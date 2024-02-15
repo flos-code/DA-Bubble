@@ -52,6 +52,23 @@ $purple: #797EF3;
     width: 485px;
     display: flex;
     justify-content: center;
+
+    textarea {
+        border: 1px solid #ADB0D9;
+        border-radius: 20px;
+        height: 100px;
+        width: calc(485px - 40px);
+        height: calc(145px - 40px);
+        margin-bottom: 30px;
+        resize: none;
+        padding: 20px;
+        outline: none;
+
+        &::placeholder {
+            font-size: 18px;
+            font-weight: 400;
+        }
+    }
 }
 
 #second-chat-input {
@@ -63,4 +80,8 @@ $purple: #797EF3;
     margin-bottom: 30px;
     resize: none;
     padding: 20px;
+}
+
+.close-cross {
+    margin-right: 46px;
 }
