@@ -2,7 +2,7 @@
     <div class="mainChatHeader">
         <div class="mainChatHeaderLeft">
             <div>#</div>
-            <div>Entwicklerteam</div>
+            <div>{{channels[0].name}}</div>
             <div>
                 <img src="../../../assets/img/arrowDownDefault.svg">
             </div>
@@ -10,16 +10,34 @@
         <div class="mainChatHeaderRight">
             <div>
                 <div>
-                    <img src="../../../assets/img/Members preview.svg">
-                <!--<img src="">
-                    <img src="">-->                
+                    @for (member of channels[0].members; track $index) {
+                        <img src="{{channels[0].members[$index].photo}}">
+                    }
                 </div>
-                <div>3</div>
+                <div>{{membercount}}</div>
             </div>
             <div>
                 <img src="../../../assets/img/addUserDefault.svg ">
             </div>
         </div>
+
+        <!--== Add members Dialog ==-->
+        <div class="addMembersDialog">
+            <div>
+                <div>Leute hinzufügen</div>
+                <div>
+                    <img src="../../../assets/img/close.svg">
+                </div>
+            </div>
+            <div>#  {{channels[0].name}}</div>
+            <div>
+                <input type="text" placeholder="Name eingeben">
+            </div>
+            <div>
+                <button>Hinzufügen</button>
+            </div>
+        </div>
+        <!--=======================-->
     </div>
 
     <div class="mainChatMessages">
@@ -36,7 +54,7 @@
 
     <div class="mainChatInput">
         <div class="mainChatInputSubContainer">
-            <textarea placeholder="Nachricht an #Entwicklerteam"></textarea>
+            <textarea placeholder="Nachricht an #{{channels[0].name}}"></textarea>
            <div>
                 <div>
                     <img src="../../../assets/img/addDefault.svg">
