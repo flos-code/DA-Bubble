@@ -1,4 +1,5 @@
 $purple: #797EF3;
+$light-purple: #ADB0D9;
 
 .chat-box {
     height: 940px;
@@ -49,6 +50,7 @@ $purple: #797EF3;
 }
 
 .input-content {
+    position: relative;
     width: 485px;
     display: flex;
     justify-content: center;
@@ -84,4 +86,45 @@ $purple: #797EF3;
 
 .close-cross {
     margin-right: 46px;
+}
+
+.action-icons-container {
+    position: absolute;
+    bottom: 50px;
+    left: 49%;
+    transform: translateX(-50%);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 20px;
+    width: 380px;
+
+    img {
+        cursor: pointer;
+    }
+}
+
+.left-actions {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.answer-line-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+
+    p {
+        font-size: 18px;
+        font-weight: 400;
+        color: $light-purple;
+    }
+}
+
+.purple-line {
+    width: 296px;
+    border: 1px solid $light-purple;
 }
