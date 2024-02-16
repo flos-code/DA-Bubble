@@ -1,0 +1,67 @@
+@import "../../../styles.scss";
+
+.sideBarContainer {
+}
+
+.sideBarContent {
+  height: 940px;
+  width: 366px;
+  border-radius: 30px;
+  margin: 0 20px 25px 20px;
+  padding: 32px 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  background-color: white;
+  box-sizing: border-box;
+
+  .sideBardHeader {
+    width: 306px;
+    display: flex;
+    align-items: center;
+
+    .serverName {
+      width: 250px;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      margin-right: 20px;
+
+      div {
+        font-size: 24px;
+        font-weight: 700;
+      }
+    }
+
+    .editsServerName {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 8px;
+      border-radius: 20px;
+
+      &:hover {
+        background-color: $bgColor;
+        color: $purple1;
+      }
+
+      &:active {
+        background-color: $bgColor;
+        color: black;
+        font-variation-settings: "wght" 600;
+      }
+    }
+  }
+}
+
+.toggleSideBar {
+  position: fixed;
+  left: 0;
+  bottom: 150px;
+  width: 50px;
+  height: 400px;
+  background-color: white;
+  z-index: 10;
+  border: 1px solid red;
+}

@@ -1,11 +1,19 @@
 @import "fonts.scss";
 
 * {
-    font-family: 'Nunito', sans-serif;
+  font-family: "Nunito", sans-serif;
 }
+$purple1: #444df2;
+$purple2: #797ef3;
+$purple3: #535af1;
+$lightPurple: #adb0d9;
+$textGray: #686868;
+$bgColor: #eceefe;
+$onlineGreen: #92c83e;
+$errorRosa: #ed1e79;
 
 body {
-    margin: 0;
-    background-color: #ECEEFE;
-    box-sizing: border-box;
+  margin: 0;
+  background-color: $bgColor;
+  box-sizing: border-box;
 }
