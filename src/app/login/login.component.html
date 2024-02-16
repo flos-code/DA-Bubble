@@ -13,7 +13,7 @@
     <div class="login-form">
         <h1>Anmeldung</h1>
         <p class="login-hint">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-        <form action="login">
+        <!-- <form action="login"> -->
             <input type="text" class="login-email-input" name="email" id="login_email" ng-keyup="validateEmail()" placeholder="beispielname@email.com">
             <input type="password" class="login-password-input" name="password" id="login_password" placeholder="Passwort">
             <button class="forgot-password-btn">Passwort vergessen?</button>
@@ -24,16 +24,16 @@
                 <img src="/assets/img/login/line.png">
             </div>
             
-            <button class="login-with-google-btn">
+            <button class="login-with-google-btn" (click)="signInWithGoogle()">
                 <img src="/assets/img/login/google.png">
                 <p>Anmelden mit Google</p>
             </button>
 
             <div class="login-btns-container">
-                <button class="login-btn" (click)="validateEmail()">Login</button>
+                <button class="login-btn" type="login" (click)="signIn()">Login</button>
                 <button class="guest-login-btn"> Guest login </button>
             </div>
-        </form>
+        <!-- </form> -->
     </div>
     <div class="lower-links-container">
     <a href="">Impressum</a>

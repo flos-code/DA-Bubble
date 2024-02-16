@@ -22,6 +22,7 @@
     "@angular/router": "^17.0.0",
     "@fontsource-variable/material-symbols-outlined": "^5.0.22",
     "@fontsource-variable/material-symbols-rounded": "^5.0.22",
+    "firebase": "^10.8.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"
