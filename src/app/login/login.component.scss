@@ -31,7 +31,7 @@
 .create-account-container {
     display: flex;
     flex-direction: column;
-    align-items: center;
+    align-items: flex-end;
     gap: 15px;
     position: absolute;
     top: 75px;
@@ -44,6 +44,8 @@
         line-height: 25px;
         letter-spacing: 0em;
         text-align: right;
+        margin: 0;
+        padding: 5px 15px 5px 15px;
     }
 
     a {
@@ -55,6 +57,15 @@
         text-align: left;
         text-decoration: none;
         color: #797EF3;
+        border-radius: 32px;
+        padding: 5px 15px 5px 15px;
+        border: 1px solid rgba(255, 255, 255, 0);
+
+        &:hover {
+            border: 1px solid #9747ff;
+            cursor: pointer;
+            transition: 0.1s ease-in-out;
+        }
     }
 }
 
@@ -216,6 +227,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+    margin-bottom: 20px;
 
     img {
         width: 215px;
@@ -229,10 +241,7 @@
         line-height: 25px;
         letter-spacing: 0em;
         text-align: left;
-
     }
-
-    margin-bottom: 20px;
 }
 
 .login-with-google-btn {
@@ -276,6 +285,34 @@
 
         p {
             transform: scale(1.1) translateX(+3px);
+            transition: 0.1s ease-in-out;
+        }
+    }
+}
+
+.lower-links-container {
+    position: absolute;
+    left: calc(50% - 133.5px);
+    bottom: 70px;
+    display: flex;
+    gap: 16px;
+
+    a {
+        text-decoration: none;
+        font-family: Figtree;
+        font-size: 18px;
+        font-weight: 400;
+        line-height: 22px;
+        letter-spacing: 0em;
+        text-align: left;
+        color: #797EF3;
+        border-radius: 32px;
+        padding: 5px 15px 5px 15px;
+        border: 1px solid rgba(255, 255, 255, 0);
+
+        &:hover {
+            border: 1px solid #9747ff;
+            cursor: pointer;
             transition: 0.1s ease-in-out;
         }
     }
