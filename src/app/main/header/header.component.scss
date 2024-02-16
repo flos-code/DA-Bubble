@@ -1,0 +1,50 @@
+.header {
+    // position: relative;
+    // top: 25px;
+    // left: 45px;
+    // right: 45px;
+    margin: 25px 45px 25px 45px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    img {
+        height: 70px;
+    }
+
+    input {
+        border: none;
+        font-size: 24px;
+        width: 100%;
+        outline: none;
+    }
+}
+
+.input-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: white;
+    width: 100%;
+    max-width: 989px;
+    border-radius: 42px;
+    height: 70px;
+    font-weight: 400;
+    padding-left: 45px;
+    padding-right: 45px;
+
+    img {
+        height: 26px;
+    }
+}
+
+.header-profil {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    cursor: pointer;
+
+    .arrowDownDefault {
+        height: 8px;
+    }
+}
