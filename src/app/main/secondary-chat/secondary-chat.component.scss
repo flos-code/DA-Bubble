@@ -224,6 +224,7 @@ $bg-color: #ECEEFE;
 }
 
 .thread-message {
+    margin-top: 8px;
     max-width: calc(315px - 30px);
     background-color: $bg-color;
     padding: 15px;
