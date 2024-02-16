@@ -12,6 +12,58 @@
         ></mat-icon>
       </div>
     </div>
+    <div class="sideBarBody">
+      <div class="channelsContainer">
+        <div class="channelsContainerHead">
+          <div class="channelsContainerHeadRight">
+            <div>
+              <div class="dropDown">
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="arrow_drop_down"
+                ></mat-icon>
+              </div>
+            </div>
+            <div class="channels">
+              <div>
+                <mat-icon
+                  class="material-symbols-outlined"
+                  fontIcon="workspaces"
+                ></mat-icon>
+              </div>
+              <div>Channels</div>
+            </div>
+          </div>
+
+          <div class="channelsContainerHeadLeft">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="add"
+            ></mat-icon>
+          </div>
+        </div>
+
+        <div class="allChannels">
+          <div class="singleChannel" *ngFor="let channel of channels">
+            <mat-icon
+              class="material-symbols-rounded"
+              fontIcon="tag"
+            ></mat-icon>
+            <div>{{ channel }}</div>
+          </div>
+        </div>
+
+        <div class="addChannel">
+          <mat-icon
+            class="material-symbols-rounded"
+            fontIcon="add_circle"
+          ></mat-icon>
+
+          <div>Channel hinzufügen</div>
+        </div>
+      </div>
+      <div class="dmsContainer"></div>
+    </div>
   </div>
   <div class="toggleSideBar"></div>
 </div>
