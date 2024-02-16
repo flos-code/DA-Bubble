@@ -1,1 +1,34 @@
-<p>login works!</p>
+<div class="login-main">
+
+    <div class="logo-container">
+        <img src="./assets/img/Logo.png">
+        <p>DA Bubble</p>
+    </div>
+
+    <div class="login-form">
+        <h1>Login</h1>
+        <p class="login-hint">We recommend that you use the email address that you use at work.</p>
+        <form action="login">
+            <input type="text" class="login-email-input" name="email" id="login_email" ng-keyup="validateEmail()" placeholder="example@email.com">
+            <input type="password" class="login-password-input" name="password" id="login_password" placeholder="password">
+            <button class="forgot-password-btn">Forgot password ?</button>
+
+            <div class="or-container">
+                <img src="/assets/img/login/line.png">
+                <p>Or</p>
+                <img src="/assets/img/login/line.png">
+            </div>
+            
+            <button class="login-with-google-btn">
+                <img src="/assets/img/login/google.png">
+                <p>Login with Google</p>
+            </button>
+
+            <div class="login-btns-container">
+                <button class="login-btn" (click)="validateEmail()">Login</button>
+                <button class="guest-login-btn"> Guest login </button>
+            </div>
+        </form>
+    </div>
+
+</div>

@@ -9,4 +9,18 @@ import { Component } from '@angular/core';
 })
 export class LoginComponent {
 
+  constructor() { }
+
+
+
+  validateEmail() {
+    let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
+    let inputValue = (<HTMLInputElement>document.getElementById('login_email')).value;
+    if (inputValue.match(mailformat)) {
+      return true;
+    }
+    else {
+      return false;
+    }
+  }
 }
