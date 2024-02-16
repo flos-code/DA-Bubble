@@ -7,17 +7,36 @@
                 <p>Entwicklerteam</p>
             </div>
 
-            <img class="close-cross" src="/assets/img/closeCross.svg" alt="close Cross">
+            <button class="close-button"></button>
         </div>
 
+
         <div class="chat-content">
+
+
+            <div class="thread-opener">
+                <img src="/assets/img/userImages/userImage4.svg" alt="">
+
+                <div>
+                    <div class="user-time">
+                        <p>Noah Bruan</p>
+                        <span>{{threadContent.time}} Uhr</span>
+                    </div>
+
+                    <div class="thread-message">
+                        <span>{{threadContent.message}}</span>
+                    </div>
+                </div>
+            </div>
+
+
 
             <div class="answer-line-container">
                 <p>2 Antworten</p>
                 <div class="purple-line"></div>
             </div>
-            
         </div>
+
 
         <div class="input-content">
             <textarea placeholder="Antworten..." name="second-chat-input" id="second-chat-input" cols="30"
