@@ -7,29 +7,48 @@
                 <p>Entwicklerteam</p>
             </div>
 
-            <img class="close-cross" src="/assets/img/closeCross.svg" alt="close Cross">
+            <button class="close-button"></button>
         </div>
 
+
         <div class="chat-content">
+
+
+            <div class="thread-opener">
+                <img src="/assets/img/userImages/userImage4.svg" alt="">
+
+                <div>
+                    <div class="user-time">
+                        <p>Noah Bruan</p>
+                        <span>{{threadContent.time}} Uhr</span>
+                    </div>
+
+                    <div class="thread-message">
+                        <span>{{threadContent.message}}</span>
+                    </div>
+                </div>
+            </div>
+
+
 
             <div class="answer-line-container">
                 <p>2 Antworten</p>
                 <div class="purple-line"></div>
             </div>
-            
         </div>
+
 
         <div class="input-content">
             <textarea placeholder="Antworten..." name="second-chat-input" id="second-chat-input" cols="30"
                 rows="10"></textarea>
             <div class="action-icons-container">
                 <div class="left-actions">
-                    <img src="/assets/img/addDefault.svg">
-                    <img style="cursor: unset;" src="/assets/img/separatingLine.svg">
-                    <img src="/assets/img/smileDefault.svg">
-                    <img src="/assets/img/tagDefault.svg">
+                    <button class="add-button"></button>
+                    <img src="/assets/img/separatingLine.svg">
+                    <button class="emoji-button"></button>
+                    <button class="tag-button"></button>
                 </div>
-                <img src="/assets/img/sendIconDefault.svg">
+                <button class="send-button"></button>
             </div>
         </div>
     </div>

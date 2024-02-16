@@ -3,17 +3,42 @@
 * {
   font-family: "Nunito", sans-serif;
 }
+
 $purple1: #444df2;
 $purple2: #797ef3;
 $purple3: #535af1;
 $lightPurple: #adb0d9;
-$textGray: #686868;
 $bgColor: #eceefe;
+
 $onlineGreen: #92c83e;
+$awayYellow: #eadf3d;
 $errorRosa: #ed1e79;
+$textGray: #686868;
 
 body {
   margin: 0;
   background-color: $bgColor;
   box-sizing: border-box;
+}
+
+//Scrollbar
+
+::-webkit-scrollbar {
+  width: 12px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background-color: $purple2;
+  border-radius: 6px;
+  border: 3px solid transparent;
+  background-clip: content-box;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: $purple2 transparent;
 }

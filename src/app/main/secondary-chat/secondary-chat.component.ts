@@ -8,5 +8,13 @@ import { Component } from '@angular/core';
   styleUrl: './secondary-chat.component.scss'
 })
 export class SecondaryChatComponent {
+  threadContent =
+    {
+      id: 1,
+      message: 'Welche Version ist aktuell von Angular?',
+      sender: 'user',
+      time: '14:25'
+    }
 
+  constructor() { }
 }

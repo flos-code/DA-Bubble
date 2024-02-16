@@ -10,14 +10,18 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './side-bar.component.scss',
 })
 export class SideBarComponent {
+  workspaceVisible: boolean = true;
+  channelsVisible: boolean = true;
+  usersVisible: boolean = true;
+
   channels: string[] = ['Allgemein', 'Entwicklerteam', 'Office-team'];
   users = [
     {
       firstName: 'Frederik',
       lastName: 'Beck',
       email: 'f.beck@mail.com',
-      onlineStatus: 'active',
-      image: 'src/assets/img/userImages/userImage1.svg',
+      onlineStatus: 'idle',
+      image: './assets/img/userImages/userImage2.svg',
       isYou: false,
       userID: 0,
     },
@@ -25,8 +29,8 @@ export class SideBarComponent {
       firstName: 'Sofia',
       lastName: 'Müller',
       email: 's.müller@mail.com',
-      onlineStatus: 'offline',
-      image: 'src/assets/img/userImages/userImage2.svg',
+      onlineStatus: 'active',
+      image: './assets/img/userImages/userImage1.svg',
       isYou: true,
       userID: 1,
     },
@@ -35,9 +39,92 @@ export class SideBarComponent {
       lastName: 'Braun',
       email: 'n.braun@mail.com',
       onlineStatus: 'away',
-      image: 'src/assets/img/userImages/userImage3.svg',
+      image: './assets/img/userImages/userImage3.svg',
       isYou: false,
       userID: 2,
     },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
   ];
+
+  ngOnInit(): void {
+    this.sortUsers();
+  }
+
+  sortUsers(): void {
+    this.users.sort((a, b) => {
+      return a.isYou === true ? -1 : b.isYou === true ? 1 : 0;
+    });
+  }
+
+  toggleSection(section: string): void {
+    if (section === 'channels') {
+      this.channelsVisible = !this.channelsVisible;
+    } else if (section === 'users') {
+      this.usersVisible = !this.usersVisible;
+    } else if (section === 'workspace') {
+      this.workspaceVisible = !this.workspaceVisible;
+    }
+  }
 }

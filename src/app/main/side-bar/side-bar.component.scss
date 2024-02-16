@@ -1,8 +1,5 @@
 @import "../../../styles.scss";
 
-.sideBarContainer {
-}
-
 .sideBarContent {
   height: 940px;
   width: 366px;
@@ -60,7 +57,10 @@
 .sideBarBody {
   display: flex;
   flex-direction: column;
+  gap: 25px;
   width: 306px;
+  max-height: 800px;
+  overflow-y: scroll;
 
   .dropDown {
     width: 30px;
@@ -68,19 +68,22 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: rotate(-90deg);
+
+    .rotate-icon {
+      transform: rotate(-90deg);
+    }
   }
 
-  .channelsContainer {
+  .sidebarSectionContainer {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    .channelsContainerHead {
+    .sidebarSectionHead {
       display: flex;
       align-items: center;
       justify-content: space-between;
 
-      .channelsContainerHeadRight {
+      .sidebarSectionHeadRight {
         display: flex;
         align-items: center;
         gap: 15px;
@@ -91,20 +94,20 @@
           .dropDown {
             color: $purple3;
           }
-          .channels {
+          .sectionTitle {
             color: $purple3;
           }
         }
 
         &:active {
-          .channels {
+          .sectionTitle {
             div:last-of-type {
               color: black;
             }
           }
         }
 
-        .channels {
+        .sectionTitle {
           display: flex;
           align-items: center;
           gap: 10px;
@@ -122,7 +125,7 @@
         }
       }
 
-      .channelsContainerHeadLeft {
+      .sidebarSectionHeadLeft {
         width: 30px;
         height: 30px;
         display: flex;
@@ -205,15 +208,121 @@
       }
     }
   }
+
+  .allUsers {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+
+    .singleUser {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 4px 20px;
+      border-radius: 35px;
+      margin-left: 25px;
+      width: fit-content;
+
+      &:hover {
+        cursor: pointer;
+        background-color: $bgColor;
+      }
+
+      &:active {
+        .userName {
+          color: $purple3;
+          font-weight: 700;
+        }
+      }
+      .userImage {
+        position: relative;
+        width: 50px;
+        height: 50px;
+
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: contain;
+          position: relative;
+        }
+        .onlineStatus {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-sizing: border-box;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+
+          &.online {
+            background-color: $onlineGreen;
+          }
+
+          &.idle {
+            background-color: $awayYellow;
+          }
+
+          &.busy {
+            background-color: $errorRosa;
+          }
+
+          &.away {
+            background-color: $textGray;
+          }
+        }
+      }
+
+      .userName {
+        display: flex;
+        font-size: 18px;
+      }
+    }
+  }
 }
 
 .toggleSideBar {
   position: fixed;
   left: 0;
   bottom: 150px;
-  width: 50px;
-  height: 400px;
-  background-color: white;
   z-index: 10;
-  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    transform: rotate(-90deg);
+    transform-origin: 0% 0%;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 120%;
+    background-color: white;
+    padding: 23px 14px;
+    display: flex;
+    align-items: center;
+    border-radius: 0 0 30px 30px;
+    filter: drop-shadow(-4px 4px 7px rgba(0, 0, 0, 0.2));
+
+    &:hover {
+      cursor: pointer;
+      color: $purple1;
+      font-weight: 700;
+      svg {
+        --icon-stroke: #{$purple1};
+        --icon-stroke-width: 2.5;
+      }
+    }
+  }
+
+  div:first-of-type {
+  }
+  div:last-of-type {
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    padding: 8px;
+    transform: rotate(90deg);
+  }
 }

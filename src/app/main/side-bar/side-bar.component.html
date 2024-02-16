@@ -1,5 +1,5 @@
 <div class="sideBarContainer">
-  <div class="sideBarContent">
+  <div class="sideBarContent" *ngIf="workspaceVisible">
     <div class="sideBardHeader">
       <div class="serverName">
         <img src="../../assets/img/workspaceLogo.png" alt="Workspace Logo" />
@@ -13,18 +13,22 @@
       </div>
     </div>
     <div class="sideBarBody">
-      <div class="channelsContainer">
-        <div class="channelsContainerHead">
-          <div class="channelsContainerHeadRight">
+      <div class="sidebarSectionContainer">
+        <div class="sidebarSectionHead">
+          <div
+            class="sidebarSectionHeadRight"
+            (click)="toggleSection('channels')"
+          >
             <div>
               <div class="dropDown">
                 <mat-icon
                   class="material-symbols-rounded"
                   fontIcon="arrow_drop_down"
+                  [ngClass]="{ 'rotate-icon': !channelsVisible }"
                 ></mat-icon>
               </div>
             </div>
-            <div class="channels">
+            <div class="sectionTitle">
               <div>
                 <mat-icon
                   class="material-symbols-outlined"
@@ -35,7 +39,7 @@
             </div>
           </div>
 
-          <div class="channelsContainerHeadLeft">
+          <div class="sidebarSectionHeadLeft">
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="add"
@@ -43,7 +47,7 @@
           </div>
         </div>
 
-        <div class="allChannels">
+        <div class="allChannels" *ngIf="channelsVisible">
           <div class="singleChannel" *ngFor="let channel of channels">
             <mat-icon
               class="material-symbols-rounded"
@@ -53,7 +57,7 @@
           </div>
         </div>
 
-        <div class="addChannel">
+        <div class="addChannel" *ngIf="channelsVisible">
           <mat-icon
             class="material-symbols-rounded"
             fontIcon="add_circle"
@@ -62,8 +66,76 @@
           <div>Channel hinzufügen</div>
         </div>
       </div>
-      <div class="dmsContainer"></div>
+      <div class="sidebarSectionContainer">
+        <div class="sidebarSectionHead" (click)="toggleSection('users')">
+          <div class="sidebarSectionHeadRight">
+            <div>
+              <div class="dropDown">
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="arrow_drop_down"
+                  [ngClass]="{ 'rotate-icon': !usersVisible }"
+                ></mat-icon>
+              </div>
+            </div>
+            <div class="sectionTitle">
+              <div>
+                <mat-icon
+                  class="material-symbols-outlined"
+                  fontIcon="account_circle"
+                ></mat-icon>
+              </div>
+              <div>Direktnachrichten</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="allUsers" *ngIf="usersVisible">
+          <div class="singleUser" *ngFor="let user of users">
+            <div class="userImage">
+              <img
+                [src]="user.image"
+                [alt]="'Image of ' + user.firstName + ' ' + user.lastName"
+              />
+              <div
+                class="onlineStatus"
+                [ngClass]="{
+                  online: user.onlineStatus === 'active',
+                  idle: user.onlineStatus === 'idle',
+                  busy: user.onlineStatus === 'busy',
+                  away: user.onlineStatus === 'away'
+                }"
+              ></div>
+            </div>
+            <div class="userName">
+              {{ user.firstName }} {{ user.lastName }}
+              <span *ngIf="user.isYou">&nbsp;(Du)</span>
+            </div>
+          </div>
+        </div>
+
+        <div></div>
+      </div>
     </div>
   </div>
-  <div class="toggleSideBar"></div>
+  <div class="toggleSideBar">
+    <div *ngIf="workspaceVisible" (click)="toggleSection('workspace')">
+      Workspace-Menü schließen
+      <svg class="svg-hide-worspace">
+        <use
+          xlink:href="./assets/img/toggleWorkspaceSymbols.svg#svg-hide-worspace"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        ></use>
+      </svg>
+    </div>
+    <div *ngIf="!workspaceVisible" (click)="toggleSection('workspace')">
+      Workspace-Menü öffnen
+      <svg class="svg-show-worspace">
+        <use
+          xlink:href="./assets/img/toggleWorkspaceSymbols.svg#svg-show-worspace"
+          xmlns:xlink="http://www.w3.org/1999/xlink"
+        ></use>
+      </svg>
+    </div>
+  </div>
 </div>
