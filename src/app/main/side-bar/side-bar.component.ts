@@ -10,6 +10,7 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './side-bar.component.scss',
 })
 export class SideBarComponent {
+  workspaceVisible: boolean = true;
   channelsVisible: boolean = true;
   usersVisible: boolean = true;
 
@@ -122,6 +123,8 @@ export class SideBarComponent {
       this.channelsVisible = !this.channelsVisible;
     } else if (section === 'users') {
       this.usersVisible = !this.usersVisible;
+    } else if (section === 'workspace') {
+      this.workspaceVisible = !this.workspaceVisible;
     }
   }
 }

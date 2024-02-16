@@ -286,9 +286,43 @@
   position: fixed;
   left: 0;
   bottom: 150px;
-  width: 50px;
-  height: 400px;
-  background-color: white;
   z-index: 10;
-  border: 1px solid red;
+  display: flex;
+  flex-direction: column;
+
+  div {
+    transform: rotate(-90deg);
+    transform-origin: 0% 0%;
+    font-size: 20px;
+    font-weight: 500;
+    line-height: 120%;
+    background-color: white;
+    padding: 23px 14px;
+    display: flex;
+    align-items: center;
+    border-radius: 0 0 30px 30px;
+    filter: drop-shadow(-4px 4px 7px rgba(0, 0, 0, 0.2));
+
+    &:hover {
+      cursor: pointer;
+      color: $purple1;
+      font-weight: 700;
+      svg {
+        --icon-stroke: #{$purple1};
+        --icon-stroke-width: 2.5;
+      }
+    }
+  }
+
+  div:first-of-type {
+  }
+  div:last-of-type {
+  }
+
+  svg {
+    width: 16px;
+    height: 16px;
+    padding: 8px;
+    transform: rotate(90deg);
+  }
 }
