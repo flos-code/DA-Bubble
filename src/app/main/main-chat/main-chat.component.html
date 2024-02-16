@@ -11,30 +11,32 @@
             <div>
                 <div>
                     @for (member of channels[0].members; track $index) {
-                        <img src="{{channels[0].members[$index].photo}}">
+                        <div>
+                            <img src="{{channels[0].members[$index].photo}}">
+                        </div>
                     }
                 </div>
                 <div>{{membercount}}</div>
             </div>
-            <div>
+            <div (click)="toggleAddMemberDialog()">
                 <img src="../../../assets/img/main-chat/addUserDefault.svg ">
             </div>
         </div>
 
         <!--== Add members Dialog ==-->
-        <div class="addMembersDialog">
+        <div class="addMembersDialog" *ngIf="addMemberDialogOpen">
             <div>
                 <div>Leute hinzufügen</div>
-                <div>
+                <div (click)="closeAddMemberDialog()">
                     <img src="../../../assets/img/main-chat/close.svg">
                 </div>
             </div>
             <div>#  {{channels[0].name}}</div>
             <div>
-                <input type="text" placeholder="Name eingeben">
+                <input [(ngModel)]="newMember" type="text" placeholder="Name eingeben">
             </div>
             <div>
-                <button>Hinzufügen</button>
+                <button (click)="addMember()" >Hinzufügen</button>
             </div>
         </div>
         <!--=======================-->
@@ -42,13 +44,60 @@
 
     <div class="mainChatMessages">
         <div class="mainChatMessagesSubContainer">
-            <div class="timeSeparator">
-                <div>Heute</div>
+            <div class="beginningOfChannel">
+                <div>
+                    <div>#</div>
+                    <div>{{channels[0].name}}</div>
+                </div>
+                <div>
+                    Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)"># {{channels[0].name}}</span>
+                </div>
             </div>
-    
-            <!-- div=> Time Separator -->
-            <!-- div=> Message Component -->
-    
+
+            <div class="timeSeparator">
+                <div>
+                    <div>Heute</div>
+                </div>
+            </div>    
+
+            <div class="messageContainer">
+                <div class="messageProfileIcon">
+                    <img src="../../../assets/img/main-chat/member1.svg">
+                </div>
+                <div class="mainMessage">
+                    <div>
+                        <div>Noah Braun</div>
+                        <div>14:25 Uhr</div>
+                    </div>
+                    <div>
+                        Welche Version ist aktuell von Angular?
+                    </div>
+                    <div>
+                        <div>2 Antworten</div>
+                        <div>Letzte Antwort 14:56</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="messageContainer messageContainerOwn">
+                <div class="messageProfileIcon">
+                    <img src="../../../assets/img/main-chat/member1.svg">
+                </div>
+                <div class="mainMessage mainMessageOwn">
+                    <div>
+                        <div>Noah Braun</div>
+                        <div>14:25 Uhr</div>
+                    </div>
+                    <div>
+                        Welche Version ist aktuell von Angular?
+                    </div>
+                    <div>
+                        <div>2 Antworten</div>
+                        <div>Letzte Antwort 14:56</div>
+                    </div>
+                </div>
+            </div>
+  
         </div>
     </div>
 
