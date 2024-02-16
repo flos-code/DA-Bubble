@@ -60,6 +60,7 @@
 .sideBarBody {
   display: flex;
   flex-direction: column;
+  gap: 25px;
   width: 306px;
 
   .dropDown {
@@ -71,16 +72,16 @@
     transform: rotate(-90deg);
   }
 
-  .channelsContainer {
+  .sidebarSectionContainer {
     display: flex;
     flex-direction: column;
     gap: 25px;
-    .channelsContainerHead {
+    .sidebarSectionHead {
       display: flex;
       align-items: center;
       justify-content: space-between;
 
-      .channelsContainerHeadRight {
+      .sidebarSectionHeadRight {
         display: flex;
         align-items: center;
         gap: 15px;
@@ -91,20 +92,20 @@
           .dropDown {
             color: $purple3;
           }
-          .channels {
+          .sectionTitle {
             color: $purple3;
           }
         }
 
         &:active {
-          .channels {
+          .sectionTitle {
             div:last-of-type {
               color: black;
             }
           }
         }
 
-        .channels {
+        .sectionTitle {
           display: flex;
           align-items: center;
           gap: 10px;
@@ -122,7 +123,7 @@
         }
       }
 
-      .channelsContainerHeadLeft {
+      .sidebarSectionHeadLeft {
         width: 30px;
         height: 30px;
         display: flex;
@@ -201,6 +202,78 @@
       }
 
       div {
+        font-size: 18px;
+      }
+    }
+  }
+
+  .allUsers {
+    display: flex;
+    flex-direction: column;
+    gap: 13px;
+
+    .singleUser {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 4px 20px;
+      border-radius: 35px;
+      margin-left: 25px;
+      width: fit-content;
+
+      &:hover {
+        cursor: pointer;
+        background-color: $bgColor;
+      }
+
+      &:active {
+        .userName {
+          color: $purple3;
+          font-weight: 700;
+        }
+      }
+      .userImage {
+        position: relative;
+        width: 50px;
+        height: 50px;
+
+        img {
+          width: 50px;
+          height: 50px;
+          border-radius: 50%;
+          object-fit: contain;
+          position: relative;
+        }
+        .onlineStatus {
+          width: 14px;
+          height: 14px;
+          border-radius: 50%;
+          border: 2px solid white;
+          box-sizing: border-box;
+          position: absolute;
+          right: 0;
+          bottom: 0;
+
+          &.online {
+            background-color: $onlineGreen;
+          }
+
+          &.idle {
+            background-color: $awayYellow;
+          }
+
+          &.busy {
+            background-color: $errorRosa;
+          }
+
+          &.away {
+            background-color: $textGray;
+          }
+        }
+      }
+
+      .userName {
+        display: flex;
         font-size: 18px;
       }
     }

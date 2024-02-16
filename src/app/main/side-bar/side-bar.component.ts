@@ -16,8 +16,8 @@ export class SideBarComponent {
       firstName: 'Frederik',
       lastName: 'Beck',
       email: 'f.beck@mail.com',
-      onlineStatus: 'active',
-      image: 'src/assets/img/userImages/userImage1.svg',
+      onlineStatus: 'idle',
+      image: './assets/img/userImages/userImage2.svg',
       isYou: false,
       userID: 0,
     },
@@ -25,8 +25,8 @@ export class SideBarComponent {
       firstName: 'Sofia',
       lastName: 'Müller',
       email: 's.müller@mail.com',
-      onlineStatus: 'offline',
-      image: 'src/assets/img/userImages/userImage2.svg',
+      onlineStatus: 'active',
+      image: './assets/img/userImages/userImage1.svg',
       isYou: true,
       userID: 1,
     },
@@ -35,9 +35,28 @@ export class SideBarComponent {
       lastName: 'Braun',
       email: 'n.braun@mail.com',
       onlineStatus: 'away',
-      image: 'src/assets/img/userImages/userImage3.svg',
+      image: './assets/img/userImages/userImage3.svg',
       isYou: false,
       userID: 2,
     },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
   ];
+
+  ngOnInit(): void {
+    this.sortUsers();
+  }
+
+  sortUsers(): void {
+    this.users.sort((a, b) => {
+      return a.isYou === true ? -1 : b.isYou === true ? 1 : 0;
+    });
+  }
 }

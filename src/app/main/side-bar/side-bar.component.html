@@ -13,9 +13,9 @@
       </div>
     </div>
     <div class="sideBarBody">
-      <div class="channelsContainer">
-        <div class="channelsContainerHead">
-          <div class="channelsContainerHeadRight">
+      <div class="sidebarSectionContainer">
+        <div class="sidebarSectionHead">
+          <div class="sidebarSectionHeadRight">
             <div>
               <div class="dropDown">
                 <mat-icon
@@ -24,7 +24,7 @@
                 ></mat-icon>
               </div>
             </div>
-            <div class="channels">
+            <div class="sectionTitle">
               <div>
                 <mat-icon
                   class="material-symbols-outlined"
@@ -35,7 +35,7 @@
             </div>
           </div>
 
-          <div class="channelsContainerHeadLeft">
+          <div class="sidebarSectionHeadLeft">
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="add"
@@ -62,8 +62,56 @@
           <div>Channel hinzufügen</div>
         </div>
       </div>
-      <div class="dmsContainer"></div>
+      <div class="sidebarSectionContainer">
+        <div class="sidebarSectionHead">
+          <div class="sidebarSectionHeadRight">
+            <div>
+              <div class="dropDown">
+                <mat-icon
+                  class="material-symbols-rounded"
+                  fontIcon="arrow_drop_down"
+                ></mat-icon>
+              </div>
+            </div>
+            <div class="sectionTitle">
+              <div>
+                <mat-icon
+                  class="material-symbols-outlined"
+                  fontIcon="account_circle"
+                ></mat-icon>
+              </div>
+              <div>Direktnachrichten</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="allUsers">
+          <div class="singleUser" *ngFor="let user of users">
+            <div class="userImage">
+              <img
+                [src]="user.image"
+                [alt]="'Image of ' + user.firstName + ' ' + user.lastName"
+              />
+              <div
+                class="onlineStatus"
+                [ngClass]="{
+                  online: user.onlineStatus === 'active',
+                  idle: user.onlineStatus === 'idle',
+                  busy: user.onlineStatus === 'busy',
+                  away: user.onlineStatus === 'away'
+                }"
+              ></div>
+            </div>
+            <div class="userName">
+              {{ user.firstName }} {{ user.lastName }}
+              <span *ngIf="user.isYou">&nbsp;(Du)</span>
+            </div>
+          </div>
+        </div>
+
+        <div></div>
+      </div>
     </div>
   </div>
-  <div class="toggleSideBar"></div>
+  <!-- <div class="toggleSideBar"></div> -->
 </div>
