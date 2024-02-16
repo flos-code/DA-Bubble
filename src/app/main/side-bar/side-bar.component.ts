@@ -10,6 +10,9 @@ import { MatIconModule } from '@angular/material/icon';
   styleUrl: './side-bar.component.scss',
 })
 export class SideBarComponent {
+  channelsVisible: boolean = true;
+  usersVisible: boolean = true;
+
   channels: string[] = ['Allgemein', 'Entwicklerteam', 'Office-team'];
   users = [
     {
@@ -48,6 +51,60 @@ export class SideBarComponent {
       isYou: false,
       userID: 3,
     },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
+    {
+      firstName: 'Elias',
+      lastName: 'Neumann',
+      email: 'e.neumann@mail.com',
+      onlineStatus: 'busy',
+      image: './assets/img/userImages/userImage4.svg',
+      isYou: false,
+      userID: 3,
+    },
   ];
 
   ngOnInit(): void {
@@ -58,5 +115,13 @@ export class SideBarComponent {
     this.users.sort((a, b) => {
       return a.isYou === true ? -1 : b.isYou === true ? 1 : 0;
     });
+  }
+
+  toggleSection(section: string): void {
+    if (section === 'channels') {
+      this.channelsVisible = !this.channelsVisible;
+    } else if (section === 'users') {
+      this.usersVisible = !this.usersVisible;
+    }
   }
 }

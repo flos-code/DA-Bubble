@@ -1,8 +1,5 @@
 @import "../../../styles.scss";
 
-.sideBarContainer {
-}
-
 .sideBarContent {
   height: 940px;
   width: 366px;
@@ -62,6 +59,8 @@
   flex-direction: column;
   gap: 25px;
   width: 306px;
+  max-height: 800px;
+  overflow-y: scroll;
 
   .dropDown {
     width: 30px;
@@ -69,7 +68,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    transform: rotate(-90deg);
+
+    .rotate-icon {
+      transform: rotate(-90deg);
+    }
   }
 
   .sidebarSectionContainer {

@@ -15,12 +15,16 @@
     <div class="sideBarBody">
       <div class="sidebarSectionContainer">
         <div class="sidebarSectionHead">
-          <div class="sidebarSectionHeadRight">
+          <div
+            class="sidebarSectionHeadRight"
+            (click)="toggleSection('channels')"
+          >
             <div>
               <div class="dropDown">
                 <mat-icon
                   class="material-symbols-rounded"
                   fontIcon="arrow_drop_down"
+                  [ngClass]="{ 'rotate-icon': !channelsVisible }"
                 ></mat-icon>
               </div>
             </div>
@@ -43,7 +47,7 @@
           </div>
         </div>
 
-        <div class="allChannels">
+        <div class="allChannels" *ngIf="channelsVisible">
           <div class="singleChannel" *ngFor="let channel of channels">
             <mat-icon
               class="material-symbols-rounded"
@@ -53,7 +57,7 @@
           </div>
         </div>
 
-        <div class="addChannel">
+        <div class="addChannel" *ngIf="channelsVisible">
           <mat-icon
             class="material-symbols-rounded"
             fontIcon="add_circle"
@@ -63,13 +67,14 @@
         </div>
       </div>
       <div class="sidebarSectionContainer">
-        <div class="sidebarSectionHead">
+        <div class="sidebarSectionHead" (click)="toggleSection('users')">
           <div class="sidebarSectionHeadRight">
             <div>
               <div class="dropDown">
                 <mat-icon
                   class="material-symbols-rounded"
                   fontIcon="arrow_drop_down"
+                  [ngClass]="{ 'rotate-icon': !usersVisible }"
                 ></mat-icon>
               </div>
             </div>
@@ -85,7 +90,7 @@
           </div>
         </div>
 
-        <div class="allUsers">
+        <div class="allUsers" *ngIf="usersVisible">
           <div class="singleUser" *ngFor="let user of users">
             <div class="userImage">
               <img
