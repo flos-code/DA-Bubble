@@ -3,7 +3,7 @@
     // top: 25px;
     // left: 45px;
     // right: 45px;
-    margin: 25px 45px 25px 45px;
+    margin: 25px 45px 25px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -27,7 +27,7 @@
     justify-content: space-between;
     background-color: white;
     width: 100%;
-    max-width: 989px;
+    max-width: calc(989px - 90px);
     border-radius: 42px;
     height: 70px;
     font-weight: 400;
