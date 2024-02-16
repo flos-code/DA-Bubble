@@ -16,19 +16,19 @@ export class MainChatComponent {
         'userId': 'sadf123sadf',
         'name': 'Tobias',
         'surname': 'Odermatt',
-        'photo': '../../../assets/img/member1.svg'
+        'photo': '../../../assets/img/main-chat/member1.svg'
       },
       {
         'userId': 'iej896sdf',
         'name': 'Pierce',
         'surname': 'C.',
-        'photo': '../../../assets/img/member2.svg'
+        'photo': '../../../assets/img/main-chat/member2.svg'
       },
       {
         'userId': 'sadmvkui25ddf',
         'name': 'Filip',
         'surname': 'Todoroski',
-        'photo': '../../../assets/img/member3.svg'
+        'photo': '../../../assets/img/main-chat/member3.svg'
       }
       ]
     }];
