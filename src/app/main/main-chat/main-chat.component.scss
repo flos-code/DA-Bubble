@@ -1,4 +1,7 @@
 /* ======================= GENERAL ===================== */
+@import "../../../styles.scss";
+@import "../../main/side-bar/side-bar.component.scss";
+
 * {
     box-sizing: border-box;
 }
@@ -88,8 +91,23 @@
         }
     }
 
-    >div:last-of-type:hover {
+    >div:last-of-type {
         cursor: pointer;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+
+        > div {
+            background-image: url("../../../assets/img/main-chat/addUserDefault.svg");
+            height: 40px;
+            width: 40px;
+
+            &:hover {
+                background-image: url("../../../assets/img/main-chat/addUserHover.svg");
+
+            }
+    
+        }
     }
 }
 
@@ -294,20 +312,24 @@
         background-color: rgba(236, 238, 254, 1);
         font-size: 18px;
     }
+}
+
+.mainMessageThreads {
+    gap: 20px;
+
+    > div:first-of-type {
+        font-size: 18px;
+        color: rgba(83, 90, 241, 1);
+    }
 
     > div:last-of-type {
-        gap: 20px;
-
-        > div:first-of-type {
-            font-size: 18px;
-            color: rgba(83, 90, 241, 1);
-        }
-
-        > div:last-of-type {
-            font-size: 14px;
-            color: rgba(104, 104, 104, 1);    
-        }
+        font-size: 14px;
+        color: rgba(104, 104, 104, 1);    
     }
+}
+
+.mainMessageReactions {
+    
 }
 
 .mainMessageOwn {
@@ -363,9 +385,46 @@
             align-items: center;
             gap: 10px;
 
-            img:hover {
+            > button {
+                background-size: cover;
+                background-repeat: no-repeat;
+                background-position: center;
+                height: 26px;
+                aspect-ratio: 1/1;
+                border-style: none;
+                background-color: unset;
                 cursor: pointer;
             }
+
+            img:hover,
+            div:hover {
+                cursor: pointer;
+            }
+
+            > button:first-of-type {
+                background-image: url('../../../assets/img/main-chat/addDefault.svg');
+
+                &:hover {
+                background-image: url('../../../assets/img/main-chat/addHover.svg');
+                }
+            }
+
+            > button:nth-of-type(2) {
+                background-image: url('../../../assets/img/main-chat/smileDefault.svg');
+
+                &:hover {
+                background-image: url('../../../assets/img/main-chat/smileHover.svg');
+                }
+            }
+
+            > button:last-of-type {
+                background-image: url('../../../assets/img/main-chat/tagDefault.svg');
+
+                &:hover {
+                background-image: url('../../../assets/img/main-chat/tagHover.svg');
+                }
+            }
+
 
             > img:nth-of-type(2):hover {
                 cursor: unset;
