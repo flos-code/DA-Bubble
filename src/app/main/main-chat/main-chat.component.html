@@ -1,103 +1,160 @@
 <div class="mainChatContainer">
-    <div class="mainChatHeader">
-        <div class="mainChatHeaderLeft">
-            <div>#</div>
-            <div>{{channels[0].name}}</div>
-            <div>
-                <img src="../../../assets/img/main-chat/arrowDownDefault.svg">
-            </div>
-        </div>
-        <div class="mainChatHeaderRight">
-            <div>
+    <!-- ======================================== MAIN CHAT HEADER ========================================== -->
+    @if(showChannel) {
+        <!-- =========== Template main chat header ============= -->
+        <div class="mainChatHeader">
+            <div class="mainChatHeaderLeft">
+                <div>&#35;</div>
+                <div>{{channels[0].name}}</div>
                 <div>
-                    @for (member of channels[0].members; track $index) {
-                        <div>
-                            <img src="{{channels[0].members[$index].photo}}">
-                        </div>
-                    }
-                </div>
-                <div>{{membercount}}</div>
-            </div>
-            <div (click)="toggleAddMemberDialog()">
-                <img src="../../../assets/img/main-chat/addUserDefault.svg ">
-            </div>
-        </div>
-
-        <!--== Add members Dialog ==-->
-        <div class="addMembersDialog" *ngIf="addMemberDialogOpen">
-            <div>
-                <div>Leute hinzufügen</div>
-                <div (click)="closeAddMemberDialog()">
-                    <img src="../../../assets/img/main-chat/close.svg">
+                    <img src="../../../assets/img/main-chat/arrowDownDefault.svg">
                 </div>
             </div>
-            <div>#  {{channels[0].name}}</div>
-            <div>
-                <input [(ngModel)]="newMember" type="text" placeholder="Name eingeben">
+            <div class="mainChatHeaderRight">
+                <div>
+                    <div>
+                        @for (member of channels[0].members; track $index) {
+                            <div>
+                                <img src="{{member.photo}}">
+                            </div>
+                        }
+                    </div>
+                    <div>{{membercount}}</div>
+                </div>
+                <div (click)="toggleAddMemberDialog()">
+                    <div></div>
+                </div>
             </div>
-            <div>
-                <button (click)="addMember()" >Hinzufügen</button>
+
+            <!--== Add members Dialog ==-->
+            <div class="addMembersDialog" *ngIf="addMemberDialogOpen">
+                <div>
+                    <div>Leute hinzufügen</div>
+                    <div (click)="closeAddMemberDialog()">
+                        <img src="../../../assets/img/main-chat/close.svg">
+                    </div>
+                </div>
+                <div>#  {{channels[0].name}}</div>
+                <div>
+                    <input [(ngModel)]="newMember" type="text" placeholder="Name eingeben">
+                </div>
+                <div>
+                    <button (click)="addMember()" >Hinzufügen</button>
+                </div>
+            </div>
+            <!--=======================-->
+        </div>
+        <!-- ================================================== -->
+    } @else {
+        <!-- =========== Template main chat header - DM ============= -->
+        <div class="mainChatHeader">
+            <div class="mainChatHeaderLeft">
+                <div class="userImage">
+                    <img src="../../../assets/img/main-chat/member2.svg">
+                    <div class="onlineStatus"
+                    [ngClass]="{
+                      online: users[1].onlineStatus === 'active',
+                      idle: users[2].onlineStatus === 'idle',
+                      busy: users[3].onlineStatus === 'busy',
+                      away: users[0].onlineStatus === 'away'
+                    }"></div>
+                </div>
+                <div>{{users[1].name}} {{users[1].surname}}</div>
             </div>
         </div>
-        <!--=======================-->
-    </div>
+        <!-- ========================================================== -->
+    }
 
+    <!-- ======================================== MMAIN CHAT MESSAGES ========================================== -->
     <div class="mainChatMessages">
         <div class="mainChatMessagesSubContainer">
-            <div class="beginningOfChannel">
-                <div>
-                    <div>#</div>
-                    <div>{{channels[0].name}}</div>
+            @if(showChannel) {
+                <!-- =========== Template main chat beginning - Channel ============= -->
+                <div class="beginningOfChannel">
+                    <div>
+                        <div>&#35;</div>
+                        <div>{{channels[0].name}}</div>
+                    </div>
+                    <div>
+                        Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channels[0].name}}</span>
+                    </div>
                 </div>
-                <div>
-                    Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)"># {{channels[0].name}}</span>
-                </div>
-            </div>
+                <!-- ================================================================ -->
 
+            } @else {
+                <!-- =========== Template main chat beginning - DM ============= -->
+                <div class="beginningOfChannel">
+                    <div>
+                        <div>
+                            <img [src]="channels[0].members[0].photo">
+                        </div>
+                        <div>{{channels[0].members[0].name}}</div>
+                    </div>
+                    <div>
+                        Diese Unterhaltung findet nur zwischen <span style="color: rgba(83, 90, 241, 1)">&#64;{{channels[0].members[0].name}} {{channels[0].members[0].surname}}</span> und dir statt.
+                    </div>
+                </div>
+                <!-- ================================================================ -->
+            }
+
+            <!-- =================== Time separator ===================== -->
             <div class="timeSeparator">
                 <div>
                     <div>Heute</div>
                 </div>
-            </div>    
-
-            <div class="messageContainer">
-                <div class="messageProfileIcon">
-                    <img src="../../../assets/img/main-chat/member1.svg">
-                </div>
-                <div class="mainMessage">
-                    <div>
-                        <div>Noah Braun</div>
-                        <div>14:25 Uhr</div>
-                    </div>
-                    <div>
-                        Welche Version ist aktuell von Angular?
-                    </div>
-                    <div>
-                        <div>2 Antworten</div>
-                        <div>Letzte Antwort 14:56</div>
-                    </div>
-                </div>
             </div>
+            
+            @if(channels[0].messages.length !== 0) {
 
-            <div class="messageContainer messageContainerOwn">
-                <div class="messageProfileIcon">
-                    <img src="../../../assets/img/main-chat/member1.svg">
+                <!-- ========================= Template Other Messages ========================= -->
+                <div class="messageContainer">
+                    <div class="messageProfileIcon">
+                        <img src="../../../assets/img/main-chat/member1.svg">
+                    </div>
+                    <div class="mainMessage">
+                        <div>
+                            <div>Noah Braun</div>
+                            <div>14:25 Uhr</div>
+                        </div>
+                        <div>
+                            Welche Version ist aktuell von Angular?
+                        </div>
+                        <div class="mainMessageThreads">
+                            <div>2 Antworten</div>
+                            <div>Letzte Antwort 14:56</div>
+                        </div>
+                        <div class="mainMessageReactions">
+                            
+                        </div>
+                    </div>
                 </div>
-                <div class="mainMessage mainMessageOwn">
-                    <div>
-                        <div>Noah Braun</div>
-                        <div>14:25 Uhr</div>
+                <!-- ============================================================================ -->
+
+                <!-- ========================= Template Own Messages ========================= -->
+                <div class="messageContainer messageContainerOwn">
+                    <div class="messageProfileIcon">
+                        <img src="../../../assets/img/main-chat/member1.svg">
                     </div>
-                    <div>
-                        Welche Version ist aktuell von Angular?
-                    </div>
-                    <div>
-                        <div>2 Antworten</div>
-                        <div>Letzte Antwort 14:56</div>
+                    <div class="mainMessage mainMessageOwn">
+                        <div>
+                            <div>Noah Braun</div>
+                            <div>14:25 Uhr</div>
+                        </div>
+                        <div>
+                            Welche Version ist aktuell von Angular?
+                        </div>
+                        <div class="mainMessageThreads">
+                            <div>2 Antworten</div>
+                            <div>Letzte Antwort 14:56</div>
+                        </div>
+                        <div class="mainMessageReactions">
+
+                        </div>
                     </div>
                 </div>
-            </div>
-  
+                <!-- ============================================================================ -->
+            }
+
         </div>
     </div>
 
@@ -106,11 +163,16 @@
             <textarea placeholder="Nachricht an #{{channels[0].name}}"></textarea>
            <div>
                 <div>
-                    <img src="../../../assets/img/main-chat/addDefault.svg">
+                    <button></button>
+                    <img src="../../../assets/img/main-chat/separatingLine.svg">
+                    <button></button>
+                    <button></button>
+
+<!--                     <img src="../../../assets/img/main-chat/addDefault.svg">
                     <img src="../../../assets/img/main-chat/separatingLine.svg">
                     <img src="../../../assets/img/main-chat/smileDefault.svg">
                     <img src="../../../assets/img/main-chat/tagDefault.svg">
-                </div>
+ -->                </div>
                 <div>
                     <img src="../../../assets/img/main-chat/sendIconDefault.svg">
                 </div>
