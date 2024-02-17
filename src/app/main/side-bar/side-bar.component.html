@@ -39,7 +39,10 @@
             </div>
           </div>
 
-          <div class="sidebarSectionHeadLeft">
+          <div
+            class="sidebarSectionHeadLeft"
+            (click)="toggleAddChannelDialog()"
+          >
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="add"
@@ -57,7 +60,11 @@
           </div>
         </div>
 
-        <div class="addChannel" *ngIf="channelsVisible">
+        <div
+          class="addChannel"
+          *ngIf="channelsVisible"
+          (click)="toggleAddChannelDialog()"
+        >
           <mat-icon
             class="material-symbols-rounded"
             fontIcon="add_circle"
@@ -139,3 +146,13 @@
     </div>
   </div>
 </div>
+<!-- <app-dialog-add-channel
+  *ngIf="dialogAddChannelVisible" [dialogAddChannelVisible]="dialogAddChannelVisible" (toggleVisibility)="toggleAddChannelDialog()"
+></app-dialog-add-channel> -->
+
+<app-dialog-add-channel
+  *ngIf="dialogAddChannelVisible"
+  [isVisible]="dialogAddChannelVisible"
+  (toggleVisibility)="toggleAddChannelDialog()"
+>
+</app-dialog-add-channel>

@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
+import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-channel.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-side-bar',
   standalone: true,
-  imports: [MatIconModule, CommonModule],
+  imports: [MatIconModule, CommonModule, DialogAddChannelComponent],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
 })
@@ -13,6 +15,9 @@ export class SideBarComponent {
   workspaceVisible: boolean = true;
   channelsVisible: boolean = true;
   usersVisible: boolean = true;
+  dialogAddChannelVisible: boolean = false;
+
+  constructor(public dialog: MatDialog) {}
 
   channels: string[] = ['Allgemein', 'Entwicklerteam', 'Office-team'];
   users = [
@@ -126,5 +131,9 @@ export class SideBarComponent {
     } else if (section === 'workspace') {
       this.workspaceVisible = !this.workspaceVisible;
     }
+  }
+
+  toggleAddChannelDialog() {
+    this.dialogAddChannelVisible = !this.dialogAddChannelVisible;
   }
 }

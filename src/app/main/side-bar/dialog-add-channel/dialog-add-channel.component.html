@@ -1,0 +1,33 @@
+<div class="dialogAddChannelContainer">
+  <div class="dialogAddChannelContent">
+    <div>
+      <div>Channel erstellen</div>
+      <mat-icon
+        class="material-symbols-rounded"
+        fontIcon="close"
+        (click)="toggle()"
+      ></mat-icon>
+    </div>
+
+    <p>
+      Channels dienen deinem Team zur Kommunikation. Am besten sollten sie
+      themenbezogen sein #marketing zum Beispiel.
+    </p>
+
+    <div>
+      <div>Channel-Name</div>
+      <input type="text" placeholder="z.B. Kooperationsprojekt" />
+      <!-- da noch # icon for placeholder -->
+    </div>
+
+    <div>
+      <div>
+        Beschreibung
+        <p>(optional)</p>
+      </div>
+      <input type="text" placeholder="Dein Text hier" />
+    </div>
+
+    <button>Erstellen</button>
+  </div>
+</div>
