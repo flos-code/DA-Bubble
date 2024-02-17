@@ -12,8 +12,20 @@ export class DialogAddChannelComponent {
   @Input() isVisible: boolean = false;
   @Output() toggleVisibility = new EventEmitter<void>();
 
+  inputFocused: boolean = false;
+
   toggle(): void {
     this.toggleVisibility.emit();
-    console.log(this.isVisible);
+  }
+  stopPropagation(event: MouseEvent) {
+    event.stopPropagation();
+  }
+
+  onInputFocus(): void {
+    this.inputFocused = true;
+  }
+
+  onInputBlur(): void {
+    this.inputFocused = false;
   }
 }

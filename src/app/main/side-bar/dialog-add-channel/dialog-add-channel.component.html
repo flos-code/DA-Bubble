@@ -1,26 +1,42 @@
-<div class="dialogAddChannelContainer">
-  <div class="dialogAddChannelContent">
-    <div>
-      <div>Channel erstellen</div>
-      <mat-icon
-        class="material-symbols-rounded"
-        fontIcon="close"
-        (click)="toggle()"
-      ></mat-icon>
+<div class="dialogAddChannelContainer" (click)="toggle()">
+  <div class="dialogAddChannelContent" (click)="stopPropagation($event)">
+    <div class="titleAndIcon">
+      <div class="title">Channel erstellen</div>
+      <div class="icon">
+        <mat-icon
+          class="material-symbols-rounded"
+          fontIcon="close"
+          (click)="toggle()"
+        ></mat-icon>
+      </div>
     </div>
 
-    <p>
+    <p class="description">
       Channels dienen deinem Team zur Kommunikation. Am besten sollten sie
       themenbezogen sein #marketing zum Beispiel.
     </p>
 
-    <div>
+    <div class="setChannelName">
       <div>Channel-Name</div>
-      <input type="text" placeholder="z.B. Kooperationsprojekt" />
+      <div
+        class="inputWithIcon"
+        [class.focused]="inputFocused"
+        (click)="channelName.focus()"
+      >
+        <mat-icon class="material-symbols-rounded" fontIcon="tag"></mat-icon>
+        <input
+          #channelName
+          type="text"
+          placeholder="z.B. Kooperationsprojekt"
+          (focus)="onInputFocus()"
+          (blur)="onInputBlur()"
+        />
+      </div>
+
       <!-- da noch # icon for placeholder -->
     </div>
 
-    <div>
+    <div class="setChannelDescription">
       <div>
         Beschreibung
         <p>(optional)</p>
