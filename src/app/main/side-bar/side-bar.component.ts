@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -12,6 +12,10 @@ import { MatDialog } from '@angular/material/dialog';
   styleUrl: './side-bar.component.scss',
 })
 export class SideBarComponent {
+  @Output() viewChange = new EventEmitter<
+    'showMainChat' | 'showDms' | 'showNewMessage'
+  >();
+
   workspaceVisible: boolean = true;
   channelsVisible: boolean = true;
   usersVisible: boolean = true;
@@ -135,5 +139,9 @@ export class SideBarComponent {
 
   toggleAddChannelDialog() {
     this.dialogAddChannelVisible = !this.dialogAddChannelVisible;
+  }
+
+  showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
+    this.viewChange.emit(view);
   }
 }

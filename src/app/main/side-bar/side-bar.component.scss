@@ -289,6 +289,7 @@
   z-index: 10;
   display: flex;
   flex-direction: column;
+  pointer-events: none;
 
   div {
     transform: rotate(-90deg);
@@ -302,6 +303,7 @@
     align-items: center;
     border-radius: 0 0 30px 30px;
     filter: drop-shadow(-4px 4px 7px rgba(0, 0, 0, 0.2));
+    pointer-events: all;
 
     &:hover {
       cursor: pointer;

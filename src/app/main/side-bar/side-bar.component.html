@@ -5,7 +5,7 @@
         <img src="../../assets/img/workspaceLogo.png" alt="Workspace Logo" />
         <div>Code learning</div>
       </div>
-      <div class="editsServerName">
+      <div class="editsServerName" (click)="showChat('showNewMessage')">
         <mat-icon
           class="material-symbols-outlined"
           fontIcon="edit_square"
@@ -51,7 +51,11 @@
         </div>
 
         <div class="allChannels" *ngIf="channelsVisible">
-          <div class="singleChannel" *ngFor="let channel of channels">
+          <div
+            class="singleChannel"
+            *ngFor="let channel of channels"
+            (click)="showChat('showMainChat')"
+          >
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="tag"
@@ -98,7 +102,11 @@
         </div>
 
         <div class="allUsers" *ngIf="usersVisible">
-          <div class="singleUser" *ngFor="let user of users">
+          <div
+            class="singleUser"
+            *ngFor="let user of users"
+            (click)="showChat('showDms')"
+          >
             <div class="userImage">
               <img
                 [src]="user.image"
@@ -146,9 +154,6 @@
     </div>
   </div>
 </div>
-<!-- <app-dialog-add-channel
-  *ngIf="dialogAddChannelVisible" [dialogAddChannelVisible]="dialogAddChannelVisible" (toggleVisibility)="toggleAddChannelDialog()"
-></app-dialog-add-channel> -->
 
 <app-dialog-add-channel
   *ngIf="dialogAddChannelVisible"
