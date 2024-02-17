@@ -21,6 +21,33 @@ body {
   box-sizing: border-box;
 }
 
+.btnPrimary {
+  padding: 12px 25px;
+  border-radius: 25px;
+  background-color: $purple1;
+  font-size: 18px;
+  font-weight: 700;
+  color: white;
+  border: unset;
+  width: fit-content;
+  box-sizing: border-box;
+  transition: 0.1s ease-in-out;
+
+  &:hover {
+    cursor: pointer;
+    background-color: $purple2;
+  }
+
+  &:active {
+    background-color: $purple1;
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    background-color: $textGray;
+  }
+}
+
 //Scrollbar
 
 ::-webkit-scrollbar {
