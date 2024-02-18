@@ -56,8 +56,8 @@
                 </div>
             </div>
         </div>
-  <!--------------------------------------Chat Content-------------------------------------->
-  <!--------------------------------------Input Contnent-------------------------------------->
+        <!--------------------------------------Chat Content-------------------------------------->
+        <!--------------------------------------Input Contnent-------------------------------------->
         <div class="input-content">
             <textarea placeholder="Antworten..." name="second-chat-input" id="second-chat-input" cols="30"
                 rows="10"></textarea>
@@ -65,11 +65,22 @@
                 <div class="left-actions">
                     <button class="add-button"></button>
                     <img src="/assets/img/main-chat/separatingLine.svg">
+                    <emoji-mart
+                        [set]="native ? 'apple' : 'google'"
+                        [darkMode]="false"
+                        [isNative]="native"
+                        [hideRecent]="false"
+                        (emojiSelect)="handleClick($event)"
+                        title="Pick your emoji…"
+                        emoji="point_up"
+                       >
+                     </emoji-mart>
                     <button class="emoji-button"></button>
                     <button class="tag-button"></button>
                 </div>
                 <button class="send-button"></button>
             </div>
         </div>
+        <!--------------------------------------Input Contnent-------------------------------------->
     </div>
 </section>
