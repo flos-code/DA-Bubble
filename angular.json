@@ -28,7 +28,8 @@
               "@angular/material/prebuilt-themes/indigo-pink.css",
               "src/styles.scss",
               "src/fonts.scss",
-              "src/styles-icons.scss"
+              "src/styles-icons.scss",
+              "node_modules/@ctrl/ngx-emoji-mart/picker.css"
             ],
             "scripts": []
           },

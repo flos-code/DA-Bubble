@@ -5,4 +5,8 @@
   <app-main-chat *ngIf="showMainChat"></app-main-chat>
   <app-secondary-chat *ngIf="showMainChat"></app-secondary-chat>
   <app-new-message *ngIf="showNewMessage"></app-new-message>
+
+  <app-emoji-picker
+    (emojiSelect)="handleEmojiSelect($event)"
+  ></app-emoji-picker>
 </div>

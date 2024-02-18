@@ -20,6 +20,7 @@
     "@angular/platform-browser": "^17.0.0",
     "@angular/platform-browser-dynamic": "^17.0.0",
     "@angular/router": "^17.0.0",
+    "@ctrl/ngx-emoji-mart": "^9.2.0",
     "@fontsource-variable/material-symbols-outlined": "^5.0.22",
     "@fontsource-variable/material-symbols-rounded": "^5.0.22",
     "firebase": "^10.8.0",
