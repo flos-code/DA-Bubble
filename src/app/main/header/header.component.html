@@ -4,17 +4,18 @@
         <input type="text" placeholder="Code learning durchsuchen">
         <img src="assets/img/search.png" alt="">
     </div>
-    <div (click)="toggleOverlay(!isOverlayActive)" class="header-profil">
+    <div (click)="toggleDropdownMenu(true)" class="header-profil">
         <h2>Max Mustermann</h2>
         <img src="assets/img/main-chat/member3.svg" alt="">
-        <img class="arrowDownDefault" src="assets/img/keyboard_arrow_down.png" alt="" 
-            (click)="toggleOverlay(true)">
+        <img class="arrowDownDefault" src="assets/img/keyboard_arrow_down.png" alt="">
 
-        <div [class.active]="isOverlayActive" class="custom-dropdown-menu">
-            <div (click)="menuItemClicked('Option 1')">Profil</div>
+        <div [class.active]="showDropdownMenu" *ngIf="!showProfil" class="custom-dropdown-menu">
+            <div (click)="openProfil(true)">Profil</div>
             <div (click)="menuItemClicked('Option 2')">Log out</div>
         </div>
     </div>
 </div>
 
 <div class="overlay" [class.active]="isOverlayActive" (click)="toggleOverlay(false)"></div>
+
+<app-profil-card class="userProfilRight" *ngIf="showProfil"></app-profil-card>
