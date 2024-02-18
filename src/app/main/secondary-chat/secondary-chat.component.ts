@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
+import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [],
+  imports: [PickerComponent],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
