@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { Router } from '@angular/router';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
@@ -24,7 +25,7 @@ const app = initializeApp(firebaseConfig);
 export class LoginComponent {
 
   auth = getAuth(app);
-  constructor() { }
+  constructor(private router: Router) { }
 
 
 

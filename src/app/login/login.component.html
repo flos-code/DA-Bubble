@@ -1,43 +1,41 @@
 <div class="login-main">
 
     <div class="logo-container">
-        <img src="./assets/img/Logo.png">
+        <img src="/assets/img/Logo.png">
         <p>DA Bubble</p>
     </div>
 
     <div class="create-account-container">
         <p>Neu bei DABubble ?</p>
-        <a href="">Konto erstellen</a>
+        <a href="/sign_up">Konto erstellen</a>
     </div>
 
     <div class="login-form">
         <h1>Anmeldung</h1>
         <p class="login-hint">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-        <!-- <form action="login"> -->
-            <input type="text" class="login-email-input" name="email" id="login_email" ng-keyup="validateEmail()" placeholder="beispielname@email.com">
-            <input type="password" class="login-password-input" name="password" id="login_password" placeholder="Passwort">
-            <button class="forgot-password-btn">Passwort vergessen?</button>
+        <input type="text" class="login-email-input" name="email" id="login_email" ng-keyup="validateEmail()"
+            placeholder="beispielname@email.com">
+        <input type="password" class="login-password-input" name="password" id="login_password" placeholder="Passwort">
+        <button class="forgot-password-btn">Passwort vergessen?</button>
 
-            <div class="or-container">
-                <img src="/assets/img/login/line.png">
-                <p>ODER</p>
-                <img src="/assets/img/login/line.png">
-            </div>
-            
-            <button class="login-with-google-btn" (click)="signInWithGoogle()">
-                <img src="/assets/img/login/google.png">
-                <p>Anmelden mit Google</p>
-            </button>
+        <div class="or-container">
+            <img src="/assets/img/login/line.png">
+            <p>ODER</p>
+            <img src="/assets/img/login/line.png">
+        </div>
 
-            <div class="login-btns-container">
-                <button class="login-btn" type="login" (click)="signIn()">Login</button>
-                <button class="guest-login-btn"> Guest login </button>
-            </div>
-        <!-- </form> -->
+        <button class="login-with-google-btn" (click)="signInWithGoogle()">
+            <img src="/assets/img/login/google.png">
+            <p>Anmelden mit Google</p>
+        </button>
+
+        <div class="login-btns-container">
+            <button class="login-btn" type="login" (click)="signIn()">Login</button>
+            <button class="guest-login-btn"> Guest login </button>
+        </div>
     </div>
     <div class="lower-links-container">
-    <a href="">Impressum</a>
-    <a href="">Datenschutz</a>
+        <a href="">Impressum</a>
+        <a href="">Datenschutz</a>
+    </div>
 </div>
-</div>
-
