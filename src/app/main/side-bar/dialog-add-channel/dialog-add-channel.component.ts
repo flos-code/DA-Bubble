@@ -18,6 +18,7 @@ import { MatIconModule } from '@angular/material/icon';
 export class DialogAddChannelComponent {
   @Input() isVisible: boolean = false;
   @Output() toggleVisibility = new EventEmitter<void>();
+  @Output() onChannelCreation = new EventEmitter<void>();
   @ViewChild('form') form!: NgForm;
 
   inputFocused: boolean = false;
@@ -47,6 +48,8 @@ export class DialogAddChannelComponent {
         'Beschreibung:',
         this.channelDescriptionModel
       );
+      this.toggle();
+      this.onChannelCreation.emit();
     } else {
       console.log('Form not valid');
     }
