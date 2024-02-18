@@ -1,5 +1,5 @@
 <div class="mainChatContainer">
-    <div (click)="closeDialog()" class="addMembersDialogBackground" *ngIf="addMemberDialogOpen || channelEditionDialogOpen">
+    <div (click)="closeDialog()" class="dialogBackground" *ngIf="addMemberDialogOpen || channelEditionDialogOpen || showMembersDialogOpen">
     </div>
 
     <!-- ======================================== MAIN CHAT HEADER ========================================== -->
@@ -20,9 +20,8 @@
                         <div>&#35;</div>
                         <div>{{channels[0].name}}</div>
                     </div>
-                    
 
-                    <div (click)="closeChannelEditionDialog()">
+                    <div (click)="closeDialog()">
                         <span class="material-symbols-outlined">close</span>
                     </div>
                 </div>
@@ -84,7 +83,7 @@
             <!--======================================= -->        
 
             <div class="mainChatHeaderRight">
-                <div>
+                <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
                         @for (member of channels[0].members; track $index) {
                             <div>
@@ -95,14 +94,46 @@
                     <div>{{membercount}}</div>
                 </div>
                 <div (click)="toggleDialog('addMember')">
-                    <div></div>
+                    <span class="material-symbols-outlined">person_add</span>
                 </div>
             </div>
+            <!--============== Show member Dialog ================-->
+            <div class="showMembersDialog" *ngIf="showMembersDialogOpen" (click)="doNotClose($event)">
+                <div>
+                    <div>Mitglieder</div>
+                    <div (click)="closeDialog()">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+                <div class="usersListContainer">
+                    <div class="usersListSubContainer">
+                        <div class="userContainer">
+                            <div class="userSubContainer">
+                                <div>
+                                    <img src="/assets/img/main-chat/member1.svg">
+                                    <div></div>
+                                </div>
+                                <div>Sofia Müller</div>    
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div>
+                    <div>
+                        <span class="material-symbols-outlined">person_add</span>
+                    </div>
+                    <div>Mitglieder hinzufügen</div>
+                </div>
+            </div>
+
+
+            <!--=================================================-->
+
             <!--========== Add member Dialog ============-->
             <div class="addMembersDialog" *ngIf="addMemberDialogOpen" (click)="doNotClose($event)">
                 <div>
                     <div>Leute hinzufügen</div>
-                    <div (click)="closeAddMemberDialog()">
+                    <div (click)="closeDialog()">
                         <span class="material-symbols-outlined">close</span>
                     </div>
                 </div>

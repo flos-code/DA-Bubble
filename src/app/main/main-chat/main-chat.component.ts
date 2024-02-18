@@ -27,6 +27,8 @@ export class MainChatComponent {
     showChannel: boolean = true;
     addMemberDialogOpen: boolean = false;
     channelEditionDialogOpen: boolean = false;
+    showMembersDialogOpen: boolean = false;
+
     showchannelEditionName: boolean = true;
     showchannelEditionDescription: boolean = true;
 
@@ -139,15 +141,13 @@ export class MainChatComponent {
         } else {
           this.channelEditionDialogOpen = false;
         }
+      } else if(dialog == 'showMembers') {
+        if(this.showMembersDialogOpen == false) {
+          this.showMembersDialogOpen = true;
+        } else {
+          this.showMembersDialogOpen = false;
+        }
       }
-    }
-
-    closeAddMemberDialog() {
-        this.addMemberDialogOpen = false;
-    }
-
-    closeChannelEditionDialog() {
-      this.channelEditionDialogOpen = false;
     }
 
     addMember() {
@@ -157,6 +157,7 @@ export class MainChatComponent {
     closeDialog() {
       this.addMemberDialogOpen = false;
       this.channelEditionDialogOpen = false;
+      this.showMembersDialogOpen = false;
     }
 
     doNotClose($event: any) {
