@@ -1,3 +1,41 @@
-<div class="textBoxContainer">
+<!-- <div class="textBoxContainer">
   <input type="text" placeholder="Starte eine neue Nachricht" />
+</div> -->
+
+<div
+  class="textBoxContainer"
+  [class.focused]="inputFocused"
+  (click)="message.focus()"
+>
+  <input
+    #message
+    name="message"
+    type="text"
+    [(ngModel)]="messageModel"
+    required
+    placeholder="Starte eine neue Nachricht"
+    (focus)="onInputFocus()"
+    (blur)="onInputBlur()"
+  />
+  <div class="bottomIcons">
+    <div class="addElements">
+      <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon>
+      <div></div>
+      <mat-icon
+        class="material-symbols-rounded"
+        fontIcon="sentiment_satisfied"
+      ></mat-icon>
+      <mat-icon
+        class="material-symbols-rounded"
+        fontIcon="alternate_email"
+      ></mat-icon>
+    </div>
+
+    <div class="send">
+      <mat-icon
+        class="material-symbols-rounded-filled"
+        fontIcon="send"
+      ></mat-icon>
+    </div>
+  </div>
 </div>
