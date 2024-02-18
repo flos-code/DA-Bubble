@@ -1,18 +1,91 @@
 <div class="mainChatContainer">
+    <div (click)="closeDialog()" class="addMembersDialogBackground" *ngIf="addMemberDialogOpen || channelEditionDialogOpen">
+    </div>
+
     <!-- ======================================== MAIN CHAT HEADER ========================================== -->
     @if(showChannel) {
         <!-- =========== Template main chat header ============= -->
         <div class="mainChatHeader">
-            <div class="mainChatHeaderLeft">
+            <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
                 <div>&#35;</div>
                 <div>{{channels[0].name}}</div>
                 <div>
-                    <img src="../../../assets/img/main-chat/arrowDownDefault.svg">
+                    <mat-icon class="material-symbols-outlined" fontIcon="keyboard_arrow_down"></mat-icon>
                 </div>
             </div>
+            <!--========== Channel Edition/ Dialog ============-->
+            <div class="channelEdition" *ngIf="channelEditionDialogOpen" (click)="doNotClose($event)">
+                <div class="channelEditionHeader">
+                    <div>
+                        <div>&#35;</div>
+                        <div>{{channels[0].name}}</div>
+                    </div>
+                    
+
+                    <div (click)="closeChannelEditionDialog()">
+                        <span class="material-symbols-outlined">close</span>
+                    </div>
+                </div>
+
+                <!-- ======== Channel Edition Name ======== -->
+                <div class="channelEditionName" *ngIf="showchannelEditionName">
+                    <div>
+                        <div>Channel-Name</div>
+                        <div (click)="editChannelName()">Bearbeiten</div>
+                    </div>
+                    <div>
+                        <div>&#35;</div>
+                        <div>{{channels[0].name}}</div> 
+                    </div>
+                </div>
+
+                <div class="channelEditionNameEdit" *ngIf="!showchannelEditionName">
+                    <div>
+                        <div>Channel-Name</div>
+                        <div (click)="saveChannelName()">Speichern</div>
+                    </div>
+                    <div>
+                        <div>&#35;</div>
+                        <input type="text" placeholder="{{channels[0].name}}">
+                    </div>
+                </div>
+                <!-- ====================================== -->
+
+                <!-- ======== Channel Edition Description ======== -->
+                <div class="channelEditionDescription" *ngIf="showchannelEditionDescription">
+                    <div>
+                        <div>Beschreibung</div>
+                        <div (click)="editChannelDescription()">Bearbeiten</div>
+                    </div>
+                    <div>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</div>
+                    <div></div>
+                    <div>Erstellt von</div>
+                    <div>Noah Braun</div>
+                </div>
+
+                <div class="channelEditionDescriptionEdit" *ngIf="!showchannelEditionDescription">
+                    <div>
+                        <div>Beschreibung</div>
+                        <div (click)="saveChannelDescription()">Speichern</div>
+                    </div>
+                    <div>
+                        <input type="text" placeholder="Dein Text hier">
+                    </div>
+                    <div></div>
+                    <div>Erstellt von</div>
+                    <div>Noah Braun</div>
+                </div>
+                <!-- ====================================== -->
+
+                <div class="channelEditionButtonContainer">
+                    <button class="channelEditionButton">Channel verlassen</button>
+                </div>
+            </div>
+            <!--======================================= -->        
+
             <div class="mainChatHeaderRight">
                 <div>
-                    <div>
+                    <div class="memberPhotos">
                         @for (member of channels[0].members; track $index) {
                             <div>
                                 <img src="{{member.photo}}">
@@ -21,28 +94,49 @@
                     </div>
                     <div>{{membercount}}</div>
                 </div>
-                <div (click)="toggleAddMemberDialog()">
+                <div (click)="toggleDialog('addMember')">
                     <div></div>
                 </div>
             </div>
-
-            <!--== Add members Dialog ==-->
-            <div class="addMembersDialog" *ngIf="addMemberDialogOpen">
+            <!--========== Add member Dialog ============-->
+            <div class="addMembersDialog" *ngIf="addMemberDialogOpen" (click)="doNotClose($event)">
                 <div>
                     <div>Leute hinzufügen</div>
                     <div (click)="closeAddMemberDialog()">
-                        <img src="../../../assets/img/main-chat/close.svg">
+                        <span class="material-symbols-outlined">close</span>
                     </div>
                 </div>
                 <div>#  {{channels[0].name}}</div>
                 <div>
-                    <input [(ngModel)]="newMember" type="text" placeholder="Name eingeben">
+                    <form>
+                        <mat-form-field class="example-chip-list">
+                          <mat-chip-grid #chipGrid aria-label="Fruit selection">
+                            @for (fruit of fruits; track fruit) {
+                              <mat-chip-row (removed)="remove(fruit)">
+                                {{fruit}}
+                                <button matChipRemove [attr.aria-label]="'remove ' + fruit">
+                                    <span class="material-symbols-outlined">cancel</span>                                
+                                </button>
+                              </mat-chip-row>
+                            }
+                          </mat-chip-grid>
+                          <input placeholder="New Fruit..." #fruitInput [formControl]="fruitCtrl"
+                            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
+                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
+                            (matChipInputTokenEnd)="add($event)"/>
+                          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                            @for (fruit of filteredFruits | async; track fruit) {
+                              <mat-option [value]="fruit">{{fruit}}</mat-option>
+                            }
+                          </mat-autocomplete>
+                        </mat-form-field>
+                      </form>
                 </div>
                 <div>
                     <button (click)="addMember()" >Hinzufügen</button>
                 </div>
             </div>
-            <!--=======================-->
+            <!--=================================================-->
         </div>
         <!-- ================================================== -->
     } @else {
@@ -50,7 +144,7 @@
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft">
                 <div class="userImage">
-                    <img src="../../../assets/img/main-chat/member2.svg">
+                    <img src="/assets/img/main-chat/member2.svg">
                     <div class="onlineStatus"
                     [ngClass]="{
                       online: users[1].onlineStatus === 'active',
@@ -65,7 +159,7 @@
         <!-- ========================================================== -->
     }
 
-    <!-- ======================================== MMAIN CHAT MESSAGES ========================================== -->
+    <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
     <div class="mainChatMessages">
         <div class="mainChatMessagesSubContainer">
             @if(showChannel) {
@@ -80,7 +174,6 @@
                     </div>
                 </div>
                 <!-- ================================================================ -->
-
             } @else {
                 <!-- =========== Template main chat beginning - DM ============= -->
                 <div class="beginningOfChannel">
@@ -109,7 +202,7 @@
                 <!-- ========================= Template Other Messages ========================= -->
                 <div class="messageContainer">
                     <div class="messageProfileIcon">
-                        <img src="../../../assets/img/main-chat/member1.svg">
+                        <img src="/assets/img/main-chat/member1.svg">
                     </div>
                     <div class="mainMessage">
                         <div>
@@ -124,7 +217,7 @@
                             <div>Letzte Antwort 14:56</div>
                         </div>
                         <div class="mainMessageReactions">
-                            
+
                         </div>
                     </div>
                 </div>
@@ -133,7 +226,7 @@
                 <!-- ========================= Template Own Messages ========================= -->
                 <div class="messageContainer messageContainerOwn">
                     <div class="messageProfileIcon">
-                        <img src="../../../assets/img/main-chat/member1.svg">
+                        <img src="/assets/img/main-chat/member1.svg">
                     </div>
                     <div class="mainMessage mainMessageOwn">
                         <div>
@@ -160,21 +253,21 @@
 
     <div class="mainChatInput">
         <div class="mainChatInputSubContainer">
-            <textarea placeholder="Nachricht an #{{channels[0].name}}"></textarea>
+            <textarea [(ngModel)]="textArea" name="textarea" placeholder="Nachricht an #{{channels[0].name}}"></textarea>
            <div>
                 <div>
                     <button></button>
-                    <img src="../../../assets/img/main-chat/separatingLine.svg">
-                    <button></button>
+                        <img src="/assets/img/main-chat/separatingLine.svg">
+                        
                     <button></button>
 
-<!--                     <img src="../../../assets/img/main-chat/addDefault.svg">
+<!--                <img src="../../../assets/img/main-chat/addDefault.svg">
                     <img src="../../../assets/img/main-chat/separatingLine.svg">
                     <img src="../../../assets/img/main-chat/smileDefault.svg">
                     <img src="../../../assets/img/main-chat/tagDefault.svg">
  -->                </div>
                 <div>
-                    <img src="../../../assets/img/main-chat/sendIconDefault.svg">
+                    <img src="/assets/img/main-chat/sendIconDefault.svg">
                 </div>
             </div>
         </div>
