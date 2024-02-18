@@ -1,0 +1,59 @@
+<div class="dialogAddUserContainer" (click)="toggle()">
+  <form
+    class="dialogAddUserContent"
+    (click)="stopPropagation($event)"
+    (ngSubmit)="addUser()"
+    #form="ngForm"
+  >
+    <div class="titleAndIcon">
+      <div class="title">Leute hinzufügen</div>
+      <div class="icon">
+        <mat-icon
+          class="material-symbols-rounded"
+          fontIcon="close"
+          (click)="toggle()"
+        ></mat-icon>
+      </div>
+    </div>
+    <div class="userSelection">
+      <div>
+        <input
+          type="radio"
+          id="allMembers"
+          name="userSelection"
+          value="allMembers"
+          [(ngModel)]="userSelection"
+          checked
+        />
+        <label for="allMembers">
+          Alle Mitglieder von
+          <p class="highlight">&nbsp;OfficeTeam&nbsp;</p>
+          hinzufügen
+        </label>
+      </div>
+      <div>
+        <input
+          type="radio"
+          id="specificPeople"
+          name="userSelection"
+          value="specificPeople"
+          [(ngModel)]="userSelection"
+        />
+        <label for="specificPeople">Bestimmte Leute hinzufügen</label>
+      </div>
+    </div>
+
+    <input
+      *ngIf="userSelection === 'specificPeople'"
+      class="addedUser"
+      type="text"
+      placeholder="Name eingeben"
+      name="addedUser"
+      [(ngModel)]="addedUser"
+    />
+
+    <button class="btnPrimary" type="submit" [disabled]="shouldDisableSubmit()">
+      Erstellen
+    </button>
+  </form>
+</div>

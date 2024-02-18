@@ -3,11 +3,17 @@ import { Component, EventEmitter, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/dialog-add-user-new-channel.component';
 
 @Component({
   selector: 'app-side-bar',
   standalone: true,
-  imports: [MatIconModule, CommonModule, DialogAddChannelComponent],
+  imports: [
+    MatIconModule,
+    CommonModule,
+    DialogAddChannelComponent,
+    DialogAddUserNewChannelComponent,
+  ],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
 })
@@ -20,6 +26,7 @@ export class SideBarComponent {
   channelsVisible: boolean = true;
   usersVisible: boolean = true;
   dialogAddChannelVisible: boolean = false;
+  dialogAddUserVisible: boolean = false;
 
   constructor(public dialog: MatDialog) {}
 
@@ -139,6 +146,10 @@ export class SideBarComponent {
 
   toggleAddChannelDialog() {
     this.dialogAddChannelVisible = !this.dialogAddChannelVisible;
+  }
+
+  toggleAddUserDialog() {
+    this.dialogAddUserVisible = !this.dialogAddUserVisible;
   }
 
   showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {

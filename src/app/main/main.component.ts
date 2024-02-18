@@ -5,6 +5,8 @@ import { SecondaryChatComponent } from './secondary-chat/secondary-chat.componen
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { NewMessageComponent } from './new-message/new-message.component';
 import { CommonModule } from '@angular/common';
+import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
 
 @Component({
   selector: 'app-main',
@@ -16,6 +18,7 @@ import { CommonModule } from '@angular/common';
     MainChatComponent,
     SecondaryChatComponent,
     NewMessageComponent,
+    EmojiPickerComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
@@ -29,5 +32,10 @@ export class MainComponent {
     this.showMainChat = view === 'showMainChat';
     this.showDms = view === 'showDms';
     this.showNewMessage = view === 'showNewMessage';
+  }
+
+  handleEmojiSelect(emoji: any) {
+    console.log('Selected emoji:', emoji);
+    // Implement your logic to use the selected emoji
   }
 }

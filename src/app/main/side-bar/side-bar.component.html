@@ -159,5 +159,13 @@
   *ngIf="dialogAddChannelVisible"
   [isVisible]="dialogAddChannelVisible"
   (toggleVisibility)="toggleAddChannelDialog()"
+  (onChannelCreation)="toggleAddUserDialog()"
 >
 </app-dialog-add-channel>
+
+<app-dialog-add-user-new-channel
+  *ngIf="dialogAddUserVisible"
+  [isVisible]="dialogAddUserVisible"
+  (toggleVisibility)="toggleAddUserDialog()"
+>
+</app-dialog-add-user-new-channel>

@@ -1,0 +1,84 @@
+@import "../../../../styles.scss";
+
+.textBoxContainer {
+  width: 100%;
+  height: 100%;
+  border: 1px solid $lightPurple;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  align-items: center;
+  border-radius: 40px;
+  padding: 20px;
+
+  &:hover {
+    cursor: text;
+    border: 1px solid $purple2;
+  }
+
+  &.focused {
+    border: 1px solid $purple3;
+  }
+
+  ::placeholder {
+    color: $textGray;
+    opacity: 1;
+  }
+
+  input {
+    width: 100%;
+    font-size: 18px;
+
+    border: none;
+    background-color: aquamarine;
+
+    &:focus {
+      outline: none;
+    }
+  }
+
+  .bottomIcons {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+
+    .addElements {
+      display: flex;
+      gap: 5px;
+
+      div {
+        background-color: $lightPurple;
+        width: 1px;
+        height: 100%;
+      }
+
+      mat-icon {
+        padding: 8px;
+        border-radius: 50%;
+        color: $textGray;
+
+        &:hover {
+          background-color: $bgColor;
+          color: $purple3;
+          font-variation-settings: "wght" 600;
+          cursor: pointer;
+        }
+      }
+    }
+
+    .send {
+      mat-icon {
+        padding: 8px;
+        border-radius: 50%;
+        color: $purple1;
+        font-variation-settings: "FILL" 1;
+
+        &:hover {
+          cursor: pointer;
+          color: $purple2;
+        }
+      }
+    }
+  }
+}
