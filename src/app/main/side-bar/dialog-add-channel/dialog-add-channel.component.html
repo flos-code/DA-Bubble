@@ -1,5 +1,10 @@
 <div class="dialogAddChannelContainer" (click)="toggle()">
-  <div class="dialogAddChannelContent" (click)="stopPropagation($event)">
+  <form
+    class="dialogAddChannelContent"
+    (click)="stopPropagation($event)"
+    (ngSubmit)="createChannel()"
+    #form="ngForm"
+  >
     <div class="titleAndIcon">
       <div class="title">Channel erstellen</div>
       <div class="icon">
@@ -26,24 +31,30 @@
         <mat-icon class="material-symbols-rounded" fontIcon="tag"></mat-icon>
         <input
           #channelName
+          name="channelName"
           type="text"
+          [(ngModel)]="channelNameModel"
+          required
           placeholder="z.B. Kooperationsprojekt"
           (focus)="onInputFocus()"
           (blur)="onInputBlur()"
         />
       </div>
-
-      <!-- da noch # icon for placeholder -->
     </div>
 
     <div class="setChannelDescription">
       <div>
-        Beschreibung
+        Beschreibung&nbsp;
         <p>(optional)</p>
       </div>
-      <input type="text" placeholder="Dein Text hier" />
+      <input
+        type="text"
+        placeholder="Dein Text hier"
+        name="channelDescription"
+        [(ngModel)]="channelDescriptionModel"
+      />
     </div>
 
     <button class="btnPrimary">Erstellen</button>
-  </div>
+  </form>
 </div>

@@ -58,6 +58,11 @@
       flex-direction: column;
       gap: 20px;
 
+      div:first-of-type {
+        font-size: 18px;
+        font-weight: 700;
+      }
+
       .inputWithIcon {
         border: 1px solid $lightPurple;
         box-sizing: border-box;
@@ -72,20 +77,20 @@
 
         &.focused {
           border: 1px solid $purple3;
+        }
 
-          input {
-            color: black;
-          }
+        ::placeholder {
+          color: $textGray;
+          opacity: 1;
         }
 
         input {
-          flex-grow: 1; /* Ensure input takes available space */
+          flex-grow: 1;
           margin-left: 10px;
           font-size: 18px;
           padding: 18px 20px 18px 0;
           border-radius: 0 40px 40px 0;
           border: none;
-          color: $textGray;
 
           &:focus {
             outline: none;
@@ -98,6 +103,51 @@
           padding-left: 20px;
         }
       }
+    }
+
+    .setChannelDescription {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+
+      div:first-of-type {
+        font-size: 18px;
+        font-weight: 700;
+        display: flex;
+        align-items: center;
+
+        p {
+          font-weight: 400;
+          color: $textGray;
+          margin-block: unset;
+        }
+      }
+
+      ::placeholder {
+        color: $textGray;
+        opacity: 1;
+      }
+
+      input {
+        padding: 20px;
+        border-radius: 30px;
+        border: 1px solid $lightPurple;
+        outline: none;
+        font-size: 18px;
+
+        &:hover {
+          cursor: text;
+          border: 1px solid $purple2;
+        }
+
+        &:focus {
+          border: 1px solid $purple3;
+        }
+      }
+    }
+
+    button {
+      align-self: flex-end;
     }
   }
 }
