@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
-import { Router } from '@angular/router';
+import { CommonModule } from '@angular/common';
+import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 
@@ -18,27 +19,21 @@ const app = initializeApp(firebaseConfig);
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
 export class LoginComponent {
 
   auth = getAuth(app);
-  constructor(private router: Router) { }
 
+  signInForm = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', Validators.required],
+  })
+  constructor(private fb: FormBuilder) { }
 
-
-  validateEmail() {
-    let email = (<HTMLInputElement>document.getElementById('login_email')).value;
-    let mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-    if (email.match(mailformat)) {
-      return true;
-    }
-    else {
-      return false;
-    }
-  }
+  
 
   async signInWithGoogle() {
     await signInWithPopup(this.auth, provider)

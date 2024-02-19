@@ -13,8 +13,8 @@ import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 })
 export class SignUpComponent {
 
-  first: boolean = false;
-  second: boolean = true;
+  first: boolean = true;
+  second: boolean = false;
   
   genericImg: string = "/assets/img/login/profile_generic_big.png"
   person1Img: string = "/assets/img/userImages/userImage1.svg"
