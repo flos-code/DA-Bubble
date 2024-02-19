@@ -1,17 +1,37 @@
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { MatAutocompleteSelectedEvent, MatAutocompleteModule } from '@angular/material/autocomplete';
+import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { Observable } from 'rxjs';
+import { map, startWith } from 'rxjs/operators';
+import { MatIconModule } from '@angular/material/icon';
+import { AsyncPipe } from '@angular/common';
+import { LiveAnnouncer } from '@angular/cdk/a11y';
+
+export interface Fruit {
+  name: string;
+}
 
 @Component({
   selector: 'app-main-chat',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
+  imports: [ CommonModule, FormsModule, MatIconModule, MatChipsModule, ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
 export class MainChatComponent {
-    showChannel: boolean = false;
+    textArea: string = "";
+    showChannel: boolean = true;
     addMemberDialogOpen: boolean = false;
+    channelEditionDialogOpen: boolean = false;
+    showMembersDialogOpen: boolean = false;
+
+    showchannelEditionName: boolean = true;
+    showchannelEditionDescription: boolean = true;
+
     newMember: string = "";
     newMemberObject = {
       'userId': 'ikeikeoie',
@@ -86,25 +106,117 @@ export class MainChatComponent {
         'onlineStatus': 'online'
       },  
     ];
-
     membercount = this.channels[0]['members'].length;
 
-    constructor() { }
+    /* ===================== ADD MEMBER ===================== */
+    separatorKeysCodes: number[] = [ENTER, COMMA];
+    fruitCtrl = new FormControl('');
+    filteredFruits: Observable<string[]>;
+    fruits: string[] = ['Lemon'];
+    allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  
+    @ViewChild('fruitInput') fruitInput!: ElementRef<HTMLInputElement>;
+      
+    announcer = inject(LiveAnnouncer);
+    /* ====================================================== */
 
-    toggleAddMemberDialog() {
-      if(this.addMemberDialogOpen == false) {
-        this.addMemberDialogOpen = true;
-      } else {
-        this.addMemberDialogOpen = false;
+
+    constructor() {
+      this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
+        startWith(null),
+        map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
+      );
+     }
+
+    toggleDialog(dialog: string) {
+      if(dialog == 'addMember'){
+        if(this.addMemberDialogOpen == false) {
+          this.addMemberDialogOpen = true;
+        } else {
+          this.addMemberDialogOpen = false;
+        }
+      } else if(dialog == 'channelEdition') {
+        if(this.channelEditionDialogOpen == false) {
+          this.channelEditionDialogOpen = true;
+        } else {
+          this.channelEditionDialogOpen = false;
+        }
+      } else if(dialog == 'showMembers') {
+        if(this.showMembersDialogOpen == false) {
+          this.showMembersDialogOpen = true;
+        } else {
+          this.showMembersDialogOpen = false;
+        }
       }
-    }
-
-    closeAddMemberDialog() {
-        this.addMemberDialogOpen = false;
     }
 
     addMember() {
       this.channels[0].members.push(this.newMemberObject);
     }
+
+    closeDialog() {
+      this.addMemberDialogOpen = false;
+      this.channelEditionDialogOpen = false;
+      this.showMembersDialogOpen = false;
+    }
+
+    doNotClose($event: any) {
+      $event.stopPropagation(); 
+    }
+
+    editChannelName() {
+      this.showchannelEditionName = false;
+    }
+
+    editChannelDescription() {
+      this.showchannelEditionDescription = false;
+    }
+
+    saveChannelName() {
+      // Speichern in Datenbank 
+      this.showchannelEditionName = true;
+    }
+
+    saveChannelDescription() {
+      // Speichern in Datenbank 
+      this.showchannelEditionDescription = true;
+    }
+
+  /* ===================== ADD MEMBER ===================== */
+  add(event: MatChipInputEvent): void {
+    const value = (event.value || '').trim();
+
+    // Add our fruit
+    if (value) {
+      this.fruits.push(value);
+    }
+
+    // Clear the input value
+    event.chipInput!.clear();
+
+    this.fruitCtrl.setValue(null);
+  }
+
+  remove(fruit: string): void {
+    const index = this.fruits.indexOf(fruit);
+
+    if (index >= 0) {
+      this.fruits.splice(index, 1);
+
+      this.announcer.announce(`Removed ${fruit}`);
+    }
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    this.fruits.push(event.option.viewValue);
+    this.fruitInput.nativeElement.value = '';
+    this.fruitCtrl.setValue(null);
+  }
+
+  private _filter(value: string): string[] {
+    const filterValue = value.toLowerCase();
+
+    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
+  }
   
 }
