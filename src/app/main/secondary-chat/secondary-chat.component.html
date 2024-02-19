@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="threadOpen">
     <div class="chat-box">
         <!-------------------------------------Chat Head-------------------------------------->
         <div class="thread-head">
@@ -7,7 +7,7 @@
                 <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag">
                 <p>Entwicklerteam</p>
             </div>
-            <button class="close-button"></button>
+            <button (click)="closeThread()" class="close-button"></button>
         </div>
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->

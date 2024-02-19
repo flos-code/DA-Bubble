@@ -12,6 +12,7 @@ import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 })
 export class SecondaryChatComponent {
   emojiWindowOpen = false;
+  threadOpen: boolean = true;
 
   messages = [
     {
@@ -36,6 +37,7 @@ export class SecondaryChatComponent {
       own: false
     }
   ];
+  DialogRef: any;
 
   constructor() { }
 
@@ -57,5 +59,9 @@ export class SecondaryChatComponent {
     } else {
       this.emojiWindowOpen = true;
     }
+  }
+
+  closeThread(): void {
+    this.threadOpen = false;
   }
 }
