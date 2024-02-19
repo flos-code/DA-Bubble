@@ -9,7 +9,10 @@ import { Component, EventEmitter, Output } from '@angular/core';
 })
 export class ShowMembersDialogComponent {
   @Output() showMembersDialogOpenChild = new EventEmitter();
+  @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
+
   showMembersDialogOpen: boolean;
+  addMemberDialogOpen: boolean;
 
 
   doNotClose($event: any) {
@@ -20,5 +23,11 @@ export class ShowMembersDialogComponent {
   closeDialog() {
     this.showMembersDialogOpen = false;
     this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
+  }
+
+  addMemberToChannel() {
+    this.showMembersDialogOpen = false;
+    this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
+    this.addMembersDialogOpenOpenChildShow.emit(this.addMemberDialogOpen)
   }
 }

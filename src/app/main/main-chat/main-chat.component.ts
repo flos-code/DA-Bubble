@@ -25,6 +25,8 @@ export class MainChatComponent {
     addMemberDialogOpen: boolean = false;
     channelEditionDialogOpen: boolean = false;
     showMembersDialogOpen: boolean = false;
+    ownMessage: boolean = true;
+    editMessagePopupOpen = false
 
     newMember: string = "";
     newMemberObject = {
@@ -140,5 +142,25 @@ export class MainChatComponent {
       this.channelEditionDialogOpen = false;
       this.showMembersDialogOpen = false;
       this.addMemberDialogOpen = false;
+    }
+
+    switchToAddMembers(addMemberDialogOpen: boolean) {
+      this.addMemberDialogOpen = true;
+    }
+
+    addReaction(emoji: string) {
+
+    }
+
+    openMoreEmojis() {
+
+    }
+
+    openThread() {
+
+    }
+
+    moreOptions() {
+      this.editMessagePopupOpen = true;
     }
 }

@@ -181,7 +181,7 @@ app-add-members-dialog {
 .mainChatMessages {
     width: 100%;
     height: calc(100% - 96px - 180px);
-    padding: 25px 45px 25px 45px;
+    padding: 25px 0 25px 0;
 }
 
 .mainChatMessagesSubContainer {
@@ -198,7 +198,7 @@ app-add-members-dialog {
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0px 1rem 0px;
+    padding: 1rem 45px 1rem 45px;
 
     > div:first-of-type {
         display: flex;
@@ -223,7 +223,7 @@ app-add-members-dialog {
 
 .timeSeparator {
     width: 100%;
-    padding: 2rem 0 2rem 0;
+    padding: 2rem 45px 2rem 45px;
 
     > div {
         height: 2px;
@@ -241,13 +241,14 @@ app-add-members-dialog {
     }
 }
 
-.messageContainer {
+.messageContainer, .messageContainerOwn {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 2rem;
-    padding: 1rem 0px 1rem 0px;
+    padding: 1rem 45px 1rem 45px;
 
     &:hover {
         background-color: $bgColor;
@@ -255,16 +256,19 @@ app-add-members-dialog {
     }
 }
 
-.messageContainer:hover > .mainMessage > div:nth-of-type(2) {
+.messageContainerOwn{
+    justify-content: flex-end;
+}
+
+
+.messageContainer:hover > .mainMessage > div:nth-of-type(2),
+.messageContainerOwn:hover > .mainMessage > div:nth-of-type(2) {
     background-color: white;
 }
 
-.messageContainer:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type {
+.messageContainer:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type,
+.messageContainerOwn:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type {
     color: black;
-}
-
-.messageContainerOwn {
-    flex-direction: row-reverse;
 }
 
 .messageProfileIcon {
@@ -314,6 +318,42 @@ app-add-members-dialog {
     }
 }
 
+.mainMessageOwn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+
+    > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    > div:first-of-type {
+        gap: 20px;
+
+        > div:first-of-type{
+            font-size: 14px;
+            color: rgba(104, 104, 104, 1);
+        }
+        
+        > div:last-of-type{
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+
+    > div:nth-of-type(2) {
+        border-radius: 0px 30px 30px 30px;
+        padding: 15px;
+        background-color: $purple2;
+        font-size: 18px;
+        color: white;
+    }
+}
+
 
 .mainMessageThreads {
     gap: 20px;
@@ -326,6 +366,20 @@ app-add-members-dialog {
     > div:last-of-type {
         font-size: 14px;
         color: rgba(104, 104, 104, 1);    
+    }
+}
+
+.mainMessageThreadsOwn {
+    gap: 20px;
+
+    > div:first-of-type {
+        font-size: 14px;
+        color: rgba(104, 104, 104, 1);    
+    }
+
+    > div:last-of-type {
+        font-size: 18px;
+        color: rgba(83, 90, 241, 1);
     }
 }
 
@@ -345,6 +399,79 @@ app-add-members-dialog {
         border-radius: 30px 0 30px 30px;
     }
 }
+
+.toolBar, .toolBarOwn {
+    position: absolute;
+    right: 45px;
+    top: -25px;
+    height: 46px;
+    border-radius: 25px 25px 0px 25px;
+    border: 1px solid $lightPurple;
+    padding: 3px 15px 3px 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    gap: 5px;
+
+    > div {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;    
+        &:hover {
+            background-color: $bgColor;
+        }
+    }
+}
+
+.toolBarOwn{
+    right: unset;
+    left: 45px;
+}
+
+.messageContainer:hover > .toolBar,
+.messageContainerOwn:hover > .toolBarOwn {
+    display: flex;
+}
+
+.editMessagePopup {
+    position: absolute;
+    top: 10px;
+    left: 270px;
+    height: 67px;
+    border-radius: 0px 30px 30px 30px;
+    padding: 10px 20px 10px 20px;
+    box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+
+    > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;    
+        padding: 10px 20px 10px 20px;
+        border-radius: 30px;
+        &:hover {
+            background-color: $bgColor;
+        }
+
+        &:hover > div {
+            font-weight: bold;
+            color: $purple3;
+        }
+    
+        > div {
+            font-weight: 500;
+            font-size: 20px;
+        }
+    }
+}
+
 
 /* ======================= TEXT INPUT ===================== */
 .mainChatInput {
