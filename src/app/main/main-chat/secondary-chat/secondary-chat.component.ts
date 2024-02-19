@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
@@ -11,6 +11,9 @@ import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
   styleUrl: './secondary-chat.component.scss'
 })
 export class SecondaryChatComponent {
+    // Event-Emitter zum Senden des Schließbefehls
+    @Output() closeThreadEvent = new EventEmitter<void>();
+    
   emojiWindowOpen = false;
   threadOpen: boolean = true;
 
@@ -62,7 +65,6 @@ export class SecondaryChatComponent {
   }
 
   closeThread(): void {
-    this.threadOpen = false;
-    console.log('thread closed', this.threadOpen);
+    this.closeThreadEvent.emit();
   }
 }

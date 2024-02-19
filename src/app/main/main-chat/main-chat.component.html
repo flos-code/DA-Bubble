@@ -237,5 +237,5 @@
     </div>
 
 
-    <app-secondary-chat *ngIf="threadOpen"></app-secondary-chat>
+    <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
 </div>
