@@ -14,10 +14,6 @@
                 </div>
             </div>
 
-            <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen" (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
-            <!--=================================================-->
-
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
@@ -33,6 +29,10 @@
                     <span class="material-symbols-outlined">person_add</span>
                 </div>
             </div>
+
+            <!--========== Channel Edition/ Dialog ============-->
+            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen" (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
+            <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
             <app-show-members-dialog *ngIf="showMembersDialogOpen" (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>

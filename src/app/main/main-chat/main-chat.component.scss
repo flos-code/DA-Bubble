@@ -160,6 +160,23 @@
     z-index: 5;
 }
 
+app-show-members-dialog{
+    position: absolute;
+    right: 140px;
+    top: 80px;
+    width: 415px;
+    z-index: 10;
+}
+
+app-add-members-dialog {
+    position: absolute;
+    top: 80px;
+    right: 45px;
+    height: 294px;
+    width: 514px;
+    z-index: 10;
+}
+
 /* ======================= MAIN CHAT MESSAGES ===================== */
 .mainChatMessages {
     width: 100%;
