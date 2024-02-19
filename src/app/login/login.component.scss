@@ -77,6 +77,10 @@
     height: 709px;
     border-radius: 30px;
 
+    form{
+        width: 500px;
+    }
+
     h1 {
         color: #444DF2;
         font-family: Nunito;
@@ -314,5 +318,13 @@
             cursor: pointer;
             transition: 0.1s ease-in-out;
         }
+    }
+}
+
+.btn-disabled{
+    background-color: #686868;
+    &:hover{
+        background-color: #686868;
+        cursor: unset;
     }
 }
