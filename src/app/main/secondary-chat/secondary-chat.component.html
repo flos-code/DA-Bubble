@@ -65,17 +65,16 @@
                 <div class="left-actions">
                     <button class="add-button"></button>
                     <img src="/assets/img/main-chat/separatingLine.svg">
+                    <button (click)="toggleEmojis()" class="emoji-button"></button>
                     <emoji-mart
-                        [set]="native ? 'apple' : 'google'"
-                        [darkMode]="false"
-                        [isNative]="native"
-                        [hideRecent]="false"
+                        *ngIf="emojiWindowOpen"
+                        class="emoji-mart"
+                        set="apple"
                         (emojiSelect)="handleClick($event)"
                         title="Pick your emoji…"
                         emoji="point_up"
                        >
                      </emoji-mart>
-                    <button class="emoji-button"></button>
                     <button class="tag-button"></button>
                 </div>
                 <button class="send-button"></button>

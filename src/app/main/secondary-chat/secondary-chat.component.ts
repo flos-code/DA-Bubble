@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
@@ -5,18 +6,12 @@ import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent],
+  imports: [PickerComponent, EmojiComponent, CommonModule],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
 export class SecondaryChatComponent {
-  themes = ['native', 'apple', 'google', 'twitter', 'facebook'];
-  darkMode: undefined | boolean = !!(
-    typeof matchMedia === 'function' && matchMedia('(prefers-color-scheme: dark)').matches
-  );
-  darkestMode: undefined | boolean = undefined;
-  set = 'native';
-  native = true;
+  emojiWindowOpen = false;
 
   messages = [
     {
@@ -54,5 +49,13 @@ export class SecondaryChatComponent {
       return true;
     }
     return false;
+  }
+
+  toggleEmojis() {
+    if (this.emojiWindowOpen) {
+      this.emojiWindowOpen = false;
+    } else {
+      this.emojiWindowOpen = true;
+    }
   }
 }
