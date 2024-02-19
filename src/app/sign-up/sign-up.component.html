@@ -38,7 +38,7 @@
 
         <div class="picture-choice-info">
             <div>
-                <p class="p1">Name Nachname</p>
+                <p class="p1">{{registerForm.value.nameAndSurname}}</p>
                 <p class="p2">Aus der Liste wählen</p>
             </div>
             <div class="generic-profile-pic-list">
@@ -59,7 +59,7 @@
         </div>
 
         <div class="sign-up-btns-container">
-            <button class="next-btn" (click)="signUp()">Weiter</button>
+            <button class="next-btn" [disabled]="person == 'zero'" [class.btn-disabled]="person == 'zero'" (click)="signUp()">Weiter</button>
         </div>
     </div>
 
