@@ -75,200 +75,7 @@
         align-items: center;
     }
 }
-/* ========== Channel Edition Dialog ============ */
-.channelEdition {
-    position: absolute;
-    top: 75px;
-    left: 52px;
-    width: 872px;
-    height: auto;
-    padding: 2rem;
-    border-radius: 0px 30px 30px 30px;
-    background-color: white;
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-    z-index: 10;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 1rem;
-}
 
-.channelEditionHeader {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    > div:first-of-type {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        grid-area: 15px;
-
-        > div {
-            font-weight: bold;
-            font-size: 24px;
-        }
-    }
-
-    > div:last-of-type {
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        cursor: pointer;
-        &:hover {
-            background-color: $bgColor;
-        }
-        &:hover span {
-            color: $purple3;
-        }
-
-        > span {
-            font-size: 24px;
-        }
-    }
-}
-
-.channelEditionName,
-.channelEditionNameEdit,
-.channelEditionDescription,
-.channelEditionDescriptionEdit {
-    width: 100%;
-    padding: 20px;
-    border: 1px solid $lightPurple;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 20px;
-
-    > div{
-        width: 100%;
-    }
-
-    > div:first-of-type {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        > div:first-of-type {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
-        > div:last-of-type {
-            font-weight: 600;
-            font-size: 18px;
-            color: $purple3;
-            cursor: pointer;
-
-            &:hover{
-                font-weight: 700;
-            }
-        }
-    }
-
-    > div:nth-of-type(2) {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
-        font-size: 18px;
-
-        > div {
-            font-size: 18px;
-        }
-    }
-}
-
-.channelEditionNameEdit {
-    padding: 0;
-    border: none;
-
-    > div:nth-of-type(2) {
-        border-radius: 40px;  
-        border: 1px solid $lightPurple;  
-        padding: 18px 20px 18px 20px;
-        gap: 20px;
-
-        > div {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        > input {
-            font-size: 18px;
-            font-weight: 400;
-            outline: none;
-            border: none;
-        }
-    }
-}
-
-.channelEditionDescription,
-.channelEditionDescriptionEdit {
-    > div:nth-of-type(3) {
-        height: 1px;
-        background-color: $lightPurple;
-    }
-
-    > div:nth-of-type(4) {
-        font-weight: 700;
-        font-size: 18px;
-    }
-
-    > div:nth-of-type(5) {
-        font-weight: 400;
-        font-size: 24px;
-        color: $purple3;
-    }
-}
-
-.channelEditionDescriptionEdit {
-    padding: 0;
-    border: none;
-    
-    > div > input {
-        width: 100%;
-        border-radius: 40px;  
-        border: 1px solid $lightPurple;  
-        padding: 18px 20px 18px 20px;
-        font-size: 18px;
-        font-weight: 400;
-        outline: none;
-    }
-}
-
-
-
-.channelEditionButtonContainer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-}
-
-.channelEditionButton {
-    height: 49px;
-    border-radius: 25px;
-    padding: 12px 25px 12px 25px;
-    background-color: rgba(68, 77, 242, 1);
-    color: white;
-    font-weight: 700;
-    font-size: 18px;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-        background-color: $purple2;
-    }
-}
-/* ============================================== */
 .mainChatHeaderRight {
     height: 100%;
     display: flex;
@@ -323,27 +130,27 @@
         }
     }
 
-    >div:last-of-type {
-        cursor: pointer;
+    > div:last-of-type {
+        width: 40px;
+        height: 40px;
+        padding: 8px;
         display: flex;
         justify-content: center;
         align-items: center;
+        cursor: pointer;
+        border-radius: 50%;
+        background-color: $bgColor;
 
-        > div {
-            background-image: url("/assets/img/main-chat/addUserDefault.svg");
-            height: 40px;
-            width: 40px;
-
-            &:hover {
-                background-image: url("/assets/img/main-chat/addUserHover.svg");
-            }
+        &:hover span {
+            font-weight: bold;
+            color: $purple3;
         }
     }
 }
 
-/* ==== Add members Dialog ==== */
-.addMembersDialogBackground {
-    position: absolute;
+/* ==== Dialog Background ==== */
+.dialogBackground {
+    position: fixed;
     top: 0;
     left: 0;
     right: 0;
@@ -353,109 +160,35 @@
     z-index: 5;
 }
 
-.addMembersDialog {
+app-channel-edition-dialog {
     position: absolute;
-    right: 45px;
+    top: 75px;
+    left: 52px;
+    z-index: 10;
+}
+
+app-show-members-dialog{
+    position: absolute;
+    right: 140px;
     top: 80px;
+    width: 415px;
+    z-index: 10;
+}
+
+app-add-members-dialog {
+    position: absolute;
+    top: 80px;
+    right: 45px;
     height: 294px;
     width: 514px;
-    border-radius: 30px 0 30px 30px;
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-    background-color: white;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
     z-index: 10;
-
-    > div {
-        width: 100%;
-    }
-
-    > div:first-of-type {
-        font-weight: bold;
-        font-size: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        > div:last-of-type {
-            height: 40px;
-            width: 40px;    
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            cursor: pointer;
-            &:hover {
-                background-color: $bgColor;
-            }
-
-            &:hover span {
-                color: $purple3;
-            }
-    
-            > span {
-                font-size: 24px;
-            }
-        }
-    }
-
-    > div:nth-of-type(2) {
-        font-size: 18px;
-        color: rgba(121, 126, 243, 1);
-    }
-
-
-/*     > div:nth-of-type(3) > input, */    
-    > div:nth-of-type(3) > mat-form-field {
-        border: 1px solid rgba(173, 176, 217, 1);
-        outline: none;
-        border-radius: 30px;
-        padding: 15px 20px 15px 20px;
-        font-size: 18px;
-        width: 100%;
-
-        &:focus {
-            border: 1px solid $purple3;
-        }
-    }
-
-    > div:last-of-type {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-
-        > button {
-            background-color: rgba(104, 104, 104, 1);
-            padding: 12px 25px 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-size: 18px;
-            color: white;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-    } 
 }
-
-.cdk-overlay-pane{
-    border-radius: 0 30px 30px 30px!important;
-}
-
-
-
 
 /* ======================= MAIN CHAT MESSAGES ===================== */
 .mainChatMessages {
     width: 100%;
     height: calc(100% - 96px - 180px);
-    padding: 25px 45px 25px 45px;
+    padding: 25px 0 25px 0;
 }
 
 .mainChatMessagesSubContainer {
@@ -472,7 +205,7 @@
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    padding: 1rem 0px 1rem 0px;
+    padding: 1rem 45px 1rem 45px;
 
     > div:first-of-type {
         display: flex;
@@ -497,7 +230,7 @@
 
 .timeSeparator {
     width: 100%;
-    padding: 2rem 0 2rem 0;
+    padding: 2rem 45px 2rem 45px;
 
     > div {
         height: 2px;
@@ -515,13 +248,14 @@
     }
 }
 
-.messageContainer {
+.messageContainer, .messageContainerOwn {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
     gap: 2rem;
-    padding: 1rem 0px 1rem 0px;
+    padding: 1rem 45px 1rem 45px;
 
     &:hover {
         background-color: $bgColor;
@@ -529,16 +263,19 @@
     }
 }
 
-.messageContainer:hover > .mainMessage > div:nth-of-type(2) {
+.messageContainerOwn{
+    justify-content: flex-end;
+}
+
+
+.messageContainer:hover > .mainMessage > div:nth-of-type(2),
+.messageContainerOwn:hover > .mainMessage > div:nth-of-type(2) {
     background-color: white;
 }
 
-.messageContainer:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type {
+.messageContainer:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type,
+.messageContainerOwn:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type {
     color: black;
-}
-
-.messageContainerOwn {
-    flex-direction: row-reverse;
 }
 
 .messageProfileIcon {
@@ -588,6 +325,42 @@
     }
 }
 
+.mainMessageOwn {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 10px;
+
+    > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    > div:first-of-type {
+        gap: 20px;
+
+        > div:first-of-type{
+            font-size: 14px;
+            color: rgba(104, 104, 104, 1);
+        }
+        
+        > div:last-of-type{
+            font-weight: bold;
+            font-size: 18px;
+        }
+    }
+
+    > div:nth-of-type(2) {
+        border-radius: 0px 30px 30px 30px;
+        padding: 15px;
+        background-color: $purple2;
+        font-size: 18px;
+        color: white;
+    }
+}
+
 
 .mainMessageThreads {
     gap: 20px;
@@ -600,6 +373,20 @@
     > div:last-of-type {
         font-size: 14px;
         color: rgba(104, 104, 104, 1);    
+    }
+}
+
+.mainMessageThreadsOwn {
+    gap: 20px;
+
+    > div:first-of-type {
+        font-size: 14px;
+        color: rgba(104, 104, 104, 1);    
+    }
+
+    > div:last-of-type {
+        font-size: 18px;
+        color: rgba(83, 90, 241, 1);
     }
 }
 
@@ -619,6 +406,80 @@
         border-radius: 30px 0 30px 30px;
     }
 }
+
+.toolBar, .toolBarOwn {
+    position: absolute;
+    right: 45px;
+    top: -25px;
+    height: 46px;
+    border-radius: 25px 25px 0px 25px;
+    border: 1px solid $lightPurple;
+    padding: 3px 15px 3px 20px;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+    gap: 5px;
+
+    > div {
+        width: 40px;
+        height: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;    
+        cursor: pointer;
+        &:hover {
+            background-color: $bgColor;
+        }
+    }
+}
+
+.toolBarOwn{
+    right: unset;
+    left: 45px;
+}
+
+.messageContainer:hover > .toolBar,
+.messageContainerOwn:hover > .toolBarOwn {
+    display: flex;
+}
+
+.editMessagePopup {
+    position: absolute;
+    top: 10px;
+    left: 270px;
+    height: 67px;
+    border-radius: 0px 30px 30px 30px;
+    padding: 10px 20px 10px 20px;
+    box-shadow: 0 6px 14px 0 rgba(0, 0, 0, 0.2);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: white;
+
+    > div {
+        display: flex;
+        justify-content: center;
+        align-items: center;    
+        padding: 10px 20px 10px 20px;
+        border-radius: 30px;
+        &:hover {
+            background-color: $bgColor;
+        }
+
+        &:hover > div {
+            font-weight: bold;
+            color: $purple3;
+        }
+    
+        > div {
+            font-weight: 500;
+            font-size: 20px;
+        }
+    }
+}
+
 
 /* ======================= TEXT INPUT ===================== */
 .mainChatInput {

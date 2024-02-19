@@ -1,0 +1,172 @@
+
+@import "../../../../styles.scss";
+
+* {
+    box-sizing: border-box;
+}
+
+.mat-mdc-form-field-infix {
+    background-color: white!important;
+}
+
+
+.addMembersDialog {
+    border-radius: 30px 0 30px 30px;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    background-color: white;
+    padding: 40px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    z-index: 10;
+
+    > div {
+        width: 100%;
+    }
+
+    > div:first-of-type {
+        font-weight: bold;
+        font-size: 24px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > div:last-of-type {
+            height: 40px;
+            width: 40px;    
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            &:hover {
+                background-color: $bgColor;
+            }
+
+            &:hover span {
+                color: $purple3;
+            }
+    
+            > span {
+                font-size: 24px;
+            }
+        }
+    }
+
+    > div:nth-of-type(2) {
+        font-size: 18px;
+        color: rgba(121, 126, 243, 1);
+    }
+
+    > div:last-of-type {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        > button {
+            background-color: rgba(104, 104, 104, 1);
+            padding: 12px 25px 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            color: white;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    } 
+}
+
+.addUserInputContainer {
+    position: relative;
+    border: 1px solid $lightPurple;
+    border-radius: 30px;
+    padding: 15px 20px 15px 20px;
+}
+
+.addUserInputSubContainer {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 10px;
+}
+
+.chipContainer {
+
+}
+
+.newUserToAdd{
+    border-radius: 35px;
+    padding: 3px 10px 3px 10px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    background-color: $bgColor;
+    cursor: pointer;
+
+    > span:hover {
+        font-weight: bold;
+        color: $purple3;
+    }
+}
+
+.userSearchInput {
+    width: 100%;
+    font-size: 18px;
+    outline: none;
+    border: none;
+}
+
+.focusedBorder{
+    border-color: $purple3;
+}
+
+.userList {
+    position: absolute;
+    top: 50px;
+    left: 20px;
+    width: 267px;
+    height: 220px;
+    border-radius: 0px 20px 20px 20px;
+    border: 1px solid $lightPurple;
+    padding: 20px 25px 20px 25px;
+    box-shadow: 0 2px 10px 0 rgba(0, 0, 0, 0.08);
+    background-color: white;
+    overflow: hidden;
+}
+
+.userSubList {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 15px;
+
+    overflow: auto;
+    height: 100%;
+    width: 100%;
+
+
+    > div {
+        width: 100%;
+        padding: 4px 20px 4px 20px;
+        border-radius: 35px;
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 15px;
+        cursor: pointer;
+        &:hover {
+            background-color: $bgColor;
+        }
+    }
+}
+
+.cdk-overlay-pane{
+    border-radius: 0 30px 30px 30px!important;
+}

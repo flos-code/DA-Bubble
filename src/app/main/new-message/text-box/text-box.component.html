@@ -1,27 +1,26 @@
-<!-- <div class="textBoxContainer">
-  <input type="text" placeholder="Starte eine neue Nachricht" />
-</div> -->
-
 <div
   class="textBoxContainer"
   [class.focused]="inputFocused"
   (click)="message.focus()"
 >
-  <input
+  <textarea
+    rows="2"
     #message
     name="message"
     type="text"
     [(ngModel)]="messageModel"
     required
     placeholder="Starte eine neue Nachricht"
+    (input)="adjustTextareaHeight($event)"
     (focus)="onInputFocus()"
     (blur)="onInputBlur()"
-  />
+  ></textarea>
   <div class="bottomIcons">
     <div class="addElements">
       <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon>
       <div></div>
       <mat-icon
+        (click)="toggleEmojiPicker()"
         class="material-symbols-rounded"
         fontIcon="sentiment_satisfied"
       ></mat-icon>
@@ -38,4 +37,14 @@
       ></mat-icon>
     </div>
   </div>
+
+  <emoji-mart
+    #emojiMart
+    *ngIf="showEmojiPicker"
+    [darkMode]="false"
+    (emojiSelect)="handleClick($event)"
+    title="Pick your emoji…"
+    emoji="point_up"
+  >
+  </emoji-mart>
 </div>

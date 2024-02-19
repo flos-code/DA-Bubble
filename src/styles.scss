@@ -72,13 +72,10 @@ body {
 }
 
 emoji-mart {
-  /* Targeting the anchor bar background color */
   .emoji-mart-anchor-bar {
     background-color: $purple2 !important;
   }
-
-  /* Optional: If you also want to change the anchor text color to ensure it contrasts well */
   .emoji-mart-anchor-selected {
-    color: $purple2 !important; /* Example: setting text color to white for better contrast */
+    color: $purple2 !important;
   }
 }

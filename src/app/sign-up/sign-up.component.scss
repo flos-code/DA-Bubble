@@ -28,7 +28,7 @@
     }
 }
 
-.go-back-to-login-btn{
+.go-back-to-login-btn {
     width: 40px;
     height: 40px;
     position: absolute;
@@ -37,13 +37,14 @@
     border: none;
     background-color: white;
     background-image: url('/assets/img/login/back.png');
-    &:hover{
+
+    &:hover {
         background-image: url('/assets/img/login/back_hovered.png');
         cursor: pointer;
     }
 }
 
-.sign-up-form {
+.sign-up-form-container {
     background-color: white;
     display: flex;
     flex-direction: column;
@@ -87,6 +88,10 @@
         }
     }
 
+}
+
+.sign-up-form {
+    width: 500px;
 }
 
 .sign-up-name-input {
@@ -259,5 +264,123 @@
             cursor: pointer;
             transition: 0.1s ease-in-out;
         }
+    }
+}
+
+.picture-choice-container {
+    background-color: white;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 606px;
+    height: 709px;
+    border-radius: 30px;
+    position: relative;
+
+    h1 {
+        color: #444DF2;
+        font-family: Nunito;
+        font-size: 46px;
+        font-weight: 700;
+        line-height: 55px;
+        letter-spacing: 0em;
+        text-align: center;
+    }
+}
+
+.chosen-profile-pic{
+    width: 170px;
+    height: 170px;
+    border-radius: 100%;
+}
+
+.picture-choice-info {
+    width: 500px;
+
+    .p1 {
+        font-family: Nunito;
+        font-size: 32px;
+        font-weight: 700;
+        line-height: 44px;
+        letter-spacing: 0em;
+        text-align: center;
+    }
+
+    .p2 {
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 27px;
+        letter-spacing: 0em;
+        text-align: left;
+
+    }
+
+    .generic-profile-pic-list {
+        width: 500px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 10px;
+        margin-bottom: 30px;
+
+        img {
+            width: 64px;
+            height: 64px;
+            border-radius: 41px;
+            padding: 4px;
+            &:hover{
+                cursor: pointer;
+            }
+        }
+    }
+}
+
+.personal-pic-upload-container {
+    width: 500px;
+    display: flex;
+    align-items: center;
+    margin-bottom: 30px;
+    gap: 10px;
+
+    p {
+        font-family: Nunito;
+        font-size: 20px;
+        font-weight: 400;
+        line-height: 27px;
+        letter-spacing: 0em;
+        text-align: left;
+        margin: 0;
+    }
+
+    button {
+        background-color: white;
+        padding: 12px 25px 12px 25px;
+        border-radius: 25px;
+        border: 1px solid #797EF3;
+        gap: 10px;
+        font-family: Nunito;
+        font-size: 18px !important;
+        font-weight: 700;
+        line-height: 25px;
+        letter-spacing: 0em;
+        text-align: center;
+        color: #444DF2;
+        margin: 0;
+
+        &:hover {
+            cursor: pointer;
+            background-color: #444DF2;
+            color: white;
+            transition: 0.1s ease-in-out;
+        }
+    }
+}
+
+.btn-disabled{
+    background-color: #686868;
+    &:hover{
+        background-color: #686868;
+        cursor: unset;
     }
 }

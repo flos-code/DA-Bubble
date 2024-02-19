@@ -1,0 +1,67 @@
+<div class="channelEdition" (click)="doNotClose($event)">
+    <div class="channelEditionHeader">
+        <div>
+            <div>&#35;</div>
+            <div>Entwicklerteam</div>
+        </div>
+
+        <div (click)="closeDialog()">
+            <span class="material-symbols-outlined">close</span>
+        </div>
+    </div>
+
+    <!-- ======== Channel Edition Name ======== -->
+    <div class="channelEditionName" *ngIf="showchannelEditionName">
+        <div>
+            <div>Channel-Name</div>
+            <div (click)="editChannelName()">Bearbeiten</div>
+        </div>
+        <div>
+            <div>&#35;</div>
+            <div>Entwicklerteam</div> 
+        </div>
+    </div>
+
+    <div class="channelEditionNameEdit" *ngIf="!showchannelEditionName">
+        <div>
+            <div>Channel-Name</div>
+            <div (click)="saveChannelName()">Speichern</div>
+        </div>
+        <div>
+            <div>&#35;</div>
+            <input type="text" placeholder="Entwicklerteam">
+        </div>
+    </div>
+    <!-- ====================================== -->
+
+    <!-- ======== Channel Edition Description ======== -->
+    <div class="channelEditionDescription" *ngIf="showchannelEditionDescription">
+        <div>
+            <div>Beschreibung</div>
+            <div (click)="editChannelDescription()">Bearbeiten</div>
+        </div>
+        <div>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</div>
+        <div></div>
+        <div>Erstellt von</div>
+        <div>Noah Braun</div>
+    </div>
+
+    <div class="channelEditionDescriptionEdit" *ngIf="!showchannelEditionDescription">
+        <div>
+            <div>Beschreibung</div>
+            <div (click)="saveChannelDescription()">Speichern</div>
+        </div>
+        <div>
+            <input type="text" placeholder="Dein Text hier">
+        </div>
+        <div></div>
+        <div>Erstellt von</div>
+        <div>Noah Braun</div>
+    </div>
+    <!-- ====================================== -->
+
+    <div class="channelEditionButtonContainer">
+        <button class="channelEditionButton">Channel verlassen</button>
+    </div>
+</div>
+

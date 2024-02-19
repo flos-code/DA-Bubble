@@ -13,9 +13,12 @@
     <div class="login-form">
         <h1>Anmeldung</h1>
         <p class="login-hint">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
-        <input type="text" class="login-email-input" name="email" id="login_email" ng-keyup="validateEmail()"
-            placeholder="beispielname@email.com">
-        <input type="password" class="login-password-input" name="password" id="login_password" placeholder="Passwort">
+        <form [formGroup]="signInForm">
+            <input type="text" class="login-email-input" name="email" id="login_email"
+                placeholder="beispielname@email.com" formControlName="email">
+            <input type="password" class="login-password-input" name="password" id="login_password"
+                placeholder="Passwort" formControlName="password">
+        </form>
         <button class="forgot-password-btn">Passwort vergessen?</button>
 
         <div class="or-container">
@@ -30,8 +33,8 @@
         </button>
 
         <div class="login-btns-container">
-            <button class="login-btn" type="login" (click)="signIn()">Login</button>
-            <button class="guest-login-btn"> Guest login </button>
+            <button class="login-btn" type="login" [disabled]="!signInForm.valid" [class.btn-disabled]="!signInForm.valid" (click)="signIn()">Anmelden</button>
+            <button class="guest-login-btn">Gäste-Login</button>
         </div>
     </div>
     <div class="lower-links-container">
