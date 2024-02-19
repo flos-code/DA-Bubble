@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule, Pipe, PipeTransform, OnInit } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,24 +8,32 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, map, startWith } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-/* import { Ng2SearchPipeModule } from 'ng2-search-filter';
- */
+
+import { FilterPipe } from './filter.pipe';
+
 @Component({
   selector: 'app-add-members-dialog',
   standalone: true,
-  imports: [ MatIconModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, CommonModule ],
+  imports: [ MatIconModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, CommonModule, FilterPipe ],
   templateUrl: './add-members-dialog.component.html',
   styleUrl: './add-members-dialog.component.scss'
 })
-export class AddMembersDialogComponent {
+export class AddMembersDialogComponent implements OnInit {
+  
+  ngOnInit(): void {
+
+  }
+
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
   inputFocus: boolean = false;
+
   newUsersToAdd = [{
     'id': 'sldajfl22',
     'name': 'Elias',
     'surname': 'Neumann'
   }];
+
   userList = [{
     'id': 'sldajfl22',
     'name': 'Stefanie',
@@ -42,24 +50,38 @@ export class AddMembersDialogComponent {
     'surname': 'Neumann'
   }];
 
-  searchText;
+  filteredUserList = this.userList;
+  searchText: string = '';
 
-  separatorKeysCodes: number[] = [ENTER, COMMA];
-  fruitCtrl = new FormControl('');
-  filteredFruits: Observable<string[]>;
-  fruits: string[] = ['Lemon'];
-  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-
-  @ViewChild('fruitInput') fruitInput!: ElementRef<HTMLInputElement>;
-    
-  announcer = inject(LiveAnnouncer);
-
-  constructor() {
-    this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-      startWith(null),
-      map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
-    );
+  searchKey(data:string) {
+    this.searchText = data;
+    this.search();
   }
+
+
+  search() {
+    let originalUserList = this.userList;
+
+    if(this.searchText !== "") {
+        this.filteredUserList = [];
+        this.filteredUserList = this.userList.filter( user =>  {
+            return user.name.toLowerCase().includes(this.searchText) || user.surname.toLowerCase().includes(this.searchText);
+        });
+           
+    } else {
+      this.filteredUserList = [];
+      this.filteredUserList = originalUserList;
+    }
+  }
+
+/* filteredFruits: Observable<string[]>;
+fruits: string[] = ['Lemon'];
+allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+ */
+
+
+
+  constructor() { }
 
   doNotClose($event: any) {
     $event.stopPropagation(); 
@@ -87,43 +109,6 @@ export class AddMembersDialogComponent {
 
   addUsers() {
     //this.channels[0].members.push(this.newMemberObject);
-  }
-
-
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value) {
-      this.fruits.push(value);
-    }
-
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.fruitCtrl.setValue(null);
-  }
-
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
-
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-
-      this.announcer.announce(`Removed ${fruit}`);
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
   }
 
 }

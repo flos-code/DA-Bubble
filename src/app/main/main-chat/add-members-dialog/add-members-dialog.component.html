@@ -9,29 +9,32 @@
     <div class="addUserInputContainer" [class.focusedBorder]="inputFocus">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
-<!--           <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd | filter:searchText">
-            <img src="/assets/img/main-chat/member3.svg">
-            <div>{{userToAdd.name}} {{userToAdd.surname}}</div>
-            <span (click)="removeaddedUser()" class="material-symbols-outlined">close</span>
-          </div> -->
+          @for (userToAdd of newUsersToAdd; track $index) {
+            <div class="newUserToAdd">
+              <img src="/assets/img/main-chat/member3.svg">
+              <div>{{userToAdd.name}} {{userToAdd.surname}}</div>
+              <span (click)="removeaddedUser()" class="material-symbols-outlined">close</span>
+            </div>
+          }
         </div>
-        <input class="userSearchInput" type="text" name="search" [(ngModel)]="searchText" placeholder="Name eingeben" (focus)="showUserList()">
+        <input class="userSearchInput" type="text" autocomplete="off" name="search" (ngModelChange)="searchKey($event)" [(ngModel)]="searchText" placeholder="Name eingeben" (focus)="showUserList()">
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-            <div (click)="addUser()">
+            <div (click)="addUser()" *ngFor="let user of filteredUserList">
               <img src="/assets/img/main-chat/member2.svg">
-            <div>Elise Roth</div>
+              <div>{{user.name}} {{user.surname}}</div>
+            </div>
+
+<!--             <div (click)="addUser()">
+              <img src="/assets/img/main-chat/member2.svg">
+              <div>Elise Roth</div>
             </div>
             <div (click)="addUser()">
               <img src="/assets/img/main-chat/member2.svg">
-            <div>Elise Roth</div>
+              <div>Elise Roth</div>
             </div>
-            <div (click)="addUser()">
-              <img src="/assets/img/main-chat/member2.svg">
-            <div>Elise Roth</div>
-          </div>
-        </div>
+ -->       </div>
       </div>
 
 
