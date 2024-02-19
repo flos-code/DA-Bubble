@@ -7,10 +7,11 @@
   box-sizing: border-box;
   display: flex;
   flex-direction: column;
-  gap: 40px;
+  gap: 8px;
   align-items: center;
   border-radius: 40px;
   padding: 20px;
+  position: relative;
 
   &:hover {
     cursor: text;
@@ -26,12 +27,13 @@
     opacity: 1;
   }
 
-  input {
+  textarea {
     width: 100%;
+    max-width: 100%;
+    overflow-y: scroll;
+    resize: none;
     font-size: 18px;
-
     border: none;
-    background-color: aquamarine;
 
     &:focus {
       outline: none;
@@ -80,5 +82,12 @@
         }
       }
     }
+  }
+
+  emoji-mart {
+    position: absolute;
+    bottom: 130px;
+    left: 40px;
+    cursor: pointer;
   }
 }
