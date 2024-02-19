@@ -6,8 +6,37 @@
         </div>
     </div>
     <div># Entwickler</div>
-    <div>
-        <form>
+    <div class="addUserInputContainer" [class.focusedBorder]="inputFocus">
+      <div class="addUserInputSubContainer">
+        <div class="chipContainer">
+<!--           <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd | filter:searchText">
+            <img src="/assets/img/main-chat/member3.svg">
+            <div>{{userToAdd.name}} {{userToAdd.surname}}</div>
+            <span (click)="removeaddedUser()" class="material-symbols-outlined">close</span>
+          </div> -->
+        </div>
+        <input class="userSearchInput" type="text" name="search" [(ngModel)]="searchText" placeholder="Name eingeben" (focus)="showUserList()">
+      </div>
+      <div class="userList" *ngIf="inputFocus">
+        <div class="userSubList">
+            <div (click)="addUser()">
+              <img src="/assets/img/main-chat/member2.svg">
+            <div>Elise Roth</div>
+            </div>
+            <div (click)="addUser()">
+              <img src="/assets/img/main-chat/member2.svg">
+            <div>Elise Roth</div>
+            </div>
+            <div (click)="addUser()">
+              <img src="/assets/img/main-chat/member2.svg">
+            <div>Elise Roth</div>
+          </div>
+        </div>
+      </div>
+
+
+
+<!--         <form>
             <mat-form-field class="example-chip-list">
               <mat-chip-grid #chipGrid aria-label="Fruit selection">
                 @for (fruit of fruits; track fruit) {
@@ -29,9 +58,10 @@
                 }
               </mat-autocomplete>
             </mat-form-field>
-          </form>
+          </form> -->
+
     </div>
     <div>
-        <button (click)="addMember()" >Hinzufügen</button>
+        <button (click)="addUsers()" >Hinzufügen</button>
     </div>
 </div>

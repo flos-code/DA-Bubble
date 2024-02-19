@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -8,7 +8,8 @@ import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { Observable, map, startWith } from 'rxjs';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
-
+/* import { Ng2SearchPipeModule } from 'ng2-search-filter';
+ */
 @Component({
   selector: 'app-add-members-dialog',
   standalone: true,
@@ -19,6 +20,29 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 export class AddMembersDialogComponent {
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
+  inputFocus: boolean = false;
+  newUsersToAdd = [{
+    'id': 'sldajfl22',
+    'name': 'Elias',
+    'surname': 'Neumann'
+  }];
+  userList = [{
+    'id': 'sldajfl22',
+    'name': 'Stefanie',
+    'surname': 'Müller'
+  },
+  {
+    'id': 'sldajfl22',
+    'name': 'Tobias',
+    'surname': 'Odermatt'
+  },
+  {
+    'id': 'sldajfl22',
+    'name': 'Filip',
+    'surname': 'Neumann'
+  }];
+
+  searchText;
 
   separatorKeysCodes: number[] = [ENTER, COMMA];
   fruitCtrl = new FormControl('');
@@ -37,18 +61,31 @@ export class AddMembersDialogComponent {
     );
   }
 
-
-
   doNotClose($event: any) {
     $event.stopPropagation(); 
   }
 
   closeDialog() {
     this.addMemberDialogOpen = false;
-    this.addMemberDialogOpenChild.emit(this.addMemberDialogOpen)
+    this.addMemberDialogOpenChild.emit(this.addMemberDialogOpen);
+    this.inputFocus = false;
   }
 
-  addMember() {
+  showUserList() {
+    this.inputFocus = true;
+  }
+
+  addUser() {
+    // Push user in newUsersToAdd array.
+    // Splice List array and remove user
+  }
+
+  removeaddedUser(){
+    // Push to user List array
+    // Splice newUsersToAdd array and remove user
+  }
+
+  addUsers() {
     //this.channels[0].members.push(this.newMemberObject);
   }
 

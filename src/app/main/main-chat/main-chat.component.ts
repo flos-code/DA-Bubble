@@ -26,7 +26,7 @@ export class MainChatComponent {
     channelEditionDialogOpen: boolean = false;
     showMembersDialogOpen: boolean = false;
     ownMessage: boolean = true;
-    editMessagePopupOpen = false
+    editMessagePopupOpen: boolean = false;
 
     newMember: string = "";
     newMemberObject = {

@@ -1,7 +1,7 @@
-<div class="mainChatContainer">
-    <div (click)="closeDialog()" class="dialogBackground" *ngIf="addMemberDialogOpen || channelEditionDialogOpen || showMembersDialogOpen">
-    </div>
+<div (click)="closeDialog()" class="dialogBackground" *ngIf="addMemberDialogOpen || channelEditionDialogOpen || showMembersDialogOpen">
+</div>
 
+<div class="mainChatContainer">
     <!-- ======================================== MAIN CHAT HEADER ========================================== -->
     @if(showChannel) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
@@ -171,7 +171,7 @@
                         </div>
 
                         <!-- ========== Toolbar own ========== -->
-                        <div class="toolBarOwn">
+                        <div class="toolBarOwn" *ngIf="editMessagePopupOpen">
                             <div (click)="addReaction('approve')">
                                 <img src="/assets/img/main-chat/check_mark.svg">
                             </div>
@@ -199,23 +199,25 @@
         </div>
     </div>
 
-
     <!-- ======================================== MAIN CHAT INPUT ========================================== -->
     <div class="mainChatInput">
         <div class="mainChatInputSubContainer">
             <textarea [(ngModel)]="textArea" name="textarea" placeholder="Nachricht an #{{channels[0].name}}"></textarea>
            <div>
                 <div>
-                    <button></button>
+                    <div>
+                        <span class="material-symbols-outlined">add</span>
+                    </div>
+                    <div>
                         <img src="/assets/img/main-chat/separatingLine.svg">
-                        
-                    <button></button>
-
-<!--                <img src="../../../assets/img/main-chat/addDefault.svg">
-                    <img src="../../../assets/img/main-chat/separatingLine.svg">
-                    <img src="../../../assets/img/main-chat/smileDefault.svg">
-                    <img src="../../../assets/img/main-chat/tagDefault.svg">
- -->                </div>
+                    </div>
+                    <div>
+                        <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    </div>
+                    <div>
+                        <span class="material-symbols-outlined">alternate_email</span>
+                    </div>
+                </div>
                 <div>
                     <img src="/assets/img/main-chat/sendIconDefault.svg">
                 </div>
