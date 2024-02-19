@@ -1,1 +1,28 @@
-<p>show-members-dialog works!</p>
+<div class="showMembersDialog" (click)="doNotClose($event)">
+    <div>
+        <div>Mitglieder</div>
+        <div (click)="closeDialog()">
+            <span class="material-symbols-outlined">close</span>
+        </div>
+    </div>
+    <div class="usersListContainer">
+        <div class="usersListSubContainer">
+            <div class="userContainer">
+                <div class="userSubContainer">
+                    <div>
+                        <img src="/assets/img/main-chat/member1.svg">
+                        <div></div>
+                    </div>
+                    <div>Sofia Müller</div>    
+                </div>
+            </div>
+        </div>
+    </div>
+    <div>
+        <div>
+            <span class="material-symbols-outlined">person_add</span>
+        </div>
+        <div>Mitglieder hinzufügen</div>
+    </div>
+</div>
+

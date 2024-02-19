@@ -1,4 +1,4 @@
-import { Component, Input } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 
@@ -10,14 +10,14 @@ import { CommonModule } from '@angular/common';
   styleUrl: './channel-edition-dialog.component.scss'
 })
 export class ChannelEditionDialogComponent {
-  channelEditionDialogOpen: boolean = false;
+  @Output() channelEditionDialogOpenChild = new EventEmitter();
+  channelEditionDialogOpen: boolean;
   showchannelEditionName: boolean = true;
   showchannelEditionDescription: boolean = true;
 
-
-
   closeDialog() {
     this.channelEditionDialogOpen = false;
+    this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen)
   }
 
   editChannelName() {

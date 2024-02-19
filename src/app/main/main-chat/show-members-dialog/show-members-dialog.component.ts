@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 
 @Component({
   selector: 'app-show-members-dialog',
@@ -8,5 +8,17 @@ import { Component } from '@angular/core';
   styleUrl: './show-members-dialog.component.scss'
 })
 export class ShowMembersDialogComponent {
+  @Output() showMembersDialogOpenChild = new EventEmitter();
+  showMembersDialogOpen: boolean;
 
+
+  doNotClose($event: any) {
+    $event.stopPropagation(); 
+
+  }
+
+  closeDialog() {
+    this.showMembersDialogOpen = false;
+    this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
+  }
 }

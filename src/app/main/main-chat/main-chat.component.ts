@@ -1,16 +1,11 @@
-import { Component, ElementRef, ViewChild, inject, Input } from '@angular/core';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
-import { MatAutocompleteSelectedEvent, MatAutocompleteModule } from '@angular/material/autocomplete';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { Observable } from 'rxjs';
-import { map, startWith } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
-import { AsyncPipe } from '@angular/common';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
 import { ChannelEditionDialogComponent } from './channel-edition-dialog/channel-edition-dialog.component';
+import { ShowMembersDialogComponent } from './show-members-dialog/show-members-dialog.component';
+import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
 
 export interface Fruit {
   name: string;
@@ -19,8 +14,8 @@ export interface Fruit {
 @Component({
   selector: 'app-main-chat',
   standalone: true,
-  imports: [ CommonModule, FormsModule, MatIconModule, MatChipsModule, ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule,
-  ChannelEditionDialogComponent ],
+  imports: [ CommonModule, FormsModule, MatIconModule, ReactiveFormsModule, MatFormFieldModule,
+  ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
@@ -107,25 +102,7 @@ export class MainChatComponent {
     ];
     membercount = this.channels[0]['members'].length;
 
-    /* ===================== ADD MEMBER ===================== */
-    separatorKeysCodes: number[] = [ENTER, COMMA];
-    fruitCtrl = new FormControl('');
-    filteredFruits: Observable<string[]>;
-    fruits: string[] = ['Lemon'];
-    allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
-  
-    @ViewChild('fruitInput') fruitInput!: ElementRef<HTMLInputElement>;
-      
-    announcer = inject(LiveAnnouncer);
-    /* ====================================================== */
-
-
-    constructor() {
-      this.filteredFruits = this.fruitCtrl.valueChanges.pipe(
-        startWith(null),
-        map((fruit: string | null) => (fruit ? this._filter(fruit) : this.allFruits.slice())),
-      );
-     }
+    constructor() { }
 
     toggleDialog(dialog: string) {
       if(dialog == 'addMember'){
@@ -149,10 +126,6 @@ export class MainChatComponent {
       }
     }
 
-    addMember() {
-      this.channels[0].members.push(this.newMemberObject);
-    }
-
     closeDialog() {
       this.addMemberDialogOpen = false;
       this.channelEditionDialogOpen = false;
@@ -163,41 +136,9 @@ export class MainChatComponent {
       $event.stopPropagation(); 
     }
 
-  /* ===================== ADD MEMBER ===================== */
-  add(event: MatChipInputEvent): void {
-    const value = (event.value || '').trim();
-
-    // Add our fruit
-    if (value) {
-      this.fruits.push(value);
+    setBoolean(dialogBoolen: boolean) {
+      this.channelEditionDialogOpen = false;
+      this.showMembersDialogOpen = false;
+      this.addMemberDialogOpen = false;
     }
-
-    // Clear the input value
-    event.chipInput!.clear();
-
-    this.fruitCtrl.setValue(null);
-  }
-
-  remove(fruit: string): void {
-    const index = this.fruits.indexOf(fruit);
-
-    if (index >= 0) {
-      this.fruits.splice(index, 1);
-
-      this.announcer.announce(`Removed ${fruit}`);
-    }
-  }
-
-  selected(event: MatAutocompleteSelectedEvent): void {
-    this.fruits.push(event.option.viewValue);
-    this.fruitInput.nativeElement.value = '';
-    this.fruitCtrl.setValue(null);
-  }
-
-  private _filter(value: string): string[] {
-    const filterValue = value.toLowerCase();
-
-    return this.allFruits.filter(fruit => fruit.toLowerCase().includes(filterValue));
-  }
-  
 }

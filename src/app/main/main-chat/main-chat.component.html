@@ -15,7 +15,7 @@
             </div>
 
             <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen"></app-channel-edition-dialog>
+            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen" (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
             <!--=================================================-->
 
             <div class="mainChatHeaderRight">
@@ -35,72 +35,11 @@
             </div>
 
             <!--============== Show member Dialog ================-->
-            <div class="showMembersDialog" *ngIf="showMembersDialogOpen" (click)="doNotClose($event)">
-                <div>
-                    <div>Mitglieder</div>
-                    <div (click)="closeDialog()">
-                        <span class="material-symbols-outlined">close</span>
-                    </div>
-                </div>
-                <div class="usersListContainer">
-                    <div class="usersListSubContainer">
-                        <div class="userContainer">
-                            <div class="userSubContainer">
-                                <div>
-                                    <img src="/assets/img/main-chat/member1.svg">
-                                    <div></div>
-                                </div>
-                                <div>Sofia Müller</div>    
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div>
-                    <div>
-                        <span class="material-symbols-outlined">person_add</span>
-                    </div>
-                    <div>Mitglieder hinzufügen</div>
-                </div>
-            </div>
+            <app-show-members-dialog *ngIf="showMembersDialogOpen" (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
+            <!--=================================================-->
 
             <!--========== Add member Dialog ============-->
-            <div class="addMembersDialog" *ngIf="addMemberDialogOpen" (click)="doNotClose($event)">
-                <div>
-                    <div>Leute hinzufügen</div>
-                    <div (click)="closeDialog()">
-                        <span class="material-symbols-outlined">close</span>
-                    </div>
-                </div>
-                <div>#  {{channels[0].name}}</div>
-                <div>
-                    <form>
-                        <mat-form-field class="example-chip-list">
-                          <mat-chip-grid #chipGrid aria-label="Fruit selection">
-                            @for (fruit of fruits; track fruit) {
-                              <mat-chip-row (removed)="remove(fruit)">
-                                {{fruit}}
-                                <button matChipRemove [attr.aria-label]="'remove ' + fruit">
-                                    <span class="material-symbols-outlined">cancel</span>                                
-                                </button>
-                              </mat-chip-row>
-                            }
-                          </mat-chip-grid>
-                          <input placeholder="New Fruit..." #fruitInput [formControl]="fruitCtrl"
-                            [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
-                            [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                            (matChipInputTokenEnd)="add($event)"/>
-                          <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                            @for (fruit of filteredFruits | async; track fruit) {
-                              <mat-option [value]="fruit">{{fruit}}</mat-option>
-                            }
-                          </mat-autocomplete>
-                        </mat-form-field>
-                      </form>
-                </div>
-                <div>
-                    <button (click)="addMember()" >Hinzufügen</button>
-                </div>
-            </div>
+            <app-add-members-dialog *ngIf="addMemberDialogOpen" (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
             <!--=================================================-->
 
         </div>
