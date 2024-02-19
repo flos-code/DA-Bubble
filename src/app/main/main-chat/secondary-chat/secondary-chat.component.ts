@@ -63,5 +63,6 @@ export class SecondaryChatComponent {
 
   closeThread(): void {
     this.threadOpen = false;
+    console.log('thread closed', this.threadOpen);
   }
 }

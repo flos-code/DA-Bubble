@@ -3,7 +3,7 @@
 <div class="main-content">
   <app-side-bar (viewChange)="setActiveView($event)"></app-side-bar>
   <app-main-chat *ngIf="showMainChat"></app-main-chat>
-  <app-secondary-chat *ngIf="showMainChat"></app-secondary-chat>
+  <!-- <app-secondary-chat *ngIf="showMainChat"></app-secondary-chat> -->
   <app-new-message *ngIf="showNewMessage"></app-new-message>
 
   <!-- <app-emoji-picker

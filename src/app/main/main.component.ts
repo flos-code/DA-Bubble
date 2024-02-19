@@ -1,7 +1,7 @@
 import { Component } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
-import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
+import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-chat.component';
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { NewMessageComponent } from './new-message/new-message.component';
 import { CommonModule } from '@angular/common';

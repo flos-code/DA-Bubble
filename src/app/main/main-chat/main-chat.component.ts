@@ -6,6 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
 import { ChannelEditionDialogComponent } from './channel-edition-dialog/channel-edition-dialog.component';
 import { ShowMembersDialogComponent } from './show-members-dialog/show-members-dialog.component';
 import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
+import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 
 export interface Fruit {
   name: string;
@@ -15,7 +16,7 @@ export interface Fruit {
   selector: 'app-main-chat',
   standalone: true,
   imports: [ CommonModule, FormsModule, MatIconModule, ReactiveFormsModule, MatFormFieldModule,
-  ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent ],
+  ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
@@ -27,6 +28,7 @@ export class MainChatComponent {
     showMembersDialogOpen: boolean = false;
     ownMessage: boolean = true;
     editMessagePopupOpen: boolean = false;
+    threadOpen: boolean = false;
 
     newMember: string = "";
     newMemberObject = {
@@ -156,11 +158,12 @@ export class MainChatComponent {
 
     }
 
-    openThread() {
-
-    }
-
     moreOptions() {
       this.editMessagePopupOpen = true;
+    }
+
+    openThread() {
+      console.log('thread opened');
+      this.threadOpen = true;
     }
 }
