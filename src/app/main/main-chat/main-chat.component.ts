@@ -1,4 +1,4 @@
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject, Input } from '@angular/core';
 import { COMMA, ENTER } from '@angular/cdk/keycodes';
 import { CommonModule } from '@angular/common';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
@@ -10,6 +10,7 @@ import { map, startWith } from 'rxjs/operators';
 import { MatIconModule } from '@angular/material/icon';
 import { AsyncPipe } from '@angular/common';
 import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { ChannelEditionDialogComponent } from './channel-edition-dialog/channel-edition-dialog.component';
 
 export interface Fruit {
   name: string;
@@ -18,7 +19,8 @@ export interface Fruit {
 @Component({
   selector: 'app-main-chat',
   standalone: true,
-  imports: [ CommonModule, FormsModule, MatIconModule, MatChipsModule, ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule ],
+  imports: [ CommonModule, FormsModule, MatIconModule, MatChipsModule, ReactiveFormsModule, MatAutocompleteModule, MatFormFieldModule,
+  ChannelEditionDialogComponent ],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
@@ -29,9 +31,6 @@ export class MainChatComponent {
     channelEditionDialogOpen: boolean = false;
     showMembersDialogOpen: boolean = false;
 
-    showchannelEditionName: boolean = true;
-    showchannelEditionDescription: boolean = true;
-
     newMember: string = "";
     newMemberObject = {
       'userId': 'ikeikeoie',
@@ -40,7 +39,7 @@ export class MainChatComponent {
       'photo': '../../../assets/img/main-chat/member2.svg'
     };
 
-    channels = [{
+    @Input() channels = [{
       'id': 'sijfef8e8',
       'name': 'Entwicklerteam',
       'members': [{
@@ -162,24 +161,6 @@ export class MainChatComponent {
 
     doNotClose($event: any) {
       $event.stopPropagation(); 
-    }
-
-    editChannelName() {
-      this.showchannelEditionName = false;
-    }
-
-    editChannelDescription() {
-      this.showchannelEditionDescription = false;
-    }
-
-    saveChannelName() {
-      // Speichern in Datenbank 
-      this.showchannelEditionName = true;
-    }
-
-    saveChannelDescription() {
-      // Speichern in Datenbank 
-      this.showchannelEditionDescription = true;
     }
 
   /* ===================== ADD MEMBER ===================== */

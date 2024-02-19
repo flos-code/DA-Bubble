@@ -4,7 +4,7 @@
 
     <!-- ======================================== MAIN CHAT HEADER ========================================== -->
     @if(showChannel) {
-        <!-- =========== Template main chat header ============= -->
+        <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
                 <div>&#35;</div>
@@ -13,74 +13,10 @@
                     <mat-icon class="material-symbols-outlined" fontIcon="keyboard_arrow_down"></mat-icon>
                 </div>
             </div>
+
             <!--========== Channel Edition/ Dialog ============-->
-            <div class="channelEdition" *ngIf="channelEditionDialogOpen" (click)="doNotClose($event)">
-                <div class="channelEditionHeader">
-                    <div>
-                        <div>&#35;</div>
-                        <div>{{channels[0].name}}</div>
-                    </div>
-
-                    <div (click)="closeDialog()">
-                        <span class="material-symbols-outlined">close</span>
-                    </div>
-                </div>
-
-                <!-- ======== Channel Edition Name ======== -->
-                <div class="channelEditionName" *ngIf="showchannelEditionName">
-                    <div>
-                        <div>Channel-Name</div>
-                        <div (click)="editChannelName()">Bearbeiten</div>
-                    </div>
-                    <div>
-                        <div>&#35;</div>
-                        <div>{{channels[0].name}}</div> 
-                    </div>
-                </div>
-
-                <div class="channelEditionNameEdit" *ngIf="!showchannelEditionName">
-                    <div>
-                        <div>Channel-Name</div>
-                        <div (click)="saveChannelName()">Speichern</div>
-                    </div>
-                    <div>
-                        <div>&#35;</div>
-                        <input type="text" placeholder="{{channels[0].name}}">
-                    </div>
-                </div>
-                <!-- ====================================== -->
-
-                <!-- ======== Channel Edition Description ======== -->
-                <div class="channelEditionDescription" *ngIf="showchannelEditionDescription">
-                    <div>
-                        <div>Beschreibung</div>
-                        <div (click)="editChannelDescription()">Bearbeiten</div>
-                    </div>
-                    <div>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</div>
-                    <div></div>
-                    <div>Erstellt von</div>
-                    <div>Noah Braun</div>
-                </div>
-
-                <div class="channelEditionDescriptionEdit" *ngIf="!showchannelEditionDescription">
-                    <div>
-                        <div>Beschreibung</div>
-                        <div (click)="saveChannelDescription()">Speichern</div>
-                    </div>
-                    <div>
-                        <input type="text" placeholder="Dein Text hier">
-                    </div>
-                    <div></div>
-                    <div>Erstellt von</div>
-                    <div>Noah Braun</div>
-                </div>
-                <!-- ====================================== -->
-
-                <div class="channelEditionButtonContainer">
-                    <button class="channelEditionButton">Channel verlassen</button>
-                </div>
-            </div>
-            <!--======================================= -->        
+            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen"></app-channel-edition-dialog>
+            <!--=================================================-->
 
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
@@ -97,6 +33,7 @@
                     <span class="material-symbols-outlined">person_add</span>
                 </div>
             </div>
+
             <!--============== Show member Dialog ================-->
             <div class="showMembersDialog" *ngIf="showMembersDialogOpen" (click)="doNotClose($event)">
                 <div>
@@ -125,9 +62,6 @@
                     <div>Mitglieder hinzufügen</div>
                 </div>
             </div>
-
-
-            <!--=================================================-->
 
             <!--========== Add member Dialog ============-->
             <div class="addMembersDialog" *ngIf="addMemberDialogOpen" (click)="doNotClose($event)">
@@ -168,10 +102,11 @@
                 </div>
             </div>
             <!--=================================================-->
+
         </div>
         <!-- ================================================== -->
     } @else {
-        <!-- =========== Template main chat header - DM ============= -->
+        <!-- =========== TEMPLATE MAIN CHAT HEADER - DM ============= -->
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft">
                 <div class="userImage">

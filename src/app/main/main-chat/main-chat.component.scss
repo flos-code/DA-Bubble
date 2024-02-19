@@ -75,205 +75,104 @@
         align-items: center;
     }
 }
-/* ========== Channel Edition Dialog ============ */
-.channelEdition {
+
+/* ==== Add members Dialog ==== */
+.addMembersDialog {
     position: absolute;
-    top: 75px;
-    left: 52px;
-    width: 872px;
-    height: auto;
-    padding: 2rem;
-    border-radius: 0px 30px 30px 30px;
-    background-color: white;
+    right: 45px;
+    top: 80px;
+    height: 294px;
+    width: 514px;
+    border-radius: 30px 0 30px 30px;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-    z-index: 10;
+    background-color: white;
+    padding: 40px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: flex-start;
+    justify-content: center;
     gap: 1rem;
-}
+    z-index: 10;
 
-.channelEditionHeader {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    > div:first-of-type {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        grid-area: 15px;
-
-        > div {
-            font-weight: bold;
-            font-size: 24px;
-        }
-    }
-
-    > div:last-of-type {
-        height: 40px;
-        width: 40px;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        border-radius: 50%;
-        cursor: pointer;
-        &:hover {
-            background-color: $bgColor;
-        }
-        &:hover span {
-            color: $purple3;
-        }
-
-        > span {
-            font-size: 24px;
-        }
-    }
-}
-
-.channelEditionName,
-.channelEditionNameEdit,
-.channelEditionDescription,
-.channelEditionDescriptionEdit {
-    width: 100%;
-    padding: 20px;
-    border: 1px solid $lightPurple;
-    border-radius: 20px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    gap: 20px;
-
-    > div{
+    > div {
         width: 100%;
     }
 
     > div:first-of-type {
+        font-weight: bold;
+        font-size: 24px;
         display: flex;
         justify-content: space-between;
         align-items: center;
 
-        > div:first-of-type {
-            font-weight: bold;
-            font-size: 18px;
-        }
-
         > div:last-of-type {
-            font-weight: 600;
-            font-size: 18px;
-            color: $purple3;
+            height: 40px;
+            width: 40px;    
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
             cursor: pointer;
+            &:hover {
+                background-color: $bgColor;
+            }
 
-            &:hover{
-                font-weight: 700;
+            &:hover span {
+                color: $purple3;
+            }
+    
+            > span {
+                font-size: 24px;
             }
         }
     }
 
     > div:nth-of-type(2) {
-        display: flex;
-        justify-content: flex-start;
-        align-items: center;
-        gap: 10px;
         font-size: 18px;
-
-        > div {
-            font-size: 18px;
-        }
-
-        > div:first-of-type {
-            font-size: 20px;
-            font-weight: bold;
-        }
-    }
-}
-
-.channelEditionNameEdit {
-    padding: 0;
-    border: none;
-
-    > div:nth-of-type(2) {
-        border-radius: 40px;  
-        border: 1px solid $lightPurple;  
-        padding: 18px 20px 18px 20px;
-        gap: 20px;
-
-        > div {
-            font-size: 18px;
-            font-weight: bold;
-        }
-
-        > input {
-            font-size: 18px;
-            font-weight: 400;
-            outline: none;
-            border: none;
-        }
-    }
-}
-
-.channelEditionDescription,
-.channelEditionDescriptionEdit {
-    > div:nth-of-type(3) {
-        height: 1px;
-        background-color: $lightPurple;
+        color: rgba(121, 126, 243, 1);
     }
 
-    > div:nth-of-type(4) {
-        font-weight: 700;
-        font-size: 18px;
-    }
 
-    > div:nth-of-type(5) {
-        font-weight: 400;
-        font-size: 24px;
-        color: $purple3;
-    }
-}
-
-.channelEditionDescriptionEdit {
-    padding: 0;
-    border: none;
-    
-    > div > input {
-        width: 100%;
-        border-radius: 40px;  
-        border: 1px solid $lightPurple;  
-        padding: 18px 20px 18px 20px;
-        font-size: 18px;
-        font-weight: 400;
+/*     > div:nth-of-type(3) > input, */    
+    > div:nth-of-type(3) > mat-form-field {
+        border: 1px solid rgba(173, 176, 217, 1);
         outline: none;
+        border-radius: 30px;
+        padding: 15px 20px 15px 20px;
+        font-size: 18px;
+        width: 100%;
+
+        &:focus {
+            border: 1px solid $purple3;
+        }
     }
+
+    > div:last-of-type {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+
+        > button {
+            background-color: rgba(104, 104, 104, 1);
+            padding: 12px 25px 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            color: white;
+
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    } 
 }
 
-
-
-.channelEditionButtonContainer {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
+.cdk-overlay-pane{
+    border-radius: 0 30px 30px 30px!important;
 }
+/* ========================== */
 
-.channelEditionButton {
-    height: 49px;
-    border-radius: 25px;
-    padding: 12px 25px 12px 25px;
-    background-color: rgba(68, 77, 242, 1);
-    color: white;
-    font-weight: 700;
-    font-size: 18px;
-    border: none;
-    cursor: pointer;
-
-    &:hover {
-        background-color: $purple2;
-    }
-}
-/* ============================================== */
 .mainChatHeaderRight {
     height: 100%;
     display: flex;
@@ -490,108 +389,6 @@
         font-weight: 400;
     }
 }
-
-
-/* ========================== */
-
-/* ==== Add members Dialog ==== */
-.addMembersDialog {
-    position: absolute;
-    right: 45px;
-    top: 80px;
-    height: 294px;
-    width: 514px;
-    border-radius: 30px 0 30px 30px;
-    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
-    background-color: white;
-    padding: 40px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
-    z-index: 10;
-
-    > div {
-        width: 100%;
-    }
-
-    > div:first-of-type {
-        font-weight: bold;
-        font-size: 24px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-
-        > div:last-of-type {
-            height: 40px;
-            width: 40px;    
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            border-radius: 50%;
-            cursor: pointer;
-            &:hover {
-                background-color: $bgColor;
-            }
-
-            &:hover span {
-                color: $purple3;
-            }
-    
-            > span {
-                font-size: 24px;
-            }
-        }
-    }
-
-    > div:nth-of-type(2) {
-        font-size: 18px;
-        color: rgba(121, 126, 243, 1);
-    }
-
-
-/*     > div:nth-of-type(3) > input, */    
-    > div:nth-of-type(3) > mat-form-field {
-        border: 1px solid rgba(173, 176, 217, 1);
-        outline: none;
-        border-radius: 30px;
-        padding: 15px 20px 15px 20px;
-        font-size: 18px;
-        width: 100%;
-
-        &:focus {
-            border: 1px solid $purple3;
-        }
-    }
-
-    > div:last-of-type {
-        width: 100%;
-        display: flex;
-        justify-content: flex-end;
-        align-items: center;
-
-        > button {
-            background-color: rgba(104, 104, 104, 1);
-            padding: 12px 25px 12px 25px;
-            border: none;
-            border-radius: 25px;
-            font-size: 18px;
-            color: white;
-
-            &:hover {
-                cursor: pointer;
-            }
-        }
-    } 
-}
-
-.cdk-overlay-pane{
-    border-radius: 0 30px 30px 30px!important;
-}
-/* ========================== */
-
-
 
 
 /* ======================= MAIN CHAT MESSAGES ===================== */

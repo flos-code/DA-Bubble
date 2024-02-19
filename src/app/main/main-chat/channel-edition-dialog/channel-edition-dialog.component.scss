@@ -1,0 +1,199 @@
+@import "../../../../styles.scss";
+
+.channelEdition {
+    position: absolute;
+    top: 75px;
+    left: 52px;
+    width: 872px;
+    height: auto;
+    padding: 2rem;
+    border-radius: 0px 30px 30px 30px;
+    background-color: white;
+    box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.channelEditionHeader {
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    > div:first-of-type {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        grid-area: 15px;
+
+        > div {
+            font-weight: bold;
+            font-size: 24px;
+        }
+    }
+
+    > div:last-of-type {
+        height: 40px;
+        width: 40px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+        cursor: pointer;
+        &:hover {
+            background-color: $bgColor;
+        }
+        &:hover span {
+            color: $purple3;
+        }
+
+        > span {
+            font-size: 24px;
+        }
+    }
+}
+
+.channelEditionName,
+.channelEditionNameEdit,
+.channelEditionDescription,
+.channelEditionDescriptionEdit {
+    width: 100%;
+    padding: 20px;
+    border: 1px solid $lightPurple;
+    border-radius: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 20px;
+
+    > div{
+        width: 100%;
+    }
+
+    > div:first-of-type {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > div:first-of-type {
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        > div:last-of-type {
+            font-weight: 600;
+            font-size: 18px;
+            color: $purple3;
+            cursor: pointer;
+
+            &:hover{
+                font-weight: 700;
+            }
+        }
+    }
+
+    > div:nth-of-type(2) {
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        gap: 10px;
+        font-size: 18px;
+
+        > div {
+            font-size: 18px;
+        }
+
+        > div:first-of-type {
+            font-size: 20px;
+            font-weight: bold;
+        }
+    }
+}
+
+.channelEditionNameEdit {
+    padding: 0;
+    border: none;
+
+    > div:nth-of-type(2) {
+        border-radius: 40px;  
+        border: 1px solid $lightPurple;  
+        padding: 18px 20px 18px 20px;
+        gap: 20px;
+
+        > div {
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        > input {
+            font-size: 18px;
+            font-weight: 400;
+            outline: none;
+            border: none;
+        }
+    }
+}
+
+.channelEditionDescription,
+.channelEditionDescriptionEdit {
+    > div:nth-of-type(3) {
+        height: 1px;
+        background-color: $lightPurple;
+    }
+
+    > div:nth-of-type(4) {
+        font-weight: 700;
+        font-size: 18px;
+    }
+
+    > div:nth-of-type(5) {
+        font-weight: 400;
+        font-size: 24px;
+        color: $purple3;
+    }
+}
+
+.channelEditionDescriptionEdit {
+    padding: 0;
+    border: none;
+    
+    > div > input {
+        width: 100%;
+        border-radius: 40px;  
+        border: 1px solid $lightPurple;  
+        padding: 18px 20px 18px 20px;
+        font-size: 18px;
+        font-weight: 400;
+        outline: none;
+    }
+}
+
+
+
+.channelEditionButtonContainer {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+}
+
+.channelEditionButton {
+    height: 49px;
+    border-radius: 25px;
+    padding: 12px 25px 12px 25px;
+    background-color: rgba(68, 77, 242, 1);
+    color: white;
+    font-weight: 700;
+    font-size: 18px;
+    border: none;
+    cursor: pointer;
+
+    &:hover {
+        background-color: $purple2;
+    }
+}
