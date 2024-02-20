@@ -28,12 +28,8 @@ export class AddMembersDialogComponent implements OnInit {
   addMemberDialogOpen: boolean;
   inputFocus: boolean = false;
 
-  newUsersToAdd = [{
-    'id': 'sldajfl22',
-    'name': 'Elias',
-    'surname': 'Neumann'
-  }];
-
+  searchText: string = '';
+  newUsersToAdd = [];
   userList = [{
     'id': 'sldajfl22',
     'name': 'Stefanie',
@@ -48,10 +44,15 @@ export class AddMembersDialogComponent implements OnInit {
     'id': 'sldajfl22',
     'name': 'Filip',
     'surname': 'Neumann'
+  },
+  {
+    'id': 'sldajfl22',
+    'name': 'Elias',
+    'surname': 'Neumann'
   }];
 
   filteredUserList = this.userList;
-  searchText: string = '';
+  originalUserList;
 
   searchKey(data:string) {
     this.searchText = data;
@@ -60,17 +61,15 @@ export class AddMembersDialogComponent implements OnInit {
 
 
   search() {
-    let originalUserList = this.userList;
-
+    this.originalUserList = this.userList;
+    
     if(this.searchText !== "") {
-        this.filteredUserList = [];
-        this.filteredUserList = this.userList.filter( user =>  {
+        this.filteredUserList =  this.userList.filter( user =>  {
             return user.name.toLowerCase().includes(this.searchText) || user.surname.toLowerCase().includes(this.searchText);
         });
-           
+
     } else {
-      this.filteredUserList = [];
-      this.filteredUserList = originalUserList;
+      this.filteredUserList = this.userList;
     }
   }
 
@@ -90,18 +89,25 @@ export class AddMembersDialogComponent implements OnInit {
     this.inputFocus = true;
   }
 
-  addUser() {
-    // Push user in newUsersToAdd array.
-    // Splice List array and remove user
+  addUser(user: any, i: number) {
+    this.newUsersToAdd.push(user); // Push user in newUsersToAdd array.
+    this.userList.splice(i, 1)     // Splice userList array and remove user
+    this.inputFocus = false;
+    this.filteredUserList = this.userList;
   }
 
-  removeaddedUser(){
-    // Push to user List array
-    // Splice newUsersToAdd array and remove user
+  removeaddedUser(user: any, i: number) {
+    this.userList.push(user);         // Push to user List array
+    this.newUsersToAdd.splice(i, 1);  // Splice newUsersToAdd array and remove user 
+    this.inputFocus = false;
   }
 
   addUsers() {
     //this.channels[0].members.push(this.newMemberObject);
+  }
+
+  closeUserList() {
+    this.inputFocus = false;
   }
 
 }

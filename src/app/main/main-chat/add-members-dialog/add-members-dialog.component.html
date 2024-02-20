@@ -1,4 +1,4 @@
-<div class="addMembersDialog" (click)="doNotClose($event)">
+<div class="addMembersDialog" (click)="doNotClose($event); closeUserList()">
     <div>
         <div>Leute hinzufügen</div>
         <div (click)="closeDialog()">
@@ -6,27 +6,23 @@
         </div>
     </div>
     <div># Entwickler</div>
-    <div class="addUserInputContainer" [class.focusedBorder]="inputFocus">
+    <div class="addUserInputContainer" [class.focusedBorder]="inputFocus" (click)="doNotClose($event)">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
-          @for (userToAdd of newUsersToAdd; track $index) {
-            <div class="newUserToAdd">
+            <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd; let i = index">
               <img src="/assets/img/main-chat/member3.svg">
               <div>{{userToAdd.name}} {{userToAdd.surname}}</div>
-              <span (click)="removeaddedUser()" class="material-symbols-outlined">close</span>
+              <span (click)="removeaddedUser(userToAdd, i)" class="material-symbols-outlined">close</span>
             </div>
-          }
         </div>
         <input class="userSearchInput" type="text" autocomplete="off" name="search" (ngModelChange)="searchKey($event)" [(ngModel)]="searchText" placeholder="Name eingeben" (focus)="showUserList()">
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-          @for (user of filteredUserList; track $index) {
-            <div (click)="addUser()"  (click)="addUser()">
-              <img src="/assets/img/main-chat/member2.svg">
-              <div>{{user.name}} {{user.surname}}</div>
-            </div>
-          }
+          <div *ngFor="let user of filteredUserList; let i = index" (click)="addUser(user, i)">
+            <img src="/assets/img/main-chat/member2.svg">
+            <div>{{user.name}} {{user.surname}}</div>
+          </div>
 
 
 <!--             <div (click)="addUser()">
