@@ -90,13 +90,14 @@
 
 .addUserInputSubContainer {
     display: flex;
-    justify-content: flex-start;
-    align-items: center;
-    gap: 10px;
+    flex-wrap: wrap;
 }
 
 .chipContainer {
-
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-wrap: wrap;
 }
 
 .newUserToAdd{
@@ -105,9 +106,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    gap: 15px;
+    gap: 10px;
+    margin-bottom: 10px;
+    margin-right: 10px;
     background-color: $bgColor;
     cursor: pointer;
+
+    > div {
+        white-space: nowrap;
+    }
 
     > span:hover {
         font-weight: bold;
@@ -117,6 +124,7 @@
 
 .userSearchInput {
     width: 100%;
+    min-width: 150px;
     font-size: 18px;
     outline: none;
     border: none;
