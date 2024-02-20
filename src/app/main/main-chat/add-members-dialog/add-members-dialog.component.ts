@@ -30,6 +30,7 @@ export class AddMembersDialogComponent implements OnInit {
 
   searchText: string = '';
   newUsersToAdd = [];
+
   userList = [{
     'id': 'sldajfl22',
     'name': 'Stefanie',
@@ -51,8 +52,8 @@ export class AddMembersDialogComponent implements OnInit {
     'surname': 'Neumann'
   }];
 
+  originalUserList = this.userList;
   filteredUserList = this.userList;
-  originalUserList;
 
   searchKey(data:string) {
     this.searchText = data;
@@ -61,16 +62,19 @@ export class AddMembersDialogComponent implements OnInit {
 
 
   search() {
-    this.originalUserList = this.userList;
-    
+    this.filteredUserList = this.userList;
+
     if(this.searchText !== "") {
         this.filteredUserList =  this.userList.filter( user =>  {
-            return user.name.toLowerCase().includes(this.searchText) || user.surname.toLowerCase().includes(this.searchText);
+          return user.name.toLowerCase().includes(this.searchText) || user.surname.toLowerCase().includes(this.searchText);
         });
-
-    } else {
-      this.filteredUserList = this.userList;
+      } else {
+      this.filteredUserList = this.originalUserList;      
     }
+
+    console.log('FilteredUserList', this.filteredUserList);
+    console.log('userList', this.userList);
+    console.log('originalUserList', this.originalUserList);
   }
 
   constructor() { }
@@ -90,16 +94,33 @@ export class AddMembersDialogComponent implements OnInit {
   }
 
   addUser(user: any, i: number) {
+    //this.userList = this.savedUserList;
     this.newUsersToAdd.push(user); // Push user in newUsersToAdd array.
     this.userList.splice(i, 1)     // Splice userList array and remove user
-    this.inputFocus = false;
     this.filteredUserList = this.userList;
+    this.originalUserList = this.userList;
+    this.inputFocus = false; 
+
+    console.log('FilteredUserList', this.filteredUserList);
+    console.log('userList', this.userList);
+    console.log('originalUserList', this.originalUserList);
+
   }
 
   removeaddedUser(user: any, i: number) {
-    this.userList.push(user);         // Push to user List array
-    this.newUsersToAdd.splice(i, 1);  // Splice newUsersToAdd array and remove user 
-    this.inputFocus = false;
+      this.userList.push(user);         // Push to user List array
+      this.newUsersToAdd.splice(i, 1);      // Splice newUsersToAdd array and remove user
+      this.originalUserList = this.userList;
+      this.filteredUserList = this.userList;
+
+      //this.filteredUserList = this.userList;
+      this.inputFocus = false;
+
+      console.log('FilteredUserList', this.filteredUserList);
+      console.log('userList', this.userList);
+      console.log('originalUserList', this.originalUserList);
+  
+
   }
 
   addUsers() {
