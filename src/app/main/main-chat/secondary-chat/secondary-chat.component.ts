@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { ChatService } from '../../../services/chat.service';
 
 @Component({
   selector: 'app-secondary-chat',
@@ -10,10 +11,7 @@ import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
-export class SecondaryChatComponent {
-    // Event-Emitter zum Senden des Schließbefehls
-    @Output() closeThreadEvent = new EventEmitter<void>();
-    
+export class SecondaryChatComponent { 
   emojiWindowOpen = false;
   threadOpen: boolean = true;
 
@@ -42,7 +40,7 @@ export class SecondaryChatComponent {
   ];
   DialogRef: any;
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   handleClick($event: EmojiEvent) {
     console.log($event.emoji);
@@ -65,6 +63,6 @@ export class SecondaryChatComponent {
   }
 
   closeThread(): void {
-    this.closeThreadEvent.emit();
+    this.chatService.closeThread();
   }
 }
