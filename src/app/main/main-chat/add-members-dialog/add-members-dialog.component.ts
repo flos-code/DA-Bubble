@@ -74,13 +74,6 @@ export class AddMembersDialogComponent implements OnInit {
     }
   }
 
-/* filteredFruits: Observable<string[]>;
-fruits: string[] = ['Lemon'];
-allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
- */
-
-
-
   constructor() { }
 
   doNotClose($event: any) {

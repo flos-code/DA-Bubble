@@ -23,8 +23,8 @@ const app = initializeApp(firebaseConfig);
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'
 })
-export class LoginComponent {
 
+export class LoginComponent {
   auth = getAuth(app);
 
   signInForm = this.fb.group({

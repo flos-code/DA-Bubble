@@ -21,10 +21,13 @@
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-            <div (click)="addUser()" *ngFor="let user of filteredUserList">
+          @for (user of filteredUserList; track $index) {
+            <div (click)="addUser()"  (click)="addUser()">
               <img src="/assets/img/main-chat/member2.svg">
               <div>{{user.name}} {{user.surname}}</div>
             </div>
+          }
+
 
 <!--             <div (click)="addUser()">
               <img src="/assets/img/main-chat/member2.svg">
