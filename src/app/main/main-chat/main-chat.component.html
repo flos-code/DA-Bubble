@@ -4,7 +4,7 @@
 
 <div style="display: flex;">
 
-    <div class="mainChatContainer">
+    <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
         @if(showChannel) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->

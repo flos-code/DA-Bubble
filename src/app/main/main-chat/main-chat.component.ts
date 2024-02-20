@@ -163,7 +163,6 @@ export class MainChatComponent {
     }
 
     openThread() {
-      console.log('thread opened');
       this.threadOpen = true;
     }
 }
