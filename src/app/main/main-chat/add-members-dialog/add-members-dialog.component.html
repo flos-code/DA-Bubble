@@ -19,9 +19,9 @@
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-          <div *ngFor="let user of filteredUserList; let i = index" (click)="addUser(user, i)">
+          <div *ngFor="let filtereduser of filteredUserList; let i = index" (click)="addUser(filtereduser, i)">
             <img src="/assets/img/main-chat/member2.svg">
-            <div>{{user.name}} {{user.surname}}</div>
+            <div>{{filtereduser.name}} {{filtereduser.surname}}</div>
           </div>
 
 

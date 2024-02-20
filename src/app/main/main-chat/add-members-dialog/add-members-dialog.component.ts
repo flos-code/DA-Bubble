@@ -21,6 +21,7 @@ import { FilterPipe } from './filter.pipe';
 export class AddMembersDialogComponent implements OnInit {
   
   ngOnInit(): void {
+    console.log(this.filteredUserList);
 
   }
 
@@ -32,22 +33,22 @@ export class AddMembersDialogComponent implements OnInit {
   newUsersToAdd = [];
 
   userList = [{
-    'id': 'sldajfl22',
+    'id': 'kalof85s8s',
     'name': 'Stefanie',
     'surname': 'Müller'
   },
   {
-    'id': 'sldajfl22',
+    'id': 'sldajfdffl22',
     'name': 'Tobias',
     'surname': 'Odermatt'
   },
   {
-    'id': 'sldajfl22',
+    'id': 'sldajzjzzfl22',
     'name': 'Filip',
     'surname': 'Neumann'
   },
   {
-    'id': 'sldajfl22',
+    'id': 'hufslehuf85ss',
     'name': 'Elias',
     'surname': 'Neumann'
   }];
@@ -71,13 +72,10 @@ export class AddMembersDialogComponent implements OnInit {
       } else {
       this.filteredUserList = this.originalUserList;      
     }
-
-    console.log('FilteredUserList', this.filteredUserList);
-    console.log('userList', this.userList);
-    console.log('originalUserList', this.originalUserList);
   }
 
-  constructor() { }
+  constructor() { 
+  }
 
   doNotClose($event: any) {
     $event.stopPropagation(); 
@@ -93,34 +91,23 @@ export class AddMembersDialogComponent implements OnInit {
     this.inputFocus = true;
   }
 
-  addUser(user: any, i: number) {
-    //this.userList = this.savedUserList;
-    this.newUsersToAdd.push(user); // Push user in newUsersToAdd array.
-    this.userList.splice(i, 1)     // Splice userList array and remove user
+  addUser(filtereduser: any, i: number) {
+    let userId = filtereduser.id;
+    let existingUser = this.userList.find(user => user.id == userId);
+    let indexOfAddedUser = this.userList.indexOf(existingUser);
+    this.newUsersToAdd.push(filtereduser); // Push user in newUsersToAdd array.
+    this.userList.splice(indexOfAddedUser, 1);     // Splice userList array and remove user
     this.filteredUserList = this.userList;
-    this.originalUserList = this.userList;
     this.inputFocus = false; 
-
-    console.log('FilteredUserList', this.filteredUserList);
-    console.log('userList', this.userList);
-    console.log('originalUserList', this.originalUserList);
-
   }
 
-  removeaddedUser(user: any, i: number) {
-      this.userList.push(user);         // Push to user List array
-      this.newUsersToAdd.splice(i, 1);      // Splice newUsersToAdd array and remove user
-      this.originalUserList = this.userList;
+  removeaddedUser(userToAdd: any, i: number) {
       this.filteredUserList = this.userList;
-
-      //this.filteredUserList = this.userList;
+      this.userList.push(userToAdd);             // Push to user List array
+      this.newUsersToAdd.splice(i, 1);          // Splice newUsersToAdd array and remove user
+      this.filteredUserList = this.userList;
+      this.originalUserList = this.userList;
       this.inputFocus = false;
-
-      console.log('FilteredUserList', this.filteredUserList);
-      console.log('userList', this.userList);
-      console.log('originalUserList', this.originalUserList);
-  
-
   }
 
   addUsers() {
