@@ -158,7 +158,7 @@
                 <!-- ============================================================================ -->
                 } @else {
                 <!-- ========================= Template Own Message ========================= -->
-                <div class="messageContainerOwn">
+                <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
                     <div class="mainMessageOwn">
                         <div>
                             <div>14:25 Uhr</div>
@@ -198,11 +198,30 @@
                         </div>
                     </div>
                     <div *ngIf="editMessagePopupOpen" class="editMessagePopup">
-                        <div>
+                        <div (click)="editMessage()">
                             <div>Nachricht bearbeiten</div>
                         </div>
                     </div>
                 </div>
+                <!-- ========================= Template Own Message - EDIT ========================= -->
+                <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
+                    <div class="mainMessageOwnEdit">
+                        <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
+                        <div>
+                            <div>
+                                <span class="material-symbols-outlined">sentiment_satisfied</span>
+                            </div>
+                            <div>
+                                <button (click)="closeEditedMessage()">Abbrechen</button>
+                                <button (click)="saveEditedMessage()">Speichern</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="messageProfileIcon">
+                        <img src="/assets/img/main-chat/member1.svg">
+                    </div>
+                </div>
+                
                 }
                 }
             </div>

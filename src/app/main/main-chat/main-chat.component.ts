@@ -23,6 +23,7 @@ export interface Fruit {
   styleUrl: './main-chat.component.scss'
 })
 export class MainChatComponent implements OnInit, OnDestroy {
+  @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
   textArea: string = "";
@@ -32,6 +33,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   showMembersDialogOpen: boolean = false;
   ownMessage: boolean = true;
   editMessagePopupOpen: boolean = false;
+  ownMessageEdit: boolean = false;
 
   newMember: string = "";
   newMemberObject = {
@@ -175,6 +177,19 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   moreOptions() {
     this.editMessagePopupOpen = true;
+  }
+
+  editMessage() {
+    this.editMessagePopupOpen = false;
+    this.ownMessageEdit = true;
+  }
+
+  closeEditedMessage() {
+    this.ownMessageEdit = false;
+  }
+
+  saveEditedMessage() {
+    // 
   }
 
   openThread(): void {

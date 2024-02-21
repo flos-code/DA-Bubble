@@ -469,6 +469,7 @@ app-add-members-dialog {
         align-items: center;    
         padding: 10px 20px 10px 20px;
         border-radius: 30px;
+        cursor: pointer;
         &:hover {
             background-color: $bgColor;
         }
@@ -485,6 +486,92 @@ app-add-members-dialog {
     }
 }
 
+.messageContainerOwnEdit {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    gap: 30px;
+    padding: 1rem 45px 1rem 145px;
+    background-color: $bgColor;
+}
+
+.mainMessageOwnEdit {
+    width: 100%;
+    background-color: white;
+    border: 1px solid $lightPurple;
+    border-radius: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
+    gap: 1rem;
+
+    > textarea {
+        height: 150px;
+        width: 100%;
+        border: none;
+        outline: none;
+        font-size: 18px;
+        overflow: hidden;
+        resize: none;
+    }
+
+    > div {
+        width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        > div:first-of-type {
+            width: 40px;
+            height: 40px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border-radius: 50%;
+            cursor: pointer;
+            &:hover {
+                background-color: $bgColor;
+            }
+            &:hover span {
+                color: $purple2;
+                font-weight: bold;
+            }
+        }
+
+        > div:last-of-type {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 2rem;
+
+            > button {
+                padding: 12px 25px 12px 25px;
+                border-radius: 50px;
+                border: 1px solid $purple2;
+                background-color: white;
+                color: $purple2;
+                font-size: 18px;
+                font-weight: bold;
+                cursor: pointer;
+                &:hover {
+                    background-color: $bgColor;
+                }
+            }
+            
+            >button:last-of-type {
+                background-color: $purple2;
+                color: white;
+                &:hover {
+                    background-color: $bgColor;
+                    color: $purple2;
+                }
+            }
+        }
+    }
+}
 
 /* ======================= TEXT INPUT ===================== */
 .mainChatInput {
