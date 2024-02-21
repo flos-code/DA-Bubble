@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
@@ -31,7 +32,7 @@ export class LoginComponent {
     email: ['', [Validators.required, Validators.email]],
     password: ['', Validators.required],
   })
-  constructor(private fb: FormBuilder) { }
+  constructor(private fb: FormBuilder, private router: Router) { }
 
   
 
@@ -59,9 +60,8 @@ export class LoginComponent {
    }
 
   async signIn() {
-    let email = (<HTMLInputElement>document.getElementById('login_email')).value;
-    let password = (<HTMLInputElement>document.getElementById('login_password')).value;
-    const userCredentials = await signInWithEmailAndPassword(this.auth, email, password);
+    const userCredentials = await signInWithEmailAndPassword(this.auth, this.signInForm.value.email, this.signInForm.value.password);
     console.log(userCredentials.user.uid);
+    this.router.navigateByUrl('');
   }
 }

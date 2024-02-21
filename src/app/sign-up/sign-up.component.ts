@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeApp } from "firebase/app";
+import { getFirestore, collection, doc, setDoc } from "firebase/firestore";
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { getAuth, createUserWithEmailAndPassword, signOut, updateProfile } from "firebase/auth";
 
@@ -15,6 +16,7 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 
 @Component({
@@ -31,6 +33,9 @@ export class SignUpComponent {
   first: boolean = true;
   second: boolean = false;
   person: string = 'zero';
+  current: Date = new Date;
+  uID: string = '';
+  userCreationSuccess: boolean = false;
 
   genericImg: string = "/assets/img/login/profile_generic_big.png"
   person1Img: string = "/assets/img/userImages/userImage1.svg"
@@ -50,7 +55,6 @@ export class SignUpComponent {
 
   constructor(private router: Router, private fb: FormBuilder) { }
 
-
   goBackToLogin() {
     this.router.navigateByUrl('login');
   }
@@ -60,8 +64,11 @@ export class SignUpComponent {
     this.second = false;
   }
 
+  getNotesRef() {
+    return collection(db, "users")
+  }
+
   goToAvatarChoice() {
-    console.log(this.registerForm.valid, this.registerForm.value.nameAndSurname, this.registerForm.value.email, this.registerForm.value.password);
     this.first = false;
     this.second = true;
   }
@@ -89,15 +96,43 @@ export class SignUpComponent {
   }
 
   async signUp() {
-    console.log(this.registerForm.value.nameAndSurname, this.registerForm.value.email, this.registerForm.value.password, this.person);
-    let email = this.registerForm.value.email;
-    let password = this.registerForm.value.password;
-    let name = this.registerForm.value.nameAndSurname;
-    await createUserWithEmailAndPassword(this.auth, email, password);
+    await createUserWithEmailAndPassword(this.auth, this.registerForm.value.email, this.registerForm.value.password);
     await updateProfile(this.auth.currentUser, {
-      displayName: name, photoURL: this.person,
+      displayName: this.registerForm.value.nameAndSurname, 
+      photoURL: this.person,
     });
-    console.log(this.auth.currentUser);
+    await this.createUserDetailsDoc();
+    await this.createDirectMessagesCollection();
     await signOut(this.auth);
+    this.animateAndGoBackToLogin();
   }
+
+  async createUserDetailsDoc() {
+    await setDoc(doc(db, "users", this.auth.currentUser.uid), {
+      name: this.auth.currentUser.displayName,
+      email: this.auth.currentUser.email,
+      imgUrl: this.auth.currentUser.photoURL,
+      isOnline: false,
+      id: this.auth.currentUser.uid,
+    });
+  }
+
+  async createDirectMessagesCollection() {
+    await setDoc(doc(db, "users", this.auth.currentUser.uid, 'direct_messages', 'dummy_message'), {
+      message: 'Lorem ipsum, bla bla bla',
+      from: this.auth.currentUser.uid,
+      to: 'receive_from_html',
+      reactions: ':rocket',
+      timestamp: this.current.getTime(),
+    });
+  }
+
+  animateAndGoBackToLogin(){
+    this.userCreationSuccess = true;
+    setTimeout(() => {
+      this.goBackToLogin();
+      this.userCreationSuccess = false;
+    }, 1500);
+  }
+
 }

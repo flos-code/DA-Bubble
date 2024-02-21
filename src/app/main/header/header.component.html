@@ -5,13 +5,13 @@
         <img src="assets/img/search.png" alt="">
     </div>
     <div (click)="toggleDropdownMenu(true)" class="header-profil">
-        <h2>Max Mustermann</h2>
-        <img src="assets/img/main-chat/member3.svg" alt="">
+        <h2>{{userNameandSurname}}</h2>
+        <img src= {{profilePic}}>
         <img class="arrowDownDefault" src="assets/img/keyboard_arrow_down.png" alt="">
 
         <div [class.active]="showDropdownMenu" *ngIf="!showProfil" class="custom-dropdown-menu">
             <div (click)="openProfil(true)">Profil</div>
-            <div (click)="menuItemClicked('Option 2')">Log out</div>
+            <div (click)="signOut()">Log out</div>
         </div>
     </div>
 </div>
