@@ -1,3 +1,14 @@
-<div class="profilCard">
-test !!!
-</div>
+<div (click)="serviceProfilCard.toggleCardOverlay(false)" [class.active]="serviceProfilCard.isOverlayActive"
+    class="overlay">
+
+    <div (click)="$event.stopPropagation()" [class.topRight]="serviceProfilCard.isCurrentUserActive"
+        *ngIf="serviceProfilCard.isProfilCardActive" class="cardContainer">
+
+        <div class="cardHeader">
+            <h3>Profil</h3>
+            <span class="material-symbols-outlined">
+                close
+            </span>
+        </div>
+
+    </div>

@@ -6,6 +6,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
+import { ProfilCardService } from '../../services/profil-card.service';
+import { MatIconModule } from '@angular/material/icon';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -24,7 +26,7 @@ const db = getFirestore(app);
   standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
-  imports: [ProfilCardComponent, CommonModule]
+  imports: [ProfilCardComponent, CommonModule, MatIconModule]
 })
 export class HeaderComponent implements OnInit {
   authSubscription: any;
@@ -43,10 +45,35 @@ export class HeaderComponent implements OnInit {
   showProfil: boolean = false;
   showDropdownMenu: boolean = false;
 
-  constructor(public dialog: MatDialog, private router: Router) { }
+  constructor(
+    public dialog: MatDialog,
+    private router: Router,
+    public serviceProfilCard: ProfilCardService,
+  ) {
+    this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
+      this.showDropdownMenu = isActive; // Update local variable when service variable changes
+    });
+  }
 
   menuItemClicked(option: string) {
     console.log('Option clicked:', option);
+  }
+
+  toggleOverlay(active: boolean) {
+    this.isOverlayActive = active;
+    this.showDropdownMenu = active;
+  }
+
+  toggleDropdownMenu(active: boolean) {
+    this.showDropdownMenu = active;
+    // this.isOverlayActive = active;
+    if (!this.serviceProfilCard.isProfilCardActive) {
+      this.serviceProfilCard.isOverlayActive = active;
+    }
+  }
+
+  openProfil(active: boolean): void {
+    this.showProfil = active;
   }
 
   signOut() {
@@ -54,20 +81,6 @@ export class HeaderComponent implements OnInit {
     this.router.navigateByUrl('login');
   }
 
-  toggleOverlay(active: boolean) {
-    this.isOverlayActive = active;
-    this.showDropdownMenu = active;
-    this.showProfil = active;
-  }
-
-  toggleDropdownMenu(active: boolean) {
-    this.showDropdownMenu = active;
-    this.isOverlayActive = active;
-  }
-
-  openProfil(active: boolean): void {
-    this.showProfil = active;
-  }
 
   getTheLoggedInUser() {
     this.authSubscription = this.auth.onAuthStateChanged((user) => {

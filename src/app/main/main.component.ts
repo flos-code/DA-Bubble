@@ -8,6 +8,8 @@ import { CommonModule } from '@angular/common';
 import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
 import { ViewManagementService } from '../services/view-management.service';
 import { Subscription } from 'rxjs';
+import { ProfilCardComponent } from './profil-card/profil-card.component';
+import { ProfilCardService } from '../services/profil-card.service';
 
 @Component({
   selector: 'app-main',
@@ -20,6 +22,7 @@ import { Subscription } from 'rxjs';
     SecondaryChatComponent,
     NewMessageComponent,
     EmojiPickerComponent,
+    ProfilCardComponent,
   ],
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
@@ -30,7 +33,7 @@ export class MainComponent {
   showNewMessage: boolean = false;
   private viewChangeSubscription: Subscription;
 
-  constructor(private viewManagementService: ViewManagementService) {
+  constructor(private viewManagementService: ViewManagementService, public serviceProfilCard: ProfilCardService) {
     this.viewChangeSubscription =
       this.viewManagementService.currentView$.subscribe((view) => {
         this.showMainChat = view === 'showMainChat';

@@ -1,3 +1,35 @@
-.profilCard {
-    
+.overlay {
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    height: 100vh;
+    width: 100vw;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(0, 0, 0, 0.3);
+    transition: 0.2s;
+    opacity: 0;
+}
+
+.overlay.active {
+    z-index: 999;
+    opacity: 1;
+}
+
+.cardContainer.topRight {
+    border-radius: 30px 0px 30px 30px !important;
+    position: absolute;
+    right: 32px !important;
+    top: 100px;
+    height: 600px;
+}
+
+.cardContainer {
+    z-index: 1000;
+    background-color: white;
+    display: block;
+    height: 705px;
+    width: 500px;
+    border-radius: 30px;
 }

@@ -1,8 +1,6 @@
+@import "../../../styles.scss";
+
 .header {
-    // position: relative;
-    // top: 25px;
-    // left: 45px;
-    // right: 45px;
     margin: 25px 45px 25px 20px;
     display: flex;
     align-items: center;
@@ -46,11 +44,25 @@
     cursor: pointer;
 
     .arrowDownDefault {
-        height: 8px;
+        height: 27px;
+        font-size: 30px;
     }
+
+    // &:hover {
+    //     color: $purple1;
+    // }
 }
 
-.header-profile-photo{
+.header-profil:hover mat-icon {
+    font-weight: bold;
+    color: $purple1;
+  }
+
+  h2:hover {
+    color: $purple1;
+  }
+
+.header-profile-photo {
     border-radius: 100%;
 }
 

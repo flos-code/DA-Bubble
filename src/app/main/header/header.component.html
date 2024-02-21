@@ -4,18 +4,18 @@
         <input type="text" placeholder="Code learning durchsuchen">
         <img src="assets/img/search.png" alt="">
     </div>
-    <div (click)="toggleDropdownMenu(true)" class="header-profil">
+    <div (click)="toggleDropdownMenu(!showDropdownMenu)" class="header-profil">
         <h2>{{userNameandSurname}}</h2>
-        <img src= {{profilePic}}>
-        <img class="arrowDownDefault" src="assets/img/keyboard_arrow_down.png" alt="">
+        <img src={{profilePic}}>
+        <mat-icon class="material-symbols-outlined arrowDownDefault">expand_more</mat-icon>
 
-        <div [class.active]="showDropdownMenu" *ngIf="!showProfil" class="custom-dropdown-menu">
-            <div (click)="openProfil(true)">Profil</div>
+        <div [class.active]="showDropdownMenu" class="custom-dropdown-menu">
+            <div (click)="serviceProfilCard.toggleProfilCard(true, true)">Profil</div>
             <div (click)="signOut()">Log out</div>
         </div>
     </div>
 </div>
 
-<div class="overlay" [class.active]="isOverlayActive" (click)="toggleOverlay(false)"></div>
+<!-- <div class="overlay" [class.active]="isOverlayActive" (click)="toggleOverlay(false)"></div> -->
 
-<app-profil-card class="userProfilRight" *ngIf="showProfil"></app-profil-card>
+<!-- <app-profil-card class="userProfilRight" *ngIf="showProfil"></app-profil-card> -->
