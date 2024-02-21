@@ -1,9 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/dialog-add-user-new-channel.component';
+import { ViewManagementService } from '../../services/view-management.service';
 
 @Component({
   selector: 'app-side-bar',
@@ -18,24 +19,40 @@ import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/
   styleUrl: './side-bar.component.scss',
 })
 export class SideBarComponent {
-  @Output() viewChange = new EventEmitter<
-    'showMainChat' | 'showDms' | 'showNewMessage'
-  >();
-
   workspaceVisible: boolean = true;
   channelsVisible: boolean = true;
   usersVisible: boolean = true;
   dialogAddChannelVisible: boolean = false;
   dialogAddUserVisible: boolean = false;
 
-  constructor(public dialog: MatDialog) {}
+  selectedChannelId: number | null = null;
+  selectedUserId: number | null = null;
 
-  channels: string[] = ['Allgemein', 'Entwicklerteam', 'Office-team'];
+  constructor(
+    public dialog: MatDialog,
+    private viewManagementService: ViewManagementService
+  ) {}
+
+  channels = [
+    {
+      name: 'Allgemein',
+      id: 0,
+    },
+    {
+      name: 'Entwicklerteam',
+      id: 1,
+    },
+    {
+      name: 'Office-team',
+      id: 2,
+    },
+  ];
+
   users = [
     {
       firstName: 'Frederik',
-      lastName: 'Beck',
-      email: 'f.beck@mail.com',
+      lastName: 'Gluber',
+      email: 'g.gluber@mail.com',
       onlineStatus: 'idle',
       image: './assets/img/userImages/userImage2.svg',
       isYou: false,
@@ -152,7 +169,25 @@ export class SideBarComponent {
     this.dialogAddUserVisible = !this.dialogAddUserVisible;
   }
 
+  openNewMessage() {
+    this.selectedChannelId = null;
+    this.selectedUserId = null;
+    this.showChat('showNewMessage');
+  }
+
+  selectChannel(channelId: number): void {
+    this.selectedChannelId = channelId;
+    this.selectedUserId = null;
+    this.showChat('showMainChat');
+  }
+
+  selectUser(userId: number): void {
+    this.selectedUserId = userId;
+    this.selectedChannelId = null;
+    this.showChat('showDms');
+  }
+
   showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
-    this.viewChange.emit(view);
+    this.viewManagementService.changeView(view);
   }
 }

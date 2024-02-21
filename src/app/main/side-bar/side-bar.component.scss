@@ -323,3 +323,14 @@
     transform: rotate(90deg);
   }
 }
+
+.active {
+  font-weight: 700;
+  color: $purple3;
+  background-color: $bgColor;
+
+  mat-icon {
+    color: $purple3;
+    font-variation-settings: "wght" 600;
+  }
+}

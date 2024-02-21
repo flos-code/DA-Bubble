@@ -1,11 +1,7 @@
 <app-header></app-header>
 
 <div class="main-content">
-  <app-side-bar (viewChange)="setActiveView($event)"></app-side-bar>
+  <app-side-bar></app-side-bar>
   <app-main-chat *ngIf="showMainChat"></app-main-chat>
   <app-new-message *ngIf="showNewMessage"></app-new-message>
-
-  <!-- <app-emoji-picker
-    (emojiSelect)="handleEmojiSelect($event)"
-  ></app-emoji-picker> -->
 </div>

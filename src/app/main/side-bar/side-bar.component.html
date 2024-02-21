@@ -5,7 +5,7 @@
         <img src="../../assets/img/workspaceLogo.png" alt="Workspace Logo" />
         <div>Code learning</div>
       </div>
-      <div class="editsServerName" (click)="showChat('showNewMessage')">
+      <div class="editsServerName" (click)="openNewMessage()">
         <mat-icon
           class="material-symbols-outlined"
           fontIcon="edit_square"
@@ -54,13 +54,14 @@
           <div
             class="singleChannel"
             *ngFor="let channel of channels"
-            (click)="showChat('showMainChat')"
+            (click)="selectChannel(channel.id)"
+            [ngClass]="{ active: selectedChannelId === channel.id }"
           >
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="tag"
             ></mat-icon>
-            <div>{{ channel }}</div>
+            <div>{{ channel.name }}</div>
           </div>
         </div>
 
@@ -105,7 +106,8 @@
           <div
             class="singleUser"
             *ngFor="let user of users"
-            (click)="showChat('showDms')"
+            (click)="selectUser(user.userID)"
+            [ngClass]="{ active: selectedUserId === user.userID }"
           >
             <div class="userImage">
               <img

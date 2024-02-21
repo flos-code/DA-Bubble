@@ -5,8 +5,9 @@ import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-cha
 import { MainChatComponent } from './main-chat/main-chat.component';
 import { NewMessageComponent } from './new-message/new-message.component';
 import { CommonModule } from '@angular/common';
-import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
+import { ViewManagementService } from '../services/view-management.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-main',
@@ -27,15 +28,18 @@ export class MainComponent {
   showMainChat: boolean = true;
   showDms: boolean = false;
   showNewMessage: boolean = false;
+  private viewChangeSubscription: Subscription;
 
-  setActiveView(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
-    this.showMainChat = view === 'showMainChat';
-    this.showDms = view === 'showDms';
-    this.showNewMessage = view === 'showNewMessage';
+  constructor(private viewManagementService: ViewManagementService) {
+    this.viewChangeSubscription =
+      this.viewManagementService.currentView$.subscribe((view) => {
+        this.showMainChat = view === 'showMainChat';
+        this.showDms = view === 'showDms';
+        this.showNewMessage = view === 'showNewMessage';
+      });
   }
 
-  handleEmojiSelect(emoji: any) {
-    console.log('Selected emoji:', emoji);
-    // Implement your logic to use the selected emoji
+  ngOnDestroy(): void {
+    this.viewChangeSubscription.unsubscribe();
   }
 }
