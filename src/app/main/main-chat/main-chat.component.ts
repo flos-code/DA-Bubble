@@ -41,7 +41,6 @@ export interface Fruit {
   styleUrl: './main-chat.component.scss'
 })
 export class MainChatComponent implements OnInit, OnDestroy {
-  activeChannel: string;
   channel = [];
 
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
@@ -64,7 +63,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     'photo': '../../../assets/img/main-chat/member2.svg'
   };
 
- /*  @Input() channels = [{
+ @Input() channels = [{
     'id': 'sijfef8e8',
     'name': 'Entwicklerteam',
     'members': [{
@@ -93,7 +92,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       'threads': [{ 'message': 'Was für eine Frage hast du genau?' }],
       'reactions': [{ 'reactedBy': 'sadmvkui25ddf', 'ractionName': 'rocket', 'iconPath': '../../../assets/img/main-chat/arrowDownDefault.svg' }]
     }]
-  }]; */
+  }];
 
   users = [{
     'userId': 'sadmvkui25ddf',
@@ -132,7 +131,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   },
   ];
 
-  //membercount = this.channel[0]['members'].length;
+  membercount = this.channels[0]['members'].length;
 
   constructor(private chatService: ChatService) { }
 
@@ -156,6 +155,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         if(element.data()["isActive"] == true) {
           this.channel.push(element.data());
           console.log('Current channel data', this.channel);
+          console.log('Current channel name', element.data()['name']);
+          console.log('Current members length', element.data()['members'].length);
         }
       });
     });
@@ -247,10 +248,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.showMembersDialogOpen = false;
       }
     }
-    console.log('Active channel', this.activeChannel);
-
-    console.log('Current channel data', this.channel);
-
   }
 
   closeDialog() {
