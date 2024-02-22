@@ -1,27 +1,30 @@
-export class Message {
+export class DirectMessage {
     messageId: string;
-    createdBy: string;
+    from: string;
+    to: string;
     creationDate: number;
     message: string;
-    threads: [];
+    type: string;
     reactions: [];
 
     constructor(obj?: any) { // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.
         this.messageId = obj ? obj.messageId : "";
-        this.createdBy = obj ? obj.createdBy : ""; // if else Abfrage schneller geschrieben. Wenn das Objekt existiert, dann obj.firstname und sonst ein leerer String.
+        this.from = obj ? obj.from : ""; // if else Abfrage schneller geschrieben. Wenn das Objekt existiert, dann obj.firstname und sonst ein leerer String.
+        this.to = obj ? obj.to : "";
         this.creationDate = obj ? obj.creationDate : "";
         this.message = obj ? obj.message : "";
-        this.threads = obj ? obj.threads : "";
+        this.type = obj ? obj.type : "";
         this.reactions = obj ? obj.reactions : "";
     }
 
     public toJSON() {
         return {
             'messageId': this.messageId,
-            'createdBy': this.createdBy,
+            'from': this.from,
+            'to': this.to,
             'creationDate': this.creationDate,
             'message': this.message,
-            'threads': this.threads,
+            'type': this.type,
             'reactions': this.reactions
         };
     }
