@@ -55,13 +55,13 @@
             class="singleChannel"
             *ngFor="let channel of channels"
             (click)="selectChannel(channel.id)"
-            [ngClass]="{ active: selectedChannelId === channel.id }"
+            [ngClass]="{ active: channel.data.isActive }"
           >
             <mat-icon
               class="material-symbols-rounded"
               fontIcon="tag"
             ></mat-icon>
-            <div>{{ channel.name }}</div>
+            <div>{{ channel.data.name }}</div>
           </div>
         </div>
 
@@ -161,8 +161,9 @@
   *ngIf="dialogAddChannelVisible"
   [isVisible]="dialogAddChannelVisible"
   (toggleVisibility)="toggleAddChannelDialog()"
-  (onChannelCreation)="toggleAddUserDialog()"
+  (onChannelCreation)="handleChannelCreationAndToggleDialog($event)"
 >
+  >
 </app-dialog-add-channel>
 
 <app-dialog-add-user-new-channel
