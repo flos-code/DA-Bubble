@@ -11,7 +11,7 @@
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
                 <div>&#35;</div>
-                <div>{{channels[0].name}}</div>
+                <div>{{channel[0].name}}</div>
                 <div>
                     <mat-icon class="material-symbols-outlined" fontIcon="keyboard_arrow_down"></mat-icon>
                 </div>
@@ -20,13 +20,13 @@
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
-                        @for (member of channels[0].members; track $index) {
+                        @for (member of channel[0].members; track $index) {
                         <div>
-                            <img src="{{member.photo}}">
+                            <img src="/assets/img/main-chat/member2.svg">
                         </div>
                         }
                     </div>
-                    <div>{{membercount}}</div>
+                    <div>3</div>
                 </div>
                 <div (click)="toggleDialog('addMember')">
                     <span class="material-symbols-outlined">person_add</span>
@@ -70,9 +70,6 @@
         <!-- ========================================================== -->
         }
 
-
-
-
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages">
             <div class="mainChatMessagesSubContainer">
@@ -81,11 +78,11 @@
                 <div class="beginningOfChannel">
                     <div>
                         <div>&#35;</div>
-                        <div>{{channels[0].name}}</div>
+                        <div>{{channel[0].name}}</div>
                     </div>
                     <div>
                         Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span
-                            style="color: rgba(83, 90, 241, 1)">#{{channels[0].name}}</span>
+                            style="color: rgba(83, 90, 241, 1)">#{{channel[0].name}}</span>
                     </div>
                 </div>
                 <!-- ================================================================ -->
@@ -94,14 +91,14 @@
                 <div class="beginningOfChannel">
                     <div>
                         <div>
-                            <img [src]="channels[0].members[0].photo">
+                            <img [src]="channel[0].members[0].photo">
                         </div>
-                        <div>{{channels[0].members[0].name}}</div>
+                        <div>{{channel[0].members[0].name}}</div>
                     </div>
                     <div>
                         Diese Unterhaltung findet nur zwischen <span
-                            style="color: rgba(83, 90, 241, 1)">&#64;{{channels[0].members[0].name}}
-                            {{channels[0].members[0].surname}}</span> und dir statt.
+                            style="color: rgba(83, 90, 241, 1)">&#64;{{channel[0].members[0].name}}
+                            {{channel[0].members[0].surname}}</span> und dir statt.
                     </div>
                 </div>
                 <!-- ================================================================ -->
@@ -114,7 +111,7 @@
                     </div>
                 </div>
 
-                @if(channels[0].messages.length !== 0) {
+                @if(channel[0].messages.length !== 0) {
                 @if(!ownMessage){
                 <!-- ========================= Template Other Messages ========================= -->
                 <div class="messageContainer">
@@ -231,7 +228,7 @@
         <div class="mainChatInput">
             <div class="mainChatInputSubContainer">
                 <textarea [(ngModel)]="textArea" name="textarea"
-                    placeholder="Nachricht an #{{channels[0].name}}"></textarea>
+                    placeholder="Nachricht an #{{channel[0].name}}"></textarea>
                 <div>
                     <div>
                         <div>

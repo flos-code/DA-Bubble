@@ -42,7 +42,7 @@ export interface Fruit {
 })
 export class MainChatComponent implements OnInit, OnDestroy {
   activeChannel: string;
-  channel: Channel = new Channel();
+  channel = [];
 
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
@@ -64,7 +64,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     'photo': '../../../assets/img/main-chat/member2.svg'
   };
 
-  @Input() channels = [{
+ /*  @Input() channels = [{
     'id': 'sijfef8e8',
     'name': 'Entwicklerteam',
     'members': [{
@@ -93,7 +93,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       'threads': [{ 'message': 'Was für eine Frage hast du genau?' }],
       'reactions': [{ 'reactedBy': 'sadmvkui25ddf', 'ractionName': 'rocket', 'iconPath': '../../../assets/img/main-chat/arrowDownDefault.svg' }]
     }]
-  }];
+  }]; */
 
   users = [{
     'userId': 'sadmvkui25ddf',
@@ -131,7 +131,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
     'onlineStatus': 'online'
   },
   ];
-  membercount = this.channels[0]['members'].length;
+
+  //membercount = this.channel[0]['members'].length;
 
   constructor(private chatService: ChatService) { }
 
@@ -150,12 +151,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getCurrentChannel() {
     const q = query(collection(db, 'channels'));
     return onSnapshot(q, (list) => {
+      this.channel = [];
       list.forEach(element => {
-        if(element.data()["name"] == true) {
-          this.activeChannel = element.data()["name"];
-          console.log('Active channel', this.activeChannel);
-
-          this.channel = new Channel(element.data());
+        if(element.data()["isActive"] == true) {
+          this.channel.push(element.data());
           console.log('Current channel data', this.channel);
         }
       });
