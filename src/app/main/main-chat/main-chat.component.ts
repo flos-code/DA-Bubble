@@ -10,6 +10,24 @@ import { SecondaryChatComponent } from './secondary-chat/secondary-chat.componen
 import { ChatService } from '../../services/chat.service';
 import { Subscription } from 'rxjs';
 
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
+import { Router } from '@angular/router';
+import { Channel } from '../../../models/channel.class';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 export interface Fruit {
   name: string;
 }
@@ -23,6 +41,9 @@ export interface Fruit {
   styleUrl: './main-chat.component.scss'
 })
 export class MainChatComponent implements OnInit, OnDestroy {
+  activeChannel: string;
+  channel: Channel = new Channel();
+
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -114,16 +135,98 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   constructor(private chatService: ChatService) { }
 
-
   ngOnInit(): void {
     this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
       this.threadOpen = open;
     }));
+    this.getCurrentChannel();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
+
+  /* ================== Main chat get channel data ================== */
+  getCurrentChannel() {
+    const q = query(collection(db, 'channels'));
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        if(element.data()["name"] == true) {
+          this.activeChannel = element.data()["name"];
+          console.log('Active channel', this.activeChannel);
+
+          this.channel = new Channel(element.data());
+          console.log('Current channel data', this.channel);
+        }
+      });
+    });
+  }
+
+/*   async getUser() {
+    if(this.userId) {
+    //let currentUser = doc(collection(this.firestore, 'users'), this.userId);
+    //let currentUserSnap = await getDoc(currentUser);
+
+    onSnapshot(doc(collection(this.firestore, 'users'), this.userId), (doc) => {
+      this.user = new User(doc.data());
+    });
+          //this.user = new User(currentUserSnap);  // das JSON "currentUserSnap.data()" welches wir von der DB erhalten wird in ein Objekt vom Typ User umgewandelt.
+        console.log('Retrieved user', this.user);
+    }
+  } */
+
+
+/*   getCurrentChanelData() {
+      // orderBy('title')
+      const q = query(this.getUsersRef(), limit(50));
+      return onSnapshot(q, (list) => {
+        this.allUsers = [];
+        list.forEach(element => {
+            let documentRef: string = element.id;
+            this.allUsers.push(this.setUserObject(element.data(), documentRef));
+            this.addDocIdToUser(documentRef);
+        });
+  
+        // Mit der docChanges kann man sich die änderungen eines Dokuments auslogen lassen.
+        list.docChanges().forEach((change) => {
+          if(change.type === "added") {
+            //console.log("New note: ", change.doc.data());
+          }
+          if(change.type === "modified") {
+            //console.log("Modified note: ", change.doc.data());
+          }if(change.type === "removed") {
+            //console.log("Removed note: ", change.doc.data());
+          }
+        })
+      });
+  } */
+
+/*   getUsersRef(){
+    return collection(this.firestore, 'users'); // Zugriff auf die Datenbank
+                                                // => collection() Method greift auf die gesamte Datenbank (Collection) zu
+  } */
+
+/*   async addDocIdToUser(documentRef: string) {
+    let currentUserRef = doc(this.firestore, 'users', documentRef);
+    let data = {id: documentRef};
+    updateDoc(currentUserRef, data);
+  } */
+
+/*   setUserObject(obj: any, id: string): User {
+    return {
+      id: id || "",
+      firstName: obj.firstName || "",
+      lastName: obj.lastName || "",
+      email: obj.email || "",
+      birthDate: obj.birthDate || "" ,
+      address: obj.address || "",
+      zipCode: obj.zipCode || "",
+      city: obj.city || "",
+    }
+  } */
+
+  /* ======================================================== */
+
 
   toggleDialog(dialog: string) {
     if (dialog == 'addMember') {
@@ -145,6 +248,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.showMembersDialogOpen = false;
       }
     }
+    console.log('Active channel', this.activeChannel);
+
+    console.log('Current channel data', this.channel);
+
   }
 
   closeDialog() {
