@@ -18,6 +18,7 @@ import {
   addDoc,
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
+import { User } from '../../../models/user.class';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -60,61 +61,22 @@ export class SideBarComponent {
 
   selectedChannel: string | null = null;
   selectedUserId: number | null = null;
-  // channels: { id: string; isActive?: boolean; name?: string }[];
   channels: { id: string; data: Channel }[] = [];
+  users: { id: string; data: User }[] = [];
 
   constructor(
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService
   ) {}
 
-  users = [
-    {
-      firstName: 'Frederik',
-      lastName: 'Gluber',
-      email: 'g.gluber@mail.com',
-      onlineStatus: 'idle',
-      image: './assets/img/userImages/userImage2.svg',
-      isYou: false,
-      userID: 0,
-    },
-    {
-      firstName: 'Sofia',
-      lastName: 'Müller',
-      email: 's.müller@mail.com',
-      onlineStatus: 'active',
-      image: './assets/img/userImages/userImage1.svg',
-      isYou: true,
-      userID: 1,
-    },
-    {
-      firstName: 'Noah',
-      lastName: 'Braun',
-      email: 'n.braun@mail.com',
-      onlineStatus: 'away',
-      image: './assets/img/userImages/userImage3.svg',
-      isYou: false,
-      userID: 2,
-    },
-    {
-      firstName: 'Elias',
-      lastName: 'Neumann',
-      email: 'e.neumann@mail.com',
-      onlineStatus: 'busy',
-      image: './assets/img/userImages/userImage4.svg',
-      isYou: false,
-      userID: 3,
-    },
-  ];
-
   async ngOnInit() {
     await this.loadChannels();
-    this.sortUsers();
+    await this.loadUsers();
   }
 
   sortUsers(): void {
     this.users.sort((a, b) => {
-      return a.isYou === true ? -1 : b.isYou === true ? 1 : 0;
+      return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
     });
   }
 
@@ -143,22 +105,27 @@ export class SideBarComponent {
   }
 
   async selectChannel(selectedChannelId: string): Promise<void> {
-    const currentlyActiveChannelSnapshot = await getDocs(
-      query(collection(db, 'channels'), where('isActive', '==', true))
-    );
-    currentlyActiveChannelSnapshot.forEach(async (document) => {
-      await updateDoc(doc(db, 'channels', document.id), { isActive: false });
-    });
+    await this.deselect();
     await updateDoc(doc(db, 'channels', selectedChannelId), { isActive: true });
-
-    this.selectedUserId = null;
     this.showChat('showMainChat');
   }
 
-  selectUser(userId: number): void {
-    this.selectedUserId = userId;
-    this.selectedChannel = null;
+  async selectUser(selectedUserId: string): Promise<void> {
+    await this.deselect();
+    await updateDoc(doc(db, 'users', selectedUserId), { isSelected: true });
     this.showChat('showDms');
+  }
+
+  async deselect() {
+    const channelSnapshot = await getDocs(collection(db, 'channels'));
+    channelSnapshot.forEach(async (docSnapshot) => {
+      await updateDoc(doc(db, 'channels', docSnapshot.id), { isActive: false });
+    });
+
+    const usersSnapshot = await getDocs(collection(db, 'users'));
+    usersSnapshot.forEach(async (docSnapshot) => {
+      await updateDoc(doc(db, 'users', docSnapshot.id), { isSelected: false });
+    });
   }
 
   showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
@@ -168,10 +135,28 @@ export class SideBarComponent {
   loadChannels(): void {
     const channelsCol = collection(db, 'channels');
     onSnapshot(channelsCol, (snapshot) => {
-      this.channels = snapshot.docs.map((doc) => ({
+      // Zuerst die Kanäle in ein Array umwandeln
+      let channels = snapshot.docs.map((doc) => ({
         id: doc.id,
         data: new Channel(doc.data()),
       }));
+
+      // Kanäle basierend auf dem creationDate sortieren
+      channels.sort((a, b) => a.data.creationDate - b.data.creationDate);
+
+      // Die sortierten Kanäle dem 'channels'-Array zuweisen
+      this.channels = channels;
+    });
+  }
+
+  loadUsers(): void {
+    const usersCol = collection(db, 'users');
+    onSnapshot(usersCol, (snapshot) => {
+      this.users = snapshot.docs.map((doc) => ({
+        id: doc.id,
+        data: new User(doc.data()),
+      }));
+      this.sortUsers();
     });
   }
 
@@ -219,6 +204,9 @@ export class SideBarComponent {
       createdBy: 'UserID', // Hier sollten Sie die UserID des Erstellers setzen
       creationDate: Date.now(),
       isActive: true,
+      type: 'channel',
+      messages: [],
+      members: [],
     });
 
     this.addChannelToFirestore(newChannel);
