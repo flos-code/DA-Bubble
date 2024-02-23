@@ -18,7 +18,7 @@
         </div>
         <div>
             <div>&#35;</div>
-            <div>Entwicklerteam</div> 
+            <div>{{channelData[0].name}}</div> 
         </div>
     </div>
 
@@ -29,7 +29,7 @@
         </div>
         <div>
             <div>&#35;</div>
-            <input type="text" placeholder="Entwicklerteam">
+            <input type="text" [(ngModel)]="editedChannelName" placeholder="{{channelData[0].name}}">
         </div>
     </div>
     <!-- ====================================== -->
@@ -40,7 +40,7 @@
             <div>Beschreibung</div>
             <div (click)="editChannelDescription()">Bearbeiten</div>
         </div>
-        <div>Dieser Channel ist für alles rund um #dfsdf vorgesehen. Hier kannst du zusammen mit deinem Team Meetings abhalten, Dokumente teilen und Entscheidungen treffen.</div>
+        <div>{{channelData[0].description}}</div>
         <div></div>
         <div>Erstellt von</div>
         <div>Noah Braun</div>
@@ -52,7 +52,7 @@
             <div (click)="saveChannelDescription()">Speichern</div>
         </div>
         <div>
-            <input type="text" placeholder="Dein Text hier">
+            <input type="text" [(ngModel)]="editedChannelDescription" placeholder="Dein Text hier">
         </div>
         <div></div>
         <div>Erstellt von</div>

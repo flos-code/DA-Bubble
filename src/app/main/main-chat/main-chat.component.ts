@@ -42,6 +42,7 @@ export interface Fruit {
 })
 export class MainChatComponent implements OnInit, OnDestroy {
   channel = [];
+  channelId: string;
 
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
@@ -154,9 +155,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
       list.forEach(element => {
         if(element.data()["isActive"] == true) {
           this.channel.push(element.data());
-          console.log('Current channel data', this.channel);
-          console.log('Current channel name', element.data()['name']);
-          console.log('Current members length', element.data()['members'].length);
+          this.channelId = element.id;
+          console.log('Channel data', this.channel);
+          console.log('Channel name', element.data()['name']);
+          console.log('Members length', element.data()['members'].length);
         }
       });
     });

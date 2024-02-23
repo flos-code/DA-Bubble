@@ -34,7 +34,7 @@
             </div>
 
             <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog *ngIf="channelEditionDialogOpen"
+            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="channelEditionDialogOpen"
                 (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
             <!--=================================================-->
 
