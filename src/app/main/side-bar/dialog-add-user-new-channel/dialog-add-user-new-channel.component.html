@@ -48,9 +48,24 @@
       class="addedUser"
       type="text"
       placeholder="Name eingeben"
-      name="addedUser"
-      [(ngModel)]="addedUser"
+      [(ngModel)]="userInput"
+      (input)="filterUsers()"
+      name="userInput"
     />
+
+    <div *ngIf="filteredUsers.length > 0" class="userSuggestions">
+      <div *ngFor="let user of filteredUsers" (click)="addSelectedUser(user)">
+        {{ user.name }}
+      </div>
+    </div>
+
+    <div class="selectedUsers">
+      <div *ngFor="let user of selectedUsers">
+        {{ user.name }}
+        <span class="removeUser" (click)="removeUser(user)">×</span>
+      </div>
+    </div>
+
 
     <button class="btnPrimary" type="submit" [disabled]="shouldDisableSubmit()">
       Erstellen
