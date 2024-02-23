@@ -1,4 +1,9 @@
 <section>
+    <div
+    class="closePicker"
+    *ngIf="emojiWindowOpen"
+    (click)="toggleEmojis()"
+    ></div>
     <div class="chat-box">
         <!-------------------------------------Chat Head-------------------------------------->
         <div class="thread-head">
@@ -75,13 +80,8 @@
             (blur)="onInputBlur()">
         </textarea>
 
-        <div
-        class="closePicker"
-        *ngIf="emojiWindowOpen"
-        (click)="toggleEmojis()"
-        ></div>
-
             <div class="action-icons-container">
+
                 <div class="left-actions">
                     <button class="add-button"></button>
                     <img src="/assets/img/main-chat/separatingLine.svg">

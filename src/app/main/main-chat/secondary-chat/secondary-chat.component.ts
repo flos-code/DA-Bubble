@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ChatService } from '../../../services/chat.service';
@@ -27,7 +27,7 @@ const db = getFirestore(app);
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
-export class SecondaryChatComponent implements OnInit, OnDestroy { 
+export class SecondaryChatComponent { 
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   emojiWindowOpen = false;
@@ -61,16 +61,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   DialogRef: any;
 
   constructor(private chatService: ChatService) { }
-
-  ngOnInit() {
-    // Füge einen Klick-EventListener zum document hinzu
-    document.addEventListener('click', this.handleClickOutside.bind(this));
-  }
-
-  ngOnDestroy() {
-    // Entferne den EventListener, wenn die Komponente zerstört wird
-    document.removeEventListener('click', this.handleClickOutside.bind(this));
-  }
 
   handleClickOutside(event) {
     // Prüfe, ob der Klick außerhalb des Emoji-Pickers aufgetreten ist
