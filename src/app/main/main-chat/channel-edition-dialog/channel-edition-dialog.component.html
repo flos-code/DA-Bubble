@@ -43,7 +43,7 @@
         <div>{{channelData[0].description}}</div>
         <div></div>
         <div>Erstellt von</div>
-        <div>Noah Braun</div>
+        <div>{{channelCreatedByName}}</div>
     </div>
 
     <div class="channelEditionDescriptionEdit" *ngIf="!showchannelEditionDescription">
@@ -56,12 +56,12 @@
         </div>
         <div></div>
         <div>Erstellt von</div>
-        <div>Noah Braun</div>
+        <div>{{channelCreatedByName}}</div>
     </div>
     <!-- ====================================== -->
 
     <div class="channelEditionButtonContainer">
-        <button class="channelEditionButton">Channel verlassen</button>
+        <button class="channelEditionButton" (click)="leaveChannel()">Channel verlassen</button>
     </div>
 </div>
 

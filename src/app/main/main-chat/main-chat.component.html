@@ -20,13 +20,13 @@
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
-                        @for (member of channels[0].members; track $index) {
+                        @for (member of channel[0].members; track $index) {
                         <div>
-                            <img src="{{member.photo}}">
+                            <img src="/assets/img/main-chat/member2.svg">
                         </div>
                         }
                     </div>
-                    <div>{{membercount}}</div>
+                    <div>{{channel[0].members.length}}</div>
                 </div>
                 <div (click)="toggleDialog('addMember')">
                     <span class="material-symbols-outlined">person_add</span>
@@ -39,13 +39,13 @@
             <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
-            <app-show-members-dialog *ngIf="showMembersDialogOpen"
+            <app-show-members-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="showMembersDialogOpen"
                 (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
                 (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
             <!--=================================================-->
 
             <!--========== Add member Dialog ============-->
-            <app-add-members-dialog *ngIf="addMemberDialogOpen"
+            <app-add-members-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="addMemberDialogOpen"
                 (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
             <!--=================================================-->
 

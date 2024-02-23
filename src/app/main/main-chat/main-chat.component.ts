@@ -132,8 +132,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   },
   ];
 
-  membercount = this.channels[0]['members'].length;
-
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {

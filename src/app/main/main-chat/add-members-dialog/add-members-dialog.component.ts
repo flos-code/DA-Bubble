@@ -1,4 +1,4 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule, Pipe, PipeTransform, OnInit } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule, Pipe, PipeTransform, OnInit, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -11,6 +11,24 @@ import { LiveAnnouncer } from '@angular/cdk/a11y';
 
 import { FilterPipe } from './filter.pipe';
 
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
+import { Router } from '@angular/router';
+import { Channel } from '../../../../models/channel.class';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
 @Component({
   selector: 'app-add-members-dialog',
   standalone: true,
@@ -19,6 +37,10 @@ import { FilterPipe } from './filter.pipe';
   styleUrl: './add-members-dialog.component.scss'
 })
 export class AddMembersDialogComponent implements OnInit {
+  @Input() channelData = [];
+  @Input() currentChannelId: string;
+  channelCreatedByName: string = "";
+
   
   ngOnInit(): void {
     console.log(this.filteredUserList);

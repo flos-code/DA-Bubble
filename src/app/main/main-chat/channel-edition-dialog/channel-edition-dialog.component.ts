@@ -3,10 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { Router } from '@angular/router';
-import { Channel } from '../../../../models/channel.class';
+import { getFirestore, collection, onSnapshot, query, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -29,8 +26,8 @@ const db = getFirestore(app);
 })
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData = [];
-  @Input() currentChannelId;
-  
+  @Input() currentChannelId: string;
+  channelCreatedByName: string = "";
 
   @Output() channelEditionDialogOpenChild = new EventEmitter();
   channelEditionDialogOpen: boolean;
@@ -41,7 +38,20 @@ export class ChannelEditionDialogComponent implements OnInit {
   editedChannelDescription: string;
 
   ngOnInit(): void {
-      console.log('Current channel data', this.channelData)
+    console.log('Current channel data', this.channelData);
+    this.setChannelCreatedBy();
+  }
+
+  setChannelCreatedBy() {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        if(element.id == this.channelData[0].createdBy) {
+          this.channelCreatedByName = element.data()['name'];
+          console.log('Channel created by', this.channelCreatedByName);
+        }
+      });
+    });
   }
 
   closeDialog() {
@@ -50,7 +60,6 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   editChannelName() {
-    // Current channel name = placeholder
     this.showchannelEditionName = false;
   }
 
@@ -66,19 +75,6 @@ export class ChannelEditionDialogComponent implements OnInit {
     this.showchannelEditionName = true;
   }
 
-/*   getCleanJSON(user: User) {
-    return {
-        'id': user.id,
-        'firstName': user.firstName,
-        'lastName': user.lastName,
-        'email': user.email,
-        'birthDate': user.birthDate,
-        'address': user.address,
-        'zipCode': user.zipCode,
-        'city': user.city
-    }
-  } */
-
   editChannelDescription() {
     this.showchannelEditionDescription = false;
   }
@@ -92,6 +88,11 @@ export class ChannelEditionDialogComponent implements OnInit {
     });
     this.editedChannelDescription = "";
     this.showchannelEditionDescription = true;
+  }
+
+  leaveChannel() {
+    // Delete id from members
+    // Remove Channel from Sidebar??
   }
 
   doNotClose($event: any) {
