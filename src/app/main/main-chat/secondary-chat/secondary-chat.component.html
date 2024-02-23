@@ -75,20 +75,28 @@
             (blur)="onInputBlur()">
         </textarea>
 
+        <div
+        class="closePicker"
+        *ngIf="emojiWindowOpen"
+        (click)="toggleEmojis()"
+        ></div>
+
             <div class="action-icons-container">
                 <div class="left-actions">
                     <button class="add-button"></button>
                     <img src="/assets/img/main-chat/separatingLine.svg">
                     <button (click)="toggleEmojis()" class="emoji-button"></button>
+
                     <emoji-mart
+                        #emojiPicker
                         *ngIf="emojiWindowOpen"
                         class="emoji-mart"
-                        set="apple"
                         (emojiSelect)="handleClick($event)"
                         title="Pick your emoji…"
                         emoji="point_up"
                        >
-                     </emoji-mart>
+                    </emoji-mart>
+
                     <button class="tag-button"></button>
                 </div>
                 <button class="send-button"></button>

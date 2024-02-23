@@ -106,27 +106,25 @@
           <div
             class="singleUser"
             *ngFor="let user of users"
-            (click)="selectUser(user.userID)"
-            [ngClass]="{ active: selectedUserId === user.userID }"
+            (click)="selectUser(user.id)"
+            [ngClass]="{ active: user.data.isSelected }"
           >
             <div class="userImage">
               <img
-                [src]="user.image"
-                [alt]="'Image of ' + user.firstName + ' ' + user.lastName"
+                [src]="user.data.imgUrl"
+                [alt]="'Image of ' + user.data.name"
               />
               <div
                 class="onlineStatus"
                 [ngClass]="{
-                  online: user.onlineStatus === 'active',
-                  idle: user.onlineStatus === 'idle',
-                  busy: user.onlineStatus === 'busy',
-                  away: user.onlineStatus === 'away'
+                  online: user.data.isOnline === true,
+                  away: user.data.isOnline === false
                 }"
               ></div>
             </div>
             <div class="userName">
-              {{ user.firstName }} {{ user.lastName }}
-              <span *ngIf="user.isYou">&nbsp;(Du)</span>
+              {{ user.data.name }}
+              <span *ngIf="user.data.isYou">&nbsp;(Du)</span>
             </div>
           </div>
         </div>
