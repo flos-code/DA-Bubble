@@ -88,7 +88,6 @@ export class HeaderComponent implements OnInit {
       if (user) {
         this.profilePic = user.photoURL;
         this.userNameandSurname = user.displayName;
-        this.changeProfilePicVariable();
       } else {
         this.profilePic = '/assets/img/login/profile_generic_big.png';
         this.userNameandSurname = 'Max Mustermann';
@@ -96,19 +95,5 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  changeProfilePicVariable() {
-    if (this.profilePic == 'one') {
-      this.profilePic = '/assets/img/userImages/userImage1.svg'
-    } else if (this.profilePic == 'two') {
-      this.profilePic = '/assets/img/userImages/userImage2.svg'
-    } else if (this.profilePic == 'three') {
-      this.profilePic = '/assets/img/userImages/userImage3.svg'
-    } else if (this.profilePic == 'four') {
-      this.profilePic = '/assets/img/userImages/userImage4.svg'
-    } else if (this.profilePic == 'five') {
-      this.profilePic = '/assets/img/userImages/userImage5.svg'
-    } else if (this.profilePic == 'six') {
-      this.profilePic = '/assets/img/userImages/userImage6.svg'
-    }
-  }
+
 }

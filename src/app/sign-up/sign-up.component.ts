@@ -76,22 +76,22 @@ export class SignUpComponent {
   chooseAvatar(person: number) {
     if (person == 1) {
       this.imgUrl = this.person1Img;
-      this.person = 'one';
+      this.person = this.person1Img;
     } else if (person == 2) {
       this.imgUrl = this.person2Img;
-      this.person = 'two';
+      this.person = this.person2Img;
     } else if (person == 3) {
       this.imgUrl = this.person3Img;
-      this.person = 'three'
+      this.person = this.person3Img;
     } else if (person == 4) {
       this.imgUrl = this.person4Img;
-      this.person = 'four'
+      this.person = this.person4Img;
     } else if (person == 5) {
       this.imgUrl = this.person5Img;
-      this.person = 'five'
+      this.person = this.person5Img;
     } else if (person == 6) {
       this.imgUrl = this.person6Img;
-      this.person = 'six'
+      this.person = this.person6Img;
     }
   }
 
@@ -99,7 +99,7 @@ export class SignUpComponent {
     await createUserWithEmailAndPassword(this.auth, this.registerForm.value.email, this.registerForm.value.password);
     await updateProfile(this.auth.currentUser, {
       displayName: this.registerForm.value.nameAndSurname, 
-      photoURL: this.person,
+      photoURL: this.imgUrl,
     });
     await this.createUserDetailsDoc();
     await this.createDirectMessagesCollection();
