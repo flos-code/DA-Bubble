@@ -5,8 +5,8 @@ export class Channel {
   creationDate: number;
   createdBy: string;
   isActive: boolean;
-  messages: [];
-  members: [];
+  messages: [];  //muss ersetzt werden durch subcolelction
+  members: [];  
 
   constructor(obj?: any) {
     // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.

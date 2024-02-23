@@ -19,10 +19,11 @@ import { MatIconModule } from '@angular/material/icon';
 export class DialogAddUserNewChannelComponent {
   @Input() isVisible: boolean = false;
   @Output() toggleVisibility = new EventEmitter<void>();
+  @Output() usersToAdd = new EventEmitter<{ all: boolean, userIds?: string[] }>();
   @ViewChild('form') form!: NgForm;
 
   userSelection: string = 'allMembers';
-  addedUser: string = '';
+  addedUser: string = 'test';
 
   toggle(): void {
     this.toggleVisibility.emit();
@@ -32,16 +33,13 @@ export class DialogAddUserNewChannelComponent {
   }
 
   addUser(): void {
-    // Handle form submission
-    console.log(
-      'selected option:',
-      this.userSelection,
-      'selecteduser:',
-      this.addedUser
-    );
-
+    if (this.userSelection === 'allMembers') {
+        this.usersToAdd.emit({ all: true });
+    } else if (this.userSelection === 'specificPeople') {
+        this.usersToAdd.emit({ all: false, userIds: [this.addedUser] }); // Hier könnten Sie auch mehrere ausgewählte User-IDs übergeben
+    }
     this.toggle();
-  }
+}
 
   shouldDisableSubmit(): boolean {
     return this.userSelection === 'specificPeople' && !this.addedUser;

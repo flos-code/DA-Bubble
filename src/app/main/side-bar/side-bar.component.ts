@@ -16,6 +16,9 @@ import {
   query,
   where,
   addDoc,
+  serverTimestamp,
+  setDoc,
+  getDoc,
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
 import { User } from '../../../models/user.class';
@@ -31,14 +34,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-const newChannel = new Channel({
-  name: 'Neuer Kanal',
-  description: 'Beschreibung des neuen Kanals',
-  createdBy: 'Benutzer-ID',
-  creationDate: Date.now(),
-  isActive: true,
-});
 
 @Component({
   selector: 'app-side-bar',
@@ -66,7 +61,7 @@ export class SideBarComponent {
 
   constructor(
     public dialog: MatDialog,
-    private viewManagementService: ViewManagementService
+    private viewManagementService: ViewManagementService,
   ) {}
 
   async ngOnInit() {
@@ -98,9 +93,8 @@ export class SideBarComponent {
     this.dialogAddUserVisible = !this.dialogAddUserVisible;
   }
 
-  openNewMessage() {
-    this.selectedChannel = null;
-    this.selectedUserId = null;
+  async  openNewMessage() {
+    await this.deselect();
     this.showChat('showNewMessage');
   }
 
@@ -180,6 +174,18 @@ export class SideBarComponent {
         isActive: true,
       });
       console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
+
+          // Optional: Schritt 3: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument, falls gewünscht
+    // Hinweis: Dieser Schritt ist optional und hängt davon ab, ob Sie ein leeres Dokument in 'messages' beim Erstellen eines Kanals hinzufügen möchten.
+    const messagesRef = collection(docRef, 'messages');
+    await addDoc(messagesRef, {
+      placeholder: true, // Markiere dieses Dokument als Platzhalter
+      timestamp: serverTimestamp() // Optional: Firestore Server-Zeitstempel als Erstellungszeit
+
+      
+
+    });
+    
       await this.loadChannels();
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
@@ -194,21 +200,77 @@ export class SideBarComponent {
     this.toggleAddUserDialog();
   }
 
-  handleChannelCreation(channelData: {
+ async handleChannelCreation(channelData: {
     name: string;
     description: string;
-  }): void {
+  }): Promise<void> {
+    const currentUserSnapshot = await getDocs(query(collection(db, 'users'), where('isYou', '==', true)));
+    let currentUserId = '';
+    currentUserSnapshot.forEach(doc => {
+      currentUserId = doc.id; // Nehmen wir an, es gibt nur einen solchen Benutzer
+    });
+  
+    if (!currentUserId) {
+      console.error('Kein Benutzer mit isYou = true gefunden');
+      return;
+    }
+
     let newChannel = new Channel({
       name: channelData.name,
       description: channelData.description,
-      createdBy: 'UserID', // Hier sollten Sie die UserID des Erstellers setzen
+      createdBy: currentUserId, // Setze den aktuellen Benutzer als Ersteller
       creationDate: Date.now(),
       isActive: true,
       type: 'channel',
       messages: [],
-      members: [],
+      members: [currentUserId],
     });
 
     this.addChannelToFirestore(newChannel);
   }
+
+  async getActiveChannel() {
+    const channelsCol = collection(db, 'channels');
+    const querySnapshot = await getDocs(query(channelsCol, where('isActive', '==', true)));
+    const activeChannelDocs = querySnapshot.docs;
+
+    // Es sollte maximal einen aktiven Kanal geben
+    if (activeChannelDocs.length > 0) {
+        const activeChannel = activeChannelDocs[0];
+        return activeChannel.id; // Gibt die ID des aktiven Kanals zurück
+    } else {
+        console.error("Kein aktiver Kanal gefunden.");
+        return null; // Gibt null zurück, wenn kein aktiver Kanal gefunden wurde
+    }
+}
+
+
+async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Promise<void> {
+  const selectedChannelId = await this.getActiveChannel();
+
+  if (!selectedChannelId) {
+      console.error("Kein aktiver Kanal ausgewählt.");
+      return; // Frühzeitige Rückkehr, wenn kein aktiver Kanal gefunden wurde
+  }
+
+  let membersToUpdate: string[] = [];
+
+  if (all) {
+      // Füge alle Benutzer-IDs hinzu, wenn 'all' wahr ist
+      const allUsersSnapshot = await getDocs(collection(db, 'users'));
+      allUsersSnapshot.forEach(doc => membersToUpdate.push(doc.id));
+  } else if (userIds) {
+      // Füge nur die spezifisch ausgewählten Benutzer-IDs hinzu
+      membersToUpdate = userIds;
+  }
+
+  // Aktualisiere das 'members'-Array des aktiven Kanals
+  const channelRef = doc(db, 'channels', selectedChannelId);
+  const channelSnap = await getDoc(channelRef);
+  if (channelSnap.exists()) {
+      const existingMembers = channelSnap.data()['members'] || [];
+      const updatedMembers = Array.from(new Set([...existingMembers, ...membersToUpdate])); // Kombiniert und entfernt Duplikate
+      await updateDoc(channelRef, { members: updatedMembers });
+  }
+}
 }
