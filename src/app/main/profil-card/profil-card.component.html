@@ -5,10 +5,74 @@
         *ngIf="serviceProfilCard.isProfilCardActive" class="cardContainer">
 
         <div class="cardHeader">
+
             <h3>Profil</h3>
-            <span class="material-symbols-outlined">
-                close
-            </span>
+            <div>
+                <mat-icon class="material-symbols-outlined" fontIcon="close"
+                    (click)="serviceProfilCard.toggleCardOverlay(false)"></mat-icon>
+            </div>
+        </div>
+
+        <div class="imgContainer">
+            <img src="/assets/img/userImages/userImage2.svg" alt="">
+        </div>
+
+        <div *ngIf="!edit">
+            <div class="nameContainer">
+                <h3>Max Mustermann</h3>
+                <span *ngIf="serviceProfilCard.isCurrentUserActive" (click)="toggleEdit(!edit)">Bearbeiten</span>
+            </div>
+
+            <div class="onlineStatusContainer">
+                <div class="onlineStatusImg online"></div>
+                <div class="onlineStatusText online">Active</div>
+            </div>
+        </div>
+
+        <div *ngIf="edit">
+            <div class="editNameContainer">
+                <mat-icon class="material-symbols-outlined" fontIcon="account_circle"></mat-icon>
+                <h3>Vollständiger Name</h3>
+            </div>
+
+            <div class="nameInput">
+                <input type="text" *ngIf="edit" placeholder="Max Mustermann">
+            </div>
+        </div>
+
+        <div *ngIf="!edit">
+            <div class="emailContainerTop">
+                <mat-icon class="material-symbols-outlined" fontIcon="mail"></mat-icon>
+                <span>E-Mail-Adresse</span>
+            </div>
+
+            <div class="emailContainerButton">
+                <mat-icon class="material-symbols-outlined" fontIcon=""></mat-icon>
+                <span>maxmustermann&commat;gmail.com</span>
+            </div>
+        </div>
+
+        <div class="mt-17" *ngIf="edit">
+            <div class="emailContainerTop">
+                <mat-icon class="material-symbols-outlined" fontIcon="mail"></mat-icon>
+                <span>E-Mail-Adresse</span>
+            </div>
+
+            <div class="emailContainerButton">
+                <input type="text" *ngIf="edit" placeholder="maxmustermann&commat;gmail.com">
+            </div>
+        </div>
+
+        <div *ngIf="!serviceProfilCard.isCurrentUserActive" class="messageContainer">
+            <div>
+                <mat-icon class="material-symbols-outlined" fontIcon="mode_comment"></mat-icon>
+                <span>Nachricht</span>
+            </div>
+        </div>
+
+        <div *ngIf="edit" class="editProfilCardButton">
+            <div (click)="toggleEdit(!edit)" class="cancelBotton">Abbrechen</div>
+            <div class="saveBotton">Speichern</div>
         </div>
 
     </div>

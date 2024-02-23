@@ -79,6 +79,7 @@ export class HeaderComponent implements OnInit {
   signOut() {
     this.auth.signOut();
     this.router.navigateByUrl('login');
+    this.serviceProfilCard.isOverlayActive = false;
   }
 
 
@@ -110,5 +111,4 @@ export class HeaderComponent implements OnInit {
       this.profilePic = '/assets/img/userImages/userImage6.svg'
     }
   }
-
 }

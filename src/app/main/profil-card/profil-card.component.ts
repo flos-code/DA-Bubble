@@ -11,8 +11,12 @@ import { MatIcon } from '@angular/material/icon';
   styleUrl: './profil-card.component.scss'
 })
 export class ProfilCardComponent {
+  edit: boolean = false;
 
   constructor(public serviceProfilCard: ProfilCardService) {
+  }
 
+  toggleEdit(active: boolean) {
+    this.edit = active;
   }
 }
