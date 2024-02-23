@@ -11,21 +11,20 @@
                 <div class="userContainer">
                     <div class="userSubContainer">
                         <div>
-                            <img src="/assets/img/main-chat/member1.svg">
+                            <img src="/assets/img/main-chat/member2.svg">
                             <div></div>
                         </div>
-                        <div>{{member[$index].name}}</div>    
+                        <div>{{member.name}}</div>    
                     </div>
                 </div>           
             }
-
         </div>
     </div>
     <div>
         <div>
             <span class="material-symbols-outlined">person_add</span>
         </div>
-        <div (click)="addMemberToChannel()">Mitglieder hinzufügen</div>
+        <div (click)="goToAddMemberDialog()">Mitglieder hinzufügen</div>
     </div>
 </div>
 

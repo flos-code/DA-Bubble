@@ -5,6 +5,7 @@ import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updat
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { Channel } from '../../../../models/channel.class';
+import { C } from '@angular/cdk/keycodes';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -28,7 +29,6 @@ const db = getFirestore(app);
 export class ShowMembersDialogComponent implements OnInit {
   @Input() channelData = [];
   @Input() currentChannelId: string;
-  channelCreatedByName: string = "";
   membersData = [];
 
   @Output() showMembersDialogOpenChild = new EventEmitter();
@@ -37,32 +37,33 @@ export class ShowMembersDialogComponent implements OnInit {
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
 
-  ngOnInit(): void {
-      //this.getMembers();
 
+  ngOnInit(): void {
+      this.getMembers();
+      console.log('Show members channel data', this.channelData);
+      console.log('Current members ids', this.channelData[0].members);
 
   }
 
-/*   getMembers() {
-    for (let i = 0; i < this.channelData[0].members.length; i++) {
-      const memberId = this.channelData[0].members[i];
-      console.log(memberId);
+  getMembers() {
       const q = query(collection(db, 'users'));
 
       return onSnapshot(q, (list) => {
+        this.membersData = [];
         list.forEach(element => {
-          if(element.id == memberId) {
-            this.membersData.push(element.data());
-          }
+          for (let i = 0; i < this.channelData[0].members.length; i++) {
+            const memberId = this.channelData[0].members[i];
+            if(element.id == memberId) {
+              this.membersData.push(element.data());
+              console.log('Members data array', this.membersData);
+            }         
+          }      
         });
       });    
-    }
-  } */
-
+  }
 
   doNotClose($event: any) {
     $event.stopPropagation(); 
-
   }
 
   closeDialog() {
@@ -70,7 +71,7 @@ export class ShowMembersDialogComponent implements OnInit {
     this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
   }
 
-  addMemberToChannel() {
+  goToAddMemberDialog() {
     this.showMembersDialogOpen = false;
     this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
     this.addMembersDialogOpenOpenChildShow.emit(this.addMemberDialogOpen)
