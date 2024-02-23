@@ -7,53 +7,17 @@
     </div>
     <div class="usersListContainer">
         <div class="usersListSubContainer">
-            @for (members of channelData[0].members; track $index) {
+            @for (member of membersData; track $index) {
                 <div class="userContainer">
                     <div class="userSubContainer">
                         <div>
                             <img src="/assets/img/main-chat/member1.svg">
                             <div></div>
                         </div>
-                        <div>Sofia Müller</div>    
+                        <div>{{member[$index].name}}</div>    
                     </div>
                 </div>           
             }
-            <div class="userContainer">
-                <div class="userSubContainer">
-                    <div>
-                        <img src="/assets/img/main-chat/member1.svg">
-                        <div></div>
-                    </div>
-                    <div>Sofia Müller</div>    
-                </div>
-            </div>
-            <div class="userContainer">
-                <div class="userSubContainer">
-                    <div>
-                        <img src="/assets/img/main-chat/member1.svg">
-                        <div></div>
-                    </div>
-                    <div>Sofia Müller</div>    
-                </div>
-            </div>
-            <div class="userContainer">
-                <div class="userSubContainer">
-                    <div>
-                        <img src="/assets/img/main-chat/member1.svg">
-                        <div></div>
-                    </div>
-                    <div>Sofia Müller</div>    
-                </div>
-            </div>
-            <div class="userContainer">
-                <div class="userSubContainer">
-                    <div>
-                        <img src="/assets/img/main-chat/member1.svg">
-                        <div></div>
-                    </div>
-                    <div>Sofia Müller</div>    
-                </div>
-            </div>
 
         </div>
     </div>

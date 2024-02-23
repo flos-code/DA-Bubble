@@ -38,16 +38,17 @@ export class ShowMembersDialogComponent implements OnInit {
   addMemberDialogOpen: boolean;
 
   ngOnInit(): void {
-      this.getMembers();
+      //this.getMembers();
 
 
   }
 
-  getMembers() {
+/*   getMembers() {
     for (let i = 0; i < this.channelData[0].members.length; i++) {
       const memberId = this.channelData[0].members[i];
+      console.log(memberId);
       const q = query(collection(db, 'users'));
-      
+
       return onSnapshot(q, (list) => {
         list.forEach(element => {
           if(element.id == memberId) {
@@ -56,7 +57,7 @@ export class ShowMembersDialogComponent implements OnInit {
         });
       });    
     }
-  }
+  } */
 
 
   doNotClose($event: any) {
