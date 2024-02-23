@@ -3,7 +3,6 @@
 </div>
 
 <div style="display: flex;">
-
     <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
         @if(showChannel) {
@@ -20,7 +19,7 @@
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
-                        @for (member of channel[0].members; track $index) {
+                        @for (member of channel[0].members | slice:0:2; track $index) {
                         <div>
                             <img src="/assets/img/main-chat/member2.svg">
                         </div>
@@ -69,8 +68,6 @@
         </div>
         <!-- ========================================================== -->
         }
-
-
 
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->

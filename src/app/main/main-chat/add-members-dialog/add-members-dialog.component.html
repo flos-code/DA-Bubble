@@ -5,7 +5,7 @@
             <span class="material-symbols-outlined">close</span>
         </div>
     </div>
-    <div># Entwickler</div>
+    <div># {{channelData[0].name}}</div>
     <div class="addUserInputContainer" [class.focusedBorder]="inputFocus" (click)="doNotClose($event)">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
@@ -23,45 +23,8 @@
             <img src="/assets/img/main-chat/member2.svg">
             <div>{{filtereduser.name}} {{filtereduser.surname}}</div>
           </div>
-
-
-<!--             <div (click)="addUser()">
-              <img src="/assets/img/main-chat/member2.svg">
-              <div>Elise Roth</div>
-            </div>
-            <div (click)="addUser()">
-              <img src="/assets/img/main-chat/member2.svg">
-              <div>Elise Roth</div>
-            </div>
- -->       </div>
+       </div>
       </div>
-
-
-
-<!--         <form>
-            <mat-form-field class="example-chip-list">
-              <mat-chip-grid #chipGrid aria-label="Fruit selection">
-                @for (fruit of fruits; track fruit) {
-                  <mat-chip-row (removed)="remove(fruit)">
-                    {{fruit}}
-                    <button matChipRemove [attr.aria-label]="'remove ' + fruit">
-                        <span class="material-symbols-outlined">cancel</span>                                
-                    </button>
-                  </mat-chip-row>
-                }
-              </mat-chip-grid>
-              <input placeholder="New Fruit..." #fruitInput [formControl]="fruitCtrl"
-                [matChipInputFor]="chipGrid" [matAutocomplete]="auto"
-                [matChipInputSeparatorKeyCodes]="separatorKeysCodes"
-                (matChipInputTokenEnd)="add($event)"/>
-              <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
-                @for (fruit of filteredFruits | async; track fruit) {
-                  <mat-option [value]="fruit">{{fruit}}</mat-option>
-                }
-              </mat-autocomplete>
-            </mat-form-field>
-          </form> -->
-
     </div>
     <div>
         <button (click)="addUsers()" >Hinzufügen</button>

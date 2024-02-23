@@ -1,21 +1,15 @@
-import { Component, ElementRef, EventEmitter, Output, ViewChild, inject, NgModule, Pipe, PipeTransform, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
-import { MatChipEditedEvent, MatChipInputEvent, MatChipsModule } from '@angular/material/chips';
-import { MatAutocompleteSelectedEvent, MatAutocompleteModule } from '@angular/material/autocomplete';
-import { COMMA, ENTER } from '@angular/cdk/keycodes';
-import { Observable, map, startWith } from 'rxjs';
-import { AsyncPipe, CommonModule } from '@angular/common';
-import { LiveAnnouncer } from '@angular/cdk/a11y';
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
+import { CommonModule } from '@angular/common';
 
 import { FilterPipe } from './filter.pipe';
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { Router } from '@angular/router';
-import { Channel } from '../../../../models/channel.class';
+import { getFirestore, collection, onSnapshot,  query, doc, getDoc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -43,18 +37,18 @@ export class AddMembersDialogComponent implements OnInit {
 
   
   ngOnInit(): void {
-    console.log(this.filteredUserList);
-
+    this.getMembers();
   }
 
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
   inputFocus: boolean = false;
-
   searchText: string = '';
   newUsersToAdd = [];
 
-  userList = [{
+  userList = [];
+
+ /*  userList = [{
     'id': 'kalof85s8s',
     'name': 'Stefanie',
     'surname': 'Müller'
@@ -73,16 +67,34 @@ export class AddMembersDialogComponent implements OnInit {
     'id': 'hufslehuf85ss',
     'name': 'Elias',
     'surname': 'Neumann'
-  }];
+  }]; */
 
   originalUserList = this.userList;
   filteredUserList = this.userList;
+
+  getMembers() {
+    console.log('Channel data add members', this.channelData);
+    const q = query(collection(db, 'users'));
+
+    return onSnapshot(q, (list) => {
+      this.userList = [];
+      list.forEach(element => {
+        for (let i = 0; i < this.channelData[0].members.length; i++) {
+          const memberId = this.channelData[0].members[i];
+
+          if(element.id !== memberId) {
+            this.userList.push(element.data());
+            console.log('Members data array', this.userList);
+          }         
+        }      
+      });
+    });  
+  }
 
   searchKey(data:string) {
     this.searchText = data;
     this.search();
   }
-
 
   search() {
     this.filteredUserList = this.userList;

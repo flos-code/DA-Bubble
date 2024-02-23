@@ -62,6 +62,10 @@ export class ShowMembersDialogComponent implements OnInit {
       });    
   }
 
+  openProfileCard() {
+    
+  }
+
   doNotClose($event: any) {
     $event.stopPropagation(); 
   }

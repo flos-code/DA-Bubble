@@ -15,6 +15,7 @@ import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updat
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { Channel } from '../../../models/channel.class';
+import { OverlayOutsideClickDispatcher } from '@angular/cdk/overlay';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -42,6 +43,7 @@ export interface Fruit {
 })
 export class MainChatComponent implements OnInit, OnDestroy {
   channel = [];
+  dmUser = [];
   channelId: string;
 
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
@@ -135,31 +137,40 @@ export class MainChatComponent implements OnInit, OnDestroy {
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
+    this.getCurrentChannel();
     this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
       this.threadOpen = open;
     }));
-    this.getCurrentChannel();
+    //this.getCurrentDirectMessage();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  /* ================== Main chat get channel data ================== */
+  /* ================== Main chat channel data ================== */
   getCurrentChannel() {
     const q = query(collection(db, 'channels'));
-    return onSnapshot(q, (list) => {
-      this.channel = [];
-      list.forEach(element => {
-        if(element.data()["isActive"] == true) {
-          this.channel.push(element.data());
-          this.channelId = element.id;
-          console.log('Channel data', this.channel);
-          console.log('Channel name', element.data()['name']);
-          console.log('Members length', element.data()['members'].length);
-        }
-      });
-    });
+      return onSnapshot(q, (list) => {
+        this.channel = [];
+        list.forEach(element => {
+          if(element.data()["isActive"] == true) {
+            this.channel.push(element.data());
+            this.channelId = element.id;
+            console.log('Channel data', this.channel);
+            console.log('Channel name', element.data()['name']);
+            console.log('Members length', element.data()['members'].length);
+          }
+        });
+      }
+    );
+  }
+
+  getCurrentDirectMessage() {
+    if(this.channel = []) {
+      this.showChannel = false;
+      this.getCurrentDmUser();
+    }
   }
 
 /*   async getUser() {
@@ -175,31 +186,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   } */
 
-
-/*   getCurrentChanelData() {
-      // orderBy('title')
-      const q = query(this.getUsersRef(), limit(50));
-      return onSnapshot(q, (list) => {
-        this.allUsers = [];
-        list.forEach(element => {
-            let documentRef: string = element.id;
-            this.allUsers.push(this.setUserObject(element.data(), documentRef));
-            this.addDocIdToUser(documentRef);
-        });
-  
-        // Mit der docChanges kann man sich die änderungen eines Dokuments auslogen lassen.
-        list.docChanges().forEach((change) => {
-          if(change.type === "added") {
-            //console.log("New note: ", change.doc.data());
-          }
-          if(change.type === "modified") {
-            //console.log("Modified note: ", change.doc.data());
-          }if(change.type === "removed") {
-            //console.log("Removed note: ", change.doc.data());
-          }
-        })
-      });
-  } */
 
 /*   getUsersRef(){
     return collection(this.firestore, 'users'); // Zugriff auf die Datenbank
@@ -224,6 +210,33 @@ export class MainChatComponent implements OnInit, OnDestroy {
       city: obj.city || "",
     }
   } */
+
+  /* ======================================================== */
+
+  /* ================== Main chat DM data ================== */
+  getCurrentDmUser() {
+    const q = query(collection(db, 'users'));
+    console.log('Querry users colelction', q);
+
+    return onSnapshot(q, (list) => {
+      this.dmUser = [];
+      list.forEach(element => {
+        this.dmUser.push(element.data());
+
+        //const dmq = query(collection(db, element.data()["directMessages"]));
+        //console.log('subcollection direct messages', dmq);
+
+/*         return onSnapshot(dmq, (list) => {
+          list.forEach(dmElement => {
+            if(dmElement.data()["isActive"] == true) {
+              this.dmUser.push(element.data());
+            }
+          });
+        }) */
+      });
+      console.log('DM user data', this.dmUser);
+    }); 
+  }
 
   /* ======================================================== */
 

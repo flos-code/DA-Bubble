@@ -8,7 +8,7 @@
     <div class="usersListContainer">
         <div class="usersListSubContainer">
             @for (member of membersData; track $index) {
-                <div class="userContainer">
+                <div class="userContainer" (click)="openProfileCard()">
                     <div class="userSubContainer">
                         <div>
                             <img src="/assets/img/main-chat/member2.svg">
