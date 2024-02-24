@@ -11,6 +11,8 @@ export class ChatService {
   // Exposition eines Observables, auf das Komponenten abonnieren können
   threadOpen$ = this.threadOpenSource.asObservable();
 
+  private activeChannelId: string;
+
   constructor() { }
 
   // Methode zum Öffnen des Threads
@@ -21,5 +23,14 @@ export class ChatService {
   // Methode zum Schließen des Threads
   closeThread(): void {
     this.threadOpenSource.next(false);
+  }
+
+  setActiveChannelId(channelId: string) {
+    this.activeChannelId = channelId;
+    console.log(`Aktiver Channel: ${this.activeChannelId}`);
+  }
+
+  getActiveChannelId(): string {
+    return this.activeChannelId;
   }
 }

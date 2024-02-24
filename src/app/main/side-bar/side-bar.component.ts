@@ -5,6 +5,7 @@ import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-chann
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/dialog-add-user-new-channel.component';
 import { ViewManagementService } from '../../services/view-management.service';
+import { ChatService } from '../../services/chat.service';
 import { initializeApp } from 'firebase/app';
 import {
   getFirestore,
@@ -62,6 +63,7 @@ export class SideBarComponent {
   constructor(
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
+    private chatService: ChatService
   ) {}
 
   async ngOnInit() {
@@ -272,5 +274,9 @@ async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Prom
       const updatedMembers = Array.from(new Set([...existingMembers, ...membersToUpdate])); // Kombiniert und entfernt Duplikate
       await updateDoc(channelRef, { members: updatedMembers });
   }
+}
+
+setActiveChannel(channelId: string) {
+  this.chatService.setActiveChannelId(channelId);
 }
 }
