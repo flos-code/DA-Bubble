@@ -55,7 +55,7 @@
             class="singleChannel"
             *ngFor="let channel of channels"
             (click)="setActiveChannel(channel.id)"
-            [ngClass]="{ active: channel.data.isActive }"
+            [ngClass]="{ 'active': getActiveChannelId() === channel.id }"
           >
             <mat-icon
               class="material-symbols-rounded"
