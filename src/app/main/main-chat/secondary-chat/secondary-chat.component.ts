@@ -3,8 +3,9 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ChatService } from '../../../services/chat.service';
+import { InputService } from '../../../services/input.service';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
 
@@ -27,13 +28,13 @@ const db = getFirestore(app);
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
-export class SecondaryChatComponent { 
+export class SecondaryChatComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   emojiWindowOpen = false;
-  inputFocused: boolean = false;
   threadOpen: boolean = true;
   messageModel: string = '';
+  currentCursorPosition: number = 0; // Speichert die aktuelle Cursorposition
 
   messages = [
     {
@@ -60,28 +61,46 @@ export class SecondaryChatComponent {
   ];
   DialogRef: any;
 
-  constructor(private chatService: ChatService) { }
+  constructor(
+    private chatService: ChatService,
+    public inputService: InputService
+  ) { }
 
-  handleClickOutside(event) {
-    // Prüfe, ob der Klick außerhalb des Emoji-Pickers aufgetreten ist
-    if (this.emojiWindowOpen && this.emojiPicker && !this.emojiPicker.nativeElement.contains(event.target)) {
-      this.emojiWindowOpen = false;
-    }
+  /**
+   * Updates the current cursor position based on user interactions.
+   * @param {any} event - The event object.
+   */
+  updateCursorPosition(event: any) {
+    this.currentCursorPosition = event.target.selectionStart;
   }
 
-  onInputFocus(): void {
-    this.inputFocused = true;
-  }
-
-  onInputBlur(): void {
-    this.inputFocused = false;
-  }
-
-  handleClick(event: any) {
+  /**
+   * Handles the selection of an emoji.
+   * @param {any} event - The event object.
+   */
+  onEmojiSelect(event: any) {
     const emoji = event.emoji.native;
-    this.insertEmojiAtCursor(emoji);
+    this.messageModel += emoji; // Adds the emoji at the end of the text
+    
+    // Restores focus to the text field and sets the cursor position
+    this.setFocusAndCursorPosition();
+  }
+  
+  /**
+   * Sets focus and cursor position.
+   */
+  setFocusAndCursorPosition() {
+    setTimeout(() => {
+      const textArea: HTMLInputElement = this.messageInput.nativeElement;
+      textArea.focus(); // Sets focus to the text field
+      const len = this.messageModel.length; // Determines the length of the updated text
+      textArea.setSelectionRange(len, len); // Sets the cursor position at the end of the text
+    }, 0);
   }
 
+  /**
+   * Toggles the visibility of the emoji window.
+   */
   toggleEmojis() {
     if (this.emojiWindowOpen) {
       this.emojiWindowOpen = false;
@@ -90,21 +109,9 @@ export class SecondaryChatComponent {
     }
   }
 
-  insertEmojiAtCursor(emoji: string) {
-    const inputEl = this.messageInput.nativeElement;
-    const start = inputEl.selectionStart;
-    const end = inputEl.selectionEnd;
-    const text = inputEl.value;
-    const before = text.substring(0, start);
-    const after = text.substring(end, text.length);
-    this.messageModel = before + emoji + after;
-
-    const newPos = start + emoji.length;
-    setTimeout(() => {
-      inputEl.selectionStart = inputEl.selectionEnd = newPos;
-    });
-  }
-
+  /**
+   * Closes the chat thread.
+   */
   closeThread(): void {
     this.chatService.closeThread();
   }

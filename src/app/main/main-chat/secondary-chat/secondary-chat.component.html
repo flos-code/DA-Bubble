@@ -1,9 +1,5 @@
 <section>
-    <div
-    class="closePicker"
-    *ngIf="emojiWindowOpen"
-    (click)="toggleEmojis()"
-    ></div>
+    <div class="closePicker" *ngIf="emojiWindowOpen" (click)="toggleEmojis()"></div>
     <div class="chat-box">
         <!-------------------------------------Chat Head-------------------------------------->
         <div class="thread-head">
@@ -63,22 +59,17 @@
         </div>
         <!--------------------------------------Chat Content-------------------------------------->
         <!--------------------------------------Input Contnent-------------------------------------->
-        <div class="input-content"
-          [class.focused]="inputFocused"
-          (click)="message.focus()"
-          >
+        <div class="input-content" (click)="message.focus()">
 
-        <textarea 
-            required
-            [(ngModel)]="messageModel"
-            placeholder="Antworten..."
+            <textarea
             #message
+            [(ngModel)]="messageModel"
+            (input)="updateCursorPosition($event)"
+            placeholder="Antworten..."
             name="second-chat-input"
             cols="30"
-            rows="10"
-            (focus)="onInputFocus()"
-            (blur)="onInputBlur()">
-        </textarea>
+            rows="10">
+          </textarea>          
 
             <div class="action-icons-container">
 
@@ -87,14 +78,8 @@
                     <img src="/assets/img/main-chat/separatingLine.svg">
                     <button (click)="toggleEmojis()" class="emoji-button"></button>
 
-                    <emoji-mart
-                        #emojiPicker
-                        *ngIf="emojiWindowOpen"
-                        class="emoji-mart"
-                        (emojiSelect)="handleClick($event)"
-                        title="Pick your emoji…"
-                        emoji="point_up"
-                       >
+                    <emoji-mart #emojiPicker *ngIf="emojiWindowOpen" class="emoji-mart"
+                        (emojiSelect)="onEmojiSelect($event)" title="Pick your emoji…" emoji="point_up">
                     </emoji-mart>
 
                     <button class="tag-button"></button>
