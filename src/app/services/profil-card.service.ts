@@ -14,7 +14,6 @@ export class ProfilCardService {
 
   toggleCardOverlay(active: boolean) {
     this.isOverlayActive = active;
-    console.log('Passt!');
     this.isProfilCardActiveChanged.emit(active); // Emit event when the variable changes
     if (this.isProfilCardActive) {
       this.isProfilCardActive = false;

@@ -149,7 +149,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== Main chat channel data ================== */
-  async getCurrentChannel() {
+  getCurrentChannel() {
     const q = query(collection(db, 'channels'));
       return  onSnapshot(q, (list) => {
         this.channel = [];
