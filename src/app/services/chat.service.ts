@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { initializeApp } from "firebase/app";
+import { Message } from '../../models/message.class';
 import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc } from "firebase/firestore";
 
 @Injectable({
@@ -25,36 +26,23 @@ export class ChatService {
     };
     const app = initializeApp(firebaseConfig);
     this.db = getFirestore(app);
-    this.listenForMessages();
   }
 
-  private listenForMessages() {
-    const messagesRef = collection(this.db, 'messages');
+  listenForMessages(channelId: string) {
+    const messagesRef = collection(this.db, `channels/${this.activeChannelId}/messages`);
     onSnapshot(messagesRef, (snapshot) => {
-      this.messages = snapshot.docs.map(doc => ({
-        id: doc.id,
-        ...doc.data()
-      }));
+      const messages = snapshot.docs.map(doc => new Message({ ...doc.data(), messageId: doc.id }));
     });
   }
 
-  getMessages() {
-    return this.messages;
+  async addMessage(channelId: string, message: Message) {
+    const messagesRef = collection(this.db, `channels/${this.activeChannelId}/messages`);
+    await addDoc(messagesRef, message.toJSON());
   }
 
-  async addMessage(message) {
-    const messagesRef = collection(this.db, 'messages');
-    await addDoc(messagesRef, message);
-  }
-
-  async updateMessage(id, updatedFields) {
-    const messageRef = doc(this.db, 'messages', id);
-    await updateDoc(messageRef, updatedFields);
-  }
-
-  async deleteMessage(id) {
-    const messageRef = doc(this.db, 'messages', id);
-    await deleteDoc(messageRef);
+  async updateMessage(channelId: string, message: Message) {
+    const messageRef = doc(this.db, `channels/${this.activeChannelId}/messages/${message.messageId}`);
+    await updateDoc(messageRef, message.toJSON());
   }
 
   openThread(): void {
