@@ -149,9 +149,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== Main chat channel data ================== */
-  getCurrentChannel() {
+  async getCurrentChannel() {
     const q = query(collection(db, 'channels'));
-      return onSnapshot(q, (list) => {
+      return  onSnapshot(q, (list) => {
         this.channel = [];
         list.forEach(element => {
           if(element.data()["isActive"] == true) {

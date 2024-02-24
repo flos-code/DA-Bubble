@@ -1,0 +1,75 @@
+<section>
+    <div class="chat-box">
+        <!-------------------------------------Chat Head-------------------------------------->
+        <div class="thread-head">
+            <div class="left-side-head">
+                <h3>Thread</h3>
+                <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag">
+                <p>Entwicklerteam</p>
+            </div>
+            <button class="close-button"></button>
+        </div>
+        <!-----------------------------------Chat Head------------------------------------>
+        <!---------------------------------------Chat Content--------------------------------------->
+        <div class="chat-content">
+            <div class="user-message"> <!-- Thread Message -->
+                <img src="/assets/img/userImages/userImage4.svg" alt="">
+                <div>
+                    <div class="user-time">
+                        <p>Noah Bruan</p>
+                        <span>{{messages[0].time}} Uhr</span>
+                    </div>
+                    <div class="thread-message">
+                        <span>{{messages[0].message}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="answer-line-container"> <!-- Marker for seperate thread quiry to answers -->
+                <p>2 Antworten</p>
+                <div class="purple-line"></div>
+            </div>
+
+            <div class="user-message"> <!-- Template of awnsers -->
+                <img src="/assets/img/userImages/userImage5.svg" alt="">
+                <div>
+                    <div class="user-time">
+                        <p>Sofia Müller</p>
+                        <span>{{messages[1].time}} Uhr</span>
+                    </div>
+                    <div class="thread-message">
+                        <span>{{messages[1].message}}</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="user-message own-message"> <!-- Template of own message -->
+                <img src="/assets/img/userImages/userImage6.svg" alt="">
+                <div>
+                    <div class="user-time own-message">
+                        <p>Frederik Beck</p>
+                        <span>{{messages[2].time}} Uhr</span>
+                    </div>
+                    <div class="thread-message own-bubble">
+                        <span>{{messages[2].message}}</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+  <!--------------------------------------Chat Content-------------------------------------->
+  <!--------------------------------------Input Contnent-------------------------------------->
+        <div class="input-content">
+            <textarea placeholder="Antworten..." name="second-chat-input" id="second-chat-input" cols="30"
+                rows="10"></textarea>
+            <div class="action-icons-container">
+                <div class="left-actions">
+                    <button class="add-button"></button>
+                    <img src="/assets/img/main-chat/separatingLine.svg">
+                    <button class="emoji-button"></button>
+                    <button class="tag-button"></button>
+                </div>
+                <button class="send-button"></button>
+            </div>
+        </div>
+    </div>
+</section>

@@ -239,13 +239,13 @@ app-add-members-dialog {
 
     > div {
         height: 2px;
-        background-color: rgba(173, 176, 217, 1);
+        background-color: $lightPurple;
         display: flex;
         justify-content: center;
         align-items: center;
 
         > div {
-            border: 1px solid rgba(173, 176, 217, 1);
+            border: 1px solid $lightPurple;
             border-radius: 30px;
             padding: 5px 15px 5px 15px;
             background-color: white;
@@ -318,14 +318,14 @@ app-add-members-dialog {
 
         > div:last-of-type{
             font-size: 14px;
-            color: rgba(104, 104, 104, 1);
+            color: $textGray;
         }
     }
 
     > div:nth-of-type(2) {
         border-radius: 0px 30px 30px 30px;
         padding: 15px;
-        background-color: rgba(236, 238, 254, 1);
+        background-color: $bgColor;
         font-size: 18px;
     }
 }
@@ -348,7 +348,7 @@ app-add-members-dialog {
 
         > div:first-of-type{
             font-size: 14px;
-            color: rgba(104, 104, 104, 1);
+            color: $textGray;
         }
         
         > div:last-of-type{
@@ -372,12 +372,12 @@ app-add-members-dialog {
 
     > div:first-of-type {
         font-size: 18px;
-        color: rgba(83, 90, 241, 1);
+        color: $purple3;
     }
 
     > div:last-of-type {
         font-size: 14px;
-        color: rgba(104, 104, 104, 1);    
+        color: $textGray;    
     }
 }
 
@@ -386,12 +386,12 @@ app-add-members-dialog {
 
     > div:first-of-type {
         font-size: 14px;
-        color: rgba(104, 104, 104, 1);    
+        color: $textGray;    
     }
 
     > div:last-of-type {
         font-size: 18px;
-        color: rgba(83, 90, 241, 1);
+        color: $purple3;
     }
 }
 
@@ -583,7 +583,7 @@ app-add-members-dialog {
 .mainChatInputSubContainer {
     width: 100%;
     height: 100%;
-    border: 1px solid rgba(173, 176, 217, 1);
+    border: 1px solid $lightPurple;
     border-radius: 20px;
     display: flex;
     flex-direction: column;
