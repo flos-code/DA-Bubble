@@ -2,8 +2,9 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
+/* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, query, doc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -13,9 +14,9 @@ const firebaseConfig = {
   messagingSenderId: "970901942782",
   appId: "1:970901942782:web:56b67253649b6206f290af"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+/* =============================== */
 
 @Component({
   selector: 'app-channel-edition-dialog',
@@ -26,7 +27,7 @@ const db = getFirestore(app);
 })
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData;
-  @Input() currentChannelId: string;
+  @Input() currentChannelId;
   channelCreatedByName: string = "";
 
   @Output() channelEditionDialogOpenChild = new EventEmitter();
@@ -46,7 +47,7 @@ export class ChannelEditionDialogComponent implements OnInit {
     const q = query(collection(db, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
-        if(element.id == this.channelData[0].createdBy) {
+        if(element.id == this.channelData['createdBy']) {
           this.channelCreatedByName = element.data()['name'];
           console.log('Channel created by', this.channelCreatedByName);
         }
@@ -64,12 +65,10 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async saveChannelName() {
-    //this.loading = true;
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
     let data = {name: this.editedChannelName };
     await updateDoc(currentChannelRef, data).then(() => {
-    //updateDoc(currentChannelRef, this.channelData.toJSON()).then(() => {
-    //this.loading = false;
+      console.log('New channel name', data);
     });
     this.editedChannelName = "";
     this.showchannelEditionName = true;
@@ -80,11 +79,9 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async saveChannelDescription() {
-    //this.loading = true;
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
     let data = {description: this.editedChannelDescription };
     await updateDoc(currentChannelRef, data).then(() => {
-    //this.loading = false;
     });
     this.editedChannelDescription = "";
     this.showchannelEditionDescription = true;
