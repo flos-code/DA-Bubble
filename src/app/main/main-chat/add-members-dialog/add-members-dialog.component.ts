@@ -6,8 +6,6 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
 
-import { FilterPipe } from './filter.pipe';
-
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot,  query, doc, getDoc, updateDoc } from "firebase/firestore";
 
@@ -26,12 +24,12 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-add-members-dialog',
   standalone: true,
-  imports: [ MatIconModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, CommonModule, FilterPipe ],
+  imports: [ MatIconModule, FormsModule, ReactiveFormsModule, MatFormFieldModule, MatChipsModule, MatAutocompleteModule, CommonModule ],
   templateUrl: './add-members-dialog.component.html',
   styleUrl: './add-members-dialog.component.scss'
 })
 export class AddMembersDialogComponent implements OnInit {
-  @Input() channelData = [];
+  @Input() channelData;
   @Input() currentChannelId: string;
   channelCreatedByName: string = "";
 

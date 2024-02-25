@@ -27,7 +27,7 @@ const db = getFirestore(app);
   styleUrl: './show-members-dialog.component.scss'
 })
 export class ShowMembersDialogComponent implements OnInit {
-  @Input() channelData = [];
+  @Input() channelData;
   @Input() currentChannelId: string;
   membersData = [];
 

@@ -11,11 +11,12 @@ import { ChatService } from '../../services/chat.service';
 import { Subscription } from 'rxjs';
 
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc, orderBy } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { Channel } from '../../../models/channel.class';
 import { OverlayOutsideClickDispatcher } from '@angular/cdk/overlay';
+import { Message } from '../../../models/message.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -42,9 +43,14 @@ export interface Fruit {
   styleUrl: './main-chat.component.scss'
 })
 export class MainChatComponent implements OnInit, OnDestroy {
-  channel = [];
+  channel: Channel;
+  channelId: string = 'allgemein';
+
+  channelMessages: Message[] = [];
+  messageId: string = '';
+  messageCreationDates: number[] = [];
+
   dmUser = [];
-  channelId: string;
 
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
@@ -95,7 +101,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       'threads': [{ 'message': 'Was für eine Frage hast du genau?' }],
       'reactions': [{ 'reactedBy': 'sadmvkui25ddf', 'ractionName': 'rocket', 'iconPath': '../../../assets/img/main-chat/arrowDownDefault.svg' }]
     }]
-  }];
+  }]; 
 
   users = [{
     'userId': 'sadmvkui25ddf',
@@ -138,6 +144,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
+    this.getMessages();
     this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
       this.threadOpen = open;
     }));
@@ -150,71 +157,58 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ================== Main chat channel data ================== */
   getCurrentChannel() {
-    const q = query(collection(db, 'channels'));
-      return  onSnapshot(q, (list) => {
-        this.channel = [];
-        list.forEach(element => {
-          if(element.data()["isActive"] == true) {
-            this.channel.push(element.data());
-            this.channelId = element.id;
-            console.log('Channel data', this.channel);
-            console.log('Channel name', element.data()['name']);
-            console.log('Members length', element.data()['members'].length);
-          }
-        });
-      }
-    );
+    // => nicht in ein array pushen!! => channel = new Channel();
+    onSnapshot(doc(collection(db, 'channels'), this.channelId), (doc) => {
+      //this.channel = [];
+      this.channel = new Channel(doc.data());
+      //this.channel.push(new Channel(doc.data()));
+      console.log('Channel data', this.channel);
+    });
   }
 
-  getCurrentDirectMessage() {
+  getMessages() {
+    //const q = query(collection(db, `channels'/${this.channelId}/messages`));
+    const q = query(collection(db, 'channels/allgemein/messages'), orderBy("creationDate", "asc"));
+    return onSnapshot(q, (list) => {
+      this.channelMessages = [];
+      list.forEach(message => {
+          this.channelMessages.push(new Message(message.data()));
+          console.log('Channel messages data', this.channelMessages);
+          this.getMessageCreationDates();
+        })
+    });
+  }
+
+  getMessageCreationDates() {
+    for (let i = 0; i < this.channelMessages.length; i++) {
+      let message = this.channelMessages[i];
+      //let date = new Date(message['creationDate']);
+     // date = date.toLocaleDateString('de-CH');
+
+      if(!this.messageCreationDates.includes(message['creationDate'])) {
+        let date = new Date(message['creationDate']);
+        this.messageCreationDates.push(message.creationDate);
+      }
+    }
+    console.log(this.messageCreationDates);
+    console.log('Current date', Date.now());
+  }  
+
+
+  //const messages = snapshot.docs.map(doc => new Message({ ...doc.data(), messageId: doc.id })).orderBy();
+
+
+/*   getCurrentDirectMessage() {
     if(this.channel = []) {
       this.showChannel = false;
       this.getCurrentDmUser();
-    }
-  }
-
-/*   async getUser() {
-    if(this.userId) {
-    //let currentUser = doc(collection(this.firestore, 'users'), this.userId);
-    //let currentUserSnap = await getDoc(currentUser);
-
-    onSnapshot(doc(collection(this.firestore, 'users'), this.userId), (doc) => {
-      this.user = new User(doc.data());
-    });
-          //this.user = new User(currentUserSnap);  // das JSON "currentUserSnap.data()" welches wir von der DB erhalten wird in ein Objekt vom Typ User umgewandelt.
-        console.log('Retrieved user', this.user);
-    }
-  } */
-
-
-/*   getUsersRef(){
-    return collection(this.firestore, 'users'); // Zugriff auf die Datenbank
-                                                // => collection() Method greift auf die gesamte Datenbank (Collection) zu
-  } */
-
-/*   async addDocIdToUser(documentRef: string) {
-    let currentUserRef = doc(this.firestore, 'users', documentRef);
-    let data = {id: documentRef};
-    updateDoc(currentUserRef, data);
-  } */
-
-/*   setUserObject(obj: any, id: string): User {
-    return {
-      id: id || "",
-      firstName: obj.firstName || "",
-      lastName: obj.lastName || "",
-      email: obj.email || "",
-      birthDate: obj.birthDate || "" ,
-      address: obj.address || "",
-      zipCode: obj.zipCode || "",
-      city: obj.city || "",
     }
   } */
 
   /* ======================================================== */
 
   /* ================== Main chat DM data ================== */
-  getCurrentDmUser() {
+/*   getCurrentDmUser() {
     const q = query(collection(db, 'users'));
     console.log('Querry users colelction', q);
 
@@ -223,20 +217,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
       list.forEach(element => {
         this.dmUser.push(element.data());
 
-        //const dmq = query(collection(db, element.data()["directMessages"]));
-        //console.log('subcollection direct messages', dmq);
-
-/*         return onSnapshot(dmq, (list) => {
+        const dmq = query(collection(db, element.data()["directMessages"]));
+        console.log('subcollection direct messages', dmq);
+         return onSnapshot(dmq, (list) => {
           list.forEach(dmElement => {
             if(dmElement.data()["isActive"] == true) {
               this.dmUser.push(element.data());
             }
           });
-        }) */
+        })
       });
+
       console.log('DM user data', this.dmUser);
     }); 
-  }
+  } */
 
   /* ======================================================== */
 
