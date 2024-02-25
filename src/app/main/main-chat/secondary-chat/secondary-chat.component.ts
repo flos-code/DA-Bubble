@@ -2,12 +2,12 @@ import { CommonModule } from '@angular/common';
 import { Component, ElementRef, ViewChild } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { InputService } from '../../../services/input.service';
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { FormsModule } from '@angular/forms';
+import { ThreadMessage } from '../../../../models/threadMessage.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -34,8 +34,7 @@ export class SecondaryChatComponent {
   emojiWindowOpen = false;
   threadOpen: boolean = true;
   messageModel: string = '';
-  currentCursorPosition: number = 0; // Speichert die aktuelle Cursorposition
-
+  currentCursorPosition: number = 0;
   messages = [
     {
       id: 1,
@@ -63,8 +62,30 @@ export class SecondaryChatComponent {
 
   constructor(
     private chatService: ChatService,
-    public inputService: InputService
+    public inputService: InputService,
   ) { }
+
+  // async addThreadMessage(channelId: string, messageId: string, threadMessage: ThreadMessage) {
+  //   const threadRef = collection(db, `channels/${channelId}/messages/${messageId}/threads`);
+  //   await addDoc(threadRef, threadMessage.toJSON());
+  // }
+
+  // async updateThreadMessage(channelId: string, messageId: string, threadId: string, updates: any) {
+  //   const threadDocRef = doc(db, `channels/${channelId}/messages/${messageId}/threads/${threadId}`);
+  //   await updateDoc(threadDocRef, updates);
+  // }
+
+  // async deleteThreadMessage(channelId: string, messageId: string, threadId: string) {
+  //   const threadDocRef = doc(db, `channels/${channelId}/messages/${messageId}/threads/${threadId}`);
+  //   await deleteDoc(threadDocRef);
+  // }
+
+  // async getThreadMessages(channelId: string, messageId: string): Promise<ThreadMessage[]> {
+  //   const threadsRef = collection(db, `channels/${channelId}/messages/${messageId}/threads`);
+  //   const snapshot = await getDocs(threadsRef);
+  //   return snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
+  // }
+  
 
   /**
    * Updates the current cursor position based on user interactions.
@@ -81,11 +102,11 @@ export class SecondaryChatComponent {
   onEmojiSelect(event: any) {
     const emoji = event.emoji.native;
     this.messageModel += emoji; // Adds the emoji at the end of the text
-    
+
     // Restores focus to the text field and sets the cursor position
     this.setFocusAndCursorPosition();
   }
-  
+
   /**
    * Sets focus and cursor position.
    */

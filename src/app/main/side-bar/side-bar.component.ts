@@ -278,6 +278,7 @@ async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Prom
 
 setActiveChannel(channelId: string) {
   this.chatService.setActiveChannelId(channelId);
+  this.chatService.getThreads(channelId, 'messageId');
 }
 
 getActiveChannelId() {
