@@ -9,15 +9,11 @@ import { AddMembersDialogComponent } from './add-members-dialog/add-members-dial
 import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 import { ChatService } from '../../services/chat.service';
 import { Subscription } from 'rxjs';
-
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc, orderBy } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { Router } from '@angular/router';
 import { Channel } from '../../../models/channel.class';
-import { OverlayOutsideClickDispatcher } from '@angular/cdk/overlay';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
+import { initializeApp } from 'firebase/app';
+import { collection, doc, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -27,13 +23,9 @@ const firebaseConfig = {
   messagingSenderId: "970901942782",
   appId: "1:970901942782:web:56b67253649b6206f290af"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
-export interface Fruit {
-  name: string;
-}
+/* =============================== */
 
 @Component({
   selector: 'app-main-chat',
@@ -43,13 +35,15 @@ export interface Fruit {
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
+
 export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel;
   channelId: string = 'allgemein';
 
-  channelMessages: Message[] = [];
-  messageId: string = '';
-  messageCreationDates: number[] = [];
+  channelThreads: Message[] = [];
+  threadId: string = '';
+  threadCreationDates = [];
+  currentUser: string = '5BhorO43YJhodR2nL3aKgYQWzuo1';
 
   dmUser = [];
 
@@ -74,79 +68,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     'photo': '../../../assets/img/main-chat/member2.svg'
   };
 
- @Input() channels = [{
-    'id': 'sijfef8e8',
-    'name': 'Entwicklerteam',
-    'members': [{
-      'userId': 'sadf123sadf',
-      'name': 'Tobias',
-      'surname': 'Odermatt',
-      'photo': '../../../assets/img/main-chat/member1.svg'
-    },
-    {
-      'userId': 'iej896sdf',
-      'name': 'Pierce',
-      'surname': 'C.',
-      'photo': '../../../assets/img/main-chat/member2.svg'
-    },
-    {
-      'userId': 'sadmvkui25ddf',
-      'name': 'Filip',
-      'surname': 'Todoroski',
-      'photo': '../../../assets/img/main-chat/member3.svg'
-    }
-    ],
-    'messages': [{
-      'from': 'sadf123sadf',
-      'createDate': '10.02.2024',
-      'message': 'Hallo Zusammen, ich habe ein Frage zu Angular',
-      'threads': [{ 'message': 'Was für eine Frage hast du genau?' }],
-      'reactions': [{ 'reactedBy': 'sadmvkui25ddf', 'ractionName': 'rocket', 'iconPath': '../../../assets/img/main-chat/arrowDownDefault.svg' }]
-    }]
-  }]; 
-
-  users = [{
-    'userId': 'sadmvkui25ddf',
-    'name': 'Filip',
-    'surname': 'Todoroski',
-    'photo': '../../../assets/img/main-chat/member1.svg',
-    'onlineStatus': 'online'
-  },
-  {
-    'userId': 'sadf123sadf',
-    'name': 'Tobias',
-    'surname': 'Odermatt',
-    'photo': '../../../assets/img/main-chat/member2.svg',
-    'onlineStatus': 'idle'
-  },
-  {
-    'userId': 'iej896sdf',
-    'name': 'Pierce',
-    'surname': 'C.',
-    'photo': '../../../assets/img/main-chat/member3.svg',
-    'onlineStatus': 'busy'
-  },
-  {
-    'userId': 'okokloilk366',
-    'name': 'Pascal',
-    'surname': 'M.',
-    'photo': '../../../assets/img/main-chat/member1.svg',
-    'onlineStatus': 'away'
-  },
-  {
-    'userId': 'sadfsadf8585',
-    'name': 'Florian',
-    'surname': 'Scholz',
-    'photo': '../../../assets/img/main-chat/member2.svg',
-    'onlineStatus': 'online'
-  },
-  ];
-
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
     this.getCurrentChannel();
-    this.getMessages();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
     //this.getCurrentDirectMessage();
@@ -156,50 +81,48 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  /* ================== Main chat channel data ================== */
+  /* ================== MAIN CHAT CHANNEL DATA ================== */
   getCurrentChannel() {
-    // => nicht in ein array pushen!! => channel = new Channel();
     onSnapshot(doc(collection(db, 'channels'), this.channelId), (doc) => {
-      //this.channel = [];
       this.channel = new Channel(doc.data());
-      //this.channel.push(new Channel(doc.data()));
       console.log('Channel data', this.channel);
+      this.getThreads();
     });
   }
 
-  getMessages() {
+  getThreads() {
     //const q = query(collection(db, `channels'/${this.channelId}/messages`));
-    const q = query(collection(db, 'channels/allgemein/messages'), orderBy("creationDate", "asc"));
+    const q = query(collection(db, 'channels/allgemein/threads'), orderBy("creationDate", "asc"));
     return onSnapshot(q, (list) => {
-      this.channelMessages = [];
+      this.channelThreads = [];
       list.forEach(message => {
-          this.channelMessages.push(new Message(message.data()));
-          console.log('Channel messages data', this.channelMessages);
-          this.getMessageCreationDates();
+          this.channelThreads.push(new Message(message.data()));
+          console.log('Channel messages data', this.channelThreads);
+          this.getThreadCreationDates();
         })
     });
   }
 
-  getMessageCreationDates() {
-    for (let i = 0; i < this.channelMessages.length; i++) {
-      let message = this.channelMessages[i];
-      //let date = new Date(message['creationDate']);
-     // date = date.toLocaleDateString('de-CH');
 
-      if(!this.messageCreationDates.includes(message['creationDate'])) {
-        let date = new Date(message['creationDate']);
-        this.messageCreationDates.push(message.creationDate);
+  getThreadCreationDates() {
+    for (let i = 0; i < this.channelThreads.length; i++) {
+      let message = this.channelThreads[i];
+
+      const timestamp = message['creationDate'];
+      const date = new Date(timestamp);
+      const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
+
+      if(!this.threadCreationDates.includes(formattedDate)) {
+        this.threadCreationDates.push(formattedDate);
       }
     }
-    console.log(this.messageCreationDates);
-    console.log('Current date', Date.now());
-  }  
+    this.threadCreationDates.sort(function(b, a) {
+      return b - a;
+    });
+    console.log('Sorted thread creation dates array', this.threadCreationDates);
+  } 
 
-
-  //const messages = snapshot.docs.map(doc => new Message({ ...doc.data(), messageId: doc.id })).orderBy();
-
-
-/*   getCurrentDirectMessage() {
+  /*   getCurrentDirectMessage() {
     if(this.channel = []) {
       this.showChannel = false;
       this.getCurrentDmUser();
@@ -208,7 +131,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ======================================================== */
 
-  /* ================== Main chat DM data ================== */
+  /* ================== MAIN ACHT DM DATA ================== */
 /*   getCurrentDmUser() {
     const q = query(collection(db, 'users'));
     console.log('Querry users colelction', q);
@@ -235,7 +158,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ======================================================== */
 
-
+  /* ================== MAIN CHAT OTHER FUNCTIONS ================== */
   toggleDialog(dialog: string) {
     if (dialog == 'addMember') {
       if (this.addMemberDialogOpen == false) {

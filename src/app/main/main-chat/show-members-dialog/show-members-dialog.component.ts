@@ -1,12 +1,8 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
+/* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  limit, query, doc, getDoc, updateDoc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
-import { Router } from '@angular/router';
-import { Channel } from '../../../../models/channel.class';
-import { C } from '@angular/cdk/keycodes';
-
+import { getFirestore, collection, onSnapshot,  query } from "firebase/firestore";
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
   authDomain: "da-bubble-87fea.firebaseapp.com",
@@ -15,9 +11,9 @@ const firebaseConfig = {
   messagingSenderId: "970901942782",
   appId: "1:970901942782:web:56b67253649b6206f290af"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+/* =============================== */
 
 @Component({
   selector: 'app-show-members-dialog',
@@ -30,29 +26,24 @@ export class ShowMembersDialogComponent implements OnInit {
   @Input() channelData;
   @Input() currentChannelId: string;
   membersData = [];
-
   @Output() showMembersDialogOpenChild = new EventEmitter();
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
-
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
-
 
   ngOnInit(): void {
       this.getMembers();
       console.log('Show members channel data', this.channelData);
-      console.log('Current members ids', this.channelData[0].members);
-
+      console.log('Current members ids', this.channelData.members);
   }
 
   getMembers() {
       const q = query(collection(db, 'users'));
-
       return onSnapshot(q, (list) => {
         this.membersData = [];
         list.forEach(element => {
-          for (let i = 0; i < this.channelData[0].members.length; i++) {
-            const memberId = this.channelData[0].members[i];
+          for (let i = 0; i < this.channelData['members'].length; i++) {
+            const memberId = this.channelData['members'][i];
             if(element.id == memberId) {
               this.membersData.push(element.data());
               console.log('Members data array', this.membersData);

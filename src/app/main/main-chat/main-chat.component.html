@@ -68,7 +68,7 @@
         </div> -->
         <!-- ========================================================== -->
         }
-
+        <!-- ===================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages">
@@ -104,155 +104,136 @@
                 <!-- ================================================================ -->
                 }
 
-
-                    <!-- =================== Time separator ===================== -->
+                <!-- =================== Time separator / Threads ===================== -->
+                 @for (threadCreationDate of threadCreationDates; track $index) {
                     <div class="timeSeparator">
                         <div>
-                            <div>Heute</div>
+                            <div>{{threadCreationDate}}</div>
                         </div>
                     </div>
 
-
-
-
-
-
-
-                    
-
-
-
-
-
-
-
-                
-
-
-
-
-                @if(channels[0]?.messages.length !== 0) {
-                    @if(!ownMessage){
-                    <!-- ========================= Template Other Messages ========================= -->
-                    <div class="messageContainer">
-                        <div class="messageProfileIcon">
-                            <img src="/assets/img/main-chat/member1.svg">
-                        </div>
-                        <div class="mainMessage">
-                            <div>
-                                <div>Noah Braun</div>
-                                <div>14:25 Uhr</div>
-                            </div>
-                            <div>
-                                Welche Version ist aktuell von Angular?
-                            </div>
-                            <div class="mainMessageThreads">
-                                <div>2 Antworten</div>
-                                <div>Letzte Antwort 14:56</div>
-                            </div>
-                            <div class="mainMessageReactions">
-
-                            </div>
-                        </div>
-
-                        <!-- ========== Toolbar ========== -->
-                        <div class="toolBar">
-                            <div (click)="addReaction('approve')">
-                                <img src="/assets/img/main-chat/check_mark.svg">
-                            </div>
-                            <div (click)="addReaction('raisingHands')">
-                                <img src="/assets/img/main-chat/raising_hands.svg">
-                            </div>
-                            <div (click)="openMoreEmojis()">
-                                <span class="material-symbols-outlined">add_reaction</span>
-                            </div>
-                            <div (click)="openThread()">
-                                <span class="material-symbols-outlined">comment</span>
-                            </div>
-                        </div>
-
-                    </div>
-                    <!-- ============================================================================ -->
-                    } @else {
-                    <!-- ========================= Template Own Message ========================= -->
-                    <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
-                        <div class="mainMessageOwn">
-                            <div>
-                                <div>14:25 Uhr</div>
-                                <div>Noah Braun</div>
-                            </div>
-
-                            <div>
-                                Welche Version ist aktuell von Angular?
-                                <div *ngFor="let thread of threads">
-                                    <p>{{ thread.message }}</p>
-                                  </div>
-                            </div>
-                            
-                            <div class="mainMessageThreadsOwn">
-                                <div>Letzte Antwort 14:56</div>
-                                <div (click)="openThread()">2 Antworten</div>
-                            </div>
-                            <div class="mainMessageReactions">
-
-                            </div>
-                        </div>
-                        <div class="messageProfileIcon">
-                            <img src="/assets/img/main-chat/member1.svg">
-                        </div>
-
-                        <!-- ========== Toolbar own ========== -->
-                        <div class="toolBarOwn">
-                            <div (click)="addReaction('approve')">
-                                <img src="/assets/img/main-chat/check_mark.svg">
-                            </div>
-                            <div (click)="addReaction('raisingHands')">
-                                <img src="/assets/img/main-chat/raising_hands.svg">
-                            </div>
-                            <div (click)="openMoreEmojis()">
-                                <span class="material-symbols-outlined">add_reaction</span>
-                            </div>
-                            <div (click)="openThread()">
-                                <span class="material-symbols-outlined">comment</span>
-                            </div>
-                            <div (click)="moreOptions()">
-                                <span class="material-symbols-outlined">more_vert</span>
-                            </div>
-                        </div>
-                        <div *ngIf="editMessagePopupOpen" class="editMessagePopup">
-                            <div (click)="editMessage()">
-                                <div>Nachricht bearbeiten</div>
-                            </div>
-                        </div>
-                    </div>
-                    <!-- ========================= Template Own Message - EDIT ========================= -->
-                    <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
-                        <div class="mainMessageOwnEdit">
-                            <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
-                            <div>
-                                <div>
-                                    <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    @for (thread of channelThreads; track $index) {
+                        @if(thread.creationDate == threadCreationDate) {
+                            @if(currentUser !== threadCreationDate.createdBy){
+                                <!-- ========================= Template Other Messages ========================= -->
+                                <div class="messageContainer">
+                                    <div class="messageProfileIcon">
+                                        <img src="/assets/img/main-chat/member1.svg">
+                                    </div>
+                                    <div class="mainMessage">
+                                        <div>
+                                            <div>Noah Braun</div>
+                                            <div>{{thread.creationDate}}</div>
+                                        </div>
+                                        <div>
+                                            {{thread.message}}
+                                        </div>
+                                        <div class="mainMessageThreads">
+                                            <div>2 Antworten</div>
+                                            <div>Letzte Antwort 14:56</div>
+                                        </div>
+                                        <div class="mainMessageReactions">
+            
+                                        </div>
+                                    </div>
+            
+                                    <!-- ========== Toolbar ========== -->
+                                    <div class="toolBar">
+                                        <div (click)="addReaction('approve')">
+                                            <img src="/assets/img/main-chat/check_mark.svg">
+                                        </div>
+                                        <div (click)="addReaction('raisingHands')">
+                                            <img src="/assets/img/main-chat/raising_hands.svg">
+                                        </div>
+                                        <div (click)="openMoreEmojis()">
+                                            <span class="material-symbols-outlined">add_reaction</span>
+                                        </div>
+                                        <div (click)="openThread()">
+                                            <span class="material-symbols-outlined">comment</span>
+                                        </div>
+                                    </div>
+            
                                 </div>
-                                <div>
-                                    <button (click)="closeEditedMessage()">Abbrechen</button>
-                                    <button (click)="saveEditedMessage()">Speichern</button>
+                                <!-- ============================================================================ -->
+                            } @else {
+                                <!-- ========================= Template Own Message ========================= -->
+                                <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
+                                    <div class="mainMessageOwn">
+                                        <div>
+                                            <div>14:25 Uhr</div>
+                                            <div>Noah Braun</div>
+                                        </div>
+                                        <div>
+                                            Welche Version ist aktuell von Angular?
+                                        </div>
+                                        <div class="mainMessageThreadsOwn">
+                                            <div>Letzte Antwort 14:56</div>
+                                            <div (click)="openThread()">2 Antworten</div>
+                                        </div>
+                                        <div class="mainMessageReactions">
+            
+                                        </div>
+                                    </div>
+                                    <div class="messageProfileIcon">
+                                        <img src="/assets/img/main-chat/member1.svg">
+                                    </div>
+            
+                                    <!-- ========== Toolbar own ========== -->
+                                    <div class="toolBarOwn">
+                                        <div (click)="addReaction('approve')">
+                                            <img src="/assets/img/main-chat/check_mark.svg">
+                                        </div>
+                                        <div (click)="addReaction('raisingHands')">
+                                            <img src="/assets/img/main-chat/raising_hands.svg">
+                                        </div>
+                                        <div (click)="openMoreEmojis()">
+                                            <span class="material-symbols-outlined">add_reaction</span>
+                                        </div>
+                                        <div (click)="openThread()">
+                                            <span class="material-symbols-outlined">comment</span>
+                                        </div>
+                                        <div (click)="moreOptions()">
+                                            <span class="material-symbols-outlined">more_vert</span>
+                                        </div>
+                                    </div>
+                                    <div *ngIf="editMessagePopupOpen" class="editMessagePopup">
+                                        <div (click)="editMessage()">
+                                            <div>Nachricht bearbeiten</div>
+                                        </div>
+                                    </div>
                                 </div>
-                            </div>
-                        </div>
-                        <div class="messageProfileIcon">
-                            <img src="/assets/img/main-chat/member1.svg">
-                        </div>
-                    </div>
+                                <!-- ========================= Template Own Message - EDIT ========================= -->
+                                <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
+                                    <div class="mainMessageOwnEdit">
+                                        <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
+                                        <div>
+                                            <div>
+                                                <span class="material-symbols-outlined">sentiment_satisfied</span>
+                                            </div>
+                                            <div>
+                                                <button (click)="closeEditedMessage()">Abbrechen</button>
+                                                <button (click)="saveEditedMessage()">Speichern</button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="messageProfileIcon">
+                                        <img src="/assets/img/main-chat/member1.svg">
+                                    </div>
+                                </div>
+                            }
+                        }
                     }
                 }
+                                
             </div>
         </div>
+        <!-- =================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
         <div class="mainChatInput">
             <div class="mainChatInputSubContainer">
                 <textarea [(ngModel)]="textArea" name="textarea"
-                    placeholder="Nachricht an #{{channels[0].name}}"></textarea>
+                    placeholder="Nachricht an #{{channel?.name}}"></textarea>
                 <div>
                     <div>
                         <div>
@@ -273,7 +254,9 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </div>        
+        <!-- =================================================================================================== -->
+
     </div>
 
 

@@ -6,8 +6,9 @@ import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
 
+/* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, doc, getDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot,  query, doc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -17,9 +18,9 @@ const firebaseConfig = {
   messagingSenderId: "970901942782",
   appId: "1:970901942782:web:56b67253649b6206f290af"
 };
-
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+/* =============================== */
 
 @Component({
   selector: 'app-add-members-dialog',
@@ -28,64 +29,41 @@ const db = getFirestore(app);
   templateUrl: './add-members-dialog.component.html',
   styleUrl: './add-members-dialog.component.scss'
 })
+
 export class AddMembersDialogComponent implements OnInit {
   @Input() channelData;
+  channelMembers;
   @Input() currentChannelId: string;
-  channelCreatedByName: string = "";
-
-  
-  ngOnInit(): void {
-    this.getMembers();
-  }
-
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
   inputFocus: boolean = false;
   searchText: string = '';
   newUsersToAdd = [];
-
   userList = [];
+  originalUserList;
+  filteredUserList;
 
- /*  userList = [{
-    'id': 'kalof85s8s',
-    'name': 'Stefanie',
-    'surname': 'Müller'
-  },
-  {
-    'id': 'sldajfdffl22',
-    'name': 'Tobias',
-    'surname': 'Odermatt'
-  },
-  {
-    'id': 'sldajzjzzfl22',
-    'name': 'Filip',
-    'surname': 'Neumann'
-  },
-  {
-    'id': 'hufslehuf85ss',
-    'name': 'Elias',
-    'surname': 'Neumann'
-  }]; */
+  ngOnInit(): void {
+    this.channelMembers = [...this.channelData['members']];
+    this.getUsersToAdd();
+  }
 
-  originalUserList = this.userList;
-  filteredUserList = this.userList;
+  constructor() { }
 
-  getMembers() {
-    console.log('Channel data add members', this.channelData);
+  getUsersToAdd() {
     const q = query(collection(db, 'users'));
-
     return onSnapshot(q, (list) => {
-      this.userList = [];
       list.forEach(element => {
-        for (let i = 0; i < this.channelData[0].members.length; i++) {
-          const memberId = this.channelData[0].members[i];
-
-          if(element.id !== memberId) {
-            this.userList.push(element.data());
-            console.log('Members data array', this.userList);
-          }         
-        }      
+        if(!this.channelMembers.includes(element.id)) {
+            this.userList.push({
+              'userName': element.data()['name'],
+              'userId': element.id
+            });
+        }
       });
+      this.filteredUserList = this.userList;
+      this.originalUserList = this.userList;
+
     });  
   }
 
@@ -99,14 +77,11 @@ export class AddMembersDialogComponent implements OnInit {
 
     if(this.searchText !== "") {
         this.filteredUserList =  this.userList.filter( user =>  {
-          return user.name.toLowerCase().includes(this.searchText) || user.surname.toLowerCase().includes(this.searchText);
+          return user.userName.toLowerCase().includes(this.searchText);
         });
       } else {
       this.filteredUserList = this.originalUserList;      
     }
-  }
-
-  constructor() { 
   }
 
   doNotClose($event: any) {
@@ -123,27 +98,39 @@ export class AddMembersDialogComponent implements OnInit {
     this.inputFocus = true;
   }
 
-  addUser(filtereduser: any, i: number) {
-    let userId = filtereduser.id;
-    let existingUser = this.userList.find(user => user.id == userId);
+  addUser(filteredUser: any) {
+    let existingUser = this.userList.find(user => user.userId == filteredUser.userId);
     let indexOfAddedUser = this.userList.indexOf(existingUser);
-    this.newUsersToAdd.push(filtereduser); // Push user in newUsersToAdd array.
-    this.userList.splice(indexOfAddedUser, 1);     // Splice userList array and remove user
+    this.newUsersToAdd.push(filteredUser);        // Push user in newUsersToAdd array.
+    this.userList.splice(indexOfAddedUser, 1);    // Splice userList array and remove user
     this.filteredUserList = this.userList;
     this.inputFocus = false; 
+    console.log('New users to add array', this.newUsersToAdd);
   }
 
-  removeaddedUser(userToAdd: any, i: number) {
+  removeAddedUser(userToAdd: any, i: number) {
       this.filteredUserList = this.userList;
-      this.userList.push(userToAdd);             // Push to user List array
+      this.userList.push(userToAdd);            // Push to user List array
       this.newUsersToAdd.splice(i, 1);          // Splice newUsersToAdd array and remove user
       this.filteredUserList = this.userList;
       this.originalUserList = this.userList;
       this.inputFocus = false;
   }
 
-  addUsers() {
-    //this.channels[0].members.push(this.newMemberObject);
+  async addUsers() {
+    for (let i = 0; i < this.newUsersToAdd.length; i++) {
+      const user = this.newUsersToAdd[i]['userId'];
+      if(!this.channelMembers.includes(user)) {
+        this.channelMembers.push(user);
+      }
+    }
+    let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+    let data = {members: this.channelMembers };
+    await updateDoc(currentChannelRef, data).then(() => {
+      console.log('Members to Firebase added', this.channelMembers);
+    });
+    this.newUsersToAdd = [];
+    this.closeDialog();
   }
 
   closeUserList() {

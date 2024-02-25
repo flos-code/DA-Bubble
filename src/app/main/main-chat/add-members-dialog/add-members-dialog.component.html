@@ -5,23 +5,23 @@
             <span class="material-symbols-outlined">close</span>
         </div>
     </div>
-    <div># {{channelData[0].name}}</div>
+    <div># {{channelData.name}}</div>
     <div class="addUserInputContainer" [class.focusedBorder]="inputFocus" (click)="doNotClose($event)">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
             <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd; let i = index">
               <img src="/assets/img/main-chat/member3.svg">
-              <div>{{userToAdd.name}} {{userToAdd.surname}}</div>
-              <span (click)="removeaddedUser(userToAdd, i)" class="material-symbols-outlined">close</span>
+              <div>{{userToAdd.userName}}</div>
+              <span (click)="removeAddedUser(userToAdd, i)" class="material-symbols-outlined">close</span>
             </div>
         </div>
         <input class="userSearchInput" type="text" autocomplete="off" name="search" (ngModelChange)="searchKey($event)" [(ngModel)]="searchText" placeholder="Name eingeben" (focus)="showUserList()">
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-          <div *ngFor="let filtereduser of filteredUserList; let i = index" (click)="addUser(filtereduser, i)">
+          <div *ngFor="let filteredUser of filteredUserList; let i = index" (click)="addUser(filteredUser)">
             <img src="/assets/img/main-chat/member2.svg">
-            <div>{{filtereduser.name}} {{filtereduser.surname}}</div>
+            <div>{{filteredUser.userName}}</div>
           </div>
        </div>
       </div>
