@@ -148,6 +148,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.getCurrentChannel();
     this.getMessages();
     this.getThreadOpenStatus();
+    this.subscribeToThreads();
     //this.getCurrentDirectMessage();
   }
 
@@ -310,5 +311,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
       this.threadOpen = open;
     }));
+  }
+
+  subscribeToThreads(): void {
+    this.subscription.add(
+      this.chatService.threads$.subscribe(threads => {
+        this.threads = threads;
+      })
+    );
   }
 }
