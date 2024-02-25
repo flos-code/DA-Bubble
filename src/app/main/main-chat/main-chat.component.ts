@@ -11,10 +11,9 @@ import { ChatService } from '../../services/chat.service';
 import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Message } from '../../../models/message.class';
-
-/* ========== FIREBASE ========== */
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, doc, orderBy } from "firebase/firestore";
+import { Thread } from '../../../models/thread.class';
+import { initializeApp } from 'firebase/app';
+import { collection, doc, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -51,6 +50,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
+  threads: Thread[] = [];
   textArea: string = "";
   showChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
@@ -72,9 +72,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
-    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
-      this.threadOpen = open;
-    }));
+    this.getThreadOpenStatus();
     //this.getCurrentDirectMessage();
   }
 
@@ -229,5 +227,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   openThread(): void {
     this.chatService.openThread();
+  }
+
+  getThreadOpenStatus(): void {
+    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
+      this.threadOpen = open;
+    }));
   }
 }

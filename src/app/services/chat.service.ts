@@ -48,19 +48,13 @@ export class ChatService {
     return this.activeChannelId;
   }
 
-  async getThreads(channelId: string, messageId: string): Promise<Thread[]> {
-    const threadsRef = collection(db, `channels/${channelId}/messages/${messageId}/threads`);
+  async getThreads(channelId): Promise<Thread[]> {
+    const threadsRef = collection(db, `channels/${channelId}/threads`);
     const snapshot = await getDocs(threadsRef);
     const threads: Thread[] = snapshot.docs.map(doc => new Thread({ ...doc.data(), threadId: doc.id }));
     
     console.log("Geladene Threads:", threads);
     return threads;
   }
-
-  async getThreadMessages(channelId: string, threadId: string): Promise<Thread[]> {
-    const threadMessagesRef = collection(db, `channels/${channelId}/messages/${threadId}/threads/threads`);
-    const snapshot = await getDocs(threadMessagesRef);
-    return snapshot.docs.map(doc => new Thread({ ...doc.data(), messageId: doc.id }));
-  }
-
+  
 }
