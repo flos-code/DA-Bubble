@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { Channel } from '../../../models/channel.class';
 import { OverlayOutsideClickDispatcher } from '@angular/cdk/overlay';
 import { Message } from '../../../models/message.class';
+import { Thread } from '../../../models/thread.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -55,6 +56,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
+  threads: Thread[] = [];
   textArea: string = "";
   showChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
@@ -145,9 +147,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.getCurrentChannel();
     this.getMessages();
-    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
-      this.threadOpen = open;
-    }));
+    this.getThreadOpenStatus();
     //this.getCurrentDirectMessage();
   }
 
@@ -304,5 +304,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   openThread(): void {
     this.chatService.openThread();
+  }
+
+  getThreadOpenStatus(): void {
+    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
+      this.threadOpen = open;
+    }));
   }
 }
