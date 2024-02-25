@@ -14,12 +14,12 @@
         </div>
 
         <div class="imgContainer">
-            <img src="/assets/img/userImages/userImage2.svg" alt="">
+            <img src={{profilePic}}>
         </div>
 
         <div *ngIf="!edit">
             <div class="nameContainer">
-                <h3>Max Mustermann</h3>
+                <h3>{{userNameandSurname}}</h3>
                 <span *ngIf="serviceProfilCard.isCurrentUserActive" (click)="toggleEdit(!edit)">Bearbeiten</span>
             </div>
 
@@ -48,7 +48,7 @@
 
             <div class="emailContainerButton">
                 <mat-icon class="material-symbols-outlined" fontIcon=""></mat-icon>
-                <span>maxmustermann&commat;gmail.com</span>
+                <span>{{userEmailAddress}}</span>
             </div>
         </div>
 

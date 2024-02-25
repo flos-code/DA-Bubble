@@ -1,8 +1,24 @@
+<div class="start-animation-container" [class.d-none]="removeAnimatedContainer">
+    <div class="start-animation-background"></div>
+    <div class="start-animation-logo-and-text-container">
+            <div class="start-animation-logo">
+            <img [class.animate-the-logo]="startLogoAnimation" src="/assets/img/Logo.png">
+        </div>
+        <div class="start-animation-text-container">
+            <p [class.d-none]="!removeDNone" [class.animate-the-text]="startTextAnimation">DaBubble</p>
+        </div>
+
+    </div>
+
+
+
+</div>
+
 <div class="login-main">
 
     <div class="logo-container">
         <img src="/assets/img/Logo.png">
-        <p>DA Bubble</p>
+        <p>DABubble</p>
     </div>
 
     <div class="create-account-container">
@@ -33,7 +49,8 @@
         </button>
 
         <div class="login-btns-container">
-            <button class="login-btn" type="login" [disabled]="!signInForm.valid" [class.btn-disabled]="!signInForm.valid" (click)="signIn()">Anmelden</button>
+            <button class="login-btn" type="login" [disabled]="!signInForm.valid"
+                [class.btn-disabled]="!signInForm.valid" (click)="signIn()">Anmelden</button>
             <button class="guest-login-btn">Gäste-Login</button>
         </div>
     </div>

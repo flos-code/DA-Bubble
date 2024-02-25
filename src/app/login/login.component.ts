@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
@@ -22,11 +22,16 @@ const app = initializeApp(firebaseConfig);
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login.component.html',
-  styleUrl: './login.component.scss'
+  styleUrls: ['./login.component.scss', 'login.component.animations.scss']
 })
 
-export class LoginComponent {
+export class LoginComponent implements OnInit {
   auth = getAuth(app);
+  startTextAnimation: boolean = false;
+  removeDNone: boolean = false;
+  removeAnimatedContainer: boolean = false;
+  startLogoAnimation: boolean = false;
+  removeMainDiv: boolean = false;
 
   signInForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -34,7 +39,24 @@ export class LoginComponent {
   })
   constructor(private fb: FormBuilder, private router: Router) { }
 
-  
+  ngOnInit(): void {
+    this.startTheAnimation();
+  }
+
+  startTheAnimation(){
+    setTimeout(() => {
+      this.startLogoAnimation = true;
+    }, 1375);
+    setTimeout(() => {
+      this.removeDNone = true;
+    }, 1500);
+    setTimeout(() => {
+      this.startTextAnimation = true;
+    }, 1500);
+    setTimeout(() => {
+      this.removeAnimatedContainer = true;
+    }, 3100);
+  }
 
   async signInWithGoogle() {
     await signInWithPopup(this.auth, provider)
