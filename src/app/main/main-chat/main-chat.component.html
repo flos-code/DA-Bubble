@@ -108,13 +108,13 @@
                  @for (threadCreationDate of threadCreationDates; track $index) {
                     <div class="timeSeparator">
                         <div>
-                            <div>{{threadCreationDate.dateString}}</div>
+                            <div>{{threadCreationDate.timeSeparatorDate}}</div>
                         </div>
                     </div>
 
-                    @for (thread of channelThreads; track $index) {
-                        @if(thread.creationDate == threadCreationDate.timestamp) {
-                            @if(currentUser !== thread.createdBy){
+                    @for (thread of channelThreadsDateTime; track $index) {
+                        @if(thread.dateString == threadCreationDate.dateString) {
+                            @if(currentUser !== thread.userId){
                                 <!-- ========================= Template Other Messages ========================= -->
                                 <div class="messageContainer">
                                     <div class="messageProfileIcon">
@@ -122,8 +122,8 @@
                                     </div>
                                     <div class="mainMessage">
                                         <div>
-                                            <div>Noah Braun</div>
-                                            <div>{{threadCreationDate.dateString}} Uhr</div>
+                                            <div>{{thread.createdBy}}</div>
+                                            <div>{{thread.time}} Uhr</div>
                                         </div>
                                         <div>
                                             {{thread.message}}
@@ -160,11 +160,11 @@
                                 <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
                                     <div class="mainMessageOwn">
                                         <div>
-                                            <div>{{threadCreationDate.dateString}} Uhr</div>
-                                            <div>Noah Braun</div>
+                                            <div>{{thread.time}} Uhr</div>
+                                            <div>{{thread.createdBy}}</div>
                                         </div>
                                         <div>
-                                            Welche Version ist aktuell von Angular?
+                                            {{thread.message}}
                                         </div>
                                         <div class="mainMessageThreadsOwn">
                                             <div>Letzte Antwort 14:56</div>

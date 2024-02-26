@@ -15,7 +15,7 @@ import { Thread } from '../../../models/thread.class';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -42,10 +42,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel;
   channelId: string = 'allgemein';
   channelThreads: Message[] = [];
-  channelThreadsDates = [];
-  threadId: string = '';
+  channelThreadsDateTime = [];
   threadCreationDates = [];
+
+  threadId: string = '';
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  userName;
 
   dmUser = [];
 
@@ -136,60 +138,61 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return false;
   } */
 
-/* 
-  getFormattedThreadCreationDates(thread: any) {
-    for (let i = 0; i < this.channelThreads.length; i++) {
-      let message = this.channelThreads[i];
-
-      let timestamp = message['creationDate'];
-      const date = new Date(timestamp);
-      const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
-
-      message['creationDate'] = formattedDate;
-
-      if(!this.threadCreationDates.includes(formattedDate)) {
-        this.threadCreationDates.push(formattedDate);
-      }
-    }
-    this.threadCreationDates.sort(function(b, a) {
-      return b - a;
-    });
-    console.log('Sorted thread creation dates array', this.threadCreationDates);
-  }  */
-
   getThreadCreationDates() {
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
       let creationDate = message['creationDate'];
+      let userId = message['createdBy']
 
-      let formattedDate = this.getFormattedDate(creationDate);
+      let formattedDate = this.formattedDate(creationDate);
+      let formattedDateTimeSeparator = this.formattedDateTimeSeparator(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
+      this.getUser(userId)
+      let createdBy = this.userName;
+      console.log('Retrieved user name', createdBy);
+
+      this.channelThreadsDateTime.push({
+        'timestamp': message['creationDate'],
+        'dateString': formattedDate,
+        'timeSeparatorDate': formattedDateTimeSeparator,
+        'time': formattedTime,
+        'message': this.channelThreads[i]['message'],
+        'userId': userId,
+        'createdBy': createdBy
+      });
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
         this.threadCreationDates.push({
           'timestamp': message['creationDate'],
-          'dateString': formattedDate
+          'dateString': formattedDate,
+          'timeSeparatorDate': formattedDateTimeSeparator,
+          'time': formattedTime,
+          'userId': userId,
+          'createdBy': createdBy
         });
       }
-      console.log('Check array', this.threadCreationDates);
-
     }
     this.threadCreationDates.sort(this.compareByCreationDate);
-    console.log('Sorted thread creation dates array', this.threadCreationDates);
+    this.channelThreadsDateTime.sort(this.compareByCreationDate);
   } 
 
-  getFormattedDate(creationDate: any) {
+  formattedDate(creationDate: any) {
+    const day = new Date(creationDate).toLocaleDateString('fr-CH', { day: 'numeric'});
+    const month = new Date(creationDate).toLocaleDateString('fr-CH', { month: 'numeric'});
+    const year = new Date(creationDate).toLocaleDateString('fr-CH', { year: 'numeric'});
+    return `${day}.${month}.${year}`;
+  }
+
+  formattedDateTimeSeparator(creationDate: any) {
     const weekday = new Date(creationDate).toLocaleDateString('de-DE', { weekday: 'long' });
     const day = new Date(creationDate).toLocaleDateString('fr-CH', { day: 'numeric'});
     const month = new Date(creationDate).toLocaleDateString('de-DE', { month: 'long'});
-
-    let timeSeparatorDate = weekday + ', ' + day + ' ' + month;
-    return timeSeparatorDate;
+    return `${weekday}, ${day} ${month}`;
   }
 
-  getFormattedTime(creationDate: any) {
+  getFormattedTime(creationDate: number) {
     const getString = (number) => number < 10 ? '0' + number : String(number);
-    const getTime = (creationDate) => {
+    const getTime = (creationDate: number) => {
         const date = new Date(creationDate);
         const hours = getString(date.getHours());
         const minutes = getString(date.getMinutes());
@@ -197,6 +200,18 @@ export class MainChatComponent implements OnInit, OnDestroy {
     };
     return getTime(creationDate);
   }
+
+  async getUser(userId: string) {
+    onSnapshot(doc(collection(db, 'users'), userId), (doc) => {
+      let data = doc.data();
+      data = data['name'];
+      this.userName = data;
+      console.log('Fuction data', data)
+    });
+  }
+
+
+  
 
   /*   getCurrentDirectMessage() {
     if(this.channel = []) {
