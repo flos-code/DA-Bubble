@@ -78,7 +78,7 @@ export class ChatService {
   setSelectedUserId(userId: string) {
     this.selectedUserId = userId;
     this.activeChannelId = null;
-    console.log(`Aktiver Channel: ${this.selectedUserId}`);
+    console.log(`Ausgewählter User: ${this.selectedUserId}`);
   }
 
   getSelectedUserId(): string {

@@ -6,7 +6,6 @@ export class User {
   isOnline: boolean;
   directMessages: [];
   isYou: boolean;
-  isSelected: boolean;
 
   constructor(obj?: any) {
     // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.
@@ -17,7 +16,6 @@ export class User {
     this.isOnline = obj ? obj.isOnline : '';
     this.directMessages = obj ? obj.directMessages : '';
     this.isYou = obj ? obj.isYou : '';
-    this.isSelected = obj ? obj.isSelected : '';
   }
 
   public toJSON() {
@@ -29,7 +27,6 @@ export class User {
       isOnline: this.isOnline,
       directMessages: this.directMessages,
       isYou: this.isYou,
-      isSelected: this.isSelected,
     };
   }
 }

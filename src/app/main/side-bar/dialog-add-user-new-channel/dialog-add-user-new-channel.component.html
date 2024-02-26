@@ -54,8 +54,26 @@
     />
 
     <div *ngIf="filteredUsers.length > 0" class="userSuggestions">
-      <div *ngFor="let user of filteredUsers" (click)="addSelectedUser(user)">
-        {{ user.name }}
+      <div class="allUsers">
+        <div
+          class="singleUser"
+          *ngFor="let user of filteredUsers"
+          (click)="addSelectedUser(user)"
+        >
+          <div class="userImage">
+            <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
+            <div
+              class="onlineStatus"
+              [ngClass]="{
+                online: user.isOnline === true,
+                away: user.isOnline === false
+              }"
+            ></div>
+          </div>
+          <div class="userName">
+            {{ user.name }}
+          </div>
+        </div>
       </div>
     </div>
 
@@ -65,7 +83,6 @@
         <span class="removeUser" (click)="removeUser(user)">×</span>
       </div>
     </div>
-
 
     <button class="btnPrimary" type="submit" [disabled]="shouldDisableSubmit()">
       Erstellen

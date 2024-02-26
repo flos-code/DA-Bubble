@@ -22,6 +22,7 @@
     box-sizing: border-box;
     background-color: white;
     filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
+    position: relative;
 
     .titleAndIcon {
       display: flex;
@@ -95,4 +96,76 @@
       align-self: flex-end;
     }
   }
+
+  .userSuggestions {
+    padding: 20px 25px;
+    border-radius: 0 20px 20px 20px;
+    background-color: white;
+    filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
+    position: absolute;
+    top: 250px;
+    left: 60px;
+
+    .allUsers{
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+      max-height: 160px;
+      overflow-y: scroll;
+
+    .singleUser {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      padding: 4px 20px;
+      border-radius: 35px;
+      margin-left: 25px;
+      width: fit-content;
+    
+
+    &:hover {
+      cursor: pointer;
+      background-color: $bgColor;
+    }
+
+    &:active {
+      .userName {
+        color: $purple3;
+        font-weight: 700;
+      }
+    }
+    .userImage {
+      position: relative;
+      width: 50px;
+      height: 50px;
+
+      img {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        object-fit: contain;
+        position: relative;
+      }
+      .onlineStatus {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2px solid white;
+        box-sizing: border-box;
+        position: absolute;
+        right: 0;
+        bottom: 0;
+
+        &.online {
+          background-color: $onlineGreen;
+        }
+
+        &.away {
+          background-color: $textGray;
+        }
+      }
+    }
+    }
+  }
+}
 }
