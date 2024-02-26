@@ -129,7 +129,7 @@
                                             {{thread.message}}
                                         </div>
                                         <div class="mainMessageThreads">
-                                            <div>2 Antworten</div>
+                                            <div (click)="openThread(thread.threadId)">2 Antworten</div>
                                             <div>Letzte Antwort 14:56</div>
                                         </div>
                                         <div class="mainThreadReactions">
@@ -182,7 +182,7 @@
                                         </div>
                                         <div class="mainMessageThreadsOwn">
                                             <div>Letzte Antwort 14:56</div>
-                                            <div (click)="openThread(thread.threadId)">2 Antworten</div>
+                                            <div (click)="openThread(thread.threadId)">1 Antworten</div>
                                         </div>
                                         <div class="mainThreadReactionsOwn">
                                             <div>

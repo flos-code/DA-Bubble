@@ -45,6 +45,7 @@ export class ChatService {
     this.selectedThreadIdSource.next(threadId);
     this.threadOpenSource.next(true);
   }
+  
 
   closeThread(): void {
     this.selectedThreadIdSource.next(null);

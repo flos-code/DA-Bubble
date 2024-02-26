@@ -9,6 +9,7 @@ import { ChatService } from '../../../services/chat.service';
 import { InputService } from '../../../services/input.service';
 import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
+import { Thread } from '../../../../models/thread.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -34,6 +35,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy{
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   emojiWindowOpen = false;
   threadOpen: boolean = true;
+  threads: Thread[] = [];
   messageModel: string = '';
   currentCursorPosition: number = 0;
   private subscription = new Subscription();
@@ -92,10 +94,13 @@ export class SecondaryChatComponent implements OnInit, OnDestroy{
   ngOnInit(): void {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
+        console.log('Received thread ID in component:', threadId); // Zum Debuggen
         this.loadThreadMessages(threadId);
+      } else {
+        console.log('No thread ID available');
       }
     }));
-  }
+  }  
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
