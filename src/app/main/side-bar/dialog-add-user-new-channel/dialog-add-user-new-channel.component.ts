@@ -9,7 +9,13 @@ import {
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getDoc,
+  getDocs,
+  getFirestore,
+} from 'firebase/firestore';
 import { ChatService } from '../../../services/chat.service';
 
 const firebaseConfig = {
@@ -34,21 +40,26 @@ const db = getFirestore(app);
 export class DialogAddUserNewChannelComponent {
   @Input() isVisible: boolean = false;
   @Output() toggleVisibility = new EventEmitter<void>();
-  @Output() usersToAdd = new EventEmitter<{ all: boolean, userIds?: string[] }>();
+  @Output() usersToAdd = new EventEmitter<{
+    all: boolean;
+    userIds?: string[];
+  }>();
   @ViewChild('form') form!: NgForm;
 
   userSelection: string = 'allMembers';
   addedUser: string = 'test';
-  allUsers = [/* Array von user ids für den channel*/];
+  allUsers = [
+    /* Array von user ids für den channel*/
+  ];
   filteredUsers = [];
   selectedUsers = [];
-  userInput: string = '';
   activeChannelMembers: string[] = [];
+  inputFocused: boolean = false;
+  userInputModel: string = '';
 
   constructor(private chatService: ChatService) {
     this.filterUsers();
   }
-
 
   ngOnInit() {
     this.chatService.activeChannelIdUpdates.subscribe({
@@ -56,10 +67,9 @@ export class DialogAddUserNewChannelComponent {
         if (channelId) {
           this.initializeData(); // Rufen Sie dies nur auf, wenn ein neuer aktiver Kanal gesetzt wurde
         }
-      }
+      },
     });
   }
-  
 
   toggle(): void {
     this.toggleVisibility.emit();
@@ -73,45 +83,65 @@ export class DialogAddUserNewChannelComponent {
       this.usersToAdd.emit({ all: true });
     } else if (this.userSelection === 'specificPeople') {
       // Änderung: Emit der IDs ausgewählter Benutzer statt nur 'addedUser'
-      this.usersToAdd.emit({ all: false, userIds: this.selectedUsers.map(user => user.id) });
+      this.usersToAdd.emit({
+        all: false,
+        userIds: this.selectedUsers.map((user) => user.id),
+      });
     }
     this.toggle();
   }
 
-
-//user werden gefilter anhand der einagbe im input und der bereits im channel befindlichen user
+  //user werden gefilter anhand der einagbe im input und der bereits im channel befindlichen user
   filterUsers(): void {
-    if (!this.userInput) {
+    if (!this.userInputModel) {
       this.filteredUsers = [];
     } else {
-      this.filteredUsers = this.allUsers.filter(user =>
-        user.name.toLowerCase().includes(this.userInput.toLowerCase())
-      );
+      this.filteredUsers = this.allUsers
+        .filter((user) =>
+          user.name.toLowerCase().includes(this.userInputModel.toLowerCase())
+        )
+        .filter(
+          (user) =>
+            !this.selectedUsers.some(
+              (selectedUser) => selectedUser.id === user.id
+            )
+        ); // Filtere Benutzer, die nicht bereits ausgewählt wurden
     }
   }
 
-addSelectedUser(user): void {
-  if (!this.selectedUsers.some(selectedUser => selectedUser.id === user.id)) {
-    this.selectedUsers.push(user);
-    this.filteredUsers = [];
-    this.userInput = '';
+  addSelectedUser(user): void {
+    if (
+      !this.selectedUsers.some((selectedUser) => selectedUser.id === user.id)
+    ) {
+      this.selectedUsers.push(user);
+      this.filteredUsers = [];
+      this.userInputModel = '';
+      // this.adjustTextboxHeight();
+    }
   }
-}
 
-removeUser(userToRemove): void {
-  this.selectedUsers = this.selectedUsers.filter(user => user.id !== userToRemove.id);
-}
-
+  removeUser(userToRemove): void {
+    this.selectedUsers = this.selectedUsers.filter(
+      (user) => user.id !== userToRemove.id
+    );
+    // this.adjustTextboxHeight();
+  }
 
   shouldDisableSubmit(): boolean {
-    return this.userSelection === 'specificPeople' && this.selectedUsers.length === 0;
+    return (
+      this.userSelection === 'specificPeople' && this.selectedUsers.length === 0
+    );
   }
 
   async initializeData() {
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
     await this.fetchUsers();
 
-    console.log('actibe:',this.activeChannelMembers, this.getActiveChannelId())
+    console.log(
+      'actibe:',
+      this.activeChannelMembers,
+      this.getActiveChannelId()
+    );
   }
 
   getActiveChannelId() {
@@ -141,12 +171,17 @@ removeUser(userToRemove): void {
     const userSnapshot = await getDocs(usersCol);
     // Filtere Benutzer basierend darauf, ob ihre ID bereits im `activeChannelMembers` Array vorhanden ist
     const userList = userSnapshot.docs
-      .filter(doc => !this.activeChannelMembers.includes(doc.id)) 
-      .map(doc => ({ id: doc.id, ...doc.data() })); 
-  
+      .filter((doc) => !this.activeChannelMembers.includes(doc.id))
+      .map((doc) => ({ id: doc.id, ...doc.data() }));
+
     this.allUsers = userList; // Aktualisiere `allUsers` mit der gefilterten Liste
   }
+
+  onInputFocus(): void {
+    this.inputFocused = true;
+  }
+
+  onInputBlur(): void {
+    this.inputFocused = false;
+  }
 }
-
-
-

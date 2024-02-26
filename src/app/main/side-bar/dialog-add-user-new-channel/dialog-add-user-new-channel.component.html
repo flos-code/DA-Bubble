@@ -43,7 +43,7 @@
       </div>
     </div>
 
-    <input
+    <!-- <input
       *ngIf="userSelection === 'specificPeople'"
       class="addedUser"
       type="text"
@@ -51,9 +51,48 @@
       [(ngModel)]="userInput"
       (input)="filterUsers()"
       name="userInput"
-    />
 
-    <div *ngIf="filteredUsers.length > 0" class="userSuggestions">
+      adjustTextareaHeight($event);
+    /> -->
+
+    <div
+      *ngIf="userSelection === 'specificPeople'"
+      class="textBoxContainer"
+      [class.focused]="inputFocused"
+      (click)="userInput.focus()"
+    >
+      <div *ngIf="selectedUsers.length > 0" class="allSelectesUsers">
+        <div *ngFor="let user of selectedUsers" class="singleSelectedUser">
+          <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
+          <div>
+            <div class="name">{{ user.name }}</div>
+            <div class="removeUser">
+              <mat-icon
+                class="material-symbols-rounded"
+                fontIcon="close"
+                (click)="removeUser(user)"
+              ></mat-icon>
+            </div>
+          </div>
+        </div>
+      </div>
+      <textarea
+        rows="1"
+        #userInput
+        name="userInput"
+        type="text"
+        [(ngModel)]="userInputModel"
+        placeholder="Name eingeben"
+        (input)="filterUsers()"
+        (focus)="onInputFocus()"
+        (blur)="onInputBlur()"
+      ></textarea>
+    </div>
+
+    <div
+      *ngIf="filteredUsers.length > 0 && userSelection === 'specificPeople'"
+      class="userSuggestions"
+    >
       <div class="allUsers">
         <div
           class="singleUser"
@@ -74,13 +113,6 @@
             {{ user.name }}
           </div>
         </div>
-      </div>
-    </div>
-
-    <div class="selectedUsers">
-      <div *ngFor="let user of selectedUsers">
-        {{ user.name }}
-        <span class="removeUser" (click)="removeUser(user)">×</span>
       </div>
     </div>
 
