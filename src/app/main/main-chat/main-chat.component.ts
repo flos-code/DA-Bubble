@@ -120,6 +120,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
           console.log('Channel messages data', this.channelThreads);
         }
       )
+      console.log('Channel threads', this.channelThreads)
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
     });
@@ -166,6 +167,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let createdBy = this.getUserCreated(userId);
 
       this.channelThreadsDateTime.push({
+        'threadId': message['messageId'],
         'timestamp': message['creationDate'],
         'dateString': formattedDate,
         'timeSeparatorDate': formattedDateTimeSeparator,
@@ -182,6 +184,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         });
       }
     }
+    console.log('Channel threads help array', this.channelThreadsDateTime);
     this.threadCreationDates.sort(this.compareByCreationDate);
     this.channelThreadsDateTime.sort(this.compareByCreationDate);
   } 
