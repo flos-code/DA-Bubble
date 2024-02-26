@@ -264,7 +264,6 @@ app-add-members-dialog {
 
     &:hover {
         background-color: $bgColor;
-        cursor: pointer;
     }
 }
 
@@ -373,6 +372,7 @@ app-add-members-dialog {
     > div:first-of-type {
         font-size: 18px;
         color: $purple3;
+        cursor: pointer;
     }
 
     > div:last-of-type {
@@ -392,6 +392,7 @@ app-add-members-dialog {
     > div:last-of-type {
         font-size: 18px;
         color: $purple3;
+        cursor: pointer;
     }
 }
 

@@ -12,6 +12,8 @@ import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
+
+/* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
@@ -39,11 +41,10 @@ const db = getFirestore(app);
 export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel;
   channelId: string = 'allgemein';
-
   channelThreads: Message[] = [];
   threadId: string = '';
   threadCreationDates = [];
-  currentUser: string = '5BhorO43YJhodR2nL3aKgYQWzuo1';
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
 
   dmUser = [];
 
@@ -94,25 +95,76 @@ export class MainChatComponent implements OnInit, OnDestroy {
     const q = query(collection(db, 'channels/allgemein/threads'), orderBy("creationDate", "asc"));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
-      list.forEach(message => {
-          this.channelThreads.push(new Message(message.data()));
+      list.forEach(thread => {
+          this.channelThreads.push(new Message(thread.data()));
           console.log('Channel messages data', this.channelThreads);
-          this.getThreadCreationDates();
-        })
+        }
+      )
+      this.sortChannelThreadsArray();
+      this.getThreadCreationDates();
     });
   }
 
+  sortChannelThreadsArray() {
+    this.channelThreads.sort(this.compareByCreationDate);
+    console.log('Sorted channel threads array', this.channelThreads);
+  }
+
+  compareByCreationDate(b: any, a: any) {
+    if(b.creationDate < a.creationDate){
+      return -1;
+    }
+    
+    if(b.creationDate > a.creationDate) {
+      return 1;
+    }
+    return 0;
+  }
+
+/*   isToday(date) {
+    const today = new Date();
+  
+    // 👇️ Today's date
+    console.log(today);
+  
+    if (today.toDateString() === date.toDateString()) {
+      return true;
+    }
+  
+    return false;
+  } */
+
+/* 
+  getFormattedThreadCreationDates(thread: any) {
+    for (let i = 0; i < this.channelThreads.length; i++) {
+      let message = this.channelThreads[i];
+
+      let timestamp = message['creationDate'];
+      const date = new Date(timestamp);
+      const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
+
+      message['creationDate'] = formattedDate;
+
+      if(!this.threadCreationDates.includes(formattedDate)) {
+        this.threadCreationDates.push(formattedDate);
+      }
+    }
+    this.threadCreationDates.sort(function(b, a) {
+      return b - a;
+    });
+    console.log('Sorted thread creation dates array', this.threadCreationDates);
+  }  */
 
   getThreadCreationDates() {
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
 
-      const timestamp = message['creationDate'];
-      const date = new Date(timestamp);
-      const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
+      //const timestamp = message['creationDate'];
+      //const date = new Date(timestamp);
+      //const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
 
-      if(!this.threadCreationDates.includes(formattedDate)) {
-        this.threadCreationDates.push(formattedDate);
+      if(!this.threadCreationDates.includes(message['creationDate'])) {
+        this.threadCreationDates.push(message['creationDate']);
       }
     }
     this.threadCreationDates.sort(function(b, a) {
