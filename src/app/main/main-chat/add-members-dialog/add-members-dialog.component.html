@@ -19,10 +19,15 @@
       </div>
       <div class="userList" *ngIf="inputFocus">
         <div class="userSubList">
-          <div *ngFor="let filteredUser of filteredUserList; let i = index" (click)="addUser(filteredUser)">
-            <img src="/assets/img/main-chat/member2.svg">
-            <div>{{filteredUser.userName}}</div>
-          </div>
+          @for (filteredUser of filteredUserList; track $index) {
+            <div (click)="addUser(filteredUser)">
+              <div>
+                <img src="/assets/img/main-chat/member2.svg">
+                <div [ngStyle]="{'background-color': filteredUser.isOnline ? '#92c83e' : '#686868' }"></div>
+              </div>
+              <div>{{filteredUser.userName}}</div>
+            </div>
+          }
        </div>
       </div>
     </div>

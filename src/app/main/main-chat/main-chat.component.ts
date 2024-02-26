@@ -177,12 +177,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
         this.threadCreationDates.push({
-          'timestamp': message['creationDate'],
           'dateString': formattedDate,
           'timeSeparatorDate': formattedDateTimeSeparator,
-          'time': formattedTime,
-          'userId': userId,
-          'createdBy': createdBy
         });
       }
     }
