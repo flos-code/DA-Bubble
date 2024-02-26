@@ -12,7 +12,7 @@
                     <div class="userSubContainer">
                         <div>
                             <img src="/assets/img/main-chat/member2.svg">
-                            <div></div>
+                            <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
                         </div>
                         <div>{{member.name}}</div>    
                     </div>

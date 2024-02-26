@@ -89,6 +89,10 @@
     height: 200px;
     max-height: 200px;
     overflow: hidden;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .usersListSubContainer {
@@ -101,6 +105,10 @@
     justify-content: flex-start;
     gap: 1rem;
     padding: 12px 0 12px 0;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 .userContainer{
@@ -120,11 +128,32 @@
     gap: 15px;
 
     > div:first-of-type {
+        position: relative;
         height: 50px;
         width: 50px;
+
+        > img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        > div {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
     }
 
-    > div:first-of-type {
+    > div:last-of-type {
         font-size: 18px;
         font-weight: 400;
     }

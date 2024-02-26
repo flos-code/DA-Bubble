@@ -192,16 +192,23 @@ app-add-members-dialog {
 /* ======================= MAIN CHAT MESSAGES ===================== */
 .mainChatMessages {
     width: 100%;
-    height: calc(100% - 96px - 180px);
+    height: 100%;
+    //height: calc(940px - 96px - 180px);
     padding: 25px 0 25px 0;
+    //display: table-cell;
+    //vertical-align: bottom;
+    overflow: hidden;
 }
 
 .mainChatMessagesSubContainer {
     height: 100%;
     width: 100%;
+    //justify-content: flex-end;
     display: flex;
     flex-direction: column;
-    justify-content: flex-end;
+    align-items: center;
+    justify-content: flex-start;
+    overflow: auto;
 }
 
 .beginningOfChannel {
@@ -346,13 +353,14 @@ app-add-members-dialog {
         gap: 20px;
 
         > div:first-of-type{
-            font-size: 14px;
-            color: $textGray;
+            font-weight: bold;
+            font-size: 18px;
         }
         
         > div:last-of-type{
-            font-weight: bold;
-            font-size: 18px;
+            font-size: 14px;
+            color: $textGray;
+
         }
     }
 
@@ -577,7 +585,7 @@ app-add-members-dialog {
 /* ======================= TEXT INPUT ===================== */
 .mainChatInput {
     width: 100%;
-    min-height: 180px;
+    min-height: 200px;
     padding: 25px 45px 25px 45px;
 }
 
@@ -594,7 +602,7 @@ app-add-members-dialog {
 
     > textarea {
         width: 100%;
-        min-height: 100px;
+        height: 100%;
         border: none;
         outline: none;
         font-size: 18px;

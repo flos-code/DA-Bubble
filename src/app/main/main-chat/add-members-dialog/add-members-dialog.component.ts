@@ -57,7 +57,8 @@ export class AddMembersDialogComponent implements OnInit {
         if(!this.channelMembers.includes(element.id)) {
             this.userList.push({
               'userName': element.data()['name'],
-              'userId': element.id
+              'userId': element.id,
+              'isOnline': element.data()['isOnline']
             });
         }
       });

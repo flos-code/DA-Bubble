@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 
 /* ========== FIREBASE ========== */
@@ -18,7 +19,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-show-members-dialog',
   standalone: true,
-  imports: [],
+  imports: [CommonModule],
   templateUrl: './show-members-dialog.component.html',
   styleUrl: './show-members-dialog.component.scss'
 })
