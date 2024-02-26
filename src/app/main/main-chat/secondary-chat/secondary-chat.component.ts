@@ -30,7 +30,7 @@ const db = getFirestore(app);
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
-export class SecondaryChatComponent implements OnInit, OnDestroy{
+export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   emojiWindowOpen = false;
@@ -70,60 +70,45 @@ export class SecondaryChatComponent implements OnInit, OnDestroy{
     public inputService: InputService,
   ) { }
 
-  // async addThreadMessage(channelId: string, messageId: string, threadMessage: ThreadMessage) {
-  //   const threadRef = collection(db, `channels/${channelId}/messages/${messageId}/threads`);
-  //   await addDoc(threadRef, threadMessage.toJSON());
-  // }
-
-  // async updateThreadMessage(channelId: string, messageId: string, threadId: string, updates: any) {
-  //   const threadDocRef = doc(db, `channels/${channelId}/messages/${messageId}/threads/${threadId}`);
-  //   await updateDoc(threadDocRef, updates);
-  // }
-
-  // async deleteThreadMessage(channelId: string, messageId: string, threadId: string) {
-  //   const threadDocRef = doc(db, `channels/${channelId}/messages/${messageId}/threads/${threadId}`);
-  //   await deleteDoc(threadDocRef);
-  // }
-
-  // async getThreadMessages(channelId: string, messageId: string): Promise<ThreadMessage[]> {
-  //   const threadsRef = collection(db, `channels/${channelId}/messages/${messageId}/threads`);
-  //   const snapshot = await getDocs(threadsRef);
-  //   return snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
-  // }
-  
   ngOnInit(): void {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
-        console.log('Received thread ID in component:', threadId); // Zum Debuggen
+        console.log('Received thread ID in SecondaryChatComponent:', threadId);
         this.loadThreadMessages(threadId);
       } else {
         console.log('No thread ID available');
       }
     }));
-  }  
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
   loadThreadMessages(threadId: string) {
-    const q = query(collection(db, `channels/${this.chatService.getActiveChannelId()}/threads/${threadId}/messages`), orderBy("creationDate", "asc"));
-    onSnapshot(q, (snapshot) => {
-      this.threadMessages = snapshot.docs.map(doc => new ThreadMessage({
-        messageId: doc.id,
-        ...doc.data()
-      }));
+    const channelId = this.chatService.getActiveChannelId();
+    this.chatService.getThreadMessages(channelId, threadId).then(threadMessages => {
+      this.threadMessages = threadMessages;
       console.log('Geladene Thread-Nachrichten:', this.threadMessages);
     });
   }
-  
 
   /**
-   * Updates the current cursor position based on user interactions.
-   * @param {any} event - The event object.
-   */
-  updateCursorPosition(event: any) {
-    this.currentCursorPosition = event.target.selectionStart;
+ * Closes the chat thread.
+ */
+  closeThread(): void {
+    this.chatService.closeThread();
+  }
+
+  /**
+ * Toggles the visibility of the emoji window.
+ */
+  toggleEmojis() {
+    if (this.emojiWindowOpen) {
+      this.emojiWindowOpen = false;
+    } else {
+      this.emojiWindowOpen = true;
+    }
   }
 
   /**
@@ -151,20 +136,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy{
   }
 
   /**
-   * Toggles the visibility of the emoji window.
-   */
-  toggleEmojis() {
-    if (this.emojiWindowOpen) {
-      this.emojiWindowOpen = false;
-    } else {
-      this.emojiWindowOpen = true;
-    }
-  }
-
-  /**
-   * Closes the chat thread.
-   */
-  closeThread(): void {
-    this.chatService.closeThread();
+ * Updates the current cursor position based on user interactions.
+ * @param {any} event - The event object.
+ */
+  updateCursorPosition(event: any) {
+    this.currentCursorPosition = event.target.selectionStart;
   }
 }

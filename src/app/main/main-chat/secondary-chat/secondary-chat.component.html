@@ -31,15 +31,15 @@
                 <div class="purple-line"></div>
             </div>
 
-            <div class="user-message"> <!-- Template of awnsers -->
+            <div *ngFor="let message of threadMessages" class="user-message"> <!-- Template of awnsers -->
                 <img src="/assets/img/userImages/userImage5.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>Sofia Müller</p>
-                        <span>{{messages[1].time}} Uhr</span>
+                        <p>{{ message.createdBy }}</p>
+                        <span>{{ message.creationDate | date:'shortTime' }} Uhr</span>
                     </div>
                     <div class="thread-message">
-                        <span>{{messages[1].message}}</span>
+                        <span>{{ message.message }}</span>
                     </div>
                 </div>
             </div>

@@ -331,7 +331,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   openThread(threadId: string): void {
     this.chatService.openThread(threadId);
-    console.log('ThreadId:',threadId)
   }
 
   getThreadOpenStatus(): void {
