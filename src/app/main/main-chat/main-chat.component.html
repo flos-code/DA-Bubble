@@ -148,7 +148,7 @@
                                         <div (click)="openMoreEmojis()">
                                             <span class="material-symbols-outlined">add_reaction</span>
                                         </div>
-                                        <div (click)="openThread()">
+                                        <div (click)="openThread(thread.threadId)">
                                             <span class="material-symbols-outlined">comment</span>
                                         </div>
                                     </div>
@@ -168,7 +168,7 @@
                                         </div>
                                         <div class="mainMessageThreadsOwn">
                                             <div>Letzte Antwort 14:56</div>
-                                            <div (click)="openThread()">2 Antworten</div>
+                                            <div (click)="openThread(thread.threadId)">2 Antworten</div>
                                         </div>
                                         <div class="mainMessageReactions">
             
@@ -189,7 +189,7 @@
                                         <div (click)="openMoreEmojis()">
                                             <span class="material-symbols-outlined">add_reaction</span>
                                         </div>
-                                        <div (click)="openThread()">
+                                        <div (click)="openThread(thread.threadId)">
                                             <span class="material-symbols-outlined">comment</span>
                                         </div>
                                         <div (click)="moreOptions()">
