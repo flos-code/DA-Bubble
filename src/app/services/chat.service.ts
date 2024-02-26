@@ -27,6 +27,8 @@ export class ChatService {
   threadOpen$ = this.threadOpenSource.asObservable();
   private threadsSource = new BehaviorSubject<Thread[]>([]);
   threads$ = this.threadsSource.asObservable();
+  private selectedThreadIdSource = new BehaviorSubject<string | null>(null);
+  selectedThreadId$ = this.selectedThreadIdSource.asObservable();
 
   private activeChannelId: string;
   private selectedUserId: string;
@@ -39,11 +41,13 @@ export class ChatService {
   constructor() {
   }
 
-  openThread(): void {
+  openThread(threadId: string): void {
+    this.selectedThreadIdSource.next(threadId);
     this.threadOpenSource.next(true);
   }
 
   closeThread(): void {
+    this.selectedThreadIdSource.next(null);
     this.threadOpenSource.next(false);
   }
 

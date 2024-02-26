@@ -1,13 +1,14 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc, orderBy } from "firebase/firestore";
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { InputService } from '../../../services/input.service';
 import { ThreadMessage } from '../../../../models/threadMessage.class';
+import { Subscription } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -28,13 +29,15 @@ const db = getFirestore(app);
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
-export class SecondaryChatComponent {
+export class SecondaryChatComponent implements OnInit, OnDestroy{
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   emojiWindowOpen = false;
   threadOpen: boolean = true;
   messageModel: string = '';
   currentCursorPosition: number = 0;
+  private subscription = new Subscription();
+  threadMessages: ThreadMessage[] = [];
   messages = [
     {
       id: 1,
@@ -85,6 +88,29 @@ export class SecondaryChatComponent {
   //   const snapshot = await getDocs(threadsRef);
   //   return snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
   // }
+  
+  ngOnInit(): void {
+    this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
+      if (threadId) {
+        this.loadThreadMessages(threadId);
+      }
+    }));
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  loadThreadMessages(threadId: string) {
+    const q = query(collection(db, `channels/${this.chatService.getActiveChannelId()}/threads/${threadId}/messages`), orderBy("creationDate", "asc"));
+    onSnapshot(q, (snapshot) => {
+      this.threadMessages = snapshot.docs.map(doc => new ThreadMessage({
+        messageId: doc.id,
+        ...doc.data()
+      }));
+      console.log('Geladene Thread-Nachrichten:', this.threadMessages);
+    });
+  }
   
 
   /**
