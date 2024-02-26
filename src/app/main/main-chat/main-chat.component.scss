@@ -302,19 +302,17 @@ app-add-members-dialog {
 }
 
 .mainMessage {
+    width: 100%;
     display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
     gap: 10px;
 
-    > div {
+    > div:first-of-type {
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    > div:first-of-type {
         gap: 20px;
 
         > div:first-of-type{
@@ -329,6 +327,9 @@ app-add-members-dialog {
     }
 
     > div:nth-of-type(2) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 0px 30px 30px 30px;
         padding: 15px;
         background-color: $bgColor;
@@ -343,13 +344,10 @@ app-add-members-dialog {
     justify-content: center;
     gap: 10px;
 
-    > div {
+    > div:first-of-type {
         display: flex;
         justify-content: center;
         align-items: center;
-    }
-
-    > div:first-of-type {
         gap: 20px;
 
         > div:first-of-type{
@@ -365,6 +363,9 @@ app-add-members-dialog {
     }
 
     > div:nth-of-type(2) {
+        display: flex;
+        justify-content: center;
+        align-items: center;
         border-radius: 0px 30px 30px 30px;
         padding: 15px;
         background-color: $purple2;
@@ -375,6 +376,9 @@ app-add-members-dialog {
 
 
 .mainMessageThreads {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
     gap: 20px;
 
     > div:first-of-type {
@@ -390,6 +394,9 @@ app-add-members-dialog {
 }
 
 .mainMessageThreadsOwn {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
     gap: 20px;
 
     > div:first-of-type {
@@ -404,11 +411,101 @@ app-add-members-dialog {
     }
 }
 
-.mainMessageReactions {
+.mainThreadReactions,
+.mainThreadReactionsOwn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
 
+    > div:first-of-type {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: white;
+        &:hover {
+            cursor: pointer;
+            color: $purple2;
+        }
+
+    }
+
+    > div:last-of-type {
+        position: relative;
+        display: flex;
+        gap: 10px;
+        border-radius: 20px;
+        border: 1px solid $lightPurple;
+        padding: 5px 10px 5px 10px;
+        background-color: white;
+        &:hover {
+            cursor: pointer;
+            border-color: $purple2;
+        }
+
+        &:hover .reactionHoverBubble {
+            display: block;
+        }
+
+        .ractionEmoji {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+/*             width: 24px;
+ */            height: 24px;
+        }
+
+        .ractionCount {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            > div {
+                font-weight: 16px;
+
+            }
+        }
+
+        .reactionHoverBubble {
+            position: absolute;
+            top: -113px;
+            left: 30px;
+            display: none;
+            width: 158px;
+            height: 112px;
+            border-radius: 30px 30px 30px 0px;
+            padding: 15px 10px 15px 10px;
+            background-color: $purple1;
+            > div {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            > div:first-of-type {
+
+            }
+            > div:nth-of-type(2) {
+                color: white;
+                font-weight: 700;
+                font-size: 18px;
+            }
+            > div:last-of-type {
+                color: white;
+                font-size: 16px;
+                font-weight: 400;
+            }
+        }
+    }
 }
 
 .mainMessageOwn {
+    width: 100%;
     align-items: flex-end;
 
     > div:first-of-type,
