@@ -21,6 +21,7 @@ import {
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
 import { User } from '../../../models/user.class';
+import { getAuth } from 'firebase/auth';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -58,6 +59,9 @@ export class SideBarComponent {
   channels: { id: string; data: Channel }[] = [];
   users: { id: string; data: User }[] = [];
 
+  authSubscription: any;
+  auth = getAuth(app);
+
   constructor(
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
@@ -67,8 +71,8 @@ export class SideBarComponent {
   async ngOnInit() {
     await this.loadChannels();
     await this.loadUsers();
+    this.getTheLoggedInUser();
   }
-
 
   //is you muss durch abgleich swichen eingelogen user und user ids statt mit isYou erreicht werden
   sortUsers(): void {
@@ -95,7 +99,7 @@ export class SideBarComponent {
     this.dialogAddUserVisible = !this.dialogAddUserVisible;
   }
 
-  async  openNewMessage() {
+  async openNewMessage() {
     this.chatService.setActiveChannelId(null);
     this.chatService.setSelectedUserId(null);
     this.showChat('showNewMessage');
@@ -139,16 +143,16 @@ export class SideBarComponent {
         ...channelData,
       });
       console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
-  
+
       // Optional: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument
       const messagesRef = collection(docRef, 'messages');
       await addDoc(messagesRef, {
         placeholder: true, // Markiere dieses Dokument als Platzhalter
         timestamp: Date.now(), // Optional: Firestore Server-Zeitstempel als Erstellungszeit
       });
-  
+
       await this.loadChannels(); // Lade Kanäle neu, um die UI zu aktualisieren
-  
+
       // Setze den neu erstellten Kanal als aktiv
       this.setActiveChannel(docRef.id);
     } catch (error) {
@@ -156,24 +160,26 @@ export class SideBarComponent {
     }
   }
 
-   async handleChannelCreationAndToggleDialog(channelData: {
+  async handleChannelCreationAndToggleDialog(channelData: {
     name: string;
     description: string;
   }): Promise<void> {
-     await this.handleChannelCreation(channelData);
+    await this.handleChannelCreation(channelData);
     this.toggleAddUserDialog();
   }
 
- async handleChannelCreation(channelData: {
+  async handleChannelCreation(channelData: {
     name: string;
     description: string;
   }): Promise<void> {
-    const currentUserSnapshot = await getDocs(query(collection(db, 'users'), where('isYou', '==', true)));
+    const currentUserSnapshot = await getDocs(
+      query(collection(db, 'users'), where('isYou', '==', true))
+    );
     let currentUserId = '';
-    currentUserSnapshot.forEach(doc => {
+    currentUserSnapshot.forEach((doc) => {
       currentUserId = doc.id; // Nehmen wir an, es gibt nur einen solchen Benutzer
     });
-  
+
     if (!currentUserId) {
       console.error('Kein Benutzer mit isYou = true gefunden');
       return;
@@ -191,51 +197,69 @@ export class SideBarComponent {
     this.addChannelToFirestore(newChannel);
   }
 
+  async onUsersToAdd({
+    all,
+    userIds,
+  }: {
+    all: boolean;
+    userIds?: string[];
+  }): Promise<void> {
+    const selectedChannelId = await this.getActiveChannelId();
 
-async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Promise<void> {
-  const selectedChannelId = await this.getActiveChannelId();
-
-  if (!selectedChannelId) {
-      console.error("Kein aktiver Kanal ausgewählt.");
+    if (!selectedChannelId) {
+      console.error('Kein aktiver Kanal ausgewählt.');
       return; // Frühzeitige Rückkehr, wenn kein aktiver Kanal gefunden wurde
-  }
+    }
 
-  let membersToUpdate: string[] = [];
+    let membersToUpdate: string[] = [];
 
-  if (all) {
+    if (all) {
       // Füge alle Benutzer-IDs hinzu, wenn 'all' wahr ist
       const allUsersSnapshot = await getDocs(collection(db, 'users'));
-      allUsersSnapshot.forEach(doc => membersToUpdate.push(doc.id));
-  } else if (userIds) {
+      allUsersSnapshot.forEach((doc) => membersToUpdate.push(doc.id));
+    } else if (userIds) {
       // Füge nur die spezifisch ausgewählten Benutzer-IDs hinzu
       membersToUpdate = userIds;
-  }
+    }
 
-  // Aktualisiere das 'members'-Array des aktiven Kanals
-  const channelRef = doc(db, 'channels', selectedChannelId);
-  const channelSnap = await getDoc(channelRef);
-  if (channelSnap.exists()) {
+    // Aktualisiere das 'members'-Array des aktiven Kanals
+    const channelRef = doc(db, 'channels', selectedChannelId);
+    const channelSnap = await getDoc(channelRef);
+    if (channelSnap.exists()) {
       const existingMembers = channelSnap.data()['members'] || [];
-      const updatedMembers = Array.from(new Set([...existingMembers, ...membersToUpdate])); // Kombiniert und entfernt Duplikate
+      const updatedMembers = Array.from(
+        new Set([...existingMembers, ...membersToUpdate])
+      ); // Kombiniert und entfernt Duplikate
       await updateDoc(channelRef, { members: updatedMembers });
+    }
   }
-}
 
-setActiveChannel(channelId: string) {
-  this.chatService.setActiveChannelId(channelId);
-  this.showChat('showMainChat');
-}
+  setActiveChannel(channelId: string) {
+    this.chatService.setActiveChannelId(channelId);
+    this.showChat('showMainChat');
+  }
 
-getActiveChannelId() {
-  return this.chatService.getActiveChannelId();
-}
+  getActiveChannelId() {
+    return this.chatService.getActiveChannelId();
+  }
 
-setSelectedUser(userId: string) {
-  this.chatService.setSelectedUserId(userId);
-  this.showChat('showDms');
-}
+  setSelectedUser(userId: string) {
+    this.chatService.setSelectedUserId(userId);
+    this.showChat('showDms');
+  }
 
-getSelectedUserId() {
-  return this.chatService.getSelectedUserId();
-}
+  getSelectedUserId() {
+    return this.chatService.getSelectedUserId();
+  }
+
+  getTheLoggedInUser() {
+    this.authSubscription = this.auth.onAuthStateChanged((user) => {
+      if (user) {
+        let userId = user.uid;
+        console.log('id des eingelogten nutzer:', userId);
+      } else {
+        console.log('keine user id gefunden :(');
+      }
+    });
+  }
 }
