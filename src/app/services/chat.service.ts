@@ -25,6 +25,8 @@ export class ChatService {
   private db;
   private threadOpenSource = new BehaviorSubject<boolean>(false);
   threadOpen$ = this.threadOpenSource.asObservable();
+  private threadsSource = new BehaviorSubject<Thread[]>([]);
+  threads$ = this.threadsSource.asObservable();
 
   private activeChannelId: string;
 
@@ -41,6 +43,7 @@ export class ChatService {
 
   setActiveChannelId(channelId: string) {
     this.activeChannelId = channelId;
+    this.loadThreads(channelId);
     console.log(`Aktiver Channel: ${this.activeChannelId}`);
   }
 
@@ -57,4 +60,8 @@ export class ChatService {
     return threads;
   }
   
+  async loadThreads(channelId: string): Promise<void> {
+    const threads = await this.getThreads(channelId);
+    this.threadsSource.next(threads);
+  }
 }
