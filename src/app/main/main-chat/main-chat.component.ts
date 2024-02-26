@@ -39,14 +39,14 @@ const db = getFirestore(app);
 })
 
 export class MainChatComponent implements OnInit, OnDestroy {
-  channel: Channel;
+  channel: Channel; // Daten des aktuellen Channels
   channelId: string = 'allgemein';
 
-  channelMembers = [];
+  channelMembers = []; // Alle Userdaten der Mitglieder des Channels
 
-  channelThreads: Message[] = [];
-  channelThreadsDateTime = [];
-  threadCreationDates = [];
+  channelThreads: Message[] = []; // Alle Threads des Channels
+  channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
+  threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
 
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
