@@ -41,16 +41,17 @@ const db = getFirestore(app);
 export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel;
   channelId: string = 'allgemein';
+
+  channelMembers = [];
+
   channelThreads: Message[] = [];
   channelThreadsDateTime = [];
   threadCreationDates = [];
-
   threadId: string = '';
+
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   userName;
-
   dmUser = [];
-
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -60,7 +61,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   addMemberDialogOpen: boolean = false;
   channelEditionDialogOpen: boolean = false;
   showMembersDialogOpen: boolean = false;
-  ownMessage: boolean = true;
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
 
@@ -76,6 +76,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
+    this.getMembers();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
     //this.getCurrentDirectMessage();
@@ -94,8 +95,23 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  getMembers() {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      this.channelMembers = [];
+      list.forEach(element => {
+        for (let i = 0; i < this.channel['members'].length; i++) {
+          const memberId = this.channel['members'][i];
+          if(element.id == memberId) {
+            this.channelMembers.push(element.data());
+            console.log('Members data array', this.channelMembers);
+          }         
+        }      
+      });
+    });    
+  }
+
   getThreads() {
-    //const q = query(collection(db, `channels'/${this.channelId}/messages`));
     const q = query(collection(db, 'channels/allgemein/threads'), orderBy("creationDate", "asc"));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
@@ -142,14 +158,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
       let creationDate = message['creationDate'];
-      let userId = message['createdBy']
+      let userId = message['createdBy'];
 
       let formattedDate = this.formattedDate(creationDate);
       let formattedDateTimeSeparator = this.formattedDateTimeSeparator(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
-      this.getUser(userId)
-      let createdBy = this.userName;
-      console.log('Retrieved user name', createdBy);
+      let createdBy = this.getUserCreated(userId);
 
       this.channelThreadsDateTime.push({
         'timestamp': message['creationDate'],
@@ -201,17 +215,16 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return getTime(creationDate);
   }
 
-  async getUser(userId: string) {
-    onSnapshot(doc(collection(db, 'users'), userId), (doc) => {
-      let data = doc.data();
-      data = data['name'];
-      this.userName = data;
-      console.log('Fuction data', data)
-    });
+  getUserCreated(userId: string) {
+    let user = ""; 
+    for (let i = 0; i < this.channelMembers.length; i++) {
+      const userCreated = this.channelMembers[i];
+      if(userId == userCreated['id']) {
+        user = userCreated['name'];
+      }
+    }
+    return user;
   }
-
-
-  
 
   /*   getCurrentDirectMessage() {
     if(this.channel = []) {
