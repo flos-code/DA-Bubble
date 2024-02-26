@@ -106,8 +106,8 @@
           <div
             class="singleUser"
             *ngFor="let user of users"
-            (click)="selectUser(user.id)"
-            [ngClass]="{ active: user.data.isSelected }"
+            (click)="setSelectedUser(user.id)"
+            [ngClass]="{ 'active': getSelectedUserId() === user.id }"
           >
             <div class="userImage">
               <img

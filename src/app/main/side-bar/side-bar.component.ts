@@ -17,8 +17,6 @@ import {
   query,
   where,
   addDoc,
-  serverTimestamp,
-  setDoc,
   getDoc,
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
@@ -71,6 +69,8 @@ export class SideBarComponent {
     await this.loadUsers();
   }
 
+
+  //is you muss durch abgleich swichen eingelogen user und user ids statt mit isYou erreicht werden
   sortUsers(): void {
     this.users.sort((a, b) => {
       return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
@@ -96,32 +96,9 @@ export class SideBarComponent {
   }
 
   async  openNewMessage() {
-    await this.deselect();
+    this.chatService.setActiveChannelId(null);
+    this.chatService.setSelectedUserId(null);
     this.showChat('showNewMessage');
-  }
-
-  async selectChannel(selectedChannelId: string): Promise<void> {
-    await this.deselect();
-    await updateDoc(doc(db, 'channels', selectedChannelId), { isActive: true });
-    this.showChat('showMainChat');
-  }
-
-  async selectUser(selectedUserId: string): Promise<void> {
-    await this.deselect();
-    await updateDoc(doc(db, 'users', selectedUserId), { isSelected: true });
-    this.showChat('showDms');
-  }
-
-  async deselect() {
-    const channelSnapshot = await getDocs(collection(db, 'channels'));
-    channelSnapshot.forEach(async (docSnapshot) => {
-      await updateDoc(doc(db, 'channels', docSnapshot.id), { isActive: false });
-    });
-
-    const usersSnapshot = await getDocs(collection(db, 'users'));
-    usersSnapshot.forEach(async (docSnapshot) => {
-      await updateDoc(doc(db, 'users', docSnapshot.id), { isSelected: false });
-    });
   }
 
   showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
@@ -136,10 +113,8 @@ export class SideBarComponent {
         id: doc.id,
         data: new Channel(doc.data()),
       }));
-
       // Kanäle basierend auf dem creationDate sortieren
       channels.sort((a, b) => a.data.creationDate - b.data.creationDate);
-
       // Die sortierten Kanäle dem 'channels'-Array zuweisen
       this.channels = channels;
     });
@@ -158,47 +133,34 @@ export class SideBarComponent {
 
   async addChannelToFirestore(channel: Channel): Promise<void> {
     try {
-      // Schritt 1: aktuell aktiven chanel deaktivieren
-      const activeChannelQuery = query(
-        collection(db, 'channels'),
-        where('isActive', '==', true)
-      );
-      const activeChannelsSnapshot = await getDocs(activeChannelQuery);
-      activeChannelsSnapshot.forEach(async (docSnapshot) => {
-        const channelRef = doc(db, 'channels', docSnapshot.id);
-        await updateDoc(channelRef, { isActive: false });
-      });
-
-      // Schritt 2: Füge den neuen Kanal hinzu, setze isActive auf true
       const channelData = channel.toJSON();
+      // Füge den neuen Kanal hinzu
       const docRef = await addDoc(collection(db, 'channels'), {
         ...channelData,
-        isActive: true,
       });
       console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
-
-          // Optional: Schritt 3: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument, falls gewünscht
-    // Hinweis: Dieser Schritt ist optional und hängt davon ab, ob Sie ein leeres Dokument in 'messages' beim Erstellen eines Kanals hinzufügen möchten.
-    const messagesRef = collection(docRef, 'messages');
-    await addDoc(messagesRef, {
-      placeholder: true, // Markiere dieses Dokument als Platzhalter
-      timestamp: serverTimestamp() // Optional: Firestore Server-Zeitstempel als Erstellungszeit
-
-      
-
-    });
-    
-      await this.loadChannels();
+  
+      // Optional: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument
+      const messagesRef = collection(docRef, 'messages');
+      await addDoc(messagesRef, {
+        placeholder: true, // Markiere dieses Dokument als Platzhalter
+        timestamp: Date.now(), // Optional: Firestore Server-Zeitstempel als Erstellungszeit
+      });
+  
+      await this.loadChannels(); // Lade Kanäle neu, um die UI zu aktualisieren
+  
+      // Setze den neu erstellten Kanal als aktiv
+      this.setActiveChannel(docRef.id);
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
     }
   }
 
-  handleChannelCreationAndToggleDialog(channelData: {
+   async handleChannelCreationAndToggleDialog(channelData: {
     name: string;
     description: string;
-  }): void {
-    this.handleChannelCreation(channelData);
+  }): Promise<void> {
+     await this.handleChannelCreation(channelData);
     this.toggleAddUserDialog();
   }
 
@@ -222,33 +184,16 @@ export class SideBarComponent {
       description: channelData.description,
       createdBy: currentUserId, // Setze den aktuellen Benutzer als Ersteller
       creationDate: Date.now(),
-      isActive: true,
       type: 'channel',
-      messages: [],
       members: [currentUserId],
     });
 
     this.addChannelToFirestore(newChannel);
   }
 
-  async getActiveChannel() {
-    const channelsCol = collection(db, 'channels');
-    const querySnapshot = await getDocs(query(channelsCol, where('isActive', '==', true)));
-    const activeChannelDocs = querySnapshot.docs;
-
-    // Es sollte maximal einen aktiven Kanal geben
-    if (activeChannelDocs.length > 0) {
-        const activeChannel = activeChannelDocs[0];
-        return activeChannel.id; // Gibt die ID des aktiven Kanals zurück
-    } else {
-        console.error("Kein aktiver Kanal gefunden.");
-        return null; // Gibt null zurück, wenn kein aktiver Kanal gefunden wurde
-    }
-}
-
 
 async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Promise<void> {
-  const selectedChannelId = await this.getActiveChannel();
+  const selectedChannelId = await this.getActiveChannelId();
 
   if (!selectedChannelId) {
       console.error("Kein aktiver Kanal ausgewählt.");
@@ -278,9 +223,19 @@ async onUsersToAdd({ all, userIds }: { all: boolean, userIds?: string[] }): Prom
 
 setActiveChannel(channelId: string) {
   this.chatService.setActiveChannelId(channelId);
+  this.showChat('showMainChat');
 }
 
 getActiveChannelId() {
   return this.chatService.getActiveChannelId();
+}
+
+setSelectedUser(userId: string) {
+  this.chatService.setSelectedUserId(userId);
+  this.showChat('showDms');
+}
+
+getSelectedUserId() {
+  return this.chatService.getSelectedUserId();
 }
 }

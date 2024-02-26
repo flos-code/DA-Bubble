@@ -29,6 +29,12 @@ export class ChatService {
   threads$ = this.threadsSource.asObservable();
 
   private activeChannelId: string;
+  private selectedUserId: string;
+
+  private activeChannelIdUpdated = new BehaviorSubject<string | null>(null);
+  get activeChannelIdUpdates() {
+    return this.activeChannelIdUpdated.asObservable();
+  }
 
   constructor() {
   }
@@ -43,6 +49,8 @@ export class ChatService {
 
   setActiveChannelId(channelId: string) {
     this.activeChannelId = channelId;
+    this.selectedUserId = null;
+    this.activeChannelIdUpdated.next(channelId);
     this.loadThreads(channelId);
     console.log(`Aktiver Channel: ${this.activeChannelId}`);
   }
@@ -50,6 +58,8 @@ export class ChatService {
   getActiveChannelId(): string {
     return this.activeChannelId;
   }
+
+
 
   async getThreads(channelId): Promise<Thread[]> {
     const threadsRef = collection(db, `channels/${channelId}/threads`);
@@ -63,5 +73,15 @@ export class ChatService {
   async loadThreads(channelId: string): Promise<void> {
     const threads = await this.getThreads(channelId);
     this.threadsSource.next(threads);
+  }
+
+  setSelectedUserId(userId: string) {
+    this.selectedUserId = userId;
+    this.activeChannelId = null;
+    console.log(`Aktiver Channel: ${this.selectedUserId}`);
+  }
+
+  getSelectedUserId(): string {
+    return this.selectedUserId;
   }
 }

@@ -9,7 +9,8 @@ import {
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore } from 'firebase/firestore';
+import { ChatService } from '../../../services/chat.service';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -38,19 +39,27 @@ export class DialogAddUserNewChannelComponent {
 
   userSelection: string = 'allMembers';
   addedUser: string = 'test';
-  allUsers = [/* Array von Benutzerobjekten mit { id: string, name: string } */];
+  allUsers = [/* Array von user ids für den channel*/];
   filteredUsers = [];
   selectedUsers = [];
   userInput: string = '';
   activeChannelMembers: string[] = [];
 
-  constructor() {
+  constructor(private chatService: ChatService) {
     this.filterUsers();
   }
 
+
   ngOnInit() {
-    this.initializeData();
+    this.chatService.activeChannelIdUpdates.subscribe({
+      next: (channelId) => {
+        if (channelId) {
+          this.initializeData(); // Rufen Sie dies nur auf, wenn ein neuer aktiver Kanal gesetzt wurde
+        }
+      }
+    });
   }
+  
 
   toggle(): void {
     this.toggleVisibility.emit();
@@ -101,25 +110,43 @@ removeUser(userToRemove): void {
   async initializeData() {
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
     await this.fetchUsers();
+
+    console.log('actibe:',this.activeChannelMembers, this.getActiveChannelId())
+  }
+
+  getActiveChannelId() {
+    return this.chatService.getActiveChannelId();
   }
 
   //lädt id vom aktiven chanel um zu sehen welche user schon mitglieder sind
-  async fetchActiveChannelMembers() {
-    const channelsCol = collection(db, 'channels');
-    const channelSnapshot = await getDocs(channelsCol);
-    const activeChannel = channelSnapshot.docs.find(doc => doc.data()['isActive']);
-    if (activeChannel && activeChannel.data()['members']) {
-      return activeChannel.data()['members'];
-    } else {
-      return [];
+  async fetchActiveChannelMembers(): Promise<string[]> {
+    const activeChannelId = this.chatService.getActiveChannelId();
+    if (activeChannelId) {
+      const channelRef = doc(db, 'channels', activeChannelId);
+      const channelSnap = await getDoc(channelRef);
+      if (channelSnap.exists()) {
+        const members = channelSnap.data()['members'];
+        if (members) {
+          return members;
+        }
+      }
     }
+    console.log('Keine Mitglieder gefunden oder Channel ID ist null.'); // Für Debugging-Zwecke
+    return [];
   }
 
   //lädt alle user bis auf die welche bereits im cahnnel sind
   async fetchUsers() {
     const usersCol = collection(db, 'users');
     const userSnapshot = await getDocs(usersCol);
-    const userList = userSnapshot.docs.map(doc => doc.data()).filter(user => !this.activeChannelMembers.includes(user['id']));
-    this.allUsers = userList;
+    // Filtere Benutzer basierend darauf, ob ihre ID bereits im `activeChannelMembers` Array vorhanden ist
+    const userList = userSnapshot.docs
+      .filter(doc => !this.activeChannelMembers.includes(doc.id)) 
+      .map(doc => ({ id: doc.id, ...doc.data() })); 
+  
+    this.allUsers = userList; // Aktualisiere `allUsers` mit der gefilterten Liste
   }
 }
+
+
+

@@ -4,8 +4,6 @@ export class Channel {
   description: string;
   creationDate: number;
   createdBy: string;
-  isActive: boolean;
-  messages: [];  //muss ersetzt werden durch subcolelction
   members: [];  
 
   constructor(obj?: any) {
@@ -15,8 +13,6 @@ export class Channel {
     this.description = obj ? obj.description : '';
     this.creationDate = obj ? obj.creationDate : '';
     this.createdBy = obj ? obj.createdBy : '';
-    this.isActive = obj ? obj.isActive : '';
-    this.messages = obj ? obj.messages : '';
     this.members = obj ? obj.members : '';
   }
 
@@ -27,8 +23,6 @@ export class Channel {
       description: this.description,
       creationDate: this.creationDate,
       createdBy: this.createdBy,
-      isActive: this.isActive,
-      messages: this.messages,
       members: this.members,
     };
   }
