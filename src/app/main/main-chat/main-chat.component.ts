@@ -42,6 +42,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel;
   channelId: string = 'allgemein';
   channelThreads: Message[] = [];
+  channelThreadsDates = [];
   threadId: string = '';
   threadCreationDates = [];
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
@@ -159,20 +160,43 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getThreadCreationDates() {
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
+      let creationDate = message['creationDate'];
 
-      //const timestamp = message['creationDate'];
-      //const date = new Date(timestamp);
-      //const formattedDate = date.toLocaleDateString('fr-CH', { day: 'numeric', month: 'numeric', year: 'numeric' });
-
-      if(!this.threadCreationDates.includes(message['creationDate'])) {
-        this.threadCreationDates.push(message['creationDate']);
+      let formattedDate = this.getFormattedDate(creationDate);
+      let formattedTime = this.getFormattedTime(creationDate);
+     
+      if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
+        this.threadCreationDates.push({
+          'timestamp': message['creationDate'],
+          'dateString': formattedDate
+        });
       }
+      console.log('Check array', this.threadCreationDates);
+
     }
-    this.threadCreationDates.sort(function(b, a) {
-      return b - a;
-    });
+    this.threadCreationDates.sort(this.compareByCreationDate);
     console.log('Sorted thread creation dates array', this.threadCreationDates);
   } 
+
+  getFormattedDate(creationDate: any) {
+    const weekday = new Date(creationDate).toLocaleDateString('de-DE', { weekday: 'long' });
+    const day = new Date(creationDate).toLocaleDateString('fr-CH', { day: 'numeric'});
+    const month = new Date(creationDate).toLocaleDateString('de-DE', { month: 'long'});
+
+    let timeSeparatorDate = weekday + ', ' + day + ' ' + month;
+    return timeSeparatorDate;
+  }
+
+  getFormattedTime(creationDate: any) {
+    const getString = (number) => number < 10 ? '0' + number : String(number);
+    const getTime = (creationDate) => {
+        const date = new Date(creationDate);
+        const hours = getString(date.getHours());
+        const minutes = getString(date.getMinutes());
+        return `${hours}:${minutes}`;
+    };
+    return getTime(creationDate);
+  }
 
   /*   getCurrentDirectMessage() {
     if(this.channel = []) {

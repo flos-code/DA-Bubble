@@ -108,12 +108,12 @@
                  @for (threadCreationDate of threadCreationDates; track $index) {
                     <div class="timeSeparator">
                         <div>
-                            <div>{{threadCreationDate}}</div>
+                            <div>{{threadCreationDate.dateString}}</div>
                         </div>
                     </div>
 
                     @for (thread of channelThreads; track $index) {
-                        @if(thread.creationDate == threadCreationDate) {
+                        @if(thread.creationDate == threadCreationDate.timestamp) {
                             @if(currentUser !== thread.createdBy){
                                 <!-- ========================= Template Other Messages ========================= -->
                                 <div class="messageContainer">
@@ -123,7 +123,7 @@
                                     <div class="mainMessage">
                                         <div>
                                             <div>Noah Braun</div>
-                                            <div>{{thread.creationDate}} Uhr</div>
+                                            <div>{{threadCreationDate.dateString}} Uhr</div>
                                         </div>
                                         <div>
                                             {{thread.message}}
@@ -160,7 +160,7 @@
                                 <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
                                     <div class="mainMessageOwn">
                                         <div>
-                                            <div>{{thread.creationDate}} Uhr</div>
+                                            <div>{{threadCreationDate.dateString}} Uhr</div>
                                             <div>Noah Braun</div>
                                         </div>
                                         <div>
