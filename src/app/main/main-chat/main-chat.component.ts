@@ -46,6 +46,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   //activeChannelId: string = this.chatService.getActiveChannelId();
   activeChannelId: string = 'allgemein';
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
+  //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
   channelThreads: Message[] = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
@@ -94,32 +95,33 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
-  getCurrentChannel() {
+  async getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
-      this.channel = new Channel(doc.data());   
+      await this.channel = new Channel(doc.data());  
       console.log('Channel data', this.channel);
+      this.getMembers();
     });
-    this.getMembers();
   }
 
   getMembers() {
-    const q = query(collection(db, 'users'));
-    return onSnapshot(q, (list) => {
-      this.channelMembers = [];
-      list.forEach(element => {
-        if(this.channel.members.includes(element.id)) {
-          this.channelMembers.push(element.data());
-        }
-
-/*         for (let i = 0; i < this.channel['members'].length; i++) {
-          const memberId = this.channel['members'][i];
-          if(memberId == element.id) {
+      const q = query(collection(db, 'users'));
+      return onSnapshot(q, (list) => {
+        this.channelMembers = [];
+        list.forEach(element => {
+          if(this.channel['members'].includes(element.id)) {
             this.channelMembers.push(element.data());
-          }         
-        }  */     
-      });
-      console.log('Members data', this.channelMembers)
-    });    
+          }
+  
+  /*         for (let i = 0; i < this.channel['members'].length; i++) {
+            const memberId = this.channel['members'][i];
+            if(memberId == element.id) {
+              this.channelMembers.push(element.data());
+            }         
+          }  */     
+        });
+        console.log('Members data', this.channelMembers)
+
+    });   
   }
 
   getThreads() {
