@@ -80,7 +80,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
-    this.getMembers();
     this.getThreads();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -98,8 +97,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());   
-      console.log('Channel data', this.channel)
+      console.log('Channel data', this.channel);
     });
+    this.getMembers();
   }
 
   getMembers() {
@@ -107,27 +107,29 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return onSnapshot(q, (list) => {
       this.channelMembers = [];
       list.forEach(element => {
-        for (let i = 0; i < this.channel['members'].length; i++) {
+        if(this.channel.members.includes(element.id)) {
+          this.channelMembers.push(element.data());
+        }
+
+/*         for (let i = 0; i < this.channel['members'].length; i++) {
           const memberId = this.channel['members'][i];
-          if(element.id == memberId) {
+          if(memberId == element.id) {
             this.channelMembers.push(element.data());
           }         
-        }      
+        }  */     
       });
       console.log('Members data', this.channelMembers)
-
     });    
   }
 
   getThreads() {
-    const q = query(collection(db, 'channels/allgemein/threads'), orderBy("creationDate", "asc"));
+    const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
       list.forEach(thread => {
           this.channelThreads.push(new Message(thread.data()));
         }
       )
-      console.log('Channel threads data', this.channelThreads)
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
     });

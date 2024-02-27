@@ -6,14 +6,14 @@
             </div>
             <div class="mainMessage">
                 <div>
-                    <div>{{thread.createdBy}}</div>
-                    <div>{{thread.time}} Uhr</div>
+                    <div>{{thread?.createdBy}}</div>
+                    <div>{{thread?.time}} Uhr</div>
                 </div>
                 <div>
-                    {{thread.message}}
+                    {{thread?.message}}
                 </div>
                 <div class="mainMessageThreads">
-                    <div (click)="openThread(thread.threadId)">2 Antworten</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort 14:56</div>
                 </div>
                 <div class="mainThreadReactions">
@@ -59,15 +59,15 @@
         <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
             <div class="mainMessageOwn">
                 <div>
-                    <div>{{thread.createdBy}}</div>
-                    <div>{{thread.time}} Uhr</div>
+                    <div>{{thread?.createdBy}}</div>
+                    <div>{{thread?.time}} Uhr</div>
                 </div>
                 <div>
-                    {{thread.message}}
+                    {{thread?.message}}
                 </div>
                 <div class="mainMessageThreadsOwn">
                     <div>Letzte Antwort 14:56</div>
-                    <div (click)="openThread(thread.threadId)">1 Antworten</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
                 <div class="mainThreadReactionsOwn">
                     <div>

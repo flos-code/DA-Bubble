@@ -28,7 +28,7 @@ const db = getFirestore(app);
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData;
   @Input() currentChannelId;
-  @Input() members;
+  @Input() channelMembers;
   channelCreatedByName: string = "";
 
   @Output() channelEditionDialogOpenChild = new EventEmitter();
@@ -44,8 +44,8 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   setChannelCreatedBy() {
-    for (let i = 0; i < this.members.length; i++) {
-      const member = this.members[i];
+    for (let i = 0; i < this.channelMembers.length; i++) {
+      const member = this.channelMembers[i];
         if(member['id'] == this.channelData['createdBy']) {
           this.channelCreatedByName = member['name'];
         }

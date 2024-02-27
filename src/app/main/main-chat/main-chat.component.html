@@ -36,12 +36,12 @@
             </div>
 
             <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [members]="channelMembers" *ngIf="channelEditionDialogOpen"
+            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" *ngIf="channelEditionDialogOpen"
                 (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
             <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
-            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [members]="channelMembers" *ngIf="showMembersDialogOpen"
+            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" *ngIf="showMembersDialogOpen"
                 (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
                 (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
             <!--=================================================-->

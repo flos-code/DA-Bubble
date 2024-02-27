@@ -6,7 +6,7 @@ import { ChatService } from '../../../services/chat.service';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
 
@@ -33,6 +33,8 @@ export class ThreadComponent {
   @Input() thread;
   @Input() currentUser;
   @Input() activeChannelId;
+  messageCount: number;
+  answers: string;
 
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
@@ -41,6 +43,22 @@ export class ThreadComponent {
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
+  async getThreadMessageCount() {
+    const messages = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
+    const snapshot = await getCountFromServer(messages);
+    this.messageCount = snapshot.data().count;
+    console.log('Message count', this.messageCount);
+    console.log('Message count', snapshot.data().count);
+    this.formatMessageCount();
+  }
+
+  formatMessageCount() {
+    if(this.messageCount > 1) {
+      this.answers = 'Antworten';
+    } else {
+      this.answers = 'Antwort';
+    }
+  }
 
   addReaction(emoji: string) {
 

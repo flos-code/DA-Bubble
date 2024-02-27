@@ -26,7 +26,7 @@ const db = getFirestore(app);
 export class ShowMembersDialogComponent implements OnInit {
   @Input() channelData;
   @Input() currentChannelId: string;
-  @Input() members;
+  @Input() channelMembers;
   @Output() showMembersDialogOpenChild = new EventEmitter();
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
   showMembersDialogOpen: boolean;
@@ -46,6 +46,7 @@ export class ShowMembersDialogComponent implements OnInit {
             }         
           }      
         });
+        console.log('Members data', this.membersData);
       });    
   } */
 
