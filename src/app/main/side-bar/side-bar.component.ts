@@ -15,8 +15,6 @@ import {
   onSnapshot,
   updateDoc,
   doc,
-  query,
-  where,
   addDoc,
   getDoc,
 } from 'firebase/firestore';
@@ -58,7 +56,7 @@ export class SideBarComponent {
   selectedChannel: string | null = null;
   selectedUserId: number | null = null;
   channels: { id: string; data: Channel }[] = [];
-  users: { id: string; data: User }[] = [];
+  // users: { id: string; data: User }[] = [];
   users$ = this.userManagementService.users$;
 
   authSubscription: any;
@@ -137,22 +135,6 @@ export class SideBarComponent {
     });
   }
 
-  // getUsers(): void {
-  //   // Direkter Zugriff auf das users-Array des Services
-  //   this.users = this.userManagementService.users;
-  // }
-
-  // loadUsers(): void {
-  //   const usersCol = collection(db, 'users');
-  //   onSnapshot(usersCol, (snapshot) => {
-  //     this.users = snapshot.docs.map((doc) => ({
-  //       id: doc.id,
-  //       data: new User(doc.data()),
-  //     }));
-  //     this.sortUsers();
-  //   });
-  // }
-
   async addChannelToFirestore(channel: Channel): Promise<void> {
     try {
       const channelData = channel.toJSON();
@@ -190,26 +172,14 @@ export class SideBarComponent {
     name: string;
     description: string;
   }): Promise<void> {
-    const currentUserSnapshot = await getDocs(
-      query(collection(db, 'users'), where('isYou', '==', true))
-    );
-    let currentUserId = '';
-    currentUserSnapshot.forEach((doc) => {
-      currentUserId = doc.id; // Nehmen wir an, es gibt nur einen solchen Benutzer
-    });
-
-    if (!currentUserId) {
-      console.error('Kein Benutzer mit isYou = true gefunden');
-      return;
-    }
-
+    let activeUserId = this.userManagementService.activeUserId.getValue();
     let newChannel = new Channel({
       name: channelData.name,
       description: channelData.description,
-      createdBy: currentUserId, // Setze den aktuellen Benutzer als Ersteller
+      createdBy: activeUserId, // Setze den aktuellen Benutzer als Ersteller
       creationDate: Date.now(),
       type: 'channel',
-      members: [currentUserId],
+      members: [activeUserId],
     });
 
     this.addChannelToFirestore(newChannel);

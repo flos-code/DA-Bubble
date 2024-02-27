@@ -5,7 +5,6 @@ export class User {
   imgUrl: string;
   isOnline: boolean;
   directMessages: [];
-  isYou: boolean;
 
   constructor(obj?: any) {
     // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.
@@ -15,7 +14,6 @@ export class User {
     this.imgUrl = obj ? obj.imgUrl : '';
     this.isOnline = obj ? obj.isOnline : '';
     this.directMessages = obj ? obj.directMessages : '';
-    this.isYou = obj ? obj.isYou : '';
   }
 
   public toJSON() {
@@ -26,7 +24,6 @@ export class User {
       imgUrl: this.imgUrl,
       isOnline: this.isOnline,
       directMessages: this.directMessages,
-      isYou: this.isYou,
     };
   }
 }

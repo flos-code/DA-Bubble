@@ -23,7 +23,7 @@ export class UserManagementService {
   authSubscription: any;
   auth = getAuth(app);
 
-  private activeUserId = new BehaviorSubject<string | null>(null);
+  public activeUserId = new BehaviorSubject<string | null>(null);
   public activeUserId$ = this.activeUserId.asObservable();
 
   private users = new BehaviorSubject<{ id: string; data: User }[]>([]);
