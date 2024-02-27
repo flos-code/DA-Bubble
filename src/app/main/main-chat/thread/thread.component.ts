@@ -1,0 +1,87 @@
+import { CommonModule } from '@angular/common';
+import { Component, Input } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ChatService } from '../../../services/chat.service';
+
+
+/* ========== FIREBASE ============ */
+import { initializeApp } from 'firebase/app';
+import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
+import { MainChatComponent } from '../main-chat.component';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+/* =============================== */
+
+@Component({
+  selector: 'app-thread',
+  standalone: true,
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent],
+  templateUrl: './thread.component.html',
+  styleUrl: './thread.component.scss'
+})
+export class ThreadComponent {
+  @Input() thread;
+  @Input() currentUser;
+  @Input() activeChannelId;
+
+  editMessagePopupOpen: boolean = false;
+  ownMessageEdit: boolean = false;
+  @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
+
+
+  constructor(private chatService: ChatService, private main: MainChatComponent) { }
+
+
+  addReaction(emoji: string) {
+
+  }
+
+  openMoreEmojis() {
+
+  }
+
+  moreOptions() {
+    this.editMessagePopupOpen = true;
+  }
+
+  editMessage() {
+    this.editMessagePopupOpen = false;
+    this.ownMessageEdit = true;
+    this.main.scrollToBottom();
+  }
+
+  closeEditMessagePopUp() {
+    this.editMessagePopupOpen = false;
+  }
+
+  openThread(threadId: string): void {
+    this.chatService.openThread(threadId);
+  }
+
+  closeEditedMessage() {
+    this.ownMessageEdit = false;
+  }
+
+  saveEditedMessage() {
+    // 
+  }
+
+  setBoolean(dialogBoolen: boolean) {
+    this.ownMessageEdit = false;
+  }
+
+  doNotClose($event: any) {
+    $event.stopPropagation();
+  }
+
+}

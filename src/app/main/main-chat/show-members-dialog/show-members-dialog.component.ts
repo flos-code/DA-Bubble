@@ -59,7 +59,7 @@ export class ShowMembersDialogComponent implements OnInit {
 
   closeDialog() {
     this.showMembersDialogOpen = false;
-    this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
+    this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen);
   }
 
   goToAddMemberDialog() {

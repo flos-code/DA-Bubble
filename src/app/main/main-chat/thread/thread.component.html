@@ -1,0 +1,146 @@
+@if(currentUser !== thread.userId){
+        <!-- ========================= Template Other Messages ========================= -->
+        <div class="messageContainer">
+            <div class="messageProfileIcon">
+                <img src="/assets/img/main-chat/member1.svg">
+            </div>
+            <div class="mainMessage">
+                <div>
+                    <div>{{thread.createdBy}}</div>
+                    <div>{{thread.time}} Uhr</div>
+                </div>
+                <div>
+                    {{thread.message}}
+                </div>
+                <div class="mainMessageThreads">
+                    <div (click)="openThread(thread.threadId)">2 Antworten</div>
+                    <div>Letzte Antwort 14:56</div>
+                </div>
+                <div class="mainThreadReactions">
+                    <div>
+                        <span class="material-symbols-outlined">add_reaction</span>
+                    </div>
+                    <div>
+                        <div class="ractionEmoji">
+                             <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
+                        </div>
+                        <div class="ractionCount">
+                            <div>1</div>
+                        </div>
+                        <div class="reactionHoverBubble">
+                            <div></div>
+                            <div>Sofia Müller</div>
+                            <div>hat reagiert</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+    
+            <!-- ========== Toolbar ========== -->
+            <div class="toolBar">
+                <div (click)="addReaction('approve')">
+                    <img src="/assets/img/main-chat/check_mark.svg">
+                </div>
+                <div (click)="addReaction('raisingHands')">
+                    <img src="/assets/img/main-chat/raising_hands.svg">
+                </div>
+                <div (click)="openMoreEmojis()">
+                    <span class="material-symbols-outlined">add_reaction</span>
+                </div>
+                <div (click)="openThread(thread.threadId)">
+                    <span class="material-symbols-outlined">comment</span>
+                </div>
+            </div>
+    
+        </div>
+        <!-- ============================================================================ -->
+    } @else {
+        <!-- ========================= Template Own Message ========================= -->
+        <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
+            <div class="mainMessageOwn">
+                <div>
+                    <div>{{thread.createdBy}}</div>
+                    <div>{{thread.time}} Uhr</div>
+                </div>
+                <div>
+                    {{thread.message}}
+                </div>
+                <div class="mainMessageThreadsOwn">
+                    <div>Letzte Antwort 14:56</div>
+                    <div (click)="openThread(thread.threadId)">1 Antworten</div>
+                </div>
+                <div class="mainThreadReactionsOwn">
+                    <div>
+                        <span class="material-symbols-outlined">add_reaction</span>
+                    </div>
+                    <div>
+                        <div class="ractionEmoji">
+                             <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
+                        </div>
+                        <div class="ractionCount">
+                            <div>1</div>
+                        </div>
+                        <div class="reactionHoverBubble">
+                            <div></div>
+                            <div>Sofia Müller</div>
+                            <div>hat reagiert</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="messageProfileIcon">
+                <img src="/assets/img/main-chat/member1.svg">
+            </div>
+    
+            <!-- ========== Toolbar own ========== -->
+            <div class="toolBarOwn">
+                <div (click)="addReaction('approve')">
+                    <img src="/assets/img/main-chat/check_mark.svg">
+                </div>
+                <div (click)="addReaction('raisingHands')">
+                    <img src="/assets/img/main-chat/raising_hands.svg">
+                </div>
+                <div (click)="openMoreEmojis()">
+                    <span class="material-symbols-outlined">add_reaction</span>
+                </div>
+                <div (click)="openThread(thread.threadId)">
+                    <span class="material-symbols-outlined">comment</span>
+                </div>
+                <div (click)="moreOptions()">
+                    <span class="material-symbols-outlined">more_vert</span>
+                </div>
+            </div>
+
+            <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
+            <div *ngIf="editMessagePopupOpen" class="editMessagePopup" (click)="doNotClose($event)">
+                <div (click)="editMessage()">
+                    <div>Nachricht bearbeiten</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Template Own Message - EDIT ========================= -->
+
+        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
+        [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
+        (ownMessageEditChild)="setBoolean(ownMessageEdit)"></app-edit-own-thread>            
+        
+        
+<!--         <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
+            <div class="mainMessageOwnEdit">
+                <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
+                <div>
+                    <div>
+                        <span class="material-symbols-outlined">sentiment_satisfied</span>
+                    </div>
+                    <div>
+                        <button (click)="closeEditedMessage()">Abbrechen</button>
+                        <button (click)="saveEditedMessage()">Speichern</button>
+                    </div>
+                </div>
+            </div>
+            <div class="messageProfileIcon">
+                <img src="/assets/img/main-chat/member1.svg">
+            </div>
+        </div> -->
+    }

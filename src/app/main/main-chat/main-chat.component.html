@@ -5,7 +5,7 @@
 <div style="display: flex;">
     <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
-        @if(showChannel) {
+        @if(typeChannel) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
@@ -76,7 +76,7 @@
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages" #mainChat>
 <!--             <div class="mainChatMessagesSubContainer">
- -->            @if(showChannel) {
+ -->            @if(typeChannel) {
                 <!-- =========== Template main chat beginning - Channel ============= -->
                 <div class="beginningOfChannel">
                     <div>
@@ -117,9 +117,13 @@
 
                     @for (thread of channelThreadsDateTime; track $index) {
                         @if(thread.dateString == threadCreationDate.dateString) {
-                            @if(currentUser !== thread.userId){
+
+                            <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
+
+
+                        <!--    @if(currentUser !== thread.userId){ -->
                                 <!-- ========================= Template Other Messages ========================= -->
-                                <div class="messageContainer">
+                        <!--    <div class="messageContainer">
                                     <div class="messageProfileIcon">
                                         <img src="/assets/img/main-chat/member1.svg">
                                     </div>
@@ -141,7 +145,8 @@
                                             </div>
                                             <div>
                                                 <div class="ractionEmoji">
-                                                     <img src="/assets/img/main-chat/rocketEmoji.svg">                                            </div>
+                                                     <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
+                                                </div>
                                                 <div class="ractionCount">
                                                     <div>1</div>
                                                 </div>
@@ -152,10 +157,10 @@
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
+                                    </div> -->
             
                                     <!-- ========== Toolbar ========== -->
-                                    <div class="toolBar">
+                            <!--    <div class="toolBar">
                                         <div (click)="addReaction('approve')">
                                             <img src="/assets/img/main-chat/check_mark.svg">
                                         </div>
@@ -170,11 +175,10 @@
                                         </div>
                                     </div>
             
-                                </div>
-                                <!-- ============================================================================ -->
-                            } @else {
+                                </div> 
+                            } @else { -->
                                 <!-- ========================= Template Own Message ========================= -->
-                                <div class="messageContainerOwn">
+                        <!--    <div class="messageContainerOwn">
                                     <div class="mainMessageOwn">
                                         <div>
                                             <div>{{thread.createdBy}}</div>
@@ -207,10 +211,10 @@
                                     </div>
                                     <div class="messageProfileIcon">
                                         <img src="/assets/img/main-chat/member1.svg">
-                                    </div>
+                                    </div> -->
             
                                     <!-- ========== Toolbar own ========== -->
-                                    <div class="toolBarOwn">
+                            <!--    <div class="toolBarOwn">
                                         <div (click)="addReaction('approve')">
                                             <img src="/assets/img/main-chat/check_mark.svg">
                                         </div>
@@ -227,14 +231,14 @@
                                             <span class="material-symbols-outlined">more_vert</span>
                                         </div>
                                     </div>
-                                    <div *ngIf="editMessagePopupOpen" class="editMessagePopup">
+                                    <div id="{{thread.threadId}}" *ngIf="editMessagePopupOpen" class="editMessagePopup(thread.threadId)">
                                         <div (click)="editMessage()">
                                             <div>Nachricht bearbeiten</div>
                                         </div>
                                     </div>
-                                </div>
+                                </div> -->
                                 <!-- ========================= Template Own Message - EDIT ========================= -->
-                                <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
+                        <!--    <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">
                                     <div class="mainMessageOwnEdit">
                                         <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
                                         <div>
@@ -251,7 +255,7 @@
                                         <img src="/assets/img/main-chat/member1.svg">
                                     </div>
                                 </div>
-                            }
+                            } -->
                         }
                     }
                 }

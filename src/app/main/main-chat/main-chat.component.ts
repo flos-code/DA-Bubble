@@ -16,6 +16,7 @@ import { Thread } from '../../../models/thread.class';
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { ThreadComponent } from './thread/thread.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -33,41 +34,39 @@ const db = getFirestore(app);
   selector: 'app-main-chat',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, ReactiveFormsModule, MatFormFieldModule,
-    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent],
+    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent, ThreadComponent],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
 
 export class MainChatComponent implements OnInit, OnDestroy {
+  /* ========== MAIN VARIABLES ========== */
   @ViewChild('mainChat') private mainChat: ElementRef;
   channel: Channel; // Daten des aktuellen Channels
   //activeChannelId: string = this.chatService.getActiveChannelId();
   activeChannelId: string = 'allgemein';
-
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
-
   channelThreads: Message[] = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
-
   //currentUser: string = this.chatService.getSelectedUserId();
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
-
-  userName;
   dmUser = [];
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
-  subscription: Subscription = new Subscription();
-  threadOpen: boolean = false;
-  threads: Thread[] = [];
   textArea: string = "";
-  showChannel: boolean = true;
+  typeChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
   channelEditionDialogOpen: boolean = false;
   showMembersDialogOpen: boolean = false;
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
+  /* ============================================= */
 
+  /* ========== SECONDARY CHAT VARIABLES========== */
+  subscription: Subscription = new Subscription();
+  threadOpen: boolean = false;
+  threads: Thread[] = [];
   newMember: string = "";
   newMemberObject = {
     'userId': 'ikeikeoie',
@@ -75,6 +74,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     'surname': 'M.',
     'photo': '../../../assets/img/main-chat/member2.svg'
   };
+  /* ============================================== */
 
   constructor(private chatService: ChatService) { }
 
@@ -232,7 +232,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /*   getCurrentDirectMessage() {
     if(this.channel = []) {
-      this.showChannel = false;
+      this.typeChannel = false;
       this.getCurrentDmUser();
     }
   } */
@@ -321,7 +321,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.addMemberDialogOpen = true;
   }
 
-  addReaction(emoji: string) {
+/*   addReaction(emoji: string) {
 
   }
 
@@ -345,7 +345,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   saveEditedMessage() {
     // 
   }
-
+ */
   sendMessage() {
     this.scrollToBottom();
   }
