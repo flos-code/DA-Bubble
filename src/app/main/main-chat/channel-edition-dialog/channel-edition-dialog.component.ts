@@ -39,7 +39,6 @@ export class ChannelEditionDialogComponent implements OnInit {
   editedChannelDescription: string;
 
   ngOnInit(): void {
-    console.log('Current channel data', this.channelData);
     this.setChannelCreatedBy();
   }
 
@@ -49,7 +48,6 @@ export class ChannelEditionDialogComponent implements OnInit {
       list.forEach(element => {
         if(element.id == this.channelData['createdBy']) {
           this.channelCreatedByName = element.data()['name'];
-          console.log('Channel created by', this.channelCreatedByName);
         }
       });
     });
@@ -68,7 +66,6 @@ export class ChannelEditionDialogComponent implements OnInit {
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
     let data = {name: this.editedChannelName };
     await updateDoc(currentChannelRef, data).then(() => {
-      console.log('New channel name', data);
     });
     this.editedChannelName = "";
     this.showchannelEditionName = true;
