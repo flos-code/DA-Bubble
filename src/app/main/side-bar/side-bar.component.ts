@@ -5,6 +5,7 @@ import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-chann
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/dialog-add-user-new-channel.component';
 import { ViewManagementService } from '../../services/view-management.service';
+import { UserManagementService } from '../../services/user-management.service';
 import { ChatService } from '../../services/chat.service';
 import { initializeApp } from 'firebase/app';
 import {
@@ -14,8 +15,6 @@ import {
   onSnapshot,
   updateDoc,
   doc,
-  query,
-  where,
   addDoc,
   getDoc,
 } from 'firebase/firestore';
@@ -57,7 +56,8 @@ export class SideBarComponent {
   selectedChannel: string | null = null;
   selectedUserId: number | null = null;
   channels: { id: string; data: Channel }[] = [];
-  users: { id: string; data: User }[] = [];
+  // users: { id: string; data: User }[] = [];
+  users$ = this.userManagementService.users$;
 
   authSubscription: any;
   auth = getAuth(app);
@@ -65,21 +65,32 @@ export class SideBarComponent {
   constructor(
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
+    public userManagementService: UserManagementService,
     private chatService: ChatService
   ) {}
 
   async ngOnInit() {
     await this.loadChannels();
-    await this.loadUsers();
-    this.getTheLoggedInUser();
+    // await this.loadUsers();
+    this.userManagementService.loadUsers();
   }
 
   //is you muss durch abgleich swichen eingelogen user und user ids statt mit isYou erreicht werden
-  sortUsers(): void {
-    this.users.sort((a, b) => {
-      return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
-    });
-  }
+  // sortUsers(): void {
+  //   this.users.sort((a, b) => {
+  //     return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
+  //   });
+  // }
+
+  // sortUsers(): void {
+  //   const activeUserId = this.userManagementService.activeUserId$; // Assuming this is the current user's ID
+  //   this.users.sort((a, b) => {
+  //     // Check if either user is the active user and prioritize them
+  //     if (a.id === activeUserId) return -1;
+  //     if (b.id === activeUserId) return 1;
+  //     return 0; // No change in order if neither is the active user
+  //   });
+  // }
 
   toggleSection(section: string): void {
     if (section === 'channels') {
@@ -124,17 +135,6 @@ export class SideBarComponent {
     });
   }
 
-  loadUsers(): void {
-    const usersCol = collection(db, 'users');
-    onSnapshot(usersCol, (snapshot) => {
-      this.users = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: new User(doc.data()),
-      }));
-      this.sortUsers();
-    });
-  }
-
   async addChannelToFirestore(channel: Channel): Promise<void> {
     try {
       const channelData = channel.toJSON();
@@ -172,26 +172,14 @@ export class SideBarComponent {
     name: string;
     description: string;
   }): Promise<void> {
-    const currentUserSnapshot = await getDocs(
-      query(collection(db, 'users'), where('isYou', '==', true))
-    );
-    let currentUserId = '';
-    currentUserSnapshot.forEach((doc) => {
-      currentUserId = doc.id; // Nehmen wir an, es gibt nur einen solchen Benutzer
-    });
-
-    if (!currentUserId) {
-      console.error('Kein Benutzer mit isYou = true gefunden');
-      return;
-    }
-
+    let activeUserId = this.userManagementService.activeUserId.getValue();
     let newChannel = new Channel({
       name: channelData.name,
       description: channelData.description,
-      createdBy: currentUserId, // Setze den aktuellen Benutzer als Ersteller
+      createdBy: activeUserId, // Setze den aktuellen Benutzer als Ersteller
       creationDate: Date.now(),
       type: 'channel',
-      members: [currentUserId],
+      members: [activeUserId],
     });
 
     this.addChannelToFirestore(newChannel);
@@ -250,16 +238,5 @@ export class SideBarComponent {
 
   getSelectedUserId() {
     return this.chatService.getSelectedUserId();
-  }
-
-  getTheLoggedInUser() {
-    this.authSubscription = this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        let userId = user.uid;
-        console.log('id des eingelogten nutzer:', userId);
-      } else {
-        console.log('keine user id gefunden :(');
-      }
-    });
   }
 }

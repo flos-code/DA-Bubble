@@ -55,7 +55,7 @@
             class="singleChannel"
             *ngFor="let channel of channels"
             (click)="setActiveChannel(channel.id)"
-            [ngClass]="{ 'active': getActiveChannelId() === channel.id }"
+            [ngClass]="{ active: getActiveChannelId() === channel.id }"
           >
             <mat-icon
               class="material-symbols-rounded"
@@ -105,9 +105,9 @@
         <div class="allUsers" *ngIf="usersVisible">
           <div
             class="singleUser"
-            *ngFor="let user of users"
+            *ngFor="let user of users$ | async"
             (click)="setSelectedUser(user.id)"
-            [ngClass]="{ 'active': getSelectedUserId() === user.id }"
+            [ngClass]="{ active: getSelectedUserId() === user.id }"
           >
             <div class="userImage">
               <img
@@ -124,7 +124,12 @@
             </div>
             <div class="userName">
               {{ user.data.name }}
-              <span *ngIf="user.data.isYou">&nbsp;(Du)</span>
+              <span
+                *ngIf="
+                  (this.userManagementService.activeUserId$ | async) === user.id
+                "
+                >&nbsp;(Du)</span
+              >
             </div>
           </div>
         </div>

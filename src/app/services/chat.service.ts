@@ -1,24 +1,34 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
-import { initializeApp } from "firebase/app";
+import { initializeApp } from 'firebase/app';
 import { Message } from '../../models/message.class';
-import { getFirestore, collection, onSnapshot, addDoc, doc, updateDoc, deleteDoc, getDocs, getDoc } from "firebase/firestore";
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  addDoc,
+  doc,
+  updateDoc,
+  deleteDoc,
+  getDocs,
+  getDoc,
+} from 'firebase/firestore';
 import { ThreadMessage } from '../../models/threadMessage.class';
 import { Thread } from '../../models/thread.class';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
+  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
+  authDomain: 'da-bubble-87fea.firebaseapp.com',
+  projectId: 'da-bubble-87fea',
+  storageBucket: 'da-bubble-87fea.appspot.com',
+  messagingSenderId: '970901942782',
+  appId: '1:970901942782:web:56b67253649b6206f290af',
 };
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ChatService {
   private messages = [];
@@ -38,8 +48,7 @@ export class ChatService {
     return this.activeChannelIdUpdated.asObservable();
   }
 
-  constructor() {
-  }
+  constructor() {}
 
   // ------------------- Channel Logic --------------------
 
@@ -48,7 +57,7 @@ export class ChatService {
     this.selectedUserId = null;
     this.activeChannelIdUpdated.next(channelId);
     this.loadThreads(channelId);
-    console.log(`Aktiver Channel: ${this.activeChannelId}`);
+    // console.log(`Aktiver Channel: ${this.activeChannelId}`);
   }
 
   getActiveChannelId(): string {
@@ -58,7 +67,7 @@ export class ChatService {
   setSelectedUserId(userId: string) {
     this.selectedUserId = userId;
     this.activeChannelId = null;
-    console.log(`Ausgewählter User: ${this.selectedUserId}`);
+    // console.log(`Ausgewählter User: ${this.selectedUserId}`);
   }
 
   getSelectedUserId(): string {
@@ -70,9 +79,11 @@ export class ChatService {
   async getThreads(channelId): Promise<Thread[]> {
     const threadsRef = collection(db, `channels/${channelId}/threads`);
     const snapshot = await getDocs(threadsRef);
-    const threads: Thread[] = snapshot.docs.map(doc => new Thread({ ...doc.data(), threadId: doc.id }));
+    const threads: Thread[] = snapshot.docs.map(
+      (doc) => new Thread({ ...doc.data(), threadId: doc.id })
+    );
 
-    console.log("Geladene Threads:", threads);
+    console.log('Geladene Threads:', threads);
     return threads;
   }
 
@@ -88,33 +99,59 @@ export class ChatService {
     this.threadOpenSource.next(true);
   }
 
-
   closeThread(): void {
     this.selectedThreadIdSource.next(null);
     this.threadOpenSource.next(false);
   }
 
-  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
-    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
+  async getThreadMessages(
+    channelId: string,
+    threadId: string
+  ): Promise<ThreadMessage[]> {
+    const threadMessagesRef = collection(
+      db,
+      `channels/${channelId}/threads/${threadId}/messages`
+    );
     const snapshot = await getDocs(threadMessagesRef);
-    return snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
+    return snapshot.docs.map(
+      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
+    );
   }
 
-  async updateThreadMessage(channelId: string, threadId: string, messageId: string, updates: any) {
-    const messageDocRef = doc(db, `channels/${channelId}/threads/${threadId}/messages/${messageId}`);
+  async updateThreadMessage(
+    channelId: string,
+    threadId: string,
+    messageId: string,
+    updates: any
+  ) {
+    const messageDocRef = doc(
+      db,
+      `channels/${channelId}/threads/${threadId}/messages/${messageId}`
+    );
     await updateDoc(messageDocRef, updates);
   }
 
-  async addThreadMessage(channelId: string, threadId: string, threadMessage: ThreadMessage) {
-    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
+  async addThreadMessage(
+    channelId: string,
+    threadId: string,
+    threadMessage: ThreadMessage
+  ) {
+    const threadMessagesRef = collection(
+      db,
+      `channels/${channelId}/threads/${threadId}/messages`
+    );
     await addDoc(threadMessagesRef, threadMessage.toJSON());
   }
 
-  async deleteThreadMessage(channelId: string, threadId: string, messageId: string) {
-    const messageDocRef = doc(db, `channels/${channelId}/threads/${threadId}/messages/${messageId}`);
+  async deleteThreadMessage(
+    channelId: string,
+    threadId: string,
+    messageId: string
+  ) {
+    const messageDocRef = doc(
+      db,
+      `channels/${channelId}/threads/${threadId}/messages/${messageId}`
+    );
     await deleteDoc(messageDocRef);
   }
-
-
-
 }
