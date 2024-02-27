@@ -90,8 +90,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     const channelId = this.chatService.getActiveChannelId();
      await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
-      console.log('Geladene ThreadId:', threadId)
-      console.log('Geladene Thread-Nachrichten:', this.threadMessages);
     });
   }
 

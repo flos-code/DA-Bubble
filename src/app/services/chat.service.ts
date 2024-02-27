@@ -83,7 +83,7 @@ export class ChatService {
       (doc) => new Thread({ ...doc.data(), threadId: doc.id })
     );
 
-    console.log('Geladene Threads:', threads);
+    // console.log('Geladene Threads:', threads);
     return threads;
   }
 
@@ -107,17 +107,11 @@ export class ChatService {
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
     const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
     const snapshot = await getDocs(threadMessagesRef);
-    
-    // Log the raw snapshot data
-    console.log("Snapshot data:", snapshot.docs.map(doc => doc.data()));
-    
-    // Process and log the processed ThreadMessage objects
     const threadMessages = snapshot.docs.map(
       (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
     );
-    console.log("Processed ThreadMessages:", threadMessages);
-    console.log('threadId:', threadId,'channelId:', channelId)
-    
+    // console.log("Processed ThreadMessages:", threadMessages);
+    // console.log('threadId:', threadId,'channelId:', channelId)
     return threadMessages;
   }
   
