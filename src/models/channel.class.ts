@@ -4,7 +4,7 @@ export class Channel {
   description: string;
   creationDate: number;
   createdBy: string;
-  members: [];  
+  members: string[];
 
   constructor(obj?: any) {
     // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.

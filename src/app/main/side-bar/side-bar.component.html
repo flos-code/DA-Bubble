@@ -53,7 +53,7 @@
         <div class="allChannels" *ngIf="channelsVisible">
           <div
             class="singleChannel"
-            *ngFor="let channel of channels"
+            *ngFor="let channel of channels$ | async"
             (click)="setActiveChannel(channel.id)"
             [ngClass]="{ active: getActiveChannelId() === channel.id }"
           >

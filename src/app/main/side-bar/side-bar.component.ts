@@ -19,8 +19,8 @@ import {
   getDoc,
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
-import { User } from '../../../models/user.class';
 import { getAuth } from 'firebase/auth';
+import { Observable } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -55,8 +55,8 @@ export class SideBarComponent {
 
   selectedChannel: string | null = null;
   selectedUserId: number | null = null;
+  channels$: Observable<{ id: string; data: Channel }[]>;
   channels: { id: string; data: Channel }[] = [];
-  // users: { id: string; data: User }[] = [];
   users$ = this.userManagementService.users$;
 
   authSubscription: any;
@@ -70,27 +70,13 @@ export class SideBarComponent {
   ) {}
 
   async ngOnInit() {
-    await this.loadChannels();
-    // await this.loadUsers();
+    this.userManagementService.activeUserId$.subscribe((activeUserId) => {
+      if (activeUserId) {
+        this.channels$ = this.loadChannels(activeUserId);
+      }
+    });
     this.userManagementService.loadUsers();
   }
-
-  //is you muss durch abgleich swichen eingelogen user und user ids statt mit isYou erreicht werden
-  // sortUsers(): void {
-  //   this.users.sort((a, b) => {
-  //     return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
-  //   });
-  // }
-
-  // sortUsers(): void {
-  //   const activeUserId = this.userManagementService.activeUserId$; // Assuming this is the current user's ID
-  //   this.users.sort((a, b) => {
-  //     // Check if either user is the active user and prioritize them
-  //     if (a.id === activeUserId) return -1;
-  //     if (b.id === activeUserId) return 1;
-  //     return 0; // No change in order if neither is the active user
-  //   });
-  // }
 
   toggleSection(section: string): void {
     if (section === 'channels') {
@@ -120,22 +106,40 @@ export class SideBarComponent {
     this.viewManagementService.changeView(view);
   }
 
-  loadChannels(): void {
+  loadChannels(
+    activeUserId: string
+  ): Observable<{ id: string; data: Channel }[]> {
     const channelsCol = collection(db, 'channels');
-    onSnapshot(channelsCol, (snapshot) => {
-      // Zuerst die Kanäle in ein Array umwandeln
-      let channels = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: new Channel(doc.data()),
-      }));
-      // Kanäle basierend auf dem creationDate sortieren
-      channels.sort((a, b) => a.data.creationDate - b.data.creationDate);
-      // Die sortierten Kanäle dem 'channels'-Array zuweisen
-      this.channels = channels;
+    console.log('Active User ID wegen filter:', activeUserId);
+
+    // Erstellen Sie ein neues Observable
+    return new Observable<{ id: string; data: Channel }[]>((subscriber) => {
+      const unsubscribe = onSnapshot(
+        channelsCol,
+        (snapshot) => {
+          const channels = snapshot.docs
+            .map((doc) => ({
+              id: doc.id,
+              data: new Channel(doc.data()),
+            }))
+            .filter((channel) => channel.data.members.includes(activeUserId))
+            .sort((a, b) => a.data.creationDate - b.data.creationDate);
+          subscriber.next(channels);
+        },
+        (error) => {
+          subscriber.error(error);
+        }
+      );
+
+      // Rückgabe einer Cleanup-Funktion, die beim Unsubscribe aufgerufen wird
+      return () => unsubscribe();
     });
   }
 
-  async addChannelToFirestore(channel: Channel): Promise<void> {
+  async addChannelToFirestore(
+    channel: Channel,
+    activeUserId: string
+  ): Promise<void> {
     try {
       const channelData = channel.toJSON();
       // Füge den neuen Kanal hinzu
@@ -151,7 +155,7 @@ export class SideBarComponent {
         timestamp: Date.now(), // Optional: Firestore Server-Zeitstempel als Erstellungszeit
       });
 
-      await this.loadChannels(); // Lade Kanäle neu, um die UI zu aktualisieren
+      await this.loadChannels(activeUserId); // Lade Kanäle neu, um die UI zu aktualisieren
 
       // Setze den neu erstellten Kanal als aktiv
       this.setActiveChannel(docRef.id);
@@ -182,7 +186,7 @@ export class SideBarComponent {
       members: [activeUserId],
     });
 
-    this.addChannelToFirestore(newChannel);
+    this.addChannelToFirestore(newChannel, activeUserId);
   }
 
   async onUsersToAdd({
