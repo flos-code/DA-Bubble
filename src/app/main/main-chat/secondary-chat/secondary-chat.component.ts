@@ -40,6 +40,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   currentCursorPosition: number = 0;
   private subscription = new Subscription();
   threadMessages: ThreadMessage[] = [];
+  activeChannelId: string = 'allgemein';
+  channelId: string = 'allgemein';
   messages = [
     {
       id: 1,
@@ -73,7 +75,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
-        console.log('Received thread ID in SecondaryChatComponent:', threadId);
         this.loadThreadMessages(threadId);
       } else {
         console.log('No thread ID available');
@@ -85,10 +86,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  loadThreadMessages(threadId: string) {
+  async loadThreadMessages(threadId: string) {
     const channelId = this.chatService.getActiveChannelId();
-    this.chatService.getThreadMessages(channelId, threadId).then(threadMessages => {
+     await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
+      console.log('Geladene ThreadId:', threadId)
       console.log('Geladene Thread-Nachrichten:', this.threadMessages);
     });
   }

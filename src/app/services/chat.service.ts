@@ -104,19 +104,23 @@ export class ChatService {
     this.threadOpenSource.next(false);
   }
 
-  async getThreadMessages(
-    channelId: string,
-    threadId: string
-  ): Promise<ThreadMessage[]> {
-    const threadMessagesRef = collection(
-      db,
-      `channels/${channelId}/threads/${threadId}/messages`
-    );
+  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
+    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
     const snapshot = await getDocs(threadMessagesRef);
-    return snapshot.docs.map(
+    
+    // Log the raw snapshot data
+    console.log("Snapshot data:", snapshot.docs.map(doc => doc.data()));
+    
+    // Process and log the processed ThreadMessage objects
+    const threadMessages = snapshot.docs.map(
       (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
     );
+    console.log("Processed ThreadMessages:", threadMessages);
+    console.log('threadId:', threadId,'channelId:', channelId)
+    
+    return threadMessages;
   }
+  
 
   async updateThreadMessage(
     channelId: string,
