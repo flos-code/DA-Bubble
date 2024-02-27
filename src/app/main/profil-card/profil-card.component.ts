@@ -3,7 +3,9 @@ import { ProfilCardService } from '../../services/profil-card.service';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
-import { getAuth } from "firebase/auth"
+import { getAuth, updateEmail, updateProfile } from "firebase/auth";
+import { FormsModule } from '@angular/forms';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -15,15 +17,16 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 @Component({
   selector: 'app-profil-card',
   standalone: true,
-  imports: [CommonModule, MatIcon],
+  imports: [CommonModule, MatIcon, FormsModule],
   templateUrl: './profil-card.component.html',
   styleUrl: './profil-card.component.scss'
 })
-export class ProfilCardComponent implements OnInit{
+export class ProfilCardComponent implements OnInit {
   authSubscription: any;
   auth = getAuth(app);
   edit: boolean = false;
@@ -31,13 +34,14 @@ export class ProfilCardComponent implements OnInit{
   profilePic: string = '';
   userId: string = '';
   userEmailAddress: string = '';
-
+  newEmail: string;
+  newName: string;
 
   constructor(public serviceProfilCard: ProfilCardService) {
   }
 
   ngOnInit(): void {
-    this.getTheLoggedInUser();
+    this.serviceProfilCard.getTheLoggedInUser();
   }
 
   toggleEdit(active: boolean) {
@@ -55,6 +59,32 @@ export class ProfilCardComponent implements OnInit{
         this.userNameandSurname = 'Max Mustermann';
         this.userEmailAddress = 'maxmustermann@gmail.com'
       }
+    });
+  }
+
+  async updateUserData() {
+    if (this.newName != '') {
+      await updateProfile(this.auth.currentUser, {
+        displayName: this.newName,
+      })
+      this.newName = '';
+    }
+    if (this.newEmail != '') {
+      await updateEmail(this.auth.currentUser, this.newEmail)
+    }
+    this.newEmail = '';
+    this.createUserDetailsDoc();
+    this.toggleEdit(false);
+    this.serviceProfilCard.getTheLoggedInUser();
+  }
+
+  async createUserDetailsDoc() {
+    await setDoc(doc(db, "users", this.auth.currentUser.uid), {
+      name: this.auth.currentUser.displayName,
+      email: this.auth.currentUser.email,
+      imgUrl: this.auth.currentUser.photoURL,
+      isOnline: false,
+      id: this.auth.currentUser.uid,
     });
   }
 }

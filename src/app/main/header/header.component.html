@@ -5,8 +5,8 @@
         <img src="assets/img/search.png" alt="">
     </div>
     <div (click)="toggleDropdownMenu(!showDropdownMenu)" class="header-profil">
-        <h2>{{userNameandSurname}}</h2>
-        <img src={{profilePic}}>
+        <h2>{{serviceProfilCard.userNameandSurname}}</h2>
+        <img class="header-profile-photo" src={{serviceProfilCard.profilePic}}>
         <mat-icon class="material-symbols-outlined" fontIcon="expand_more"></mat-icon>
 
         <div [class.active]="showDropdownMenu" class="custom-dropdown-menu">
