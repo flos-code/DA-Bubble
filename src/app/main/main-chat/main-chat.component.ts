@@ -41,8 +41,8 @@ const db = getFirestore(app);
 export class MainChatComponent implements OnInit, OnDestroy {
   @ViewChild('mainChat') private mainChat: ElementRef;
   channel: Channel; // Daten des aktuellen Channels
-  activeChannelId: string = this.chatService.getActiveChannelId();
-  //activeChannelId: string = 'allgemein';
+  //activeChannelId: string = this.chatService.getActiveChannelId();
+  activeChannelId: string = 'allgemein';
 
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
 
@@ -51,8 +51,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
 
-  currentUser: string = this.chatService.getSelectedUserId();
-  //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  //currentUser: string = this.chatService.getSelectedUserId();
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
 
   userName;
   dmUser = [];
@@ -80,6 +80,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
+    console.log(this.channel);
     this.getMembers();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
