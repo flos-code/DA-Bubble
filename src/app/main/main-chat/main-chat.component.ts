@@ -1,4 +1,4 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -39,8 +39,10 @@ const db = getFirestore(app);
 })
 
 export class MainChatComponent implements OnInit, OnDestroy {
+  @ViewChild('mainChat') private mainChat: ElementRef;
   channel: Channel; // Daten des aktuellen Channels
-  channelId: string = 'allgemein';
+  activeChannelId: string = this.chatService.getActiveChannelId();
+  //activeChannelId: string = 'allgemein';
 
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
 
@@ -49,7 +51,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
 
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  currentUser: string = this.chatService.getSelectedUserId();
+  //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+
   userName;
   dmUser = [];
   @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
@@ -79,6 +83,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.getMembers();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 1000);
     //this.getCurrentDirectMessage();
   }
 
@@ -88,9 +95,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
   getCurrentChannel() {
-    onSnapshot(doc(collection(db, 'channels'), this.channelId), (doc) => {
+    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
-      console.log('Channel data', this.channel);
       this.getThreads();
     });
   }
@@ -104,7 +110,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
           const memberId = this.channel['members'][i];
           if(element.id == memberId) {
             this.channelMembers.push(element.data());
-            console.log('Members data array', this.channelMembers);
           }         
         }      
       });
@@ -117,10 +122,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.channelThreads = [];
       list.forEach(thread => {
           this.channelThreads.push(new Message(thread.data()));
-          console.log('Channel messages data', this.channelThreads);
         }
       )
-      console.log('Channel threads', this.channelThreads)
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
     });
@@ -128,7 +131,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   sortChannelThreadsArray() {
     this.channelThreads.sort(this.compareByCreationDate);
-    console.log('Sorted channel threads array', this.channelThreads);
   }
 
   compareByCreationDate(b: any, a: any) {
@@ -184,7 +186,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
         });
       }
     }
-    console.log('Channel threads help array', this.channelThreadsDateTime);
     this.threadCreationDates.sort(this.compareByCreationDate);
     this.channelThreadsDateTime.sort(this.compareByCreationDate);
   } 
@@ -232,6 +233,18 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   } */
 
+    scrollToBottom() {
+      setTimeout(() => {
+        this.mainChat.nativeElement.scroll({
+          top: this.mainChat.nativeElement.scrollHeight,
+          left: 0,
+          behavior: 'smooth'
+        });
+      }, 100)
+    }
+  
+
+  
   /* ======================================================== */
 
   /* ================== MAIN ACHT DM DATA ================== */
@@ -327,6 +340,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   saveEditedMessage() {
     // 
+  }
+
+  sendMessage() {
+    this.scrollToBottom();
   }
 
   openThread(threadId: string): void {

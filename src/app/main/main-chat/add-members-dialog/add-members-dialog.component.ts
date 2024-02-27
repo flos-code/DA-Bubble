@@ -106,7 +106,6 @@ export class AddMembersDialogComponent implements OnInit {
     this.userList.splice(indexOfAddedUser, 1);    // Splice userList array and remove user
     this.filteredUserList = this.userList;
     this.inputFocus = false; 
-    console.log('New users to add array', this.newUsersToAdd);
   }
 
   removeAddedUser(userToAdd: any, i: number) {
@@ -128,7 +127,6 @@ export class AddMembersDialogComponent implements OnInit {
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
     let data = {members: this.channelMembers };
     await updateDoc(currentChannelRef, data).then(() => {
-      console.log('Members to Firebase added', this.channelMembers);
     });
     this.newUsersToAdd = [];
     this.closeDialog();

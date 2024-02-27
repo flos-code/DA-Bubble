@@ -34,8 +34,6 @@ export class ShowMembersDialogComponent implements OnInit {
 
   ngOnInit(): void {
       this.getMembers();
-      console.log('Show members channel data', this.channelData);
-      console.log('Current members ids', this.channelData.members);
   }
 
   getMembers() {
@@ -47,7 +45,6 @@ export class ShowMembersDialogComponent implements OnInit {
             const memberId = this.channelData['members'][i];
             if(element.id == memberId) {
               this.membersData.push(element.data());
-              console.log('Members data array', this.membersData);
             }         
           }      
         });

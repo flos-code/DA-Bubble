@@ -27,24 +27,24 @@
                     </div>
                     <div>{{channel?.members.length}}</div>
                 </div>
-                <div (click)="toggleDialog('addMember')">
+                <div (click)="toggleDialog('addMember'); scrollToBottom()" >
                     <span class="material-symbols-outlined">person_add</span>
                 </div>
             </div>
 
             <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="channelEditionDialogOpen"
+            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="channelEditionDialogOpen"
                 (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
             <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
-            <app-show-members-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="showMembersDialogOpen"
+            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="showMembersDialogOpen"
                 (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
                 (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
             <!--=================================================-->
 
             <!--========== Add member Dialog ============-->
-            <app-add-members-dialog [channelData]="channel" [currentChannelId]="channelId" *ngIf="addMemberDialogOpen"
+            <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="addMemberDialogOpen"
                 (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
             <!--=================================================-->
 
@@ -71,9 +71,9 @@
         <!-- ===================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
-        <div class="mainChatMessages">
-            <div class="mainChatMessagesSubContainer">
-                @if(showChannel) {
+        <div class="mainChatMessages" #mainChat>
+<!--             <div class="mainChatMessagesSubContainer">
+ -->            @if(showChannel) {
                 <!-- =========== Template main chat beginning - Channel ============= -->
                 <div class="beginningOfChannel">
                     <div>
@@ -253,8 +253,9 @@
                     }
                 }
                                 
-            </div>
-        </div>
+<!--        </div> -->
+<!--             <div hidden #endOfChat></div>
+ -->        </div>
         <!-- =================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
@@ -277,7 +278,7 @@
                             <span class="material-symbols-outlined">alternate_email</span>
                         </div>
                     </div>
-                    <div>
+                    <div (click)="sendMessage()">
                         <img src="/assets/img/main-chat/sendIconDefault.svg">
                     </div>
                 </div>
