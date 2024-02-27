@@ -15,7 +15,7 @@ import { Thread } from '../../../models/thread.class';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
 import { ThreadComponent } from './thread/thread.component';
 
 const firebaseConfig = {
@@ -46,7 +46,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   //activeChannelId: string = this.chatService.getActiveChannelId();
   activeChannelId: string = 'allgemein';
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
-  //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
+  members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
   channelThreads: Message[] = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
@@ -81,12 +81,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
-    this.getThreads();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
     setTimeout(() => {
       this.scrollToBottom();
-    }, 1000);
+    }, 2000);
     //this.getCurrentDirectMessage();
   }
 
@@ -96,11 +95,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
   async getCurrentChannel() {
-    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
-      await this.channel = new Channel(doc.data());  
-      console.log('Channel data', this.channel);
-      this.getMembers();
-    });
+    const docRef = doc(db, "channels", this.activeChannelId);
+    const docSnap = await getDoc(docRef);
+    this.channel = new Channel(docSnap.data());  
+    console.log('Channel data', this.channel);
+    await this.getMembers();
+    await this.getThreads();
+    this.scrollToBottom();
   }
 
   getMembers() {
@@ -110,22 +111,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
         list.forEach(element => {
           if(this.channel['members'].includes(element.id)) {
             this.channelMembers.push(element.data());
-          }
-  
-  /*         for (let i = 0; i < this.channel['members'].length; i++) {
-            const memberId = this.channel['members'][i];
-            if(memberId == element.id) {
-              this.channelMembers.push(element.data());
-            }         
-          }  */     
+          }    
         });
         console.log('Members data', this.channelMembers)
-
     });   
   }
 
   getThreads() {
-    const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"));
+    const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
       list.forEach(thread => {
@@ -134,6 +127,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       )
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
+      console.log('Channel threads', this.channelThreads);
     });
   }
 

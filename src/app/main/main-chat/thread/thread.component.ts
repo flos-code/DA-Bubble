@@ -33,18 +33,18 @@ export class ThreadComponent {
   @Input() thread;
   @Input() currentUser;
   @Input() activeChannelId;
-  messageCount: number;
+  messageCount?: number = 2;
   answers: string;
 
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
-  @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
+  @Input() textAreaEditMessage: string;
 
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
   async getThreadMessageCount() {
-    const messages = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
+    const messages = collection(db, 'channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/messages');
     const snapshot = await getCountFromServer(messages);
     this.messageCount = snapshot.data().count;
     console.log('Message count', this.messageCount);
