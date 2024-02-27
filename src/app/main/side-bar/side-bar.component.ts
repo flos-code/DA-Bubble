@@ -5,6 +5,7 @@ import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-chann
 import { MatDialog } from '@angular/material/dialog';
 import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/dialog-add-user-new-channel.component';
 import { ViewManagementService } from '../../services/view-management.service';
+import { UserManagementService } from '../../services/user-management.service';
 import { ChatService } from '../../services/chat.service';
 import { initializeApp } from 'firebase/app';
 import {
@@ -58,6 +59,7 @@ export class SideBarComponent {
   selectedUserId: number | null = null;
   channels: { id: string; data: Channel }[] = [];
   users: { id: string; data: User }[] = [];
+  users$ = this.userManagementService.users$;
 
   authSubscription: any;
   auth = getAuth(app);
@@ -65,21 +67,32 @@ export class SideBarComponent {
   constructor(
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
+    public userManagementService: UserManagementService,
     private chatService: ChatService
   ) {}
 
   async ngOnInit() {
     await this.loadChannels();
-    await this.loadUsers();
-    this.getTheLoggedInUser();
+    // await this.loadUsers();
+    this.userManagementService.loadUsers();
   }
 
   //is you muss durch abgleich swichen eingelogen user und user ids statt mit isYou erreicht werden
-  sortUsers(): void {
-    this.users.sort((a, b) => {
-      return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
-    });
-  }
+  // sortUsers(): void {
+  //   this.users.sort((a, b) => {
+  //     return a.data.isYou === true ? -1 : b.data.isYou === true ? 1 : 0;
+  //   });
+  // }
+
+  // sortUsers(): void {
+  //   const activeUserId = this.userManagementService.activeUserId$; // Assuming this is the current user's ID
+  //   this.users.sort((a, b) => {
+  //     // Check if either user is the active user and prioritize them
+  //     if (a.id === activeUserId) return -1;
+  //     if (b.id === activeUserId) return 1;
+  //     return 0; // No change in order if neither is the active user
+  //   });
+  // }
 
   toggleSection(section: string): void {
     if (section === 'channels') {
@@ -124,16 +137,21 @@ export class SideBarComponent {
     });
   }
 
-  loadUsers(): void {
-    const usersCol = collection(db, 'users');
-    onSnapshot(usersCol, (snapshot) => {
-      this.users = snapshot.docs.map((doc) => ({
-        id: doc.id,
-        data: new User(doc.data()),
-      }));
-      this.sortUsers();
-    });
-  }
+  // getUsers(): void {
+  //   // Direkter Zugriff auf das users-Array des Services
+  //   this.users = this.userManagementService.users;
+  // }
+
+  // loadUsers(): void {
+  //   const usersCol = collection(db, 'users');
+  //   onSnapshot(usersCol, (snapshot) => {
+  //     this.users = snapshot.docs.map((doc) => ({
+  //       id: doc.id,
+  //       data: new User(doc.data()),
+  //     }));
+  //     this.sortUsers();
+  //   });
+  // }
 
   async addChannelToFirestore(channel: Channel): Promise<void> {
     try {
@@ -250,16 +268,5 @@ export class SideBarComponent {
 
   getSelectedUserId() {
     return this.chatService.getSelectedUserId();
-  }
-
-  getTheLoggedInUser() {
-    this.authSubscription = this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        let userId = user.uid;
-        console.log('id des eingelogten nutzer:', userId);
-      } else {
-        console.log('keine user id gefunden :(');
-      }
-    });
   }
 }
