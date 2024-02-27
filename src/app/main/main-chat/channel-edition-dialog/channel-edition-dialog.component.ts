@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, query, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, query, doc, updateDoc, where } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -28,6 +28,7 @@ const db = getFirestore(app);
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData;
   @Input() currentChannelId;
+  @Input() members;
   channelCreatedByName: string = "";
 
   @Output() channelEditionDialogOpenChild = new EventEmitter();
@@ -43,15 +44,13 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   setChannelCreatedBy() {
-    const q = query(collection(db, 'users'));
-    return onSnapshot(q, (list) => {
-      list.forEach(element => {
-        if(element.id == this.channelData['createdBy']) {
-          this.channelCreatedByName = element.data()['name'];
+    for (let i = 0; i < this.members.length; i++) {
+      const member = this.members[i];
+        if(member['id'] == this.channelData['createdBy']) {
+          this.channelCreatedByName = member['name'];
         }
-      });
-    });
-  }
+    }
+  };
 
   closeDialog() {
     this.channelEditionDialogOpen = false;

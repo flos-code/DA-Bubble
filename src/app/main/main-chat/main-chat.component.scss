@@ -115,12 +115,15 @@
             padding-left: 15px;
 
             > div {
+                width: 40px;
+                height: 40px;
                 display: flex;
                 justify-content: center;
                 align-items: center;    
                 margin-left: -15px;
                 border: 3px solid white;
                 border-radius: 50%;
+                background-color: $bgColor;
 
                 > img {
                     width: 40px;

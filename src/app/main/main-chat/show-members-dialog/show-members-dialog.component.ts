@@ -26,17 +26,15 @@ const db = getFirestore(app);
 export class ShowMembersDialogComponent implements OnInit {
   @Input() channelData;
   @Input() currentChannelId: string;
-  membersData = [];
+  @Input() members;
   @Output() showMembersDialogOpenChild = new EventEmitter();
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
 
-  ngOnInit(): void {
-      this.getMembers();
-  }
+  ngOnInit(): void { }
 
-  getMembers() {
+/*   getMembers() {
       const q = query(collection(db, 'users'));
       return onSnapshot(q, (list) => {
         this.membersData = [];
@@ -49,7 +47,7 @@ export class ShowMembersDialogComponent implements OnInit {
           }      
         });
       });    
-  }
+  } */
 
   openProfileCard() {
     

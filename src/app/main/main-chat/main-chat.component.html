@@ -19,11 +19,14 @@
             <div class="mainChatHeaderRight">
                 <div (click)="toggleDialog('showMembers')">
                     <div class="memberPhotos">
-                        @for (member of channel?.members | slice:0:2; track $index) {
+                        @for (member of channel?.members | slice:0:3; track $index) {
                         <div>
                             <img src="/assets/img/main-chat/member2.svg">
                         </div>
                         }
+                        <div *ngIf="channel?.members.length > 3">
+                            <div>+{{channel?.members.length - 3}}</div>
+                        </div>
                     </div>
                     <div>{{channel?.members.length}}</div>
                 </div>
@@ -33,18 +36,18 @@
             </div>
 
             <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="channelEditionDialogOpen"
+            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [members]="channelMembers" *ngIf="channelEditionDialogOpen"
                 (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
             <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
-            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="showMembersDialogOpen"
+            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [members]="channelMembers" *ngIf="showMembersDialogOpen"
                 (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
                 (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
             <!--=================================================-->
 
             <!--========== Add member Dialog ============-->
-            <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" *ngIf="addMemberDialogOpen"
+            <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId"  *ngIf="addMemberDialogOpen"
                 (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
             <!--=================================================-->
 

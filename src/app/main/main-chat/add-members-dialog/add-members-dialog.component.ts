@@ -32,7 +32,9 @@ const db = getFirestore(app);
 
 export class AddMembersDialogComponent implements OnInit {
   @Input() channelData;
-  channelMembers;
+  members = []; 
+
+  //channelMembers;
   @Input() currentChannelId: string;
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
@@ -44,7 +46,7 @@ export class AddMembersDialogComponent implements OnInit {
   filteredUserList;
 
   ngOnInit(): void {
-    this.channelMembers = [...this.channelData['members']];
+    this.members = [...this.channelData['members']]
     this.getUsersToAdd();
   }
 
@@ -54,7 +56,7 @@ export class AddMembersDialogComponent implements OnInit {
     const q = query(collection(db, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
-        if(!this.channelMembers.includes(element.id)) {
+        if(!this.members.includes(element.id)) {
             this.userList.push({
               'userName': element.data()['name'],
               'userId': element.id,
@@ -120,12 +122,12 @@ export class AddMembersDialogComponent implements OnInit {
   async addUsers() {
     for (let i = 0; i < this.newUsersToAdd.length; i++) {
       const user = this.newUsersToAdd[i]['userId'];
-      if(!this.channelMembers.includes(user)) {
-        this.channelMembers.push(user);
+      if(!this.members.includes(user)) {
+        this.members.push(user);
       }
     }
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
-    let data = {members: this.channelMembers };
+    let data = {members: this.members };
     await updateDoc(currentChannelRef, data).then(() => {
     });
     this.newUsersToAdd = [];

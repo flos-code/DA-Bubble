@@ -80,8 +80,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getCurrentChannel();
-    console.log(this.channel);
     this.getMembers();
+    this.getThreads();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
     setTimeout(() => {
@@ -97,8 +97,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ================== MAIN CHAT CHANNEL DATA ================== */
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
-      this.channel = new Channel(doc.data());
-      this.getThreads();
+      this.channel = new Channel(doc.data());   
+      console.log('Channel data', this.channel)
     });
   }
 
@@ -114,6 +114,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
           }         
         }      
       });
+      console.log('Members data', this.channelMembers)
+
     });    
   }
 
@@ -125,6 +127,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
           this.channelThreads.push(new Message(thread.data()));
         }
       )
+      console.log('Channel threads data', this.channelThreads)
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
     });
