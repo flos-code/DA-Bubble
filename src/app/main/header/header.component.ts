@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfilCardComponent } from '../profil-card/profil-card.component';
 import { CommonModule } from '@angular/common';
 import { initializeApp } from "firebase/app";
-import { getFirestore } from "firebase/firestore";
+import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { ProfilCardService } from '../../services/profil-card.service';
@@ -32,18 +32,33 @@ export class HeaderComponent implements OnInit {
   authSubscription: any;
 
   ngOnInit(): void {
-    this.getTheLoggedInUser();
+    // this.getTheLoggedInUser();
   }
 
   auth = getAuth(app);
   userNameandSurname: string = '';
   profilePic: string = '';
   userId: string = '';
+  headerUserNameandSurname: string;
+  headerProfilePic: string;
+  currentUser;
 
   isOverlayActive: boolean = false;
   currentUserProfil: boolean = false;
   showProfil: boolean = false;
   showDropdownMenu: boolean = false;
+
+  firebaseConfig = {
+    apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+    authDomain: "da-bubble-87fea.firebaseapp.com",
+    projectId: "da-bubble-87fea",
+    storageBucket: "da-bubble-87fea.appspot.com",
+    messagingSenderId: "970901942782",
+    appId: "1:970901942782:web:56b67253649b6206f290af"
+  };
+  app = initializeApp(this.firebaseConfig);
+  db = getFirestore(this.app);
+  userRef = collection(this.db, 'users');
 
   constructor(
     public dialog: MatDialog,
@@ -82,18 +97,15 @@ export class HeaderComponent implements OnInit {
     this.serviceProfilCard.isOverlayActive = false;
   }
 
-
-  getTheLoggedInUser() {
-    this.authSubscription = this.auth.onAuthStateChanged((user) => {
-      if (user) {
-        this.profilePic = user.photoURL;
-        this.userNameandSurname = user.displayName;
-      } else {
-        this.profilePic = '/assets/img/login/profile_generic_big.png';
-        this.userNameandSurname = 'Max Mustermann';
-      }
-    });
-  }
-
-
+  // getTheLoggedInUser() {
+  //   this.authSubscription = this.auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       this.headerProfilePic = user.photoURL;
+  //       this.headerUserNameandSurname = user.displayName;
+  //     } else {
+  //       this.headerProfilePic = '/assets/img/login/profile_generic_big.png';
+  //       this.headerUserNameandSurname = 'Max Mustermann';
+  //     }
+  //   });
+  // }
 }

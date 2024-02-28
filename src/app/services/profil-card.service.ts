@@ -1,6 +1,6 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { collection, getFirestore, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getFirestore, onSnapshot } from 'firebase/firestore';
 import { User } from '../../models/user.class';
 import { getAuth } from 'firebase/auth';
 
@@ -31,6 +31,8 @@ export class ProfilCardService {
   profilePic: string = '';
   userId: string = '';
   userEmailAddress: string = '';
+  headerProfilePic: string = '';
+  headerUserNameandSurname: string = '';
 
   isProfilCardActive: boolean = false;
   isOverlayActive: boolean = false;
@@ -47,9 +49,23 @@ export class ProfilCardService {
     }
   }
 
-  toggleProfilCard(active: boolean, currentUser: boolean) {
+  toggleProfilCard(active: boolean, currentUser: boolean, userId: string) {
     this.isProfilCardActive = active;
     this.isCurrentUserActive = currentUser;
+    if (currentUser == false) {
+      let userDocRef = doc(this.userRef, userId);
+      onSnapshot(userDocRef, (element) => {
+        console.log(element.data());
+        let userData = element.data();
+        this.userNameandSurname = userData['name'];
+        this.userEmailAddress = userData['email'];
+        this.profilePic = userData['imgUrl']
+      })
+    }
+  }
+
+  updateHeader(name: string) {
+    return name;
   }
 
   loadUserFromFirestore() {
@@ -60,7 +76,6 @@ export class ProfilCardService {
         // console.log('Hier sind die User:', element.data(), element.id);
         this.allUser.push(new User(element.data()));
       })
-      console.log(this.allUser);
     })
   }
 
@@ -68,7 +83,9 @@ export class ProfilCardService {
     this.authSubscription = this.auth.onAuthStateChanged((user) => {
       if (user) {
         this.profilePic = user.photoURL;
+        this.headerProfilePic = user.photoURL;
         this.userNameandSurname = user.displayName;
+        this.headerUserNameandSurname = user.displayName;
         this.userEmailAddress = user.email;
       } else {
         this.profilePic = '/assets/img/login/profile_generic_big.png';
