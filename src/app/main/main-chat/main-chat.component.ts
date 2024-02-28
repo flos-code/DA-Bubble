@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
+import { CommonModule, DatePipe } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,15 +8,15 @@ import { ShowMembersDialogComponent } from './show-members-dialog/show-members-d
 import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
 import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 import { ChatService } from '../../services/chat.service';
-import { Subscription } from 'rxjs';
+import { Subscription, empty } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
+import { ThreadComponent } from './thread/thread.component';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { ThreadComponent } from './thread/thread.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -46,15 +46,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
   //activeChannelId: string = this.chatService.getActiveChannelId();
   activeChannelId: string = 'allgemein';
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
-  members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
-  channelThreads: Message[] = []; // Alle Threads des Channels
+  //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
+  channelThreads = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
   //currentUser: string = this.chatService.getSelectedUserId();
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   dmUser = [];
-  @Input() textAreaEditMessage: string = "Welche Version ist aktuell von Angular?";
   textArea: string = "";
   typeChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
@@ -94,14 +93,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
-  async getCurrentChannel() {
-    const docRef = doc(db, "channels", this.activeChannelId);
-    const docSnap = await getDoc(docRef);
-    this.channel = new Channel(docSnap.data());  
-    console.log('Channel data', this.channel);
-    await this.getMembers();
-    await this.getThreads();
-    this.scrollToBottom();
+  getCurrentChannel() {
+    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
+      this.channel = new Channel(doc.data());
+      console.log('Channel data', this.channel);
+      setTimeout(() => {
+        this.getMembers();
+      }, 200);
+      setTimeout(() => {
+        this.getThreads();
+      }, 400);
+    });
   }
 
   getMembers() {
@@ -122,7 +124,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
       list.forEach(thread => {
-          this.channelThreads.push(new Message(thread.data()));
+          this.channelThreads.push(thread.data());
         }
       )
       this.sortChannelThreadsArray();
@@ -160,6 +162,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   } */
 
   getThreadCreationDates() {
+    this.channelThreadsDateTime = [];
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
       let creationDate = message['creationDate'];
@@ -169,7 +172,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let formattedDateTimeSeparator = this.formattedDateTimeSeparator(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
       let createdBy = this.getUserCreated(userId);
-
       this.channelThreadsDateTime.push({
         'threadId': message['messageId'],
         'timestamp': message['creationDate'],
@@ -319,31 +321,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.addMemberDialogOpen = true;
   }
 
-/*   addReaction(emoji: string) {
-
-  }
-
-  openMoreEmojis() {
-
-  }
-
-  moreOptions() {
-    this.editMessagePopupOpen = true;
-  }
-
-  editMessage() {
-    this.editMessagePopupOpen = false;
-    this.ownMessageEdit = true;
-  }
-
-  closeEditedMessage() {
-    this.ownMessageEdit = false;
-  }
-
-  saveEditedMessage() {
-    // 
-  }
- */
   sendMessage() {
     this.scrollToBottom();
   }

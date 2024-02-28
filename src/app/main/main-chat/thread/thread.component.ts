@@ -2,13 +2,13 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
+import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
+import { MainChatComponent } from '../main-chat.component';
 
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
-import { MainChatComponent } from '../main-chat.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -75,7 +75,6 @@ export class ThreadComponent {
   editMessage() {
     this.editMessagePopupOpen = false;
     this.ownMessageEdit = true;
-    this.main.scrollToBottom();
   }
 
   closeEditMessagePopUp() {
