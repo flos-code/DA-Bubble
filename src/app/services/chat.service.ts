@@ -114,6 +114,16 @@ export class ChatService {
     );
     return threadMessages;
   }
+
+  async getThreadInitMessage(channelId: string, threadId: string): Promise<Thread[]> {
+    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}`);
+    const snapshot = await getDocs(threadMessagesRef);
+    const threadMessages = snapshot.docs.map(
+      (doc) => new Thread({ ...doc.data(), messageId: doc.id })
+    );
+    console.log('First Thread Message:', snapshot)
+    return threadMessages;
+  }
   
 
   async updateThreadMessage(

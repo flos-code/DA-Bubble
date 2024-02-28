@@ -13,15 +13,15 @@
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->
         <div class="chat-content">
-            <div class="user-message"> <!-- Thread Message -->
+            <div *ngFor="let message of threadMessages" class="user-message"> <!-- Thread Message -->
                 <img src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>Noah Bruan</p>
-                        <span>{{messages[0].time}} Uhr</span>
+                        <p>{{ message.createdBy }}</p>
+                        <span>{{ message.creationDate}} Uhr</span>
                     </div>
                     <div class="thread-message">
-                        <span>{{messages[0].message}}</span>
+                        <span>{{ message.message }}</span>
                     </div>
                 </div>
             </div>
@@ -44,15 +44,15 @@
                 </div>
             </div>
 
-            <div class="user-message own-message"> <!-- Template of own message -->
+            <div *ngFor="let message of threadMessages" class="user-message own-message"> <!-- Template of own message -->
                 <img src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
-                        <p>Frederik Beck</p>
-                        <span>{{messages[2].time}} Uhr</span>
+                        <p>{{ message.createdBy }}</p>
+                        <span>{{ message.creationDate}} Uhr</span>
                     </div>
                     <div class="thread-message own-bubble">
-                        <span>{{messages[2].message}}</span>
+                        <span>{{ message.message }}</span>
                     </div>
                 </div>
             </div>

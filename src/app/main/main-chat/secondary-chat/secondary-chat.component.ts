@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { initializeApp } from "firebase/app";
@@ -43,29 +43,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   activeChannelId: string = 'allgemein';
   channelId: string = 'allgemein';
   creationDate: Date;
-  messages = [
-    {
-      id: 1,
-      message: 'Welche Version ist aktuell von Angular?',
-      sender: 'user',
-      time: '14:25',
-      own: false
-    },
-    {
-      id: 2,
-      message: 'Ich habe die gleiche Frage. Ich habe gegoogelt und es scheint, dass die aktuelle Version Angular 13 ist. Vielleicht weiß Frederik, ob es wahr ist.',
-      sender: 'user',
-      time: '14:30',
-      own: false
-    },
-    {
-      id: 3,
-      message: 'Ja das ist es.',
-      sender: 'user',
-      time: '15:06',
-      own: false
-    }
-  ];
   DialogRef: any;
 
   constructor(
@@ -142,9 +119,5 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
  */
   updateCursorPosition(event: any) {
     this.currentCursorPosition = event.target.selectionStart;
-  }
-
-  convertTimestampToDate(timestamp: Timestamp): Date {
-    return timestamp.toDate();
   }
 }
