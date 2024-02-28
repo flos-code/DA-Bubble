@@ -5,6 +5,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot,  query } from "firebase/firestore";
 import { ProfilecardsOtherUsersComponent } from './profilecards-other-users/profilecards-other-users.component';
+import { ProfilCardService } from '../../../services/profil-card.service';
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
   authDomain: "da-bubble-87fea.firebaseapp.com",
@@ -33,18 +34,20 @@ export class ShowMembersDialogComponent implements OnInit {
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
   showProfileCard: boolean = false;
-  memberData: any
+  //memberData: any
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    console.log(this.channelMembers);
+   }
 
-  constructor() {
+  constructor(public serviceProfilCard: ProfilCardService) {
 
   }
 
-  openProfileCard(member: any) {
+/*   openProfileCard(member: any) {
     this.memberData = member; 
     this.showProfileCard = true;
-  }
+  } */
 
   doNotClose($event: any) {
     $event.stopPropagation(); 
