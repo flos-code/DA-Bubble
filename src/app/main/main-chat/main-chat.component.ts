@@ -17,6 +17,7 @@ import { ThreadComponent } from './thread/thread.component';
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { TextBoxComponent } from '../new-message/text-box/text-box.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -34,7 +35,7 @@ const db = getFirestore(app);
   selector: 'app-main-chat',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, ReactiveFormsModule, MatFormFieldModule,
-    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent, ThreadComponent],
+    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent, ThreadComponent,TextBoxComponent],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
@@ -79,6 +80,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
+    console.log('Channel id', this.activeChannelId);
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();

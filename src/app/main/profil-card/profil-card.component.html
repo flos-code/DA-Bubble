@@ -5,7 +5,6 @@
         *ngIf="serviceProfilCard.isProfilCardActive" class="cardContainer">
 
         <div class="cardHeader" *ngIf="!edit">
-
             <h3>Profil</h3>
             <div>
                 <mat-icon class="material-symbols-outlined" fontIcon="close"
@@ -14,7 +13,6 @@
         </div>
 
         <div class="cardHeader" *ngIf="edit">
-
             <h3>Dein Profil bearbeiten</h3>
             <div>
                 <mat-icon class="material-symbols-outlined" fontIcon="close"
@@ -83,5 +81,5 @@
             <div (click)="toggleEdit(!edit)" class="cancelBotton">Abbrechen</div>
             <div (click)="updateUserData()" class="saveBotton">Speichern</div>
         </div>
-
     </div>
+</div>

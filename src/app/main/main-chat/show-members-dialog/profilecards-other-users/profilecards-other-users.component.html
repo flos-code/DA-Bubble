@@ -1,0 +1,45 @@
+<div class="overlay" *ngIf="showProfileCard" (click)="closeProfileCard()">
+    <div (click)="doNotClose($event)" class="cardContainer">
+        <div class="cardHeader">
+            <h3>Profil</h3>
+            <div (click)="closeProfileCard()">
+                <mat-icon class="material-symbols-outlined" fontIcon="close">
+                </mat-icon>
+            </div>
+        </div>
+
+        <div class="imgContainer">
+            <img src="/assets/img/main-chat/member2.svg">
+        </div>
+
+        <div>
+            <div class="nameContainer">
+                <h3>{{memberData?.name}}</h3>
+            </div>
+
+            <div class="onlineStatusContainer">
+                <div class="onlineStatusImg online" [ngClass]="{'online': memberData?.isOnline, 'awy': !memberData?.isOnline}"></div>
+                <div class="onlineStatusText online">Aktiv</div>
+            </div>
+        </div>
+
+        <div>
+            <div class="emailContainerTop">
+                <mat-icon class="material-symbols-outlined" fontIcon="mail"></mat-icon>
+                <span>E-Mail-Adresse</span>
+            </div>
+
+            <div class="emailContainerButton">
+                <mat-icon class="material-symbols-outlined" fontIcon=""></mat-icon>
+                <span>{{memberData?.email}}</span>
+            </div>
+        </div>
+
+        <div class="messageContainer">
+            <div>
+                <mat-icon class="material-symbols-outlined" fontIcon="mode_comment"></mat-icon>
+                <span>Nachricht</span>
+            </div>
+        </div>
+    </div>
+</div>

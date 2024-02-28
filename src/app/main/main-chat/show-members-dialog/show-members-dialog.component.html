@@ -8,7 +8,7 @@
     <div class="usersListContainer">
         <div class="usersListSubContainer">
             @for (member of channelMembers; track $index) {
-                <div class="userContainer" (click)="openProfileCard()">
+                <div class="userContainer" (click)="openProfileCard(member)">
                     <div class="userSubContainer">
                         <div>
                             <img src="/assets/img/main-chat/member2.svg">
@@ -16,8 +16,11 @@
                         </div>
                         <div>{{member.name}}</div>    
                     </div>
-                </div>           
+                </div>     
             }
+            <app-profilecards-other-users *ngIf="showProfileCard" [memberData]="memberData" [showProfileCard]="showProfileCard" 
+                                          (showProfileCardChild)="closeProfileCard(showProfileCard)">
+            </app-profilecards-other-users>
         </div>
     </div>
     <div>

@@ -4,6 +4,7 @@ import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot,  query } from "firebase/firestore";
+import { ProfilecardsOtherUsersComponent } from './profilecards-other-users/profilecards-other-users.component';
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
   authDomain: "da-bubble-87fea.firebaseapp.com",
@@ -19,7 +20,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-show-members-dialog',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ProfilecardsOtherUsersComponent],
   templateUrl: './show-members-dialog.component.html',
   styleUrl: './show-members-dialog.component.scss'
 })
@@ -31,27 +32,18 @@ export class ShowMembersDialogComponent implements OnInit {
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
+  showProfileCard: boolean = false;
+  memberData: any
 
   ngOnInit(): void { }
 
-/*   getMembers() {
-      const q = query(collection(db, 'users'));
-      return onSnapshot(q, (list) => {
-        this.membersData = [];
-        list.forEach(element => {
-          for (let i = 0; i < this.channelData['members'].length; i++) {
-            const memberId = this.channelData['members'][i];
-            if(element.id == memberId) {
-              this.membersData.push(element.data());
-            }         
-          }      
-        });
-        console.log('Members data', this.membersData);
-      });    
-  } */
+  constructor() {
 
-  openProfileCard() {
-    
+  }
+
+  openProfileCard(member: any) {
+    this.memberData = member; 
+    this.showProfileCard = true;
   }
 
   doNotClose($event: any) {
@@ -61,6 +53,10 @@ export class ShowMembersDialogComponent implements OnInit {
   closeDialog() {
     this.showMembersDialogOpen = false;
     this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen);
+  }
+
+  closeProfileCard(closeProfileCard: boolean) {
+    this.showProfileCard = false;
   }
 
   goToAddMemberDialog() {
