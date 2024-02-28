@@ -33,6 +33,9 @@ const db = getFirestore(app);
 export class ChatService {
   private messages = [];
   private db;
+  private activeChannelId: string;
+  private selectedUserId: string;
+
   private threadOpenSource = new BehaviorSubject<boolean>(false);
   threadOpen$ = this.threadOpenSource.asObservable();
   private threadsSource = new BehaviorSubject<Thread[]>([]);
@@ -40,8 +43,7 @@ export class ChatService {
   private selectedThreadIdSource = new BehaviorSubject<string | null>(null);
   selectedThreadId$ = this.selectedThreadIdSource.asObservable();
 
-  private activeChannelId: string;
-  private selectedUserId: string;
+
 
   private activeChannelIdUpdated = new BehaviorSubject<string | null>(null);
   get activeChannelIdUpdates() {
@@ -110,8 +112,6 @@ export class ChatService {
     const threadMessages = snapshot.docs.map(
       (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
     );
-    // console.log("Processed ThreadMessages:", threadMessages);
-    // console.log('threadId:', threadId,'channelId:', channelId)
     return threadMessages;
   }
   

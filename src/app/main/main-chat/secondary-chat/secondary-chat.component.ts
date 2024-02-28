@@ -3,7 +3,7 @@ import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/co
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc, orderBy } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc, orderBy, Timestamp } from "firebase/firestore";
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { InputService } from '../../../services/input.service';
@@ -42,6 +42,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadMessages: ThreadMessage[] = [];
   activeChannelId: string = 'allgemein';
   channelId: string = 'allgemein';
+  creationDate: Date;
   messages = [
     {
       id: 1,
@@ -69,7 +70,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private chatService: ChatService,
-    public inputService: InputService,
+    public inputService: InputService
   ) { }
 
   ngOnInit(): void {
@@ -141,5 +142,9 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
  */
   updateCursorPosition(event: any) {
     this.currentCursorPosition = event.target.selectionStart;
+  }
+
+  convertTimestampToDate(timestamp: Timestamp): Date {
+    return timestamp.toDate();
   }
 }
