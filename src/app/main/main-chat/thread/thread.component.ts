@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
@@ -29,12 +29,14 @@ const db = getFirestore(app);
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
-export class ThreadComponent {
+export class ThreadComponent implements OnInit {
   @Input() thread;
   @Input() currentUser;
   @Input() activeChannelId;
-  messageCount?: number = 2;
+  messageCount: number;
+  threadMessagesTimestamps = [];
   answers: string;
+  lastAnswer;
 
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
@@ -43,21 +45,49 @@ export class ThreadComponent {
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
-  async getThreadMessageCount() {
+  ngOnInit(): void {
+    this.getMessageCountAndAnswer()
+  }
+
+/*   async getThreadMessageCount() {
     const messages = collection(db, 'channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/messages');
     const snapshot = await getCountFromServer(messages);
     this.messageCount = snapshot.data().count;
     console.log('Message count', this.messageCount);
     console.log('Message count', snapshot.data().count);
     this.formatMessageCount();
+  } */
+
+
+
+  async getMessageCountAndAnswer() {
+    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+    const count = await getCountFromServer(q);
+    this.messageCount = count.data().count;
+    this.formatMessageCount();
+
+    return onSnapshot(q, (element) => {
+      this.threadMessagesTimestamps = [];
+      element.forEach(thread => {
+        this.threadMessagesTimestamps.push(thread.data()['creationDate']);
+      }
+    )  
+    console.log('Timestamps', this.threadMessagesTimestamps);
+    this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
+    this.formatMessageCount;   
+    });
   }
 
   formatMessageCount() {
-    if(this.messageCount > 1) {
+    if(this.messageCount > 1 || this.messageCount == 0) {
       this.answers = 'Antworten';
     } else {
       this.answers = 'Antwort';
     }
+  }
+
+  getLastAnswer() {
+    this.lastAnswer
   }
 
   addReaction(emoji: string) {

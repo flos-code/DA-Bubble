@@ -12,9 +12,9 @@
                 <div>
                     {{thread?.message}}
                 </div>
-                <div class="mainMessageThreads">
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} Antworten</div>
-                    <div>Letzte Antwort 14:56</div>
+                <div class="mainMessageThreads" *ngIf="messageCount > 0">
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{ answers }}</div>
+                    <div>Letzte Antwort {{lastAnswer}}</div>
                 </div>
                 <div class="mainThreadReactions">
                     <div>
@@ -65,9 +65,9 @@
                 <div>
                     {{thread?.message}}
                 </div>
-                <div class="mainMessageThreadsOwn">
-                    <div>Letzte Antwort 14:56</div>
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} Antworten</div>
+                <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
+                    <div>Letzte Antwort {{lastAnswer}}</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{ answers }}</div>
                 </div>
                 <div class="mainThreadReactionsOwn">
                     <div>
