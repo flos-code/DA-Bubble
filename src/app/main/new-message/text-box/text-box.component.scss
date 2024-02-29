@@ -98,4 +98,15 @@
     left: 40px;
     cursor: pointer;
   }
+
+  .file-input {
+    display: none;
+  }
+
+  .imagePreview {
+    width: 100px;
+    height: 100px;
+    background-size: cover;
+    background-position: center;
+  }
 }

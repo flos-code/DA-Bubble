@@ -3,6 +3,12 @@
   [class.focused]="inputFocused"
   (click)="message.focus()"
 >
+  <div
+    *ngIf="imageURL()"
+    class="imagePreview"
+    [style.backgroundImage]="'url(' + imageURL() + ')'"
+  ></div>
+
   <textarea
     rows="2"
     #message
@@ -17,7 +23,21 @@
   ></textarea>
   <div class="bottomIcons">
     <div class="addElements">
-      <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon>
+      <input
+        type="file"
+        class="file-input"
+        (change)="onFileSelected($event)"
+        #fileUpload
+      />
+
+      <mat-icon
+        (click)="fileUpload.click()"
+        class="material-symbols-rounded"
+        fontIcon="add"
+      ></mat-icon>
+
+      <!-- 
+      <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon> -->
       <div></div>
       <mat-icon
         (click)="toggleEmojiPicker()"
