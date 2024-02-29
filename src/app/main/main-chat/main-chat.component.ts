@@ -10,7 +10,6 @@ import { SecondaryChatComponent } from './secondary-chat/secondary-chat.componen
 import { ChatService } from '../../services/chat.service';
 import { Subscription, empty } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
-import { Message } from '../../../models/message.class';
 import { Thread } from '../../../models/thread.class';
 import { ThreadComponent } from './thread/thread.component';
 
@@ -77,7 +76,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   };
   /* ============================================== */
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService) {
+   }
 
   ngOnInit(): void {
     this.getCurrentChannel();
@@ -97,6 +97,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
+      console.log(this.channel);
+
       setTimeout(() => {
         this.getMembers();
       }, 200);
@@ -115,7 +117,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
             this.channelMembers.push(element.data());
           }    
         });
-    });   
+    });
   }
 
   getThreads() {

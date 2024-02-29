@@ -108,7 +108,7 @@
                 }
 
                 <!-- =================== Time separator / Threads ===================== -->
-                 @for (threadTimeSeparator of threadCreationDates; track $index) {
+                @for (threadTimeSeparator of threadCreationDates; track $index) {
                     <div class="timeSeparator">
                         <div>
                             <div>{{threadTimeSeparator.timeSeparatorDate}}</div>
@@ -157,7 +157,6 @@
         <!-- =================================================================================================== -->
 
     </div>
-
 
     <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
 </div>

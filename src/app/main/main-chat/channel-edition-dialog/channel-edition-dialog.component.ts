@@ -26,7 +26,7 @@ const db = getFirestore(app);
   styleUrl: './channel-edition-dialog.component.scss'
 })
 export class ChannelEditionDialogComponent implements OnInit {
-  @Input() channelData;
+  @Input() channelData!: any;
   @Input() currentChannelId;
   @Input() channelMembers;
   channelCreatedByName: string = "";
