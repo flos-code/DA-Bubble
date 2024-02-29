@@ -41,7 +41,7 @@
             <!--=================================================-->
 
             <!--============== Show member Dialog ================-->
-            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" *ngIf="showMembersDialogOpen"
+            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" [currentUser]="currentUser" *ngIf="showMembersDialogOpen"
                 (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
                 (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
             <!--=================================================-->

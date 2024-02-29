@@ -40,12 +40,14 @@ export class ReactionsService {
 
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.some(reaction => reaction.emoji === emoji)) {  
-      let currentRef = doc(db, `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`);
+      let currentRef = doc(db, this.reactionCollectionPath);
+      // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
       let data = {reactedBy: currentUser, emoji: emoji};
       await updateDoc(currentRef, data).then(() => {
       });
     } else {
       await this.addReaction(emoji, currentUser);
+      console.log(currentUser);
     }
   }
   async addReaction(emoji: string, currentUser: string) {

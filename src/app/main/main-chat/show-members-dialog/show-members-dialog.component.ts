@@ -26,28 +26,29 @@ const db = getFirestore(app);
   styleUrl: './show-members-dialog.component.scss'
 })
 export class ShowMembersDialogComponent implements OnInit {
-  @Input() channelData;
+  @Input() currentUser!: string;
+  @Input() channelData!: any;
   @Input() currentChannelId: string;
-  @Input() channelMembers;
+  @Input() channelMembers!: any;
   @Output() showMembersDialogOpenChild = new EventEmitter();
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
   showProfileCard: boolean = false;
-  //memberData: any
+  memberData: any
 
   ngOnInit(): void {
-    console.log(this.channelMembers);
+    console.log('channelMembers', this.channelMembers);
    }
 
   constructor(public serviceProfilCard: ProfilCardService) {
 
   }
 
-/*   openProfileCard(member: any) {
+  openProfileCard(member: any) {
     this.memberData = member; 
     this.showProfileCard = true;
-  } */
+  }
 
   doNotClose($event: any) {
     $event.stopPropagation(); 

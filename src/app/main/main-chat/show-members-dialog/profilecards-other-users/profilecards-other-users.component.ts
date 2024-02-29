@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
 
@@ -10,10 +10,14 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './profilecards-other-users.component.html',
   styleUrl: './profilecards-other-users.component.scss'
 })
-export class ProfilecardsOtherUsersComponent {
-  @Input() memberData;
+export class ProfilecardsOtherUsersComponent implements OnInit {
+  @Input() memberData!: any;
   @Input() showProfileCard: boolean;
   @Output() showProfileCardChild = new EventEmitter();
+
+  ngOnInit(): void {
+      console.log('Members data', this.memberData);
+  }
 
 
   closeProfileCard() {

@@ -7,7 +7,6 @@ import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
-
 @Component({
   selector: 'app-reactions',
   standalone: true,
@@ -16,22 +15,20 @@ import { PickerModule } from '@ctrl/ngx-emoji-mart';
   styleUrl: './reactions.component.scss'
 })
 export class ReactionsComponent implements OnInit {
-  @Input() showMoreEmojis: boolean;
+  @Input() showMoreEmojis!: boolean;
   @Output() showMoreEmojisChild = new EventEmitter();
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   inputFocused: boolean = false;
   messageModel: string = '';
-  @Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
-  @Input() currentUser: string;
+  @Input() reactionCollectionPath!: string;
+  // @Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
+  @Input() currentUser!: string;
 
   constructor(private reactionServie: ReactionsService) {
   }
 
   ngOnInit(): void {
-    console.log('reactionCollectionPathReaction', this.reactionCollectionPath);
-    setTimeout(() => {
-      this.reactionServie.getReactions(this.reactionCollectionPath);
-    }, 200);
+    this.reactionServie.getReactions(this.reactionCollectionPath);
   }
 
   onInputFocus(): void {
@@ -60,7 +57,8 @@ export class ReactionsComponent implements OnInit {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    await this.reactionServie.saveReaction(this.messageModel, 'OS9ntlBZdogfRKDdbni6eZ9yop93');
+    await this.reactionServie.saveReaction(this.messageModel, this.currentUser);
+    // OS9ntlBZdogfRKDdbni6eZ9yop93
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }

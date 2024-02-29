@@ -18,8 +18,9 @@
             </div>
 
             <div class="onlineStatusContainer">
-                <div class="onlineStatusImg online" [ngClass]="{'online': memberData?.isOnline, 'awy': !memberData?.isOnline}"></div>
-                <div class="onlineStatusText online">Aktiv</div>
+                <div class="onlineStatusImg online" [ngStyle]="{'background-color': memberData?.isOnline ? '#92c83e' : '#686868' }"></div>
+                <div class="onlineStatusText online" *ngIf="memberData.isOnline">Aktiv</div>
+                <div class="onlineStatusText away" *ngIf="!memberData.isOnline">Abwesend</div>
             </div>
         </div>
 
