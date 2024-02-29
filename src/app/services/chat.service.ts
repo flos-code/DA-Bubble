@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { initializeApp } from 'firebase/app';
-import { Message } from '../../models/message.class';
 import {
   getFirestore,
   collection,
@@ -123,43 +122,5 @@ export class ChatService {
     );
     console.log('First Thread Message:', snapshot)
     return threadMessages;
-  }
-  
-
-  async updateThreadMessage(
-    channelId: string,
-    threadId: string,
-    messageId: string,
-    updates: any
-  ) {
-    const messageDocRef = doc(
-      db,
-      `channels/${channelId}/threads/${threadId}/messages/${messageId}`
-    );
-    await updateDoc(messageDocRef, updates);
-  }
-
-  async addThreadMessage(
-    channelId: string,
-    threadId: string,
-    threadMessage: ThreadMessage
-  ) {
-    const threadMessagesRef = collection(
-      db,
-      `channels/${channelId}/threads/${threadId}/messages`
-    );
-    await addDoc(threadMessagesRef, threadMessage.toJSON());
-  }
-
-  async deleteThreadMessage(
-    channelId: string,
-    threadId: string,
-    messageId: string
-  ) {
-    const messageDocRef = doc(
-      db,
-      `channels/${channelId}/threads/${threadId}/messages/${messageId}`
-    );
-    await deleteDoc(messageDocRef);
   }
 }

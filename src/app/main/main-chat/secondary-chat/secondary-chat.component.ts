@@ -40,8 +40,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   currentCursorPosition: number = 0;
   private subscription = new Subscription();
   threadMessages: ThreadMessage[] = [];
+  firstThreadMessage?: ThreadMessage;
   activeChannelId: string = 'allgemein';
   channelId: string = 'allgemein';
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   creationDate: Date;
   DialogRef: any;
 
@@ -64,23 +66,55 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  /*--------------------------------- ThreadMessages -----------------------------------*/
+
   async loadThreadMessages(threadId: string) {
     const channelId = this.chatService.getActiveChannelId();
-     await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
+    await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
     });
   }
 
-  /**
- * Closes the chat thread.
- */
+  // getFormattedTime(creationDate: number) {
+  //   const getString = (number) => number < 10 ? '0' + number : String(number);
+  //   const getTime = (creationDate: number) => {
+  //       const date = new Date(creationDate);
+  //       const hours = getString(date.getHours());
+  //       const minutes = getString(date.getMinutes());
+  //       return `${hours}:${minutes}`;
+  //   };
+  //   return getTime(creationDate);
+  // }
+
+  // getUserCreated(userId: string) {
+  //   let user = ""; 
+  //   for (let i = 0; i < this.channelMembers.length; i++) {
+  //     const userCreated = this.channelMembers[i];
+  //     if(userId == userCreated['id']) {
+  //       user = userCreated['name'];
+  //     }
+  //   }
+  //   return user;
+  // }
+
+//   getMembers() {
+//     const q = query(collection(db, 'users'));
+//     return onSnapshot(q, (list) => {
+//       this.channelMembers = [];
+//       list.forEach(element => {
+//         if(this.channel['members'].includes(element.id)) {
+//           this.channelMembers.push(element.data());
+//         }    
+//       });
+//   });   
+// }
+
   closeThread(): void {
     this.chatService.closeThread();
   }
 
-  /**
- * Toggles the visibility of the emoji window.
- */
+  /*--------------------------------- Emojis -----------------------------------*/
+
   toggleEmojis() {
     if (this.emojiWindowOpen) {
       this.emojiWindowOpen = false;
@@ -89,34 +123,21 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  /**
-   * Handles the selection of an emoji.
-   * @param {any} event - The event object.
-   */
   onEmojiSelect(event: any) {
     const emoji = event.emoji.native;
-    this.messageModel += emoji; // Adds the emoji at the end of the text
-
-    // Restores focus to the text field and sets the cursor position
+    this.messageModel += emoji;
     this.setFocusAndCursorPosition();
   }
 
-  /**
-   * Sets focus and cursor position.
-   */
   setFocusAndCursorPosition() {
     setTimeout(() => {
       const textArea: HTMLInputElement = this.messageInput.nativeElement;
-      textArea.focus(); // Sets focus to the text field
-      const len = this.messageModel.length; // Determines the length of the updated text
-      textArea.setSelectionRange(len, len); // Sets the cursor position at the end of the text
+      textArea.focus();
+      const len = this.messageModel.length;
+      textArea.setSelectionRange(len, len);
     }, 0);
   }
 
-  /**
- * Updates the current cursor position based on user interactions.
- * @param {any} event - The event object.
- */
   updateCursorPosition(event: any) {
     this.currentCursorPosition = event.target.selectionStart;
   }
