@@ -13,7 +13,7 @@
                     {{thread?.message}}
                 </div>
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{ answers }}</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
                 </div>
                 <div class="mainThreadReactions">
@@ -61,22 +61,22 @@
             <div class="mainMessageOwn">
                 <div>
                     <div>{{thread?.createdBy}}</div>
-                    <div>{{thread?.time }} Uhr</div>
+                    <div>{{thread?.time}} Uhr</div>
                 </div>
                 <div>
                     {{thread?.message}}
                 </div>
                 <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
                     <div>Letzte Antwort {{lastAnswer}}</div>
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{ answers }}</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
                 <div class="mainThreadReactionsOwn">
                     <div>
                         <span class="material-symbols-outlined">add_reaction</span>
                     </div>
-                    <div class="reactionContainer">
+                    <div *ngFor="let reaction of reactions" class="reactionContainer">
                         <div class="ractionEmoji">
-                             <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
+                            <span [innerHTML]="reaction.emoji"></span>
                         </div>
                         <div class="ractionCount">
                             <div>1</div>

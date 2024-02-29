@@ -9,16 +9,29 @@
         <div class="usersListSubContainer">
             @for (member of channelMembers; track $index) {
                 <!-- <div class="userContainer" (click)="openProfileCard(member)"> -->
-                <div class="userContainer" (click)="openProfileCard(member)">
-                    <!--(click)="serviceProfilCard.toggleProfilCard(true, false, 'OS9ntlBZdogfRKDdbni6eZ9yop93')" -->
-                    <div class="userSubContainer">
-                        <div>
-                            <img src="/assets/img/main-chat/member2.svg">
-                            <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
+                @if(member.id == currentUser) {
+                    <div class="userContainer" style="cursor: default;">
+                        <!--(click)="serviceProfilCard.toggleProfilCard(true, false, 'OS9ntlBZdogfRKDdbni6eZ9yop93')" -->
+                        <div class="userSubContainer">
+                            <div>
+                                <img src="/assets/img/main-chat/member2.svg">
+                                <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
+                            </div>
+                            <div>{{member?.name}} <span *ngIf="member?.id == currentUser">(Du)</span></div>    
                         </div>
-                        <div>{{member?.name}} <span *ngIf="member?.id == currentUser">(Du)</span></div>    
                     </div>
-                </div>     
+                } @else {
+                    <div class="userContainer" (click)="openProfileCard(member)">
+                        <!--(click)="serviceProfilCard.toggleProfilCard(true, false, 'OS9ntlBZdogfRKDdbni6eZ9yop93')" -->
+                        <div class="userSubContainer">
+                            <div>
+                                <img src="/assets/img/main-chat/member2.svg">
+                                <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
+                            </div>
+                            <div>{{member?.name}} <span *ngIf="member?.id == currentUser">(Du)</span></div>    
+                        </div>
+                    </div>        
+                }
             }
             <app-profilecards-other-users *ngIf="showProfileCard" [memberData]="memberData" [showProfileCard]="showProfileCard" 
                                           (showProfileCardChild)="closeProfileCard(showProfileCard)">

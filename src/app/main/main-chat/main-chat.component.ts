@@ -80,7 +80,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   constructor(private chatService: ChatService) { }
 
   ngOnInit(): void {
-    console.log('Channel id', this.activeChannelId);
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -140,25 +139,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if(b.creationDate < a.creationDate){
       return -1;
     }
-    
     if(b.creationDate > a.creationDate) {
       return 1;
     }
     return 0;
   }
-
-/*   isToday(date) {
-    const today = new Date();
-  
-    // 👇️ Today's date
-    console.log(today);
-  
-    if (today.toDateString() === date.toDateString()) {
-      return true;
-    }
-  
-    return false;
-  } */
 
   getThreadCreationDates() {
     this.channelThreadsDateTime = [];
@@ -166,11 +151,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let message = this.channelThreads[i];
       let creationDate = message['creationDate'];
       let userId = message['createdBy'];
-
       let formattedDate = this.formattedDate(creationDate);
-      let formattedDateTimeSeparator = this.formattedDateTimeSeparator(creationDate);
+      let formattedDateTimeSeparator = this.getTimeSeparatorDate(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
       let createdBy = this.getUserCreated(userId);
+
       this.channelThreadsDateTime.push({
         'threadId': message['messageId'],
         'timestamp': message['creationDate'],
@@ -200,10 +185,23 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return `${day}.${month}.${year}`;
   }
 
-  formattedDateTimeSeparator(creationDate: any) {
-    const weekday = new Date(creationDate).toLocaleDateString('de-DE', { weekday: 'long' });
-    const day = new Date(creationDate).toLocaleDateString('fr-CH', { day: 'numeric'});
-    const month = new Date(creationDate).toLocaleDateString('de-DE', { month: 'long'});
+  getTimeSeparatorDate(creationDate: any) {
+    let dateToday = new Date();
+    const dateTodayUnix = dateToday.getTime();
+    let convertedDate = this.formattedDateTimeSeparator(dateTodayUnix);
+    creationDate = this.formattedDateTimeSeparator(creationDate);
+
+    if(convertedDate == creationDate){
+      return 'Heute';
+    } else {
+      return creationDate;
+    }
+  }
+
+  formattedDateTimeSeparator(date: any) {
+    const weekday = new Date(date).toLocaleDateString('de-DE', { weekday: 'long' });
+    const day = new Date(date).toLocaleDateString('fr-CH', { day: 'numeric'});
+    const month = new Date(date).toLocaleDateString('de-DE', { month: 'long'});
     return `${weekday}, ${day} ${month}`;
   }
 
