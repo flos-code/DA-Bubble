@@ -20,7 +20,7 @@
                     <div>
                         <span class="material-symbols-outlined">add_reaction</span>
                     </div>
-                    <div>
+                    <div class="reactionContainer">
                         <div class="ractionEmoji">
                              <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
                         </div>
@@ -51,7 +51,8 @@
                     <span class="material-symbols-outlined">comment</span>
                 </div>
             </div>
-    
+            <app-reactions class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reactions>    
         </div>
         <!-- ============================================================================ -->
     } @else {
@@ -73,7 +74,7 @@
                     <div>
                         <span class="material-symbols-outlined">add_reaction</span>
                     </div>
-                    <div>
+                    <div class="reactionContainer">
                         <div class="ractionEmoji">
                              <img src="/assets/img/main-chat/rocketEmoji.svg">                                            
                         </div>
@@ -110,6 +111,8 @@
                     <span class="material-symbols-outlined">more_vert</span>
                 </div>
             </div>
+            <app-reactions class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"></app-reactions>
+
 
             <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
             <div *ngIf="editMessagePopupOpen" class="editMessagePopup" (click)="doNotClose($event)">

@@ -9,6 +9,7 @@ import { MainChatComponent } from '../main-chat.component';
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { ReactionsComponent } from '../reactions/reactions.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -25,7 +26,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionsComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -37,6 +38,8 @@ export class ThreadComponent implements OnInit {
   threadMessagesTimestamps = [];
   answers: string;
   lastAnswer;
+  showMoreEmojis: boolean = false;
+  reactionCollectionPath: string;
 
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
@@ -46,7 +49,8 @@ export class ThreadComponent implements OnInit {
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
   ngOnInit(): void {
-    this.getMessageCountAndAnswer()
+    this.getMessageCountAndAnswer();
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
   }
 
 /*   async getThreadMessageCount() {
@@ -57,8 +61,6 @@ export class ThreadComponent implements OnInit {
     console.log('Message count', snapshot.data().count);
     this.formatMessageCount();
   } */
-
-
 
   async getMessageCountAndAnswer() {
     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
@@ -95,7 +97,11 @@ export class ThreadComponent implements OnInit {
   }
 
   openMoreEmojis() {
+    this.showMoreEmojis = true;
+  }
 
+  closeMoreEmojis(showMoreEmojis: boolean) {
+    this.showMoreEmojis = false;
   }
 
   moreOptions() {
@@ -130,5 +136,4 @@ export class ThreadComponent implements OnInit {
   doNotClose($event: any) {
     $event.stopPropagation();
   }
-
 }
