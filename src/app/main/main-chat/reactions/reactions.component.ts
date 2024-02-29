@@ -5,11 +5,13 @@ import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ReactionsService } from '../../../services/reactions.service';
+import { PickerModule } from '@ctrl/ngx-emoji-mart';
+
 
 @Component({
   selector: 'app-reactions',
   standalone: true,
-  imports: [CommonModule, FormsModule, EmojiComponent, PickerComponent, MatIconModule],
+  imports: [CommonModule, FormsModule, EmojiComponent, PickerComponent, MatIconModule, PickerModule],
   templateUrl: './reactions.component.html',
   styleUrl: './reactions.component.scss'
 })
@@ -58,7 +60,7 @@ export class ReactionsComponent implements OnInit {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    await this.reactionServie.saveReaction(this.messageModel, this.currentUser);
+    await this.reactionServie.saveReaction(this.messageModel, 'OS9ntlBZdogfRKDdbni6eZ9yop93');
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }

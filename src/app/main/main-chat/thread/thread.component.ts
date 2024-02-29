@@ -40,6 +40,7 @@ export class ThreadComponent implements OnInit {
   lastAnswer;
   showMoreEmojis: boolean = false;
   reactionCollectionPath: string;
+  reactions = [];
 
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
@@ -51,6 +52,19 @@ export class ThreadComponent implements OnInit {
   ngOnInit(): void {
     this.getMessageCountAndAnswer();
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
+    this.getReactions();
+  }
+
+  getReactions() {
+    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
+    return onSnapshot(q, (element) => {
+      this.reactions = [];
+      element.forEach(reaction => {
+        this.reactions.push(reaction.data());
+      }
+      )
+      console.log('All reactions', this.reactions);  
+    });
   }
 
 /*   async getThreadMessageCount() {

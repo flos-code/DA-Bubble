@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { ChatService } from './chat.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -23,7 +24,7 @@ export class ReactionsService {
   reactions = [];
   reactionCollectionPath: string;
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   getReactions(reactionCollectionPath: string) {
     this.reactionCollectionPath = reactionCollectionPath;
@@ -50,7 +51,8 @@ export class ReactionsService {
   async addReaction(emoji: string, currentUser: string) {
     await addDoc(collection(db, `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`), {
       reaction: emoji,
-      reactedBy: currentUser,
+      reactedBy: 'OS9ntlBZdogfRKDdbni6eZ9yop93',
     });  
+    console.log('Reactions to thread', this.reactions);
   }
 }

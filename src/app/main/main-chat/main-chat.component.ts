@@ -98,7 +98,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
-      console.log('Channel data', this.channel);
       setTimeout(() => {
         this.getMembers();
       }, 200);
@@ -117,7 +116,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
             this.channelMembers.push(element.data());
           }    
         });
-        console.log('Members data', this.channelMembers)
     });   
   }
 
@@ -131,7 +129,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       )
       this.sortChannelThreadsArray();
       this.getThreadCreationDates();
-      console.log('Channel threads', this.channelThreads);
     });
   }
 
