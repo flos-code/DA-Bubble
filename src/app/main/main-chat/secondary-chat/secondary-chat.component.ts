@@ -10,6 +10,7 @@ import { InputService } from '../../../services/input.service';
 import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
 import { Thread } from '../../../../models/thread.class';
+import { Channel } from '../../../../models/channel.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -43,9 +44,12 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   firstThreadMessage?: ThreadMessage;
   activeChannelId: string = 'allgemein';
   channelId: string = 'allgemein';
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   creationDate: Date;
   DialogRef: any;
+
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  channel: Channel; // Daten des aktuellen Channels
+  channelMembers = []; // Alle Userdaten der Mitglieder des Channels
 
   constructor(
     private chatService: ChatService,
@@ -53,6 +57,15 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getCurrentChannel();
+    this.subcribeThreadId();
+  }
+
+  ngOnDestroy(): void {
+    this.subscription.unsubscribe();
+  }
+
+  subcribeThreadId() {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
@@ -61,10 +74,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       }
     }));
   }
-
-  ngOnDestroy(): void {
-    this.subscription.unsubscribe();
+  
+  closeThread(): void {
+    this.chatService.closeThread();
   }
+
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
 
@@ -72,8 +86,45 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     const channelId = this.chatService.getActiveChannelId();
     await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
+      console.log(this.threadMessages)
     });
   }
+
+  getCurrentChannel() { /** fetching data works */
+    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
+      this.channel = new Channel(doc.data());
+      console.log('actual channel data:', this.channel)
+
+      setTimeout(() => {
+        this.getMembers();
+      }, 200);
+    });
+  }
+
+  getUserCreated(userId: string) {
+    let user = ""; 
+    for (let i = 0; i < this.channelMembers.length; i++) {
+      const userCreated = this.channelMembers[i];
+      if(userId == userCreated['id']) {
+        user = userCreated['name'];
+      }
+    }
+    return user;
+  }
+
+  getMembers() {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      this.channelMembers = [];
+      list.forEach(element => {
+        if(this.channel['members'].includes(element.id)) {
+          this.channelMembers.push(element.data());
+          console.log(this.channelMembers)
+        }    
+      });
+  });   
+}
+
 
   // getFormattedTime(creationDate: number) {
   //   const getString = (number) => number < 10 ? '0' + number : String(number);
@@ -85,33 +136,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   //   };
   //   return getTime(creationDate);
   // }
-
-  // getUserCreated(userId: string) {
-  //   let user = ""; 
-  //   for (let i = 0; i < this.channelMembers.length; i++) {
-  //     const userCreated = this.channelMembers[i];
-  //     if(userId == userCreated['id']) {
-  //       user = userCreated['name'];
-  //     }
-  //   }
-  //   return user;
-  // }
-
-//   getMembers() {
-//     const q = query(collection(db, 'users'));
-//     return onSnapshot(q, (list) => {
-//       this.channelMembers = [];
-//       list.forEach(element => {
-//         if(this.channel['members'].includes(element.id)) {
-//           this.channelMembers.push(element.data());
-//         }    
-//       });
-//   });   
-// }
-
-  closeThread(): void {
-    this.chatService.closeThread();
-  }
 
   /*--------------------------------- Emojis -----------------------------------*/
 

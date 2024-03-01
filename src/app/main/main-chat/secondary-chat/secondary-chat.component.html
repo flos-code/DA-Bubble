@@ -43,8 +43,8 @@
                     </div>
                 </div>
             </div>
-
-            <div *ngFor="let message of threadMessages" class="user-message own-message"> <!-- Template of own message -->
+            <!-- @if(currentUser !== threadMessages.createdBy){  -->
+           <div *ngFor="let message of threadMessages" class="user-message own-message"> <!-- Template of own message -->
                 <img src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
@@ -56,6 +56,7 @@
                     </div>
                 </div>
             </div>
+        <!-- } -->
         </div>
         <!--------------------------------------Chat Content-------------------------------------->
         <!--------------------------------------Input Contnent-------------------------------------->
