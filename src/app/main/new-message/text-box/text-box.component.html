@@ -75,12 +75,12 @@
         <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
         <div class="name">
           {{ user.name }}
-          <!-- <span
+          <span
             *ngIf="
               (this.userManagementService.activeUserId$ | async) === user.id
             "
             >&nbsp;(Du)</span
-          > -->
+          >
         </div>
         <div
           class="onlineStatus"

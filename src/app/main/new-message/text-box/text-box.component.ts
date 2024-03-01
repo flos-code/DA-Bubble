@@ -45,7 +45,8 @@ export class TextBoxComponent {
 
   private firestore: Firestore = inject(Firestore);
   private dbSubscription!: Subscription;
-  public userManagementService: UserManagementService;
+
+  constructor(public userManagementService: UserManagementService) {}
 
   imageURL = signal<string | undefined>(undefined);
 
@@ -57,6 +58,7 @@ export class TextBoxComponent {
       (changes) => {
         console.log('Received Changes from DB', changes);
         this.allUsers = changes;
+        this.sortUsers(this.allUsers);
       },
       (error) => {
         console.error('Error fetching changes:', error);
@@ -139,5 +141,13 @@ export class TextBoxComponent {
     } catch (error) {
       console.error('Error uploading file: ', error);
     }
+  }
+
+  sortUsers(users): void {
+    users.sort((a, b) => {
+      if (a.id === this.userManagementService.activeUserId.value) return -1;
+      if (b.id === this.userManagementService.activeUserId.value) return 1;
+      return a.name.localeCompare(b.name);
+    });
   }
 }
