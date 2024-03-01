@@ -84,7 +84,7 @@ export class ChatService {
       (doc) => new Thread({ ...doc.data(), threadId: doc.id })
     );
 
-    // console.log('Geladene Threads:', threads);
+    console.log('Geladene Threads:', threads);
     return threads;
   }
 

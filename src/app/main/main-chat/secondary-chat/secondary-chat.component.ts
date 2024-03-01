@@ -74,7 +74,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       }
     }));
   }
-  
+
   closeThread(): void {
     this.chatService.closeThread();
   }
@@ -102,10 +102,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   getUserCreated(userId: string) {
-    let user = ""; 
+    let user = "";
     for (let i = 0; i < this.channelMembers.length; i++) {
       const userCreated = this.channelMembers[i];
-      if(userId == userCreated['id']) {
+      if (userId == userCreated['id']) {
         user = userCreated['name'];
       }
     }
@@ -114,21 +114,26 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   getMembers() {
     const q = query(collection(db, 'users'));
-    return onSnapshot(q, (list) => {
+    onSnapshot(q, (snapshot) => {
       this.channelMembers = [];
-      list.forEach(element => {
-        if(this.channel['members'].includes(element.id)) {
-          this.channelMembers.push(element.data());
-          console.log(this.channelMembers)
-        }    
+      snapshot.forEach((doc) => {
+        const userData = doc.data();
+        if (this.channel['members'].includes(doc.id)) {
+          this.channelMembers.push({
+            ...userData,
+            userId: doc.id
+          });
+        }
       });
-  });   
-}
+      console.log('Channel Member:', this.channelMembers);
+    });
+  }
 
-getUserName(userId: string): string {
-  const user = this.channelMembers.find(member => member.userId === userId);
-  return user ? user.name : 'Unbekannter Benutzer';
-}
+
+  getUserName(userId: string): string {
+    const user = this.channelMembers.find(member => member.userId === userId);
+    return user ? user.name : 'Unbekannter Benutzer';
+  }
 
 
   // getFormattedTime(creationDate: number) {
