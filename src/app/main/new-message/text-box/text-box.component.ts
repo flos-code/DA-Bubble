@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
-  Input,
   ViewChild,
   inject,
   signal,
@@ -17,6 +16,10 @@ import {
   ref,
   uploadBytes,
 } from '@angular/fire/storage';
+import { User } from '../../../../models/user.class';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { Subscription } from 'rxjs';
+import { UserManagementService } from '../../../services/user-management.service';
 
 @Component({
   selector: 'app-text-box',
@@ -36,8 +39,35 @@ export class TextBoxComponent {
   inputFocused: boolean = false;
   messageModel: string = '';
   showEmojiPicker: boolean = false;
+  showMentionUser: boolean = false;
+  user = new User();
+  allUsers: any = [];
+
+  private firestore: Firestore = inject(Firestore);
+  private dbSubscription!: Subscription;
+  public userManagementService: UserManagementService;
 
   imageURL = signal<string | undefined>(undefined);
+
+  ngOnInit(): void {
+    const usersCollection = collection(this.firestore, 'users');
+    this.dbSubscription = collectionData(usersCollection, {
+      idField: 'id',
+    }).subscribe(
+      (changes) => {
+        console.log('Received Changes from DB', changes);
+        this.allUsers = changes;
+      },
+      (error) => {
+        console.error('Error fetching changes:', error);
+      }
+    );
+  }
+
+  ngOnDestroy(): void {
+    // Unsubscribe to prevent memory leaks
+    this.dbSubscription.unsubscribe();
+  }
 
   onInputFocus(): void {
     this.inputFocused = true;
@@ -71,10 +101,17 @@ export class TextBoxComponent {
     this.showEmojiPicker = !this.showEmojiPicker;
   }
 
-  closeEmojiPicker() {
+  closeEmojiPickerOrMentionUser() {
     if (this.showEmojiPicker) {
       this.showEmojiPicker = false;
     }
+    if (this.showMentionUser) {
+      this.showMentionUser = false;
+    }
+  }
+
+  toggleMentionUser() {
+    this.showMentionUser = !this.showMentionUser;
   }
 
   adjustTextareaHeight(event: any) {

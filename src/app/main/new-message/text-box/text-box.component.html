@@ -35,9 +35,6 @@
         class="material-symbols-rounded"
         fontIcon="add"
       ></mat-icon>
-
-      <!-- 
-      <mat-icon class="material-symbols-rounded" fontIcon="add"></mat-icon> -->
       <div></div>
       <mat-icon
         (click)="toggleEmojiPicker()"
@@ -45,6 +42,7 @@
         fontIcon="sentiment_satisfied"
       ></mat-icon>
       <mat-icon
+        (click)="toggleMentionUser()"
         class="material-symbols-rounded"
         fontIcon="alternate_email"
       ></mat-icon>
@@ -59,8 +57,8 @@
   </div>
   <div
     class="closePicker"
-    *ngIf="showEmojiPicker"
-    (click)="closeEmojiPicker()"
+    *ngIf="showEmojiPicker || showMentionUser"
+    (click)="closeEmojiPickerOrMentionUser()"
   ></div>
   <emoji-mart
     #emojiMart
@@ -71,4 +69,27 @@
     emoji="point_up"
   >
   </emoji-mart>
+  <div class="mentionUser" *ngIf="showMentionUser">
+    <div class="allUser">
+      <div *ngFor="let user of allUsers" class="singleUser">
+        <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
+        <div class="name">
+          {{ user.name }}
+          <!-- <span
+            *ngIf="
+              (this.userManagementService.activeUserId$ | async) === user.id
+            "
+            >&nbsp;(Du)</span
+          > -->
+        </div>
+        <div
+          class="onlineStatus"
+          [ngClass]="{
+            online: user.isOnline === true,
+            away: user.isOnline === false
+          }"
+        ></div>
+      </div>
+    </div>
+  </div>
 </div>
