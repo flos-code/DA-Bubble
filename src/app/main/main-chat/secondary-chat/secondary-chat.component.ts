@@ -125,6 +125,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   });   
 }
 
+getUserName(userId: string): string {
+  const user = this.channelMembers.find(member => member.userId === userId);
+  return user ? user.name : 'Unbekannter Benutzer';
+}
+
 
   // getFormattedTime(creationDate: number) {
   //   const getString = (number) => number < 10 ? '0' + number : String(number);

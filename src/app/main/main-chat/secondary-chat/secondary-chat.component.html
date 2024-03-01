@@ -17,8 +17,8 @@
                 <img src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>{{ message.createdBy }}</p>
-                        <span>{{ message.creationDate}} Uhr</span>
+                        <p>{{ getUserName(message.createdBy) }}</p>
+                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
                     </div>
                     <div class="thread-message">
                         <span>{{ message.message }}</span>
@@ -31,32 +31,36 @@
                 <div class="purple-line"></div>
             </div>
 
+            @if(currentUser){
+
             <div *ngFor="let message of threadMessages" class="user-message"> <!-- Template of awnsers -->
                 <img src="/assets/img/userImages/userImage5.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>{{ message.createdBy }}</p>
-                        <span>{{ message.creationDate}} Uhr</span>
+                        <p>{{ getUserName(message.createdBy) }}</p>
+                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
                     </div>
                     <div class="thread-message">
                         <span>{{ message.message }}</span>
                     </div>
                 </div>
             </div>
-            <!-- @if(currentUser !== threadMessages.createdBy){  -->
+        
+        } @else {
+
            <div *ngFor="let message of threadMessages" class="user-message own-message"> <!-- Template of own message -->
                 <img src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
-                        <p>{{ message.createdBy }}</p>
-                        <span>{{ message.creationDate}} Uhr</span>
+                        <p>{{ getUserName(message.createdBy) }}</p>
+                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
                     </div>
                     <div class="thread-message own-bubble">
                         <span>{{ message.message }}</span>
                     </div>
                 </div>
             </div>
-        <!-- } -->
+        }
         </div>
         <!--------------------------------------Chat Content-------------------------------------->
         <!--------------------------------------Input Contnent-------------------------------------->
