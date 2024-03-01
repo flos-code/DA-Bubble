@@ -13,15 +13,15 @@
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->
         <div class="chat-content">
-            <div *ngFor="let message of threadMessages" class="user-message"> <!-- Thread Message -->
+            <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
                 <img src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>{{ getUserName(message.createdBy) }}</p>
-                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
+                        <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
+                        <span>{{ firstThreadMessage.creationDate | date:'short' }} Uhr</span>
                     </div>
                     <div class="thread-message">
-                        <span>{{ message.message }}</span>
+                        <span>{{ firstThreadMessage.message }}</span>
                     </div>
                 </div>
             </div>

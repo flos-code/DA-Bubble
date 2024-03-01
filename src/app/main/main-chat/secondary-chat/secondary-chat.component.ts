@@ -34,22 +34,23 @@ const db = getFirestore(app);
 export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
+  private subscription = new Subscription();
   emojiWindowOpen = false;
   threadOpen: boolean = true;
   threads: Thread[] = [];
   messageModel: string = '';
   currentCursorPosition: number = 0;
-  private subscription = new Subscription();
   threadMessages: ThreadMessage[] = [];
-  firstThreadMessage?: ThreadMessage;
-  activeChannelId: string = 'allgemein';
-  channelId: string = 'allgemein';
   creationDate: Date;
   DialogRef: any;
 
+  firstThreadMessage?: ThreadMessage;
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   channel: Channel; // Daten des aktuellen Channels
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
+  channelId: string = 'allgemein';
+  activeChannelId: string = 'allgemein';
+  threadId : string = 'qVp8JcXz4ElKbOWPxX7U';
 
   constructor(
     private chatService: ChatService,
@@ -65,10 +66,13 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+   /*--------------------------------- Basics -----------------------------------*/
+
   subcribeThreadId() {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
+        this.loadThreadInitMessage();
       } else {
         console.log('No thread ID available');
       }
@@ -83,33 +87,28 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   /*--------------------------------- ThreadMessages -----------------------------------*/
 
   async loadThreadMessages(threadId: string) {
-    const channelId = this.chatService.getActiveChannelId();
     await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
       console.log(this.threadMessages)
     });
   }
 
+  async loadThreadInitMessage() {
+    const channelId = this.activeChannelId;
+    const threadId = this.threadId;
+  
+    this.firstThreadMessage = await this.chatService.getInitialThreadMessage(channelId, threadId);
+    console.log('first Thread Message:', this.firstThreadMessage)
+  }
+
   getCurrentChannel() { /** fetching data works */
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
-      console.log('actual channel data:', this.channel)
-
+      // console.log('actual channel data:', this.channel)
       setTimeout(() => {
         this.getMembers();
       }, 200);
     });
-  }
-
-  getUserCreated(userId: string) {
-    let user = "";
-    for (let i = 0; i < this.channelMembers.length; i++) {
-      const userCreated = this.channelMembers[i];
-      if (userId == userCreated['id']) {
-        user = userCreated['name'];
-      }
-    }
-    return user;
   }
 
   getMembers() {
@@ -125,7 +124,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
           });
         }
       });
-      console.log('Channel Member:', this.channelMembers);
+      // console.log('Channel Member:', this.channelMembers);
     });
   }
 
@@ -135,6 +134,28 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     return user ? user.name : 'Unbekannter Benutzer';
   }
 
+    // async getThreads(channelId): Promise<Thread[]> {
+  //   const threadsRef = collection(db, `channels/${channelId}/threads`);
+  //   const snapshot = await getDocs(threadsRef);
+  //   const threads: Thread[] = snapshot.docs.map(
+  //     (doc) => new Thread({ ...doc.data(), threadId: doc.id })
+  //   );
+
+  //   console.log('Geladene Threads:', threads);
+  //   return threads;
+  // }
+
+  // getUserCreated(userId: string) {
+  //   let user = "";
+  //   for (let i = 0; i < this.channelMembers.length; i++) {
+  //     const userCreated = this.channelMembers[i];
+  //     if (userId == userCreated['id']) {
+  //       user = userCreated['name'];
+  //       console.log('Created by:', user)
+  //     }
+  //   }
+  //   return user;
+  // }
 
   // getFormattedTime(creationDate: number) {
   //   const getString = (number) => number < 10 ? '0' + number : String(number);
