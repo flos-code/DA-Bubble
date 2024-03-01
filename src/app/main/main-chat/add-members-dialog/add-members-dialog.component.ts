@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
 
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, doc, updateDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot,  query, doc, updateDoc, arrayUnion } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -132,6 +132,14 @@ export class AddMembersDialogComponent implements OnInit {
     });
     this.newUsersToAdd = [];
     this.closeDialog();
+
+  /*for (let i = 0; i < this.newUsersToAdd.length; i++) {
+      const user = this.newUsersToAdd[i]['userId'];
+      await updateDoc(doc(db, 'channels', this.currentChannelId), {
+        members: arrayUnion(user)
+      });      
+    } */
+
   }
 
   closeUserList() {

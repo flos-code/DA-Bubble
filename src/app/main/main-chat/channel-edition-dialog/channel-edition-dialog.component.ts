@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, query, doc, updateDoc, where } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot, query, doc, updateDoc, where, arrayRemove } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -27,8 +27,8 @@ const db = getFirestore(app);
 })
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData!: any;
-  @Input() currentChannelId;
-  @Input() channelMembers;
+  @Input() currentChannelId!: any;
+  @Input() channelMembers!: any;
   channelCreatedByName: string = "";
 
   @Output() channelEditionDialogOpenChild = new EventEmitter();
@@ -83,9 +83,10 @@ export class ChannelEditionDialogComponent implements OnInit {
     this.showchannelEditionDescription = true;
   }
 
-  leaveChannel() {
-    // Delete id from members
-    // Remove Channel from Sidebar??
+  async leaveChannel() {
+    await updateDoc(doc(db, 'channels', this.currentChannelId), {
+      members: arrayRemove(this.channelData.createdBy)
+    });
   }
 
   doNotClose($event: any) {
