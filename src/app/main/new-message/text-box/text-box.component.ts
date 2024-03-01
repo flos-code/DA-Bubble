@@ -150,4 +150,19 @@ export class TextBoxComponent {
       return a.name.localeCompare(b.name);
     });
   }
+
+  insertMentionUserAtCursor(user: string) {
+    const inputEl = this.messageInput.nativeElement;
+    const start = inputEl.selectionStart;
+    const end = inputEl.selectionEnd;
+    const text = inputEl.value;
+    const before = text.substring(0, start);
+    const after = text.substring(end, text.length);
+    this.messageModel = before + user + after;
+
+    const newPos = start + user.length;
+    setTimeout(() => {
+      inputEl.selectionStart = inputEl.selectionEnd = newPos;
+    });
+  }
 }

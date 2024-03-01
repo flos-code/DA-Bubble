@@ -71,7 +71,11 @@
   </emoji-mart>
   <div class="mentionUser" *ngIf="showMentionUser">
     <div class="allUser">
-      <div *ngFor="let user of allUsers" class="singleUser">
+      <div
+        *ngFor="let user of allUsers"
+        class="singleUser"
+        (click)="insertMentionUserAtCursor('@' + user.name)"
+      >
         <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
         <div class="name">
           {{ user.name }}
