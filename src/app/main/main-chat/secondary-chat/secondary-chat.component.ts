@@ -43,6 +43,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadMessages: ThreadMessage[] = [];
   creationDate: Date;
   DialogRef: any;
+  isLoading: boolean = true;
 
   firstThreadMessage?: ThreadMessage;
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
@@ -94,11 +95,13 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   async loadThreadInitMessage() {
+    this.isLoading = true; // Start loading
     const channelId = this.activeChannelId;
     const threadId = this.threadId;
   
     this.firstThreadMessage = await this.chatService.getInitialThreadMessage(channelId, threadId);
     console.log('first Thread Message:', this.firstThreadMessage)
+    this.isLoading = false; // End loading
   }
 
   getCurrentChannel() { /** fetching data works */

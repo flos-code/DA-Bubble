@@ -1,4 +1,4 @@
-<section>
+<section *ngIf="!isLoading">
     <div class="closePicker" *ngIf="emojiWindowOpen" (click)="toggleEmojis()"></div>
     <div class="chat-box">
         <!-------------------------------------Chat Head-------------------------------------->
@@ -31,7 +31,7 @@
                 <div class="purple-line"></div>
             </div>
 
-            @if(currentUser){
+            @if(currentUser !== threadMessages[0].createdBy){
 
             <div *ngFor="let message of threadMessages" class="user-message"> <!-- Template of awnsers -->
                 <img src="/assets/img/userImages/userImage5.svg" alt="">
