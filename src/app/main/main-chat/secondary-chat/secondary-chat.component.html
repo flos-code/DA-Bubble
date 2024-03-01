@@ -18,7 +18,7 @@
                 <div>
                     <div class="user-time">
                         <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
-                        <span>{{ firstThreadMessage.creationDate | date:'short' }} Uhr</span>
+                        <span>{{ firstThreadMessage.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message">
                         <span>{{ firstThreadMessage.message }}</span>
@@ -38,7 +38,7 @@
                 <div>
                     <div class="user-time">
                         <p>{{ getUserName(message.createdBy) }}</p>
-                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
+                        <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message">
                         <span>{{ message.message }}</span>
@@ -53,7 +53,7 @@
                 <div>
                     <div class="user-time own-message">
                         <p>{{ getUserName(message.createdBy) }}</p>
-                        <span>{{ message.creationDate | date:'short' }} Uhr</span>
+                        <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message own-bubble">
                         <span>{{ message.message }}</span>
