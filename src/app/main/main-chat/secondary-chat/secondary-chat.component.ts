@@ -90,6 +90,34 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.chatService.closeThread();
   }
 
+  /*--------------------------------- Send Messages -----------------------------------*/
+
+  async sendMessage() {
+    if (this.messageModel.trim() === '') {
+      console.log('Die Nachricht darf nicht leer sein.');
+      return;
+    }
+  
+    try {
+      // Erstelle eine neue Instanz von ThreadMessage
+      const newMessage = new ThreadMessage({
+        createdBy: this.currentUser,
+        message: this.messageModel,
+        creationDate: Date.now(),
+      });
+  
+      // Verwende die Firestore collection und füge das neue Nachrichtenobjekt hinzu
+      const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
+      await addDoc(threadMessagesRef, newMessage.toJSON()); // Verwende die toJSON Methode hier
+  
+      this.messageModel = ''; // Setze das Eingabefeld nach dem Senden zurück
+      console.log('Nachricht erfolgreich gesendet.');
+    } catch (error) {
+      console.error('Fehler beim Senden der Nachricht:', error);
+    }
+  }
+  
+  
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
@@ -101,12 +129,20 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     return threadMessages;
   }
 
-  async loadThreadMessages(threadId: string) {
-    await this.getThreadMessages(this.activeChannelId, threadId).then(threadMessages => {
+  loadThreadMessages(threadId: string) {
+    const channelId = this.activeChannelId;
+    const threadMessagesRef = query(collection(db, `channels/${channelId}/threads/${threadId}/messages`), orderBy('creationDate', 'asc'));
+  
+    onSnapshot(threadMessagesRef, (snapshot) => {
+      const threadMessages = snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
       this.threadMessages = threadMessages;
-      console.log(this.threadMessages)
+      console.log(this.threadMessages);
+    }, (error) => {
+      console.error("Fehler beim Abonnieren der Thread-Nachrichten: ", error);
     });
   }
+  
+  
 
   async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
     const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
