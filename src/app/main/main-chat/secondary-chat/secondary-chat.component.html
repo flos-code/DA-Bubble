@@ -12,7 +12,7 @@
         </div>
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->
-        <div class="chat-content">
+        <div #chatContent class="chat-content">
             @if (currentUser !== firstThreadMessage.createdBy) {
             <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
                 <img src="/assets/img/userImages/userImage4.svg" alt="">
@@ -63,7 +63,7 @@
             } @else {
             <div class="user-message own-message"> <!-- Template of own message -->
                 <img src="/assets/img/userImages/userImage6.svg" alt="">
-                <div>
+                <div class="message-box">
                     <div class="user-time own-message">
                         <p>{{ getUserName(message.createdBy) }}</p>
                         <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>

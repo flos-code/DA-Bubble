@@ -33,6 +33,7 @@ const db = getFirestore(app);
 })
 export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('chatContent') private chatContent: ElementRef;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   private subscription = new Subscription();
   /*---------- Main Variables -----------*/
@@ -69,6 +70,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
+  ngAfterViewInit() {
+    setTimeout(() => this.scrollToBottom(), 200);
+  }
+
   /*--------------------------------- Overall -----------------------------------*/
 
   getActualChannelId() {
@@ -90,6 +95,22 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.chatService.closeThread();
   }
 
+  private scrollToBottom(): void {
+    if (this.chatContent && this.chatContent.nativeElement) {
+      try {
+        this.chatContent.nativeElement.scrollTo({
+          top: this.chatContent.nativeElement.scrollHeight,
+          behavior: 'smooth'
+        });
+      } catch (err) {
+        console.error('Fehler beim Scrollen:', err);
+      }
+    }
+  }
+  
+  
+  
+
   /*--------------------------------- Send Messages -----------------------------------*/
 
   async sendMessage() {
@@ -99,26 +120,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     }
   
     try {
-      // Erstelle eine neue Instanz von ThreadMessage
       const newMessage = new ThreadMessage({
         createdBy: this.currentUser,
         message: this.messageModel,
         creationDate: Date.now(),
       });
   
-      // Verwende die Firestore collection und füge das neue Nachrichtenobjekt hinzu
       const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
-      await addDoc(threadMessagesRef, newMessage.toJSON()); // Verwende die toJSON Methode hier
+      await addDoc(threadMessagesRef, newMessage.toJSON());
   
-      this.messageModel = ''; // Setze das Eingabefeld nach dem Senden zurück
+      this.messageModel = '';
+      this.scrollToBottom();
       console.log('Nachricht erfolgreich gesendet.');
     } catch (error) {
       console.error('Fehler beim Senden der Nachricht:', error);
     }
   }
   
-  
-
   /*--------------------------------- ThreadMessages -----------------------------------*/
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
     const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
@@ -137,6 +155,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       const threadMessages = snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
       this.threadMessages = threadMessages;
       console.log(this.threadMessages);
+      this.scrollToBottom();
     }, (error) => {
       console.error("Fehler beim Abonnieren der Thread-Nachrichten: ", error);
     });
