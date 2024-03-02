@@ -13,6 +13,7 @@
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->
         <div class="chat-content">
+            @if (currentUser !== firstThreadMessage.createdBy) {
             <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
                 <img src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
@@ -25,6 +26,20 @@
                     </div>
                 </div>
             </div>
+        } @else {
+            <div *ngIf="firstThreadMessage" class="user-message own-message">
+                <img src="/assets/img/userImages/userImage6.svg" alt="">
+                <div>
+                    <div class="user-time own-message">
+                        <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
+                        <span>{{ firstThreadMessage.creationDate | date:'HH:mm' }} Uhr</span>
+                    </div>
+                    <div class="thread-message own-bubble">
+                        <span>{{ firstThreadMessage.message }}</span>
+                    </div>
+                </div>
+            </div>
+        }
 
             <div class="answer-line-container"> <!-- Marker for seperate thread quiry to answers -->
                 <p>2 Antworten</p>
