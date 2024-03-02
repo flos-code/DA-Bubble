@@ -42,8 +42,6 @@ export class ChatService {
   private selectedThreadIdSource = new BehaviorSubject<string | null>(null);
   selectedThreadId$ = this.selectedThreadIdSource.asObservable();
 
-
-
   private activeChannelIdUpdated = new BehaviorSubject<string | null>(null);
   get activeChannelIdUpdates() {
     return this.activeChannelIdUpdated.asObservable();
@@ -103,27 +101,5 @@ export class ChatService {
   closeThread(): void {
     this.selectedThreadIdSource.next(null);
     this.threadOpenSource.next(false);
-  }
-
-  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
-    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
-    const snapshot = await getDocs(threadMessagesRef);
-    const threadMessages = snapshot.docs.map(
-      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
-    );
-    return threadMessages;
-  }
-
-  async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
-    const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
-    const docSnap = await getDoc(threadRef);
-  
-    if (docSnap.exists()) {
-      const threadData = docSnap.data();
-      return new Thread(threadData);
-    } else {
-      console.log("Kein Thread-Dokument gefunden!");
-      return null;
-    }
   }
 }

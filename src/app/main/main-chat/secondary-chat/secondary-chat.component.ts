@@ -35,23 +35,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   private subscription = new Subscription();
-  emojiWindowOpen = false;
+  /*---------- Main Variables -----------*/
+  threadMessages: ThreadMessage[] = [];
+  firstThreadMessage?: ThreadMessage;
   threadOpen: boolean = true;
-  threads: Thread[] = [];
+  creationDate: Date;
+  isLoading: boolean = true;
+  /*---------- Emoji Variables -----------*/
+  emojiWindowOpen = false;
   messageModel: string = '';
   currentCursorPosition: number = 0;
-  threadMessages: ThreadMessage[] = [];
-  creationDate: Date;
-  DialogRef: any;
-  isLoading: boolean = true;
-
-  firstThreadMessage?: ThreadMessage;
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
-  channel: Channel; // Daten des aktuellen Channels
-  channelMembers = []; // Alle Userdaten der Mitglieder des Channels
-  channelId: string = 'allgemein';
-  activeChannelId: string = 'allgemein';
-  threadId : string = 'qVp8JcXz4ElKbOWPxX7U';
+  /*---------- Debugging and onworking Variables -----------*/
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93'; //TODO: get actual current user
+  channel: Channel; // Data of actual channel
+  channelMembers = []; // userdata of actual channel members
+  activeChannelId: string = 'allgemein'; //TODO: get actual channel ID
+  threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
+  DialogRef: any; //unknown variable, maybe delete later
 
   constructor(
     private chatService: ChatService,
@@ -59,21 +59,27 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
-    this.getCurrentChannel();
     this.subcribeThreadId();
+    this.getActualChannelId()
+    this.getCurrentChannelData();
+    this.loadThreadInitMessage();
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-   /*--------------------------------- Basics -----------------------------------*/
+  /*--------------------------------- Basics -----------------------------------*/
 
-  subcribeThreadId() {
+  getActualChannelId() {
+    this.activeChannelId = this.chatService.getActiveChannelId()
+    console.log('Actual CHANNEL ID:', this.activeChannelId)
+  }
+
+  subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
-        this.loadThreadInitMessage();
       } else {
         console.log('No thread ID available');
       }
@@ -86,25 +92,44 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
+  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
+    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
+    const snapshot = await getDocs(threadMessagesRef);
+    const threadMessages = snapshot.docs.map(
+      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
+    );
+    return threadMessages;
+  }
 
   async loadThreadMessages(threadId: string) {
-    await this.chatService.getThreadMessages(this.channelId, threadId).then(threadMessages => {
+    await this.getThreadMessages(this.activeChannelId, threadId).then(threadMessages => {
       this.threadMessages = threadMessages;
       console.log(this.threadMessages)
     });
   }
 
+  async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
+    const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
+    const docSnap = await getDoc(threadRef);
+
+    if (docSnap.exists()) {
+      const threadData = docSnap.data();
+      return new Thread(threadData);
+    } else {
+      console.log("Kein Thread-Dokument gefunden!");
+      return null;
+    }
+  }
+
   async loadThreadInitMessage() {
     this.isLoading = true; // Start loading
-    const channelId = this.activeChannelId;
-    const threadId = this.threadId;
-  
-    this.firstThreadMessage = await this.chatService.getInitialThreadMessage(channelId, threadId);
+    this.firstThreadMessage = await this.getInitialThreadMessage(this.activeChannelId, this.threadId);
     console.log('first Thread Message:', this.firstThreadMessage)
     this.isLoading = false; // End loading
   }
 
-  getCurrentChannel() { /** fetching data works */
+
+  getCurrentChannelData() { /** fetching data works */
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
       // console.log('actual channel data:', this.channel)
@@ -136,40 +161,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     const user = this.channelMembers.find(member => member.userId === userId);
     return user ? user.name : 'Unbekannter Benutzer';
   }
-
-    // async getThreads(channelId): Promise<Thread[]> {
-  //   const threadsRef = collection(db, `channels/${channelId}/threads`);
-  //   const snapshot = await getDocs(threadsRef);
-  //   const threads: Thread[] = snapshot.docs.map(
-  //     (doc) => new Thread({ ...doc.data(), threadId: doc.id })
-  //   );
-
-  //   console.log('Geladene Threads:', threads);
-  //   return threads;
-  // }
-
-  // getUserCreated(userId: string) {
-  //   let user = "";
-  //   for (let i = 0; i < this.channelMembers.length; i++) {
-  //     const userCreated = this.channelMembers[i];
-  //     if (userId == userCreated['id']) {
-  //       user = userCreated['name'];
-  //       console.log('Created by:', user)
-  //     }
-  //   }
-  //   return user;
-  // }
-
-  // getFormattedTime(creationDate: number) {
-  //   const getString = (number) => number < 10 ? '0' + number : String(number);
-  //   const getTime = (creationDate: number) => {
-  //       const date = new Date(creationDate);
-  //       const hours = getString(date.getHours());
-  //       const minutes = getString(date.getMinutes());
-  //       return `${hours}:${minutes}`;
-  //   };
-  //   return getTime(creationDate);
-  // }
 
   /*--------------------------------- Emojis -----------------------------------*/
 

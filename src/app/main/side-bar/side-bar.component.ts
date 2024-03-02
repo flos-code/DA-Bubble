@@ -67,7 +67,7 @@ export class SideBarComponent {
     private viewManagementService: ViewManagementService,
     public userManagementService: UserManagementService,
     private chatService: ChatService
-  ) {}
+  ) { }
 
   async ngOnInit() {
     this.userManagementService.activeUserId$.subscribe((activeUserId) => {
@@ -227,8 +227,16 @@ export class SideBarComponent {
   }
 
   setActiveChannel(channelId: string) {
-    this.chatService.setActiveChannelId(channelId);
-    this.showChat('showMainChat');
+    if (this.getActiveChannelId() !== channelId) {
+      // Close the thread if the clicked channel is not the currently active channel
+      this.chatService.closeThread();
+      // Now set the clicked channel as the active channel
+      this.chatService.setActiveChannelId(channelId);
+      // Show the main chat view for the newly selected channel
+      this.showChat('showMainChat');
+    } else {
+      console.log('Clicked channel is already active.');
+    }
   }
 
   getActiveChannelId() {
