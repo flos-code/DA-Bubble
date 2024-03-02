@@ -31,9 +31,9 @@
                 <div class="purple-line"></div>
             </div>
 
-            @if(currentUser !== threadMessages[0].createdBy){
-
-            <div *ngFor="let message of threadMessages" class="user-message"> <!-- Template of awnsers -->
+            @for (message of threadMessages; track $index) {
+            @if(currentUser !== threadMessages[$index].createdBy){
+            <div class="user-message"> <!-- Template of awnsers -->
                 <img src="/assets/img/userImages/userImage5.svg" alt="">
                 <div>
                     <div class="user-time">
@@ -45,10 +45,8 @@
                     </div>
                 </div>
             </div>
-        
-        } @else {
-
-           <div *ngFor="let message of threadMessages" class="user-message own-message"> <!-- Template of own message -->
+            } @else {
+            <div class="user-message own-message"> <!-- Template of own message -->
                 <img src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
@@ -60,21 +58,15 @@
                     </div>
                 </div>
             </div>
-        }
+            }}
         </div>
         <!--------------------------------------Chat Content-------------------------------------->
         <!--------------------------------------Input Contnent-------------------------------------->
         <div class="input-content" (click)="message.focus()">
 
-            <textarea
-            #message
-            [(ngModel)]="messageModel"
-            (input)="updateCursorPosition($event)"
-            placeholder="Antworten..."
-            name="second-chat-input"
-            cols="30"
-            rows="10">
-          </textarea>          
+            <textarea #message [(ngModel)]="messageModel" (input)="updateCursorPosition($event)"
+                placeholder="Antworten..." name="second-chat-input" cols="30" rows="10">
+          </textarea>
 
             <div class="action-icons-container">
 

@@ -49,7 +49,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93'; //TODO: get actual current user
   channel: Channel; // Data of actual channel
   channelMembers = []; // userdata of actual channel members
-  activeChannelId: string = 'allgemein'; //TODO: get actual channel ID
+  activeChannelId: string = '';
   threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
   DialogRef: any; //unknown variable, maybe delete later
 
@@ -59,8 +59,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.getActualChannelId();
     this.subcribeThreadId();
-    this.getActualChannelId()
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
   }
@@ -69,10 +69,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.unsubscribe();
   }
 
-  /*--------------------------------- Basics -----------------------------------*/
+  /*--------------------------------- Overall -----------------------------------*/
 
   getActualChannelId() {
-    this.activeChannelId = this.chatService.getActiveChannelId()
+    this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
     console.log('Actual CHANNEL ID:', this.activeChannelId)
   }
 
@@ -96,8 +96,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
     const snapshot = await getDocs(threadMessagesRef);
     const threadMessages = snapshot.docs.map(
-      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
-    );
+      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id }))
+      .reverse();
     return threadMessages;
   }
 
