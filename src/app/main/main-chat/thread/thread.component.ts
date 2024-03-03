@@ -75,9 +75,8 @@ export class ThreadComponent implements OnInit {
         this.threadMessagesTimestamps.push(thread.data()['creationDate']);
       }
     )  
-    console.log('Timestamps', this.threadMessagesTimestamps);
     this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-    this.formatMessageCount;   
+    this.formatMessageCount; 
     });
   }
 

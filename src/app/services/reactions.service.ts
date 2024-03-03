@@ -38,6 +38,10 @@ export class ReactionsService {
     }); 
   }
 
+  returnReactions() {
+    return this.reactions;
+  }
+
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.some(reaction => reaction.emoji === emoji)) {  
       let currentRef = doc(db, this.reactionCollectionPath);

@@ -40,7 +40,7 @@ export class ReactionsComponent implements OnInit {
   inputFocused: boolean = false;
   messageModel: string = '';
   @Input() reactionCollectionPath!: string;
-  // @Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
+  //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   //@Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
   @Input() userId!: string;
@@ -48,10 +48,19 @@ export class ReactionsComponent implements OnInit {
   reactions = [];
   @Input() threadId!: string;
 
-  constructor(private reactionServie: ReactionsService) {
+
+  constructor(private reactionService: ReactionsService) {
   }
 
-  getReactions() {
+
+  ngOnInit(): void {
+    this.reactionService.getReactions(this.reactionCollectionPath);
+    this.reactions = this.reactionService.returnReactions();
+    console.log(this.reactionCollectionPath);
+    //this.getReactions();
+  }
+
+/*   getReactions() {
     const q = query(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
@@ -61,11 +70,8 @@ export class ReactionsComponent implements OnInit {
       )
       console.log('All reactions', this.reactions);  
     });
-  }
+  } */
 
-  ngOnInit(): void {
-    this.reactionServie.getReactions(this.reactionCollectionPath);
-  }
 
   onInputFocus(): void {
     this.inputFocused = true;
@@ -93,7 +99,7 @@ export class ReactionsComponent implements OnInit {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    await this.reactionServie.saveReaction(this.messageModel, this.currentUser);
+    await this.reactionService.saveReaction(this.messageModel, this.currentUser);
     // OS9ntlBZdogfRKDdbni6eZ9yop93
     this.showMoreEmojis = false;
     //this.showMoreEmojisChild.emit(this.showMoreEmojis);
