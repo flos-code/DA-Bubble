@@ -31,6 +31,7 @@ const db = getFirestore(app);
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
+
 export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('chatContent') private chatContent: ElementRef;
@@ -48,7 +49,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   messageModel: string = '';
   currentCursorPosition: number = 0;
   /*---------- Debugging and onworking Variables -----------*/
-  currentUser: string = ''; //TODO: get actual current user
+  currentUser: string = '';
   channel: Channel; // Data of actual channel
   channelMembers = []; // userdata of actual channel members
   activeChannelId: string = '';
@@ -80,12 +81,12 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   getActualChannelId() {
     this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
-    console.log('Actual CHANNEL ID:', this.activeChannelId)
+    // console.log('Actual CHANNEL ID:', this.activeChannelId)
   }
 
   setCurrentUser() {
     this.currentUser = this.auth.currentUser.uid;
-    console.log('CurrentUserID:', this.currentUser)
+    // console.log('CurrentUserID:', this.currentUser)
   }
 
   subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
@@ -186,7 +187,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   async loadThreadInitMessage() {
     this.isLoading = true; // Start loading
     this.firstThreadMessage = await this.getInitialThreadMessage(this.activeChannelId, this.threadId);
-    console.log('first Thread Message:', this.firstThreadMessage)
+    // console.log('first Thread Message:', this.firstThreadMessage)
     this.isLoading = false; // End loading
   }
 
