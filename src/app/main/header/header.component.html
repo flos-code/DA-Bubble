@@ -1,16 +1,33 @@
 <div class="header">
-    <img src="assets/img/logo2.png" alt="">
-    <div class="input-container">
-        <input type="text" placeholder="Code learning durchsuchen">
-        <img src="assets/img/search.png" alt="">
+
+    <div class="left-middle-header">
+        <img src="assets/img/logo2.png" alt="">
+
+        <div class="searchField" (document:click)="onDocumentClick($event)">
+            <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
+                <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"
+                (ngModelChange)="onInputChange($event)">
+                <img src="assets/img/search.png" alt="">
+            </div>
+                <div *ngIf="isInputValueGreaterThanOne()" class="resultFeld" id="ergebnisFeld">
+                    <p>Hier sind die Suchergebnisse.</p>
+                    <p>Hier sind die Suchergebnisse.</p>
+                    <p>Hier sind die Suchergebnisse.</p>
+                    <p>Hier sind die Suchergebnisse.</p>
+                    <p>Hier sind die Suchergebnisse.</p>
+            </div>
+        </div>
     </div>
+
+
+
     <div (click)="toggleDropdownMenu(!showDropdownMenu)" class="header-profil">
         <h2>{{serviceProfilCard.headerUserNameandSurname}}</h2>
         <img class="header-profile-photo" src={{serviceProfilCard.headerProfilePic}}>
         <mat-icon class="material-symbols-outlined" fontIcon="expand_more"></mat-icon>
 
         <div [class.active]="showDropdownMenu" class="custom-dropdown-menu">
-            <div (click)="serviceProfilCard.toggleProfilCard(true, true, 'gdP2EbmSmMT1CBHW6XDS6TJH1Ou2')">Profil</div>
+            <div (click)="serviceProfilCard.toggleProfilCard(true, true, '')">Profil</div>
             <div (click)="signOut()">Log out</div>
         </div>
     </div>
