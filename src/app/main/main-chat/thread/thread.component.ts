@@ -10,6 +10,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, getCountFromServer, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { BehaviorSubject } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -32,6 +33,7 @@ const db = getFirestore(app);
 })
 export class ThreadComponent implements OnInit {
   @Input() thread!: any;
+  //Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
   messageCount: number;

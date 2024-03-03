@@ -6,6 +6,8 @@ import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot,  query } from "firebase/firestore";
 import { ProfilecardsOtherUsersComponent } from './profilecards-other-users/profilecards-other-users.component';
 import { ProfilCardService } from '../../../services/profil-card.service';
+import { BehaviorSubject } from 'rxjs';
+
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
   authDomain: "da-bubble-87fea.firebaseapp.com",
@@ -27,6 +29,7 @@ const db = getFirestore(app);
 })
 export class ShowMembersDialogComponent implements OnInit {
   @Input() currentUser!: string;
+  //@Input() currentUser!: BehaviorSubject<string | null>;
   @Input() channelData!: any;
   @Input() currentChannelId: string;
   @Input() channelMembers!: any;

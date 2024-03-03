@@ -60,4 +60,8 @@ export class UserManagementService {
       return 0;
     });
   }
+  
+  getActiveUserId() {
+    return this.activeUserId;
+  }
 }

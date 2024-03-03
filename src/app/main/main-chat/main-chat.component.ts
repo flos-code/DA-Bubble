@@ -8,10 +8,11 @@ import { ShowMembersDialogComponent } from './show-members-dialog/show-members-d
 import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
 import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 import { ChatService } from '../../services/chat.service';
-import { Subscription, empty } from 'rxjs';
+import { BehaviorSubject, Subscription, empty } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Thread } from '../../../models/thread.class';
 import { ThreadComponent } from './thread/thread.component';
+import { UserManagementService } from '../../services/user-management.service';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -43,16 +44,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ========== MAIN VARIABLES ========== */
   @ViewChild('mainChat') private mainChat: ElementRef;
   channel: Channel; // Daten des aktuellen Channels
-  //activeChannelId: string = this.chatService.getActiveChannelId();
-  activeChannelId: string = 'allgemein';
+  //activeChannelId: string = 'allgemein';
+  activeChannelId: string = '';
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
   //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
   channelThreads = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
-  //currentUser: string = this.chatService.getSelectedUserId();
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  //currentUser = new BehaviorSubject<string | null>(null);
+
   dmUser = [];
   textArea: string = "";
   typeChannel: boolean = true;
@@ -76,10 +78,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
   };
   /* ============================================== */
 
-  constructor(private chatService: ChatService) {
-   }
+  constructor(private chatService: ChatService, private userManagementService: UserManagementService) {
+  }
 
   ngOnInit(): void {
+    this.getActiveChannelId();
+    //this.getActiveUserId();
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -94,6 +98,27 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
+
+  loadChannelData() {
+    this.getActiveChannelId();
+    //this.getActiveUserId();
+    this.getCurrentChannel();
+    this.getThreadOpenStatus();
+    this.subscribeToThreads();
+    setTimeout(() => {
+      this.scrollToBottom();
+    }, 2000);
+  }
+
+  getActiveChannelId() {
+    this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
+    console.log('Channel id', this.activeChannelId);
+  }
+
+  /*   getActiveUserId() {
+    this.currentUser = this.userManagementService.getActiveUserId();
+  } */
+
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());

@@ -50,61 +50,55 @@
             <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId"  *ngIf="addMemberDialogOpen"
                 (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
             <!--=================================================-->
-
         </div>
         <!-- ================================================== -->
         } @else {
-        <!-- =========== TEMPLATE MAIN CHAT HEADER - DM ============= -->
-<!--         <div class="mainChatHeader">
-            <div class="mainChatHeaderLeft">
-                <div class="userImage">
-                    <img src="/assets/img/main-chat/member2.svg">
-                    <div class="onlineStatus" [ngClass]="{
-                      online: users[1].onlineStatus === 'active',
-                      idle: users[2].onlineStatus === 'idle',
-                      busy: users[3].onlineStatus === 'busy',
-                      away: users[0].onlineStatus === 'away'
-                    }"></div>
+            <!-- =========== TEMPLATE MAIN CHAT HEADER - DM ============= -->
+            <div class="mainChatHeader">
+                <div class="mainChatHeaderLeft">
+                    <div class="userImage">
+                        <img src="/assets/img/main-chat/member2.svg">
+    <!--                <div class="onlineStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div> -->
+                        <div class="onlineStatus" [ngStyle]="{'background-color': '#92c83e'}"></div>
+                    </div>
+                    <div>Tobias Odermatt</div>
                 </div>
-                <div>{{users[1].name}} {{users[1].surname}}</div>
             </div>
-        </div> -->
-        <!-- ========================================================== -->
         }
         <!-- ===================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages" #mainChat>
-<!--             <div class="mainChatMessagesSubContainer">
- -->            @if(typeChannel) {
-                <!-- =========== Template main chat beginning - Channel ============= -->
-                <div class="beginningOfChannel">
-                    <div>
-                        <div>&#35;</div>
-                        <div>{{channel?.name}}</div>
-                    </div>
-                    <div>
-                        Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span
-                            style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>
-                    </div>
-                </div>
-                <!-- ================================================================ -->
-                } @else {
-                <!-- =========== Template main chat beginning - DM ============= -->
-<!--                 <div class="beginningOfChannel">
-                    <div>
+<!--        <div class="mainChatMessagesSubContainer"> -->            
+                @if(typeChannel) {
+                    <!-- =========== Template main chat beginning - Channel ============= -->
+                    <div class="beginningOfChannel">
                         <div>
-                            <img [src]="channel[0].members[0].photo">
+                            <div>&#35;</div>
+                            <div>{{channel?.name}}</div>
                         </div>
-                        <div>{{channel[0].members[0].name}}</div>
+                        <div>
+                            Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span
+                                style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>
+                        </div>
                     </div>
-                    <div>
-                        Diese Unterhaltung findet nur zwischen <span
-                            style="color: rgba(83, 90, 241, 1)">&#64;{{channels[0].members[0].name}}
-                            {{channels[0].members[0].surname}}</span> und dir statt.
-                    </div>
-                </div> -->
-                <!-- ================================================================ -->
+                    <!-- ================================================================ -->
+                } @else {
+                    <!-- =========== Template main chat beginning - DM ============= -->
+    <!--                 <div class="beginningOfChannel">
+                        <div>
+                            <div>
+                                <img [src]="channel[0].members[0].photo">
+                            </div>
+                            <div>{{channel[0].members[0].name}}</div>
+                        </div>
+                        <div>
+                            Diese Unterhaltung findet nur zwischen <span
+                                style="color: rgba(83, 90, 241, 1)">&#64;{{channels[0].members[0].name}}
+                                {{channels[0].members[0].surname}}</span> und dir statt.
+                        </div>
+                    </div> -->
+                    <!-- ================================================================ -->
                 }
 
                 <!-- =================== Time separator / Threads ===================== -->
@@ -155,8 +149,6 @@
             </div>
  -->        </div>        
         <!-- =================================================================================================== -->
-
     </div>
-
     <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
 </div>

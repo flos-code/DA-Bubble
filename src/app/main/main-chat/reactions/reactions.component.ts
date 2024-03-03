@@ -11,6 +11,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { BehaviorSubject } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -40,8 +41,10 @@ export class ReactionsComponent implements OnInit {
   messageModel: string = '';
   @Input() reactionCollectionPath!: string;
   // @Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
+  //@Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
   @Input() userId!: string;
+
   reactions = [];
   @Input() threadId!: string;
 

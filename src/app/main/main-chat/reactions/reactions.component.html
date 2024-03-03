@@ -6,7 +6,7 @@
         
         <div *ngFor="let reaction of reactions" class="reactionContainer">
             <div class="ractionEmoji">
-                <span [innerHTML]="reaction.emoji"></span>
+                <span>{{reaction.emoji}}</span>
             </div>
             <div class="ractionCount">
                 <div>1</div>
@@ -16,10 +16,10 @@
                 <div>Sofia Müller</div>
                 <div>hat reagiert</div>
             </div>
-        </div>    
+        </div>
+        <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
     </div>    
-    <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-    [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
 } @else {
     <div class="mainThreadReactionsOwn">
         <div (click)="openMoreEmojis()">
@@ -38,10 +38,10 @@
                 <div>Sofia Müller</div>
                 <div>hat reagiert</div>
             </div>
-        </div>    
+        </div> 
+        <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
     </div>
-    <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-    [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
 }
 
 
