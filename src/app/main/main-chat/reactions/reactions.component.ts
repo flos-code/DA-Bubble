@@ -55,16 +55,13 @@ export class ReactionsComponent implements OnInit {
     this.getReactions();
     //this.reactionService.getReactions(this.reactionCollectionPath);
     //this.reactions = this.reactionService.reactions;
-    console.log('REactions', this.reactions);
   }
 
   constructor(private reactionService: ReactionsService) {
     this.reactions = this.reactionService.returnReactions();
-
   }
 
-
-getReactions() {
+  getReactions() {
     const q = query(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
