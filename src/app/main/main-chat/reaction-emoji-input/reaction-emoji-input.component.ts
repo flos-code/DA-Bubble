@@ -7,6 +7,22 @@ import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
+/* ========== FIREBASE ============ */
+import { initializeApp } from 'firebase/app';
+import { addDoc, collection, doc, getFirestore, updateDoc } from 'firebase/firestore';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+/* =============================== */
+
 
 @Component({
   selector: 'app-reaction-emoji-input',
@@ -24,12 +40,15 @@ export class ReactionEmojiInputComponent {
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
+  @Input() threadId!: string;
+  @Input() reactions!: any;
+
 
   constructor(private reactionServie: ReactionsService) {
   }
 
   ngOnInit(): void {
-    this.reactionServie.getReactions(this.reactionCollectionPath);
+    //this.reactionServie.getReactions(this.reactionCollectionPath);
   }
 
   onInputFocus(): void {
@@ -58,7 +77,7 @@ export class ReactionEmojiInputComponent {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    await this.reactionServie.saveReaction(this.messageModel, this.currentUser);
+    await this.saveReaction(this.messageModel, this.currentUser);
     // OS9ntlBZdogfRKDdbni6eZ9yop93
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
@@ -71,5 +90,39 @@ export class ReactionEmojiInputComponent {
   closeEmojiInput() {
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
+  }
+
+  async saveReaction(emoji: string, currentUser: string) {
+    if(this.reactions.some(reaction => reaction.reaction === emoji)) { 
+      for (let i = 0; i < this.reactions.length; i++) {
+        const reaction = this.reactions[i];
+        if(reaction.includes(emoji)){
+          reaction.count = reaction.count + 1;
+          reaction.reactedBy.push(currentUser);
+          let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
+          console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
+          // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
+          let data = {
+            'count': reaction.count,
+            'reaction': emoji,
+            'reactedBy': currentUser,
+          };
+          await updateDoc(currentRef, data).then(() => {
+          });
+        }
+      }
+    } else {
+      await this.addReaction(emoji, currentUser);
+      console.log(currentUser);
+    }
+  }
+
+  async addReaction(emoji: string, currentUser: string) {
+    await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
+      'count': 1,
+      'reaction': emoji,
+      'reactedBy': currentUser,
+  });  
+    console.log('Reactions to thread', this.reactions);
   }
 }

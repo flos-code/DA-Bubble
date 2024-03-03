@@ -99,7 +99,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
 
-  loadChannelData() {
+  loadData() {
     this.getActiveChannelId();
     //this.getActiveUserId();
     this.getCurrentChannel();

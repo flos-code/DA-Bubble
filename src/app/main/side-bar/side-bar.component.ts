@@ -42,7 +42,7 @@ const db = getFirestore(app);
     CommonModule,
     DialogAddChannelComponent,
     DialogAddUserNewChannelComponent,
-  ],
+],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
 })
@@ -66,7 +66,7 @@ export class SideBarComponent {
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
     public userManagementService: UserManagementService,
-    private chatService: ChatService
+    private chatService: ChatService,
   ) { }
 
   async ngOnInit() {

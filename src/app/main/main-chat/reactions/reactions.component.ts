@@ -10,8 +10,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { BehaviorSubject } from 'rxjs';
+import { collection, getFirestore, onSnapshot, query } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -33,23 +32,15 @@ const db = getFirestore(app);
   styleUrl: './reactions.component.scss'
 })
 export class ReactionsComponent implements OnInit {
-  //@Input() showMoreEmojis!: boolean;
   showMoreEmojis: boolean = false;
-  //@Output() showMoreEmojisChild = new EventEmitter();
-  @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
-  inputFocused: boolean = false;
-  messageModel: string = '';
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
-  //@Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
-  @Input() userId!: string;
-
+  @Input() userId: string;
   reactions = [];
+  reactionNames = [];
   @Input() threadId!: string;
-
-
-  
+  reactionCount: number;
 
   ngOnInit(): void {
     this.getReactions();
@@ -58,7 +49,7 @@ export class ReactionsComponent implements OnInit {
   }
 
   constructor(private reactionService: ReactionsService) {
-    this.reactions = this.reactionService.returnReactions();
+
   }
 
   getReactions() {
@@ -66,28 +57,48 @@ export class ReactionsComponent implements OnInit {
     return onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
-        this.reactions.push(reaction.data());
-      }
-      )
-      console.log('All reactions', this.reactions);  
+        this.reactions.push({
+          'id': reaction.id,
+          'count': reaction.data()['count'],
+          'reaction': reaction.data()['reaction'],
+          'reactedBy': reaction.data()['reactedBy']
+        }
+        )
+      });
+      this.getReactionNames();
     });
   }
 
 
-  onInputFocus(): void {
+  getReactionNames() {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      list.forEach(name => {
+        for (let i = 0; i < this.reactions.length; i++) {
+          let reaction = this.reactions[i];
+          if(name.id == reaction.reactedBy) {
+            this.reactions = this.reactions.map(obj => ({ ...obj, reactedByName: name.data()['name'] }));
+          }
+        };
+      });
+      console.log('Reaction names', this.reactions);
+    });
+  }
+
+/*   onInputFocus(): void {
     this.inputFocused = true;
   }
 
   onInputBlur(): void {
     this.inputFocused = false;
-  }
+  } */
 
-  handleClick(event: any) {
+/*   handleClick(event: any) {
     const emoji = event.emoji.native;
     this.insertEmojiAtCursor(emoji);
-  }
+  } */
 
-  async insertEmojiAtCursor(emoji: string) {
+/*   async insertEmojiAtCursor(emoji: string) {
     const inputEl = this.messageInput.nativeElement;
     const start = inputEl.selectionStart;
     const end = inputEl.selectionEnd;
@@ -100,11 +111,11 @@ export class ReactionsComponent implements OnInit {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    await this.reactionService.saveReaction(this.messageModel, this.currentUser);
+    //await this.saveReaction(this.messageModel, this.currentUser);
     // OS9ntlBZdogfRKDdbni6eZ9yop93
     this.showMoreEmojis = false;
     //this.showMoreEmojisChild.emit(this.showMoreEmojis);
-  }
+  } */
 
   openMoreEmojis() {
     this.showMoreEmojis = true;
@@ -113,4 +124,39 @@ export class ReactionsComponent implements OnInit {
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
   }
+
+/*   async saveReaction(emoji: string, currentUser: string) {
+    if(this.reactions.some(reaction => reaction.reaction === emoji)) { 
+      for (let i = 0; i < this.reactions.length; i++) {
+        const reaction = this.reactions[i];
+        if(reaction.includes(emoji)){
+          reaction.count = reaction.count + 1;
+          reaction.reactedBy.push(currentUser);
+          let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
+          console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
+          // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
+          let data = {
+            'count': reaction.count,
+            'reaction': emoji,
+            'reactedBy': currentUser,
+          };
+          await updateDoc(currentRef, data).then(() => {
+          });
+        }
+      }
+    } else {
+      await this.addReaction(emoji, currentUser);
+      console.log(currentUser);
+    }
+  } */
+
+/*   async addReaction(emoji: string, currentUser: string) {
+    await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
+      'count': 1,
+      'reaction': emoji,
+      'reactedBy': currentUser,
+  });  
+    console.log('Reactions to thread', this.reactions);
+  } */
+  
 }
