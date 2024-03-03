@@ -96,16 +96,16 @@ export class ReactionEmojiInputComponent {
     if(this.reactions.some(reaction => reaction.reaction === emoji)) { 
       for (let i = 0; i < this.reactions.length; i++) {
         const reaction = this.reactions[i];
-        if(reaction.includes(emoji)){
+        if(reaction.reaction == emoji){
           reaction.count = reaction.count + 1;
           reaction.reactedBy.push(currentUser);
           let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
           console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
           // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
           let data = {
-            'count': reaction.count,
-            'reaction': emoji,
-            'reactedBy': currentUser,
+            count: reaction.count,
+            reaction: emoji,
+            reactedBy: currentUser,
           };
           await updateDoc(currentRef, data).then(() => {
           });
@@ -119,9 +119,9 @@ export class ReactionEmojiInputComponent {
 
   async addReaction(emoji: string, currentUser: string) {
     await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
-      'count': 1,
-      'reaction': emoji,
-      'reactedBy': currentUser,
+      count: 1,
+      reaction: emoji,
+      reactedBy: currentUser
   });  
     console.log('Reactions to thread', this.reactions);
   }

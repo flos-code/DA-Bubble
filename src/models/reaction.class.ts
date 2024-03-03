@@ -1,7 +1,7 @@
 export class Reaction {
     count: number;
     reaction: string;
-    reactedBy: string;
+    reactedBy: [];
 
     constructor(obj?: any) { // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.
         this.count = obj ? obj.count : "";
