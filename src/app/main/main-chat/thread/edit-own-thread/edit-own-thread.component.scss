@@ -1,6 +1,7 @@
 @import  '../../../../../styles.scss'; 
 
 .messageContainerOwnEdit {
+    position: relative;
     display: flex;
     justify-content: flex-start;
     align-items: flex-start;
@@ -84,3 +85,22 @@
         }
     }
 }
+
+.backgroundReactionEmojiContainer{
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    z-index: 10;
+}
+
+emoji-mart {
+    position: absolute;
+    bottom: 180px;
+    left: 145px;
+    cursor: pointer;
+    z-index: 11;
+}
+

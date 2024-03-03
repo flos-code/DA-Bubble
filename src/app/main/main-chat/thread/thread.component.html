@@ -54,7 +54,7 @@
                     <div>Letzte Antwort {{lastAnswer}}</div>
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
-                <app-reactions [userId]="thread.userId" [threadId]="thread.threadId" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                <app-reactions [userId]="thread?.userId" [threadId]="thread?.threadId" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
                 </app-reactions>
             </div>
             <div class="messageProfileIcon">

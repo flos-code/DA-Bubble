@@ -9,6 +9,7 @@ div:first-of-type {
 
 .mainThreadReactions,
 .mainThreadReactionsOwn {
+    position: relative;
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -66,14 +67,14 @@ div:first-of-type {
 
         .reactionHoverBubble {
             position: absolute;
-            top: -113px;
+            top: -105px;
             left: 30px;
             display: none;
             width: 158px;
-            height: 112px;
             border-radius: 30px 30px 30px 0px;
             padding: 15px 10px 15px 10px;
             background-color: $purple1;
+            z-index: 2;
             > div {
                 width: 100%;
                 display: flex;

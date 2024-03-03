@@ -1,9 +1,9 @@
 <!-- ========================= Template Own Message - EDIT ========================= -->
-<div class="messageContainerOwnEdit">
+<div class="messageContainerOwnEdit" (click)="message.focus()">
     <div class="mainMessageOwnEdit">
-        <textarea name="textAreaEditMessage" [(ngModel)]="textAreaEditMessage"></textarea>
+        <textarea #message name="message" [(ngModel)]="textAreaEditMessage" (focus)="onInputFocus()" (blur)="onInputBlur()"></textarea>
         <div>
-            <div>
+            <div (click)="toggleEmojiPicker()">
                 <span class="material-symbols-outlined">sentiment_satisfied</span>
             </div>
             <div>
@@ -15,4 +15,7 @@
     <div class="messageProfileIcon">
         <img src="/assets/img/main-chat/member1.svg">
     </div>
+    <emoji-mart #emojiMart *ngIf="showEmojiPicker" [darkMode]="false" (emojiSelect)="handleClick($event)" title="Pick your emoji…" emoji="point_up" (click)="doNotClose($event)">
+    </emoji-mart>
+    <div class="backgroundReactionEmojiContainer" *ngIf="showEmojiPicker" (click)="toggleEmojiPicker()"></div>
 </div>

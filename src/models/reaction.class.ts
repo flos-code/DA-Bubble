@@ -1,18 +1,18 @@
 export class Reaction {
-    reactionId: string;
-    reactionName: string;
-    reactedBy: string;
+    count: number;
+    reaction: string;
+    reactedBy: [];
 
     constructor(obj?: any) { // Zuweiseung der Werte des hineingegebenen Objektes zu den Feldern der Klasse.
-        this.reactionId = obj ? obj.reactionId : "";
-        this.reactionName = obj ? obj.reactionName : ""; // if else Abfrage schneller geschrieben. Wenn das Objekt existiert, dann obj.firstname und sonst ein leerer String.
+        this.count = obj ? obj.count : "";
+        this.reaction = obj ? obj.reaction : ""; // if else Abfrage schneller geschrieben. Wenn das Objekt existiert, dann obj.firstname und sonst ein leerer String.
         this.reactedBy = obj ? obj.reactedBy : "";
     }
 
     public toJSON() {
         return {
-            'reactionId': this.reactionId,
-            'reactionName': this.reactionName,
+            'count': this.count,
+            'reaction': this.reaction,
             'reactedBy': this.reactedBy,
         };
     }

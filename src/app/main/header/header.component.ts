@@ -3,11 +3,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfilCardComponent } from '../profil-card/profil-card.component';
 import { CommonModule } from '@angular/common';
 import { initializeApp } from "firebase/app";
-import { collection, doc, getFirestore, onSnapshot } from "firebase/firestore";
+import { collection, getFirestore } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { ProfilCardService } from '../../services/profil-card.service';
 import { MatIconModule } from '@angular/material/icon';
+import { FormsModule } from '@angular/forms';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,7 +27,7 @@ const db = getFirestore(app);
   standalone: true,
   templateUrl: './header.component.html',
   styleUrl: './header.component.scss',
-  imports: [ProfilCardComponent, CommonModule, MatIconModule]
+  imports: [ProfilCardComponent, CommonModule, MatIconModule, FormsModule]
 })
 export class HeaderComponent implements OnInit {
   authSubscription: any;
@@ -47,6 +48,7 @@ export class HeaderComponent implements OnInit {
   currentUserProfil: boolean = false;
   showProfil: boolean = false;
   showDropdownMenu: boolean = false;
+  inputValue: string = ''; // Initialisierung der Variable
 
   firebaseConfig = {
     apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -68,6 +70,19 @@ export class HeaderComponent implements OnInit {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes
     });
+  }
+
+  onInputChange(value: string) {
+    // Hier kannst du die inputValue überprüfen und weitere Aktionen durchführen
+    console.log('Neuer Wert:', value);
+    if (value.length > 0) {
+      // Führe Aktionen aus, wenn der Wert größer als eins ist
+      console.log('Wert ist größer als null.');
+    }
+  }
+
+  isInputValueGreaterThanOne(): boolean {
+    return this.inputValue.length > 0;
   }
 
   menuItemClicked(option: string) {
@@ -97,15 +112,25 @@ export class HeaderComponent implements OnInit {
     this.serviceProfilCard.isOverlayActive = false;
   }
 
-  // getTheLoggedInUser() {
-  //   this.authSubscription = this.auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       this.headerProfilePic = user.photoURL;
-  //       this.headerUserNameandSurname = user.displayName;
-  //     } else {
-  //       this.headerProfilePic = '/assets/img/login/profile_generic_big.png';
-  //       this.headerUserNameandSurname = 'Max Mustermann';
-  //     }
-  //   });
-  // }
+
+  ///////////////////////// closes the resultFeld when clicking outside of it /////////////////////////
+
+  onDocumentClick(event: MouseEvent) {
+    const clickedElement = event.target as HTMLElement;
+    const isClickedOutside = !this.isDescendant(clickedElement, 'searchField');
+
+    if (isClickedOutside) {
+      this.inputValue = '';
+    }
+  }
+
+  private isDescendant(element: HTMLElement, className: string): boolean {
+    if (!element) return false;
+
+    if (element.classList.contains(className)) {
+      return true;
+    } else {
+      return this.isDescendant(element.parentElement, className);
+    }
+  }
 }

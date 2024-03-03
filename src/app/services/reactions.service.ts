@@ -4,6 +4,7 @@ import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { ChatService } from './chat.service';
+import { Reaction } from '../../models/reaction.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,7 +27,7 @@ export class ReactionsService {
 
   constructor(private chatService: ChatService) { }
 
-  getReactions(reactionCollectionPath: string) {
+/*   getReactions(reactionCollectionPath: string) {
     this.reactionCollectionPath = reactionCollectionPath;
     const q = query(collection(db, reactionCollectionPath));
     return onSnapshot(q, (list) => {
@@ -36,30 +37,28 @@ export class ReactionsService {
       });
     console.log('Reaction data', this.reactions);
     });
-  }
+  } */
 
-  returnReactions() {
-    return this.reactions;
-  }
-
-  async saveReaction(emoji: string, currentUser: string) {
+/*   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.some(reaction => reaction.emoji === emoji)) {  
       let currentRef = doc(db, this.reactionCollectionPath);
       // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
-      let data = {reactedBy: currentUser, emoji: emoji};
-      await updateDoc(currentRef, data).then(() => {
+      let data = new Reaction({
+
+      }); //{reactedBy: currentUser, emoji: emoji};
+      await updateDoc(currentRef, data.toJSON()).then(() => {
       });
     } else {
       await this.addReaction(emoji, currentUser);
       console.log(currentUser);
     }
   }
-  
-  async addReaction(emoji: string, currentUser: string) {
+   */
+/*   async addReaction(emoji: string, currentUser: string) {
     await addDoc(collection(db, `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`), {
       reaction: emoji,
       reactedBy: 'OS9ntlBZdogfRKDdbni6eZ9yop93',
     });  
     console.log('Reactions to thread', this.reactions);
-  }
+  } */
 }
