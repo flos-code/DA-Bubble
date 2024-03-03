@@ -94,21 +94,43 @@ export class ReactionEmojiInputComponent {
 
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.some(reaction => reaction.reaction === emoji)) { 
-      for (let i = 0; i < this.reactions.length; i++) {
-        const reaction = this.reactions[i];
-        if(reaction.reaction == emoji){
-          reaction.count = reaction.count + 1;
-          reaction.reactedBy.push(currentUser);
-          let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
-          console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
-          // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
-          let data = {
-            count: reaction.count,
-            reaction: emoji,
-            reactedBy: currentUser,
-          };
-          await updateDoc(currentRef, data).then(() => {
-          });
+      if(this.reactions.some(reaction => reaction.reactedBy === currentUser)) {
+        // Emoji entfernen
+        for (let i = 0; i < this.reactions.length; i++) {
+          const reaction = this.reactions[i];
+          if(reaction.reaction == emoji && reaction.reactedBy == currentUser){
+            reaction.count = reaction.count - 1;
+            reaction.reactedBy.splice(currentUser);
+            let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
+            console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
+            // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
+            let data = {
+              count: reaction.count,
+              reaction: emoji,
+              reactedBy: reaction.reactedBy,
+            };
+            await updateDoc(currentRef, data).then(() => {
+            });
+          }
+        }
+
+      } else {
+        for (let i = 0; i < this.reactions.length; i++) {
+          const reaction = this.reactions[i];
+          if(reaction.reaction == emoji){
+            reaction.count = reaction.count + 1;
+            reaction.reactedBy.push(currentUser);
+            let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
+            console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
+            // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
+            let data = {
+              count: reaction.count,
+              reaction: emoji,
+              reactedBy: reaction.reactedBy,
+            };
+            await updateDoc(currentRef, data).then(() => {
+            });
+          }
         }
       }
     } else {
