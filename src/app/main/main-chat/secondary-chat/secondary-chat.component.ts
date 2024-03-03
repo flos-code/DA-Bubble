@@ -4,6 +4,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { initializeApp } from "firebase/app";
 import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc, orderBy, Timestamp } from "firebase/firestore";
+import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { InputService } from '../../../services/input.service';
@@ -23,7 +24,6 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
@@ -36,6 +36,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') private chatContent: ElementRef;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   private subscription = new Subscription();
+  auth = getAuth(app);
   /*---------- Main Variables -----------*/
   threadMessages: ThreadMessage[] = [];
   firstThreadMessage?: ThreadMessage;
@@ -47,7 +48,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   messageModel: string = '';
   currentCursorPosition: number = 0;
   /*---------- Debugging and onworking Variables -----------*/
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93'; //TODO: get actual current user
+  currentUser: string = ''; //TODO: get actual current user
   channel: Channel; // Data of actual channel
   channelMembers = []; // userdata of actual channel members
   activeChannelId: string = '';
@@ -60,6 +61,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    this.setCurrentUser();
     this.getActualChannelId();
     this.subcribeThreadId();
     this.getCurrentChannelData();
@@ -79,6 +81,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   getActualChannelId() {
     this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
     console.log('Actual CHANNEL ID:', this.activeChannelId)
+  }
+
+  setCurrentUser() {
+    this.currentUser = this.auth.currentUser.uid;
+    console.log('CurrentUserID:', this.currentUser)
   }
 
   subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
