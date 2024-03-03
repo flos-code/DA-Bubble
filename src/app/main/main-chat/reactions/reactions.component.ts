@@ -49,17 +49,22 @@ export class ReactionsComponent implements OnInit {
   @Input() threadId!: string;
 
 
-  constructor(private reactionService: ReactionsService) {
-  }
-
+  
 
   ngOnInit(): void {
-    this.reactionService.getReactions(this.reactionCollectionPath);
-    this.reactions = this.reactionService.returnReactions();
-    console.log(this.reactionCollectionPath);
+    this.getReactions();
+    //this.reactionService.getReactions(this.reactionCollectionPath);
+    //this.reactions = this.reactionService.reactions;
+    console.log('REactions', this.reactions);
   }
 
-/*   getReactions() {
+  constructor(private reactionService: ReactionsService) {
+    this.reactions = this.reactionService.returnReactions();
+
+  }
+
+
+getReactions() {
     const q = query(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
@@ -69,7 +74,7 @@ export class ReactionsComponent implements OnInit {
       )
       console.log('All reactions', this.reactions);  
     });
-  } */
+  }
 
 
   onInputFocus(): void {

@@ -35,7 +35,7 @@ export class ReactionsService {
         this.reactions.push(element.data());
       });
     console.log('Reaction data', this.reactions);
-    }); 
+    });
   }
 
   returnReactions() {
@@ -54,6 +54,7 @@ export class ReactionsService {
       console.log(currentUser);
     }
   }
+  
   async addReaction(emoji: string, currentUser: string) {
     await addDoc(collection(db, `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`), {
       reaction: emoji,
