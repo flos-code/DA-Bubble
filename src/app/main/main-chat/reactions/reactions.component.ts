@@ -57,7 +57,6 @@ export class ReactionsComponent implements OnInit {
     this.reactionService.getReactions(this.reactionCollectionPath);
     this.reactions = this.reactionService.returnReactions();
     console.log(this.reactionCollectionPath);
-    //this.getReactions();
   }
 
 /*   getReactions() {
