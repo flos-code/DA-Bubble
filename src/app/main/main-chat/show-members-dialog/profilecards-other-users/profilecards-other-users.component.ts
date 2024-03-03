@@ -28,4 +28,8 @@ export class ProfilecardsOtherUsersComponent implements OnInit {
   doNotClose($event: any) {
     $event.stopPropagation(); 
   }
+
+  writeMessage() {
+    // open new DM chat or switch to existing one (type: DM / path to collection)
+  }
 }

@@ -16,24 +16,8 @@
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
                 </div>
-                <div class="mainThreadReactions">
-                    <div>
-                        <span class="material-symbols-outlined">add_reaction</span>
-                    </div>
-                    <div *ngFor="let reaction of reactions" class="reactionContainer">
-                        <div class="ractionEmoji">
-                            <span [innerHTML]="reaction.emoji"></span>
-                        </div>
-                        <div class="ractionCount">
-                            <div>1</div>
-                        </div>
-                        <div class="reactionHoverBubble">
-                            <div></div>
-                            <div>Sofia Müller</div>
-                            <div>hat reagiert</div>
-                        </div>
-                    </div>
-                </div>
+                <app-reactions class="mainThreadReactions" [threadId]="thread.threadId" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                </app-reactions>
             </div>
     
             <!-- ========== Toolbar ========== -->
@@ -51,8 +35,8 @@
                     <span class="material-symbols-outlined">comment</span>
                 </div>
             </div>
-            <app-reactions class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reactions>    
+            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
         </div>
         <!-- ============================================================================ -->
     } @else {
@@ -70,24 +54,8 @@
                     <div>Letzte Antwort {{lastAnswer}}</div>
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
-                <div class="mainThreadReactionsOwn">
-                    <div>
-                        <span class="material-symbols-outlined">add_reaction</span>
-                    </div>
-                    <div *ngFor="let reaction of reactions" class="reactionContainer">
-                        <div class="ractionEmoji">
-                            <span [innerHTML]="reaction.emoji"></span>
-                        </div>
-                        <div class="ractionCount">
-                            <div>1</div>
-                        </div>
-                        <div class="reactionHoverBubble">
-                            <div></div>
-                            <div>Sofia Müller</div>
-                            <div>hat reagiert</div>
-                        </div>
-                    </div>
-                </div>
+                <app-reactions class="mainThreadReactionsOwn" [threadId]="thread.threadId" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                </app-reactions>
             </div>
             <div class="messageProfileIcon">
                 <img src="/assets/img/main-chat/member1.svg">
@@ -111,7 +79,8 @@
                     <span class="material-symbols-outlined">more_vert</span>
                 </div>
             </div>
-            <app-reactions class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"></app-reactions>
+            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
 
 
             <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
@@ -123,10 +92,9 @@
         </div>
 
         <!-- ========================= Template Own Message - EDIT ========================= -->
-
         <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
         [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
-        (ownMessageEditChild)="setBoolean(ownMessageEdit)"></app-edit-own-thread>            
+        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
         
         
 <!--         <div class="messageContainerOwnEdit" *ngIf="ownMessageEdit">

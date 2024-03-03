@@ -4,12 +4,12 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
-
+import { ReactionsComponent } from '../reactions/reactions.component';
+import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getCountFromServer, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, where } from 'firebase/firestore';
-import { ReactionsComponent } from '../reactions/reactions.component';
+import { collection, getCountFromServer, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,25 +26,23 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionsComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionsComponent, ReactionEmojiInputComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit {
-  @Input() thread;
-  @Input() currentUser;
-  @Input() activeChannelId;
+  @Input() thread!: any;
+  @Input() currentUser!: string;
+  @Input() activeChannelId!: string;
   messageCount: number;
   threadMessagesTimestamps = [];
   answers: string;
-  lastAnswer;
+  lastAnswer: any;
   showMoreEmojis: boolean = false;
   reactionCollectionPath: string;
-  reactions = [];
-
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
-  @Input() textAreaEditMessage: string;
+  //@Input() textAreaEditMessage: string;
 
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
@@ -52,19 +50,6 @@ export class ThreadComponent implements OnInit {
   ngOnInit(): void {
     this.getMessageCountAndAnswer();
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
-    this.getReactions();
-  }
-
-  getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
-    return onSnapshot(q, (element) => {
-      this.reactions = [];
-      element.forEach(reaction => {
-        this.reactions.push(reaction.data());
-      }
-      )
-      console.log('All reactions', this.reactions);  
-    });
   }
 
 /*   async getThreadMessageCount() {
@@ -135,15 +120,7 @@ export class ThreadComponent implements OnInit {
     this.chatService.openThread(threadId);
   }
 
-  closeEditedMessage() {
-    this.ownMessageEdit = false;
-  }
-
-  saveEditedMessage() {
-    // 
-  }
-
-  setBoolean(dialogBoolen: boolean) {
+  closeEditedMessage(dialogBoolen: boolean) {
     this.ownMessageEdit = false;
   }
 

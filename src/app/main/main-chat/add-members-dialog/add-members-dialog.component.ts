@@ -66,7 +66,6 @@ export class AddMembersDialogComponent implements OnInit {
       });
       this.filteredUserList = this.userList;
       this.originalUserList = this.userList;
-
     });  
   }
 
@@ -138,7 +137,7 @@ export class AddMembersDialogComponent implements OnInit {
       await updateDoc(doc(db, 'channels', this.currentChannelId), {
         members: arrayUnion(user)
       });      
-    } */
+  }*/
 
   }
 

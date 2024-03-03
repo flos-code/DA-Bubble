@@ -1,20 +1,9 @@
 @import '../../../../styles.scss';
 
-.reactionEmojiContainer {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: flex-start;
-
-  > input {
-    border: none;
-    outline: none;
-    visibility: hidden;
-    width: 40px;
-  }
-
-  > emoji-mart {
-    cursor: pointer;
+div:first-of-type {
+  cursor: pointer;
+  &:hover {
+    color: $purple3;
   }
 }
 
