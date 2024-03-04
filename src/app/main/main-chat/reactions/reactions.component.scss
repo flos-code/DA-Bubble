@@ -99,8 +99,18 @@ div:first-of-type {
     }
 }
 
+.mainThreadReactionsOwn {
+    flex-direction: row-reverse;
+}
+
 .mainThreadReactions > app-reaction-emoji-input {
     position: absolute;
     top: 170px;
     left: 145px;
+}
+
+.mainThreadReactionsOwn > app-reaction-emoji-input {
+    position: absolute;
+    top: 170px;
+    right: 145px;
 }

@@ -38,7 +38,7 @@ export class ReactionsComponent implements OnInit {
   @Input() userId: string;
   reactions = [];
   reactionNames = [];
-  @Input() threadId!: string;
+  @Input() thread!: any;
   reactionCount: number;
 
   ngOnInit(): void {
@@ -53,7 +53,7 @@ export class ReactionsComponent implements OnInit {
   }
 
   getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`));
+    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
@@ -65,6 +65,7 @@ export class ReactionsComponent implements OnInit {
         }
         )
       });
+      console.log('Reaction array', this.reactions);
     });
   }
 

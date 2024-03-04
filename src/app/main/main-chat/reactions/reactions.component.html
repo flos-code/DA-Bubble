@@ -1,4 +1,4 @@
-@if(currentUser !== threadId){
+@if(currentUser !== thread.userId){
     @if(reactions.length !== 0) {
         <div class="mainThreadReactions">
             <div (click)="openMoreEmojis()">
@@ -32,7 +32,7 @@
             </div>
 
             <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="threadId"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
         </div>
     }
  } @else {
@@ -68,7 +68,7 @@
                 </div>
             </div>
             <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
         </div>
     }
 }
