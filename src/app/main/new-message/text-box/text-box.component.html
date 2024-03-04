@@ -3,12 +3,6 @@
   [class.focused]="inputFocused"
   (click)="message.focus()"
 >
-  <div
-    *ngIf="imageURL()"
-    class="imagePreview"
-    [style.backgroundImage]="'url(' + imageURL() + ')'"
-  ></div>
-
   <textarea
     rows="2"
     #message
@@ -21,6 +15,19 @@
     (focus)="onInputFocus()"
     (blur)="onInputBlur()"
   ></textarea>
+  <div
+    *ngIf="this.imageURL"
+    class="imagePreview"
+    [style.backgroundImage]="'url(' + this.imageURL + ')'"
+  >
+    <div class="deleteUpload">
+      <mat-icon
+        (click)="removeFileUpload()"
+        class="material-symbols-rounded"
+        fontIcon="close"
+      ></mat-icon>
+    </div>
+  </div>
   <div class="bottomIcons">
     <div class="addElements">
       <input

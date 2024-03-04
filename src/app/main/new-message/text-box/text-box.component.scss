@@ -105,10 +105,37 @@
 
   .imagePreview {
     //vorläufig
-    width: 100px;
-    height: 100px;
+    width: 120px;
+    height: 120px;
     background-size: cover;
     background-position: center;
+    position: relative;
+    border-radius: 8px;
+    align-self: flex-start;
+
+    .deleteUpload {
+      position: absolute;
+      top: -16px;
+      right: -16px;
+      width: 32px;
+      height: 32px;
+      background-color: $bgColor;
+      border-radius: 16px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      border: 3px solid white;
+      box-sizing: border-box;
+
+      &:hover {
+        cursor: pointer;
+        color: $purple3;
+
+        mat-icon {
+          font-variation-settings: "wght" 600;
+        }
+      }
+    }
   }
 
   .mentionUser {

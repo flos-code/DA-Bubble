@@ -12,6 +12,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import {
   Storage,
+  deleteObject,
   getDownloadURL,
   ref,
   uploadBytes,
@@ -48,7 +49,11 @@ export class TextBoxComponent {
 
   constructor(public userManagementService: UserManagementService) {}
 
-  imageURL = signal<string | undefined>(undefined);
+  // imageURL = signal<string | undefined>(undefined);
+  // filePath = signal<string | undefined>(undefined);
+
+  public imageURL: string | undefined;
+  public filePath: string | undefined;
 
   ngOnInit(): void {
     const usersCollection = collection(this.firestore, 'users');
@@ -126,20 +131,49 @@ export class TextBoxComponent {
 
   async onFileSelected(event) {
     const file: File = event.target.files[0];
-    if (file) {
-      await this.uploadImage(file);
+    if (!file) return;
+
+    const validTypes = ['image/png', 'image/jpeg', 'image/gif'];
+    if (!validTypes.includes(file.type)) {
+      alert('Nur PNG, JPG und GIF Dateien sind zulässig.');
+      return;
     }
+
+    await this.uploadImage(file);
+  }
+
+  generateUniqueId() {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
   }
 
   async uploadImage(file: File) {
     try {
-      const filePath = `myimages/${file.name}`; // Create a path for the file
+      const uniqueId = this.generateUniqueId();
+      const uniqueFileName = `${uniqueId}-${file.name}`;
+      const filePath = `userUploads/${uniqueFileName}`;
+      this.filePath = filePath;
       const storageRef = ref(this.storage, filePath);
       const uploadTask = await uploadBytes(storageRef, file);
       const downloadUrl = await getDownloadURL(uploadTask.ref);
-      this.imageURL.set(downloadUrl); // Set the image URL to display it
+      this.imageURL = downloadUrl;
     } catch (error) {
       console.error('Error uploading file: ', error);
+    }
+  }
+
+  async removeFileUpload() {
+    if (!this.filePath) return;
+
+    try {
+      const storageRef = ref(this.storage, this.filePath);
+      await deleteObject(storageRef);
+      this.imageURL = undefined;
+      this.filePath = undefined;
+    } catch (error) {
+      console.error('Error deleting file: ', error);
     }
   }
 
