@@ -72,12 +72,23 @@
                         <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message own-bubble">
-                        <span>{{ message.message }}</span>
+
+                        <div *ngIf="editingMessageId === message.messageId; else displayMessage">
+                            <input class="edit-message-input" [(ngModel)]="editingMessageText" (keyup.enter)="saveMessageChanges()" type="text">
+                          </div>
+                          <ng-template #displayMessage>
+                            <span>{{ message.message }}</span>
+                          </ng-template>
+   
                     </div>
                 </div>
                 <div class="own-action-bar">
                     <button class="add-reaction" alt=""></button>
-                    <button class="options" alt=""></button>
+                    <button (click)="openEditOwnMessageField()" class="options" alt=""></button>
+
+                </div>
+                <div (click)="startEditMessage(message)" *ngIf="openEditOwnMessage" class="edit-message">
+                    <span>Nachricht bearbeiten</span>
                 </div>
             </div>
             }}

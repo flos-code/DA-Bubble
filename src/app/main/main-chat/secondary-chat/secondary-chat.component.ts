@@ -44,6 +44,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadOpen: boolean = true;
   creationDate: Date;
   isLoading: boolean = true;
+  editingMessageId: string | null = null;
+  editingMessageText: string = '';
+  openEditOwnMessage: boolean = false;
+
   /*---------- Emoji Variables -----------*/
   emojiWindowOpen = false;
   messageModel: string = '';
@@ -75,6 +79,32 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   ngAfterViewInit() {
     setTimeout(() => this.scrollToBottom(), 200);
+  }
+
+  /*-------------------------- Edit Message / Reactions -------------------------*/
+
+  openEditOwnMessageField() {
+    this.openEditOwnMessage = true;
+  }
+
+  startEditMessage(message: ThreadMessage) {
+    this.editingMessageId = message.messageId;
+    this.editingMessageText = message.message;
+    this.openEditOwnMessage = false;
+  }
+
+  async saveMessageChanges() {
+    if (!this.editingMessageId) return;
+    const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.editingMessageId);
+    await updateDoc(messageRef, { message: this.editingMessageText });
+    this.editingMessageId = null;
+    this.editingMessageText = '';
+  }
+
+
+  cancelEditMessage() {
+    this.editingMessageId = null;
+    this.openEditOwnMessage = false;
   }
 
   /*--------------------------------- Overall -----------------------------------*/
@@ -115,9 +145,9 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       }
     }
   }
-  
-  
-  
+
+
+
 
   /*--------------------------------- Send Messages -----------------------------------*/
 
@@ -126,17 +156,17 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.log('Die Nachricht darf nicht leer sein.');
       return;
     }
-  
+
     try {
       const newMessage = new ThreadMessage({
         createdBy: this.currentUser,
         message: this.messageModel,
         creationDate: Date.now(),
       });
-  
+
       const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
       await addDoc(threadMessagesRef, newMessage.toJSON());
-  
+
       this.messageModel = '';
       this.scrollToBottom();
       console.log('Nachricht erfolgreich gesendet.');
@@ -144,7 +174,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error('Fehler beim Senden der Nachricht:', error);
     }
   }
-  
+
   /*--------------------------------- ThreadMessages -----------------------------------*/
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
     const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
@@ -158,7 +188,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   loadThreadMessages(threadId: string) {
     const channelId = this.activeChannelId;
     const threadMessagesRef = query(collection(db, `channels/${channelId}/threads/${threadId}/messages`), orderBy('creationDate', 'asc'));
-  
+
     onSnapshot(threadMessagesRef, (snapshot) => {
       const threadMessages = snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
       this.threadMessages = threadMessages;
@@ -168,8 +198,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error("Fehler beim Abonnieren der Thread-Nachrichten: ", error);
     });
   }
-  
-  
+
+
 
   async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
     const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
