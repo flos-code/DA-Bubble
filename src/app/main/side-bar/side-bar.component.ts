@@ -42,7 +42,7 @@ const db = getFirestore(app);
     CommonModule,
     DialogAddChannelComponent,
     DialogAddUserNewChannelComponent,
-],
+  ],
   templateUrl: './side-bar.component.html',
   styleUrl: './side-bar.component.scss',
 })
@@ -58,6 +58,7 @@ export class SideBarComponent {
   channels$: Observable<{ id: string; data: Channel }[]>;
   channels: { id: string; data: Channel }[] = [];
   users$ = this.userManagementService.users$;
+  filteredUsers$ = this.userManagementService.filteredUsers$;
 
   authSubscription: any;
   auth = getAuth(app);
@@ -66,8 +67,8 @@ export class SideBarComponent {
     public dialog: MatDialog,
     private viewManagementService: ViewManagementService,
     public userManagementService: UserManagementService,
-    private chatService: ChatService,
-  ) { }
+    private chatService: ChatService
+  ) {}
 
   async ngOnInit() {
     this.userManagementService.activeUserId$.subscribe((activeUserId) => {
