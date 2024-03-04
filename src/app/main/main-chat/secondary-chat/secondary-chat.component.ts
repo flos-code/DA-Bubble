@@ -83,7 +83,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   /*-------------------------- Edit Message / Reactions -------------------------*/
 
-  openEditOwnMessageField() {
+  openEditOwnMessageField(editingMessageId) {
     this.openEditOwnMessage = true;
   }
 

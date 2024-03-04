@@ -84,7 +84,7 @@
                 </div>
                 <div class="own-action-bar">
                     <button class="add-reaction" alt=""></button>
-                    <button (click)="openEditOwnMessageField()" class="options" alt=""></button>
+                    <button (click)="openEditOwnMessageField(editingMessageId)" class="options" alt=""></button>
 
                 </div>
                 <div (click)="startEditMessage(message)" *ngIf="openEditOwnMessage" class="edit-message">

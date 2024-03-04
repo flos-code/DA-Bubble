@@ -280,6 +280,12 @@ emoji-mart {
     span {
         font-size: 20px;
         font-weight: 600;
+
+        &:hover {
+            background-color: $bg-color;
+            padding: 8px 16px;
+            border-radius: 24px;
+        }
     }
 }
 
