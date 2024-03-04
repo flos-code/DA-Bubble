@@ -9,7 +9,6 @@ div:first-of-type {
 
 .mainThreadReactions,
 .mainThreadReactionsOwn {
-    position: relative;
     width: 100%;
     display: flex;
     justify-content: flex-start;
@@ -98,4 +97,10 @@ div:first-of-type {
             }
         }
     }
+}
+
+.mainThreadReactions > app-reaction-emoji-input {
+    position: absolute;
+    top: 170px;
+    left: 145px;
 }

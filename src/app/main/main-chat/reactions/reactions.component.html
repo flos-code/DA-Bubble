@@ -7,7 +7,7 @@
             @for (reaction of reactions | slice:0:3; track $index) {
                 <div class="reactionContainer">
                     <div class="ractionEmoji">
-                        <span>{{reaction.reaction}}</span>
+                        <span>{{reaction?.reaction}}</span>
                     </div>
                     <div class="ractionCount">
                         <div>{{reaction.count}}</div>
@@ -35,7 +35,7 @@
             [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="threadId"></app-reaction-emoji-input>
         </div>
     }
-} @else {
+ } @else {
     @if(reactions.length !== 0) {
         <div class="mainThreadReactionsOwn">
             <div (click)="openMoreEmojis()">

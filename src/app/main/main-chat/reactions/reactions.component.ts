@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 
@@ -44,11 +43,12 @@ export class ReactionsComponent implements OnInit {
 
   ngOnInit(): void {
     this.getReactions();
+    this.getReactionNames();
     //this.reactionService.getReactions(this.reactionCollectionPath);
     //this.reactions = this.reactionService.reactions;
   }
 
-  constructor(private reactionService: ReactionsService) {
+  constructor() {
 
   }
 
@@ -65,10 +65,8 @@ export class ReactionsComponent implements OnInit {
         }
         )
       });
-      this.getReactionNames();
     });
   }
-
 
   getReactionNames() {
     const q = query(collection(db, 'users'));

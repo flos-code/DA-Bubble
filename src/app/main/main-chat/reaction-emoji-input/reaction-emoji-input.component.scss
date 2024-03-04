@@ -2,7 +2,7 @@
 
 
 .backgroundReactionEmojiContainer{
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   width: 100%;
@@ -19,6 +19,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 100;
+  white-space: nowrap;
 
 
   > input {

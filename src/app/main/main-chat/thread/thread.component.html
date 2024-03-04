@@ -36,7 +36,7 @@
                 </div>
             </div>
             <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions"></app-reaction-emoji-input>
         </div>
         <!-- ============================================================================ -->
     } @else {
@@ -79,8 +79,8 @@
                     <span class="material-symbols-outlined">more_vert</span>
                 </div>
             </div>
-            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"></app-reaction-emoji-input>
+            <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions"></app-reaction-emoji-input>
 
 
             <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>

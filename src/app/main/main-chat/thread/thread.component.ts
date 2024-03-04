@@ -45,11 +45,13 @@ export class ThreadComponent implements OnInit {
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
   //@Input() textAreaEditMessage: string;
+  reactions = [];
 
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
   ngOnInit(): void {
+    this.getReactions();
     this.getMessageCountAndAnswer();
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
   }
@@ -62,6 +64,22 @@ export class ThreadComponent implements OnInit {
     console.log('Message count', snapshot.data().count);
     this.formatMessageCount();
   } */
+
+  getReactions() {
+    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
+    return onSnapshot(q, (element) => {
+      this.reactions = [];
+      element.forEach(reaction => {
+        this.reactions.push({
+          'id': reaction.id,
+          'count': reaction.data()['count'],
+          'reaction': reaction.data()['reaction'],
+          'reactedBy': reaction.data()['reactedBy']
+        }
+        )
+      });
+    });
+  }
 
   async getMessageCountAndAnswer() {
     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))

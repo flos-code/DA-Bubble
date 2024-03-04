@@ -13,6 +13,22 @@
     }
 }
 
+.reactionOtherMessages {
+    position: absolute;
+    right: 45px;
+    top: 20px;
+    height: 46px;
+    z-index: 10;
+}
+
+.reactionOwnMessages {
+    position: absolute;
+    left: 45px;
+    top: 20px;
+    height: 46px;
+    z-index: 10;
+}
+
 .messageContainerOwn{
     justify-content: flex-end;
 }
@@ -200,14 +216,6 @@
 .messageContainer:hover > .toolBar,
 .messageContainerOwn:hover > .toolBarOwn {
     display: flex;
-}
-
-.reactionOtherMessages {
-    position: absolute;
-    right: 45px;
-    top: 20px;
-    height: 46px;
-    z-index: 10;
 }
 
 .editMessagePopupBackground {
