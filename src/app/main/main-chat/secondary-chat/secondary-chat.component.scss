@@ -91,12 +91,13 @@ emoji-mart {
 }
 
 .user-message {
+    position: relative;
     display: flex;
     padding: 10px 20px;
     margin: 4px 0;
     transition: all 125ms ease-in-out;
 
-    img {
+    .profile-picture {
         height: 70px;
         border-radius: 100%;
         margin: 0 10px;
@@ -107,6 +108,15 @@ emoji-mart {
 
         .thread-message {
             background-color: white;
+        }
+
+        .action-bar {
+            right: 44px;
+            opacity: 1;
+        }
+
+        .own-action-bar {
+            opacity: 1;
         }
     }
 }
@@ -161,6 +171,95 @@ emoji-mart {
     span {
         font-size: 18px;
         font-weight: 400;
+    }
+}
+
+.own-action-bar {
+    position: absolute;
+    left: 44px;
+    opacity: 0;
+    top: -12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid $light-purple;
+    width: 100px;
+    height: 44px;
+    border-radius: 24px 24px 0px 24px;
+    background-color: white;
+    transition: all 125ms ease-in-out;
+
+    .add-reaction {
+        background-image: url("/assets/img/main-chat/add_reaction.svg");
+        background-position: center;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border: unset;
+        transition: all 125ms ease-in-out;
+
+        &:hover {
+            background-color: $bg-color;
+            border-radius: 50%;
+            background-image: url("/assets/img/main-chat/add_reaction_hover.svg");
+        }
+    }
+
+    .options {
+        background-image: url("/assets/img/main-chat/options.svg");
+        background-position: center;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border: unset;
+        transition: all 125ms ease-in-out;
+
+        &:hover {
+            background-color: $bg-color;
+            border-radius: 50%;
+            background-image: url("/assets/img/main-chat/options_hover.svg");
+        }
+    }
+}
+
+.action-bar {
+    position: absolute;
+    right: -80px;
+    opacity: 0;
+    top: -12px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border: 1px solid $light-purple;
+    width: 62px;
+    height: 44px;
+    border-radius: 24px 24px 0px 24px;
+    background-color: white;
+    transition: all 200ms ease-in-out;
+
+    .add-reaction {
+        background-image: url("/assets/img/main-chat/add_reaction.svg");
+        background-position: center;
+        background-color: transparent;
+        background-repeat: no-repeat;
+        background-size: contain;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        border: unset;
+        transition: all 125ms ease-in-out;
+
+        &:hover {
+            background-color: $bg-color;
+            border-radius: 50%;
+            background-image: url("/assets/img/main-chat/add_reaction_hover.svg");
+        }
     }
 }
 

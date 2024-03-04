@@ -15,7 +15,7 @@
         <div #chatContent class="chat-content">
             @if (currentUser !== firstThreadMessage.createdBy) {
             <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
-                <img src="/assets/img/userImages/userImage4.svg" alt="">
+                <img class="profile-picture" src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
                     <div class="user-time">
                         <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
@@ -28,7 +28,7 @@
             </div>
         } @else {
             <div *ngIf="firstThreadMessage" class="user-message own-message">
-                <img src="/assets/img/userImages/userImage6.svg" alt="">
+                <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
                         <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
@@ -49,7 +49,7 @@
             @for (message of threadMessages; track $index) {
             @if(currentUser !== threadMessages[$index].createdBy){
             <div class="user-message"> <!-- Template of awnsers -->
-                <img src="/assets/img/userImages/userImage5.svg" alt="">
+                <img class="profile-picture" src="/assets/img/userImages/userImage5.svg" alt="">
                 <div>
                     <div class="user-time">
                         <p>{{ getUserName(message.createdBy) }}</p>
@@ -59,10 +59,13 @@
                         <span>{{ message.message }}</span>
                     </div>
                 </div>
+                <div class="action-bar">
+                    <button class="add-reaction" alt=""></button>
+                </div>
             </div>
             } @else {
             <div class="user-message own-message"> <!-- Template of own message -->
-                <img src="/assets/img/userImages/userImage6.svg" alt="">
+                <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
                 <div class="message-box">
                     <div class="user-time own-message">
                         <p>{{ getUserName(message.createdBy) }}</p>
@@ -71,6 +74,10 @@
                     <div class="thread-message own-bubble">
                         <span>{{ message.message }}</span>
                     </div>
+                </div>
+                <div class="own-action-bar">
+                    <button class="add-reaction" alt=""></button>
+                    <button class="options" alt=""></button>
                 </div>
             </div>
             }}
