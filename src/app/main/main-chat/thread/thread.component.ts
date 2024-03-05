@@ -111,9 +111,9 @@ export class ThreadComponent implements OnInit {
     this.lastAnswer
   }
 
-  addReaction(emoji: string, currentUser: string) {
+ /*  addReaction(emoji: string, currentUser: string) {
     this.reactionService.sendReaction(emoji, currentUser);
-  }
+  } */
 
   openMoreEmojis() {
     this.showMoreEmojis = true;

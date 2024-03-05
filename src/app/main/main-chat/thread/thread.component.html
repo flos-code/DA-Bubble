@@ -22,10 +22,10 @@
     
             <!-- ========== Toolbar ========== -->
             <div class="toolBar">
-                <div (click)="addReaction(':raised_hands:', currentUser)">
+                <div>
                     <img src="/assets/img/main-chat/check_mark.svg">
                 </div>
-                <div (click)="addReaction(':raised_hands:', currentUser)">
+                <div>
                     <img src="/assets/img/main-chat/raising_hands.svg">
                 </div>
                 <div (click)="openMoreEmojis()">
@@ -36,7 +36,7 @@
                 </div>
             </div>
             <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread.threadId"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
         </div>
         <!-- ============================================================================ -->
     } @else {
@@ -54,7 +54,7 @@
                     <div>Letzte Antwort {{lastAnswer}}</div>
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
-                <app-reactions [userId]="thread?.userId" [thread]="thread" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                <app-reactions [userId]="thread.userId" [thread]="thread"  [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
                 </app-reactions>
             </div>
             <div class="messageProfileIcon">
@@ -63,10 +63,10 @@
     
             <!-- ========== Toolbar own ========== -->
             <div class="toolBarOwn">
-                <div (click)="addReaction(':raised_hands:', currentUser)">
+                <div>
                     <img src="/assets/img/main-chat/check_mark.svg">
                 </div>
-                <div (click)="addReaction(':raised_hands:', currentUser)">
+                <div>
                     <img src="/assets/img/main-chat/raising_hands.svg">
                 </div>
                 <div (click)="openMoreEmojis()">
@@ -80,7 +80,7 @@
                 </div>
             </div>
             <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread.threadId"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
 
 
             <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>

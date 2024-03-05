@@ -35,7 +35,7 @@ export class ReactionsComponent implements OnInit {
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
-  @Input() userId: string;
+  @Input() userId!: string;
   reactions = [];
   reactionNames = [];
   @Input() thread!: any;

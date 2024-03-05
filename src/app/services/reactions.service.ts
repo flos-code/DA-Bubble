@@ -49,7 +49,7 @@ export class ReactionsService {
   }
 
 
-/*   getReactions(reactionCollectionPath: string) {
+/* getReactions(reactionCollectionPath: string) {
     this.reactionCollectionPath = reactionCollectionPath;
     const q = query(collection(db, reactionCollectionPath));
     return onSnapshot(q, (list) => {
