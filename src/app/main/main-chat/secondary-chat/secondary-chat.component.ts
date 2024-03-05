@@ -12,6 +12,8 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
 import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
+import { ReactionsComponent } from '../reactions/reactions.component';
+import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -27,7 +29,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule],
+  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionsComponent, ReactionEmojiInputComponent],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
@@ -47,7 +49,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   editingMessageId: string | null = null;
   editingMessageText: string = '';
   openEditOwnMessage: boolean = false;
-
   /*---------- Emoji Variables -----------*/
   emojiWindowOpen = false;
   messageModel: string = '';
@@ -60,6 +61,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
   DialogRef: any; //unknown variable, maybe delete later
 
+  showMoreEmojis: { [key: string]: boolean } = {};
+  reactionCollectionPath: string;
+  reactions = [];
+
   constructor(
     private chatService: ChatService,
     public inputService: InputService
@@ -71,6 +76,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subcribeThreadId();
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messageId/reactions`;
   }
 
   ngOnDestroy(): void {
@@ -83,9 +89,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   /*-------------------------- Edit Message / Reactions -------------------------*/
 
-  openEditOwnMessageField(editingMessageId) {
-    this.openEditOwnMessage = true;
+  openEditOwnMessageField(messageId: string) {
+    this.editingMessageId = messageId; // Speichern der zu bearbeitenden Nachrichten-ID
+    this.openEditOwnMessage = !this.openEditOwnMessage; // Umschalten des Bearbeitungsdialogfelds
   }
+
 
   startEditMessage(message: ThreadMessage) {
     this.editingMessageId = message.messageId;
@@ -102,10 +110,18 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
 
-  cancelEditMessage() {
-    this.editingMessageId = null;
+  closeEditMessageField() {
     this.openEditOwnMessage = false;
   }
+
+  openMoreEmojis(messageId: string) {
+    this.showMoreEmojis[messageId] = true; // Setzt den Wert auf true, um das Emoji-Fenster zu öffnen
+}
+
+closeMoreEmojis(messageId: string) {
+    this.showMoreEmojis[messageId] = false; // Setzt den Wert auf false, um das Emoji-Fenster zu schließen
+}
+
 
   /*--------------------------------- Overall -----------------------------------*/
 

@@ -39,6 +39,7 @@ export class ReactionsComponent implements OnInit {
   reactions = [];
   reactionNames = [];
   @Input() thread!: any;
+  @Input() message!: any;
   reactionCount: number;
 
   ngOnInit(): void {

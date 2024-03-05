@@ -44,6 +44,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
   @Input() threadId!: string;
+  @Input() messageId!: string;
   @Input() reactions!: any;
 
 
