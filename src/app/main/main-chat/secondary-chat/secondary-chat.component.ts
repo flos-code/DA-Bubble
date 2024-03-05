@@ -61,7 +61,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
   DialogRef: any; //unknown variable, maybe delete later
 
-  showMoreEmojis: boolean = false;
+  showMoreEmojis: { [key: string]: boolean } = {};
   reactionCollectionPath: string;
   reactions = [];
 
@@ -114,13 +114,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.openEditOwnMessage = false;
   }
 
-  openMoreEmojis() {
-    this.showMoreEmojis = true;
-  }
+  openMoreEmojis(messageId: string) {
+    this.showMoreEmojis[messageId] = true; // Setzt den Wert auf true, um das Emoji-Fenster zu öffnen
+}
 
-  closeMoreEmojis(showMoreEmojis: boolean) {
-    this.showMoreEmojis = false;
-  }
+closeMoreEmojis(messageId: string) {
+    this.showMoreEmojis[messageId] = false; // Setzt den Wert auf false, um das Emoji-Fenster zu schließen
+}
+
 
   /*--------------------------------- Overall -----------------------------------*/
 

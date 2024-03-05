@@ -61,14 +61,19 @@
                     <!-- <app-reactions [userId]="message.createdBy" [message]="message" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
                 </app-reactions> -->
                 </div>
-                <div class="action-bar">
+                <div class="action-bar" (click)="openMoreEmojis(message.messageId)">
                     <button class="add-reaction" alt=""></button>
                 </div>
 
-                <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis"
-                    [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                    [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"
-                    [reactions]="reactions" [messageId]="message.messageId">
+                <app-reaction-emoji-input 
+                class="reactionOtherMessages" 
+                *ngIf="showMoreEmojis[message.messageId]" 
+                [showMoreEmojis]="showMoreEmojis[message.messageId]" 
+                (showMoreEmojisChild)="closeMoreEmojis(message.messageId)"
+                [reactionCollectionPath]="reactionCollectionPath" 
+                [currentUser]="currentUser"
+                [reactions]="reactions" 
+                [messageId]="message.messageId">
                 </app-reaction-emoji-input>
             </div>
             } @else {
@@ -94,15 +99,20 @@
                     </app-reactions> -->
                 </div>
                 <div class="own-action-bar">
-                    <button class="add-reaction" (click)="openMoreEmojis()" alt=""></button>
+                    <button class="add-reaction" (click)="openMoreEmojis(message.messageId)" alt=""></button>
                     <button class="options" (click)="openEditOwnMessageField(message.messageId)"
                         alt="Optionen"></button>
                 </div>
 
-                <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis"
-                    [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                    [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser"
-                    [reactions]="reactions" [messageId]="message.messageId">
+                <app-reaction-emoji-input 
+                class="reactionOtherMessages" 
+                *ngIf="showMoreEmojis[message.messageId]" 
+                [showMoreEmojis]="showMoreEmojis[message.messageId]" 
+                (showMoreEmojisChild)="closeMoreEmojis(message.messageId)"
+                [reactionCollectionPath]="reactionCollectionPath" 
+                [currentUser]="currentUser"
+                [reactions]="reactions" 
+                [messageId]="message.messageId">
                 </app-reaction-emoji-input>
 
                 <div *ngIf="editingMessageId === message.messageId && openEditOwnMessage"
