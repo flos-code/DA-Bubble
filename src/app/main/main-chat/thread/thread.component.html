@@ -22,10 +22,10 @@
     
             <!-- ========== Toolbar ========== -->
             <div class="toolBar">
-                <div (click)="addReaction('approve')">
+                <div (click)="addReaction(':raised_hands:', currentUser)">
                     <img src="/assets/img/main-chat/check_mark.svg">
                 </div>
-                <div (click)="addReaction('raisingHands')">
+                <div (click)="addReaction(':raised_hands:', currentUser)">
                     <img src="/assets/img/main-chat/raising_hands.svg">
                 </div>
                 <div (click)="openMoreEmojis()">
@@ -63,10 +63,10 @@
     
             <!-- ========== Toolbar own ========== -->
             <div class="toolBarOwn">
-                <div (click)="addReaction('approve')">
+                <div (click)="addReaction(':raised_hands:', currentUser)">
                     <img src="/assets/img/main-chat/check_mark.svg">
                 </div>
-                <div (click)="addReaction('raisingHands')">
+                <div (click)="addReaction(':raised_hands:', currentUser)">
                     <img src="/assets/img/main-chat/raising_hands.svg">
                 </div>
                 <div (click)="openMoreEmojis()">

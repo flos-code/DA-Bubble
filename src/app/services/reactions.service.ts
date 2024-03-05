@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { Observable, BehaviorSubject } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -22,10 +23,31 @@ const db = getFirestore(app);
   providedIn: 'root'
 })
 export class ReactionsService {
+  emoji: string;
+  currentUser: string;
+
+  private reactionValues = new BehaviorSubject<[string, string]>(['', '']);
+
   reactions = [];
   reactionCollectionPath: string;
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService) { 
+/*     this.setReactionValues();
+ */  }
+
+/*   setReactionValues(emoji: string, currentUser: string) {
+    this.emoji = emoji;
+    this.currentUser = currentUser;
+  } */
+
+  sendReaction(emoji: string, currentUser: string): void {
+    this.reactionValues.next([emoji, currentUser]);
+  }
+
+  getReaction():Observable<any> {
+    return this.reactionValues.asObservable();
+  }
+
 
 /*   getReactions(reactionCollectionPath: string) {
     this.reactionCollectionPath = reactionCollectionPath;

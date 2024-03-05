@@ -11,6 +11,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 import { initializeApp } from 'firebase/app';
 import { collection, getCountFromServer, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { BehaviorSubject } from 'rxjs';
+import { ReactionsService } from '../../../services/reactions.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -48,7 +49,7 @@ export class ThreadComponent implements OnInit {
   reactions = [];
 
 
-  constructor(private chatService: ChatService, private main: MainChatComponent) { }
+  constructor(private chatService: ChatService, private main: MainChatComponent, private reactionService: ReactionsService) { }
 
   ngOnInit(): void {
     this.getReactions();
@@ -110,8 +111,8 @@ export class ThreadComponent implements OnInit {
     this.lastAnswer
   }
 
-  addReaction(emoji: string) {
-
+  addReaction(emoji: string, currentUser: string) {
+    this.reactionService.sendReaction(emoji, currentUser);
   }
 
   openMoreEmojis() {

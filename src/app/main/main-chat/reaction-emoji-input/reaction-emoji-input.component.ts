@@ -6,6 +6,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
+import { Subscription } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -31,7 +32,9 @@ const db = getFirestore(app);
   templateUrl: './reaction-emoji-input.component.html',
   styleUrl: './reaction-emoji-input.component.scss'
 })
-export class ReactionEmojiInputComponent {
+export class ReactionEmojiInputComponent implements OnInit {
+  clickEventReaction: Subscription;
+
   @Input() showMoreEmojis!: boolean;
   @Output() showMoreEmojisChild = new EventEmitter();
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
@@ -45,6 +48,9 @@ export class ReactionEmojiInputComponent {
 
 
   constructor(private reactionServie: ReactionsService) {
+    this.clickEventReaction =  this.reactionServie.getReaction().subscribe(reaction => {
+      this.saveReaction(reaction['emoji'], reaction['currentUser']);
+    })
   }
 
   ngOnInit(): void {
