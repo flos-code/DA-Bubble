@@ -73,7 +73,7 @@
                     </div>
                     <div class="thread-message own-bubble">
 
-                        <div *ngIf="editingMessageId === message.messageId; else displayMessage">
+                        <div *ngIf="editingMessageId === message.messageId && !openEditOwnMessage; else displayMessage">
                             <input class="edit-message-input" [(ngModel)]="editingMessageText" (keyup.enter)="saveMessageChanges()" type="text">
                           </div>
                           <ng-template #displayMessage>
@@ -84,10 +84,9 @@
                 </div>
                 <div class="own-action-bar">
                     <button class="add-reaction" alt=""></button>
-                    <button (click)="openEditOwnMessageField(editingMessageId)" class="options" alt=""></button>
-
+                    <button class="options" (click)="openEditOwnMessageField(message.messageId)" alt="Optionen"></button>
                 </div>
-                <div (click)="startEditMessage(message)" *ngIf="openEditOwnMessage" class="edit-message">
+                <div *ngIf="editingMessageId === message.messageId && openEditOwnMessage" (click)="startEditMessage(message)" class="edit-message">
                     <span>Nachricht bearbeiten</span>
                 </div>
             </div>

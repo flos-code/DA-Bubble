@@ -47,7 +47,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   editingMessageId: string | null = null;
   editingMessageText: string = '';
   openEditOwnMessage: boolean = false;
-
   /*---------- Emoji Variables -----------*/
   emojiWindowOpen = false;
   messageModel: string = '';
@@ -83,9 +82,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   /*-------------------------- Edit Message / Reactions -------------------------*/
 
-  openEditOwnMessageField(editingMessageId) {
-    this.openEditOwnMessage = true;
+  openEditOwnMessageField(messageId: string) {
+    this.editingMessageId = messageId; // Speichern der zu bearbeitenden Nachrichten-ID
+    this.openEditOwnMessage = !this.openEditOwnMessage; // Umschalten des Bearbeitungsdialogfelds
   }
+
 
   startEditMessage(message: ThreadMessage) {
     this.editingMessageId = message.messageId;
@@ -102,10 +103,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
 
-  cancelEditMessage() {
-    this.editingMessageId = null;
+  closeEditMessageField() {
     this.openEditOwnMessage = false;
   }
+
 
   /*--------------------------------- Overall -----------------------------------*/
 
