@@ -12,6 +12,8 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
 import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
+import { ReactionsComponent } from '../reactions/reactions.component';
+import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -27,7 +29,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule],
+  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionsComponent, ReactionEmojiInputComponent],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
@@ -59,6 +61,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
   DialogRef: any; //unknown variable, maybe delete later
 
+  showMoreEmojis: boolean = false;
+  reactionCollectionPath: string;
+  reactions = [];
+
   constructor(
     private chatService: ChatService,
     public inputService: InputService
@@ -70,6 +76,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subcribeThreadId();
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messageId/reactions`;
   }
 
   ngOnDestroy(): void {
@@ -107,6 +114,13 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.openEditOwnMessage = false;
   }
 
+  openMoreEmojis() {
+    this.showMoreEmojis = true;
+  }
+
+  closeMoreEmojis(showMoreEmojis: boolean) {
+    this.showMoreEmojis = false;
+  }
 
   /*--------------------------------- Overall -----------------------------------*/
 
