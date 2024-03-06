@@ -9,8 +9,11 @@
     />
   </div>
 
-  <ul *ngIf="displayUserList">
+  <ul *ngIf="displayUser">
     <li *ngFor="let user of filteredUsers">{{ user.data.name }}</li>
+  </ul>
+  <ul *ngIf="displayChannels">
+    <li *ngFor="let channel of channels$ | async">{{ channel.data.name }}</li>
   </ul>
 
   <div class="textBox">
