@@ -149,5 +149,7 @@
  -->        </div>        
         <!-- =================================================================================================== -->
     </div>
-    <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
+    <!-- <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat> -->
 </div>
+
+<app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
