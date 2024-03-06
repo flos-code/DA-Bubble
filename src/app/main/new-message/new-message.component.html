@@ -2,10 +2,16 @@
   <div class="head">
     <div class="title">Neue Nachricht</div>
     <input
+      #userInput
       type="text"
       placeholder="An: #channel, oder @jemanden oder E-Mail Adresse"
+      (keyup)="onInputChange(userInput.value)"
     />
   </div>
+
+  <ul *ngIf="displayUserList">
+    <li *ngFor="let user of filteredUsers">{{ user.data.name }}</li>
+  </ul>
 
   <div class="textBox">
     <app-text-box></app-text-box>

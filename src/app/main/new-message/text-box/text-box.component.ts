@@ -1,11 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-  Component,
-  ElementRef,
-  ViewChild,
-  inject,
-  signal,
-} from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -49,9 +43,6 @@ export class TextBoxComponent {
 
   constructor(public userManagementService: UserManagementService) {}
 
-  // imageURL = signal<string | undefined>(undefined);
-  // filePath = signal<string | undefined>(undefined);
-
   public imageURL: string | undefined;
   public filePath: string | undefined;
 
@@ -72,7 +63,6 @@ export class TextBoxComponent {
   }
 
   ngOnDestroy(): void {
-    // Unsubscribe to prevent memory leaks
     this.dbSubscription.unsubscribe();
   }
 

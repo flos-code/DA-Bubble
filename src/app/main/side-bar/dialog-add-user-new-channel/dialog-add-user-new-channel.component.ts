@@ -48,9 +48,7 @@ export class DialogAddUserNewChannelComponent {
 
   userSelection: string = 'allMembers';
   addedUser: string = 'test';
-  allUsers = [
-    /* Array von user ids für den channel*/
-  ];
+  allUsers = [];
   filteredUsers = [];
   selectedUsers = [];
   activeChannelMembers: string[] = [];
@@ -136,12 +134,6 @@ export class DialogAddUserNewChannelComponent {
   async initializeData() {
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
     await this.fetchUsers();
-
-    console.log(
-      'actibe:',
-      this.activeChannelMembers,
-      this.getActiveChannelId()
-    );
   }
 
   getActiveChannelId() {
@@ -161,7 +153,7 @@ export class DialogAddUserNewChannelComponent {
         }
       }
     }
-    console.log('Keine Mitglieder gefunden oder Channel ID ist null.'); // Für Debugging-Zwecke
+    console.log('Keine Mitglieder gefunden oder Channel ID ist null.');
     return [];
   }
 
