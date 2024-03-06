@@ -100,6 +100,7 @@ export class ChatService {
   // ------------------- SecondaryChat Logic --------------------
 
   openThread(threadId: string): void {
+    this.closeThread();
     this.selectedThreadIdSource.next(threadId);
     this.threadOpenSource.next(true);
   }

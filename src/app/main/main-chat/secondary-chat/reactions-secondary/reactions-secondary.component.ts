@@ -53,8 +53,9 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
-    // console.log('PIERCE', this.reactionCollectionPath)
-    // console.log('PIERCE', this.selectedThreadId)
+    console.log('PIERCE', this.reactionCollectionPath)
+    console.log('PIERCE', this.selectedThreadId)
+    console.log('PIERCE', this.messageId)
   }
 
   ngOnDestroy(): void {
@@ -64,6 +65,12 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   }
 
   getReactions() {
+    // Stellen Sie sicher, dass reactionCollectionPath gültig ist
+    if (!this.reactionCollectionPath) {
+      console.warn('reactionCollectionPath is not set yet.');
+      return;
+    }
+    
     const q = query(collection(db, this.reactionCollectionPath));
     onSnapshot(q, (snapshot) => {
       const updatedReactions = [];
@@ -79,6 +86,7 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
       // console.log('Reaction array', this.reactions);
     });
   }
+  
 
 
   getReactionNames() {
@@ -97,11 +105,15 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   }
 
   updateReactionCollectionPath() {
-    if (this.selectedThreadId && this.messageId) {
+    if (this.selectedThreadId && this.messageId && this.activeChannelId) {
       this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
+      // Aufruf von getReactions, nachdem der Pfad aktualisiert wurde
       this.getReactions();
+    } else {
+      console.warn('Cannot update reactionCollectionPath due to missing IDs');
     }
   }
+  
 
   getActualChannelId() {
     this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
