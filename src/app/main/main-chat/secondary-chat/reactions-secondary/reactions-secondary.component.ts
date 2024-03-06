@@ -1,11 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, OnDestroy, OnInit, Output, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
+import { ChatService } from '../../../../services/chat.service';
+import { Subscription } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -30,41 +32,53 @@ const db = getFirestore(app);
   templateUrl: './reactions-secondary.component.html',
   styleUrl: './reactions-secondary.component.scss'
 })
-export class ReactionsSecondaryComponent implements OnInit{
+export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
   @Input() currentUser!: string;
   @Input() userId!: string;
-  @Input() message!: any;
+  @Input() messageId!: any;
+  private threadIdSubscription!: Subscription;
+  private selectedThreadId!: string;
   reactions = [];
   reactionNames = [];
   reactionCount: number;
+  activeChannelId: string = '';
+
+  constructor(
+    private chatService: ChatService,
+  ) { }
 
   ngOnInit(): void {
+    this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
     console.log('PIERCE', this.reactionCollectionPath)
+    console.log('PIERCE', this.selectedThreadId)
   }
 
-  constructor() {
+  ngOnDestroy(): void {
+    if (this.threadIdSubscription) {
+      this.threadIdSubscription.unsubscribe();
+    }
   }
 
   getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/qVp8JcXz4ElKbOWPxX7U/messages/${this.message}/reactions`));
+    const q = query(collection(db, this.reactionCollectionPath));
     onSnapshot(q, (snapshot) => {
-        const updatedReactions = [];
-        snapshot.forEach(doc => {
-            updatedReactions.push({
-                id: doc.id,
-                count: doc.data()['count'],
-                reaction: doc.data()['reactionName'],
-                reactedBy: doc.data()['reactedBy']
-            });
+      const updatedReactions = [];
+      snapshot.forEach(doc => {
+        updatedReactions.push({
+          id: doc.id,
+          count: doc.data()['count'],
+          reaction: doc.data()['reaction'],
+          reactedBy: doc.data()['reactedBy']
         });
-        this.reactions = updatedReactions;
-        console.log('Reaction array', this.reactions);
+      });
+      this.reactions = updatedReactions;
+      // console.log('Reaction array', this.reactions);
     });
-}
+  }
 
 
   getReactionNames() {
@@ -73,12 +87,32 @@ export class ReactionsSecondaryComponent implements OnInit{
       list.forEach(name => {
         for (let i = 0; i < this.reactions.length; i++) {
           let reaction = this.reactions[i];
-          if(name.id == reaction.reactedBy) {
+          if (name.id == reaction.reactedBy) {
             this.reactions = this.reactions.map(obj => ({ ...obj, reactedByName: name.data()['name'] }));
           }
         };
       });
-      console.log('Reaction names', this.reactions);
+      // console.log('Reaction names', this.reactions);
+    });
+  }
+
+  updateReactionCollectionPath() {
+    if (this.selectedThreadId && this.messageId) {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
+      this.getReactions();
+    }
+  }
+
+  getActualChannelId() {
+    this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
+    // console.log('Actual CHANNEL ID:', this.activeChannelId)
+  }
+
+  getActualThreadId() {
+    this.getActualChannelId();
+    this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(threadId => {
+      this.selectedThreadId = threadId;
+      this.updateReactionCollectionPath();
     });
   }
 

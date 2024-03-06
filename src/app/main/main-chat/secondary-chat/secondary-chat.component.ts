@@ -58,7 +58,9 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   channel: Channel; // Data of actual channel
   channelMembers = []; // userdata of actual channel members
   activeChannelId: string = '';
-  threadId: string = 'qVp8JcXz4ElKbOWPxX7U'; //TODO: get actual thread ID
+  threadId: string = ''; //TODO: get actual thread ID
+  private threadIdSubscription!: Subscription;
+  private selectedThreadId!: string;
   DialogRef: any; //unknown variable, maybe delete later
 
   showMoreEmojis: { [key: string]: boolean } = {};
@@ -73,10 +75,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.setCurrentUser();
     this.getActualChannelId();
+    this.getActualThreadId();
     this.subcribeThreadId();
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/vsyJ6UHEIvgjZ8bLmgNZ/reactions`;
   }
 
   ngOnDestroy(): void {
@@ -129,6 +131,13 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     // console.log('Actual CHANNEL ID:', this.activeChannelId)
   }
 
+  getActualThreadId() {
+    this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(threadId => {
+      this.selectedThreadId = threadId;
+      this.threadId = this.selectedThreadId;
+    });
+  }
+
   setCurrentUser() {
     this.currentUser = this.auth.currentUser.uid;
     // console.log('CurrentUserID:', this.currentUser)
@@ -138,6 +147,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
+        console.log('PIERCE THREAD ID:', this.threadId)
       } else {
         console.log('No thread ID available');
       }
@@ -191,6 +201,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
+
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
     const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
     const snapshot = await getDocs(threadMessagesRef);
@@ -213,8 +224,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error("Fehler beim Abonnieren der Thread-Nachrichten: ", error);
     });
   }
-
-
 
   async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
     const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
