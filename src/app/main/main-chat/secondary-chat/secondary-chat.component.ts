@@ -12,7 +12,7 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
 import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
-import { ReactionsComponent } from '../reactions/reactions.component';
+import { ReactionsSecondaryComponent } from './reactions-secondary/reactions-secondary.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {
@@ -29,7 +29,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionsComponent, ReactionEmojiInputComponent],
+  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionsSecondaryComponent, ReactionEmojiInputComponent],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
@@ -116,12 +116,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   openMoreEmojis(messageId: string) {
     this.showMoreEmojis[messageId] = true; // Setzt den Wert auf true, um das Emoji-Fenster zu öffnen
-}
+  }
 
-closeMoreEmojis(messageId: string) {
+  closeMoreEmojis(messageId: string) {
     this.showMoreEmojis[messageId] = false; // Setzt den Wert auf false, um das Emoji-Fenster zu schließen
-}
-
+  }
 
   /*--------------------------------- Overall -----------------------------------*/
 

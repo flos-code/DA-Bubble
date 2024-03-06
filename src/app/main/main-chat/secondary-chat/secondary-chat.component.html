@@ -58,8 +58,8 @@
                     <div class="thread-message">
                         <span>{{ message.message }}</span>
                     </div>
-                    <!-- <app-reactions [userId]="message.createdBy" [message]="message" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                </app-reactions> -->
+                    <app-reactions-secondary [userId]="message.createdBy" [message]="message" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                </app-reactions-secondary>
                 </div>
                 <div class="action-bar" (click)="openMoreEmojis(message.messageId)">
                     <button class="add-reaction" alt=""></button>
@@ -95,8 +95,8 @@
                             <span>{{ message.message }}</span>
                         </ng-template>
                     </div>
-                    <!-- <app-reactions [userId]="message.createdBy" [message]="message" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                    </app-reactions> -->
+                    <app-reactions-secondary [userId]="message.createdBy" [message]="message" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                    </app-reactions-secondary>
                 </div>
                 <div class="own-action-bar">
                     <button class="add-reaction" (click)="openMoreEmojis(message.messageId)" alt=""></button>
