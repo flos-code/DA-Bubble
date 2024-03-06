@@ -82,38 +82,6 @@ export class ReactionsSecondaryComponent implements OnInit{
     });
   }
 
-/*   onInputFocus(): void {
-    this.inputFocused = true;
-  }
-
-  onInputBlur(): void {
-    this.inputFocused = false;
-  } */
-
-/*   handleClick(event: any) {
-    const emoji = event.emoji.native;
-    this.insertEmojiAtCursor(emoji);
-  } */
-
-/*   async insertEmojiAtCursor(emoji: string) {
-    const inputEl = this.messageInput.nativeElement;
-    const start = inputEl.selectionStart;
-    const end = inputEl.selectionEnd;
-    const text = inputEl.value;
-    const before = text.substring(0, start);
-    const after = text.substring(end, text.length);
-    this.messageModel = before + emoji + after;
-
-    const newPos = start + emoji.length;
-    setTimeout(() => {
-      inputEl.selectionStart = inputEl.selectionEnd = newPos;
-    });
-    //await this.saveReaction(this.messageModel, this.currentUser);
-    // OS9ntlBZdogfRKDdbni6eZ9yop93
-    this.showMoreEmojis = false;
-    //this.showMoreEmojisChild.emit(this.showMoreEmojis);
-  } */
-
   openMoreEmojis() {
     this.showMoreEmojis = true;
   }
@@ -121,39 +89,4 @@ export class ReactionsSecondaryComponent implements OnInit{
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
   }
-
-/*   async saveReaction(emoji: string, currentUser: string) {
-    if(this.reactions.some(reaction => reaction.reaction === emoji)) { 
-      for (let i = 0; i < this.reactions.length; i++) {
-        const reaction = this.reactions[i];
-        if(reaction.includes(emoji)){
-          reaction.count = reaction.count + 1;
-          reaction.reactedBy.push(currentUser);
-          let currentRef = doc(db, this.reactionCollectionPath +  reaction.id);
-          console.log('reactionCollectionPath', this.reactionCollectionPath + reaction.id);
-          // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
-          let data = {
-            'count': reaction.count,
-            'reaction': emoji,
-            'reactedBy': currentUser,
-          };
-          await updateDoc(currentRef, data).then(() => {
-          });
-        }
-      }
-    } else {
-      await this.addReaction(emoji, currentUser);
-      console.log(currentUser);
-    }
-  } */
-
-/*   async addReaction(emoji: string, currentUser: string) {
-    await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
-      'count': 1,
-      'reaction': emoji,
-      'reactedBy': currentUser,
-  });  
-    console.log('Reactions to thread', this.reactions);
-  } */
-  
 }
