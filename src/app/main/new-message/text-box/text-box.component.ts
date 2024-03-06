@@ -132,13 +132,21 @@ export class TextBoxComponent {
   async onFileSelected(event) {
     const file: File = event.target.files[0];
     if (!file) return;
-
-    const validTypes = ['image/png', 'image/jpeg', 'image/gif'];
+    const validTypes = [
+      'image/png',
+      'image/jpeg',
+      'image/gif',
+      'image/svg+xml',
+    ];
     if (!validTypes.includes(file.type)) {
-      alert('Nur PNG, JPG und GIF Dateien sind zulässig.');
+      alert('Nur PNG, JPG, GIF und SVG Dateien sind zulässig.');
       return;
     }
-
+    const maxSizeInBytes = 1.5 * 1024 * 1024; // 1,5 MB in Bytes
+    if (file.size > maxSizeInBytes) {
+      alert('Die Datei ist zu groß. Maximale Dateigröße ist 1,5 MB.');
+      return;
+    }
     await this.uploadImage(file);
   }
 
