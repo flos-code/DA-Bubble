@@ -2,8 +2,9 @@
     *ngIf="addMemberDialogOpen || channelEditionDialogOpen || showMembersDialogOpen">
 </div>
 
-<div style="display: flex;">
-    <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}">
+<div class="mainChatWrapper">
+    <!--     <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}"> -->
+    <div class="mainChatContainer">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
         @if(typeChannel) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
@@ -113,16 +114,14 @@
                             <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
                         }
                     }
-                }                      
+                }           
+        </div>
         <!-- =================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
 
         <div class="mainChatInput">
-
             <app-text-box></app-text-box>
-
-
 <!--             <div class="mainChatInputSubContainer">
                 <textarea [(ngModel)]="textArea" name="textarea"
                     placeholder="Nachricht an #{{channel?.name}}"></textarea>
@@ -146,7 +145,7 @@
                     </div>
                 </div>
             </div>
- -->        </div>        
+ -->    </div>        
         <!-- =================================================================================================== -->
     </div>
     <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
