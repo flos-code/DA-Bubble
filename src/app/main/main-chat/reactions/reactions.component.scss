@@ -31,6 +31,8 @@ div:first-of-type {
     }
 
     > .reactionContainer {
+        box-sizing: border-box;
+        height: 40px;
         position: relative;
         display: flex;
         gap: 10px;

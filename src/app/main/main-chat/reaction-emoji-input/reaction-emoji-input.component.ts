@@ -56,6 +56,7 @@ export class ReactionEmojiInputComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('Current thread id', this.threadId);
+    console.log('reactionCollectionPath', this.reactionCollectionPath);
     //this.reactionServie.getReactions(this.reactionCollectionPath);
   }
 
@@ -116,22 +117,21 @@ export class ReactionEmojiInputComponent implements OnInit {
   });
  */
 
+
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {
       await this.addReaction(emoji, currentUser);
     } else {
-      if(this.reactions.some(reaction => reaction.reaction !== emoji)) {
-        await this.addReaction(emoji, currentUser);
-      } else if(this.reactions.some(reaction => reaction.reaction === emoji)) {
+      if(this.reactions.some(reaction => reaction.reaction == emoji)) {
+
+
         for (let i = 0; i < this.reactions.length; i++) {
           const reaction = this.reactions[i];
-          // User fügt ein emoji hinzu welches bereits existiert und er dieses bereits hinzugefügt hat
-          if(reaction.reaction == emoji && reaction.reactedBy.includes(currentUser)){
+          if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
             if(reaction.reactedBy.length > 1) {
               reaction.count = reaction.count - 1;
               reaction.reactedBy.splice(currentUser);
               let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
-              // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
               let data = {
                 count: reaction.count,
                 reaction: emoji,
@@ -142,14 +142,10 @@ export class ReactionEmojiInputComponent implements OnInit {
             } else {
               await deleteDoc(doc(db, this.reactionCollectionPath, reaction.id));
             }
-  
-          // User fügt ein emoji hinzu welches bereits existiert und aber von Ihm nicht hinzugefügt wurde
-          } else if(reaction.reaction == emoji && !reaction.reactedBy.includes(currentUser)) {
+          } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
             reaction.count = reaction.count + 1;
             reaction.reactedBy.push(currentUser);
             let currentRef = doc(db, this.reactionCollectionPath + '/' + reaction.id);
-            //console.log('reactionCollectionPath', this.reactionCollectionPath + '/' + reaction.id);
-            // `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`
             let data = {
               count: reaction.count,
               reaction: emoji,
@@ -157,24 +153,17 @@ export class ReactionEmojiInputComponent implements OnInit {
             };
             await updateDoc(currentRef, data).then(() => {
             });
-          }
+          }         
         }
+      } else {
+        await this.addReaction(emoji, currentUser); 
       }
     }
-    
-
-
-      
-/*     } else {
-      // User ist im reactions array nicht enthalten => neue reaction wird hinzugefügt
-      console.log('Add new emoji');
-      await this.addReaction(emoji, currentUser);
-    } */
   }
- 
 
   async addReaction(emoji: string, currentUser: string) {
-      let newReaction = await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
+    // `channels/allgemein/threads/${this.threadId}/reactions`
+      let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
         count: 1,
         reaction: emoji,
         reactedBy: [currentUser],
