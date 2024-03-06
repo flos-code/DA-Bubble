@@ -45,15 +45,24 @@ export class MainChatComponent implements OnInit, OnDestroy {
   @ViewChild('mainChat') private mainChat: ElementRef;
   channel: Channel; // Daten des aktuellen Channels
   //activeChannelId: string = 'allgemein';
-  activeChannelId: string = '';
+  activeChannelId: string = 'allgemein';
+  activeChannelSub: Subscription = new Subscription();
+
+  currentUser: string = '';
+  //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  currentUserSub: Subscription = new Subscription();
+
+  activeDmUser: string = '';
+  activeDmUserSub: Subscription = new Subscription();
+
+
+
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
   //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
   channelThreads = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
-  //currentUser = new BehaviorSubject<string | null>(null);
 
   dmUser = [];
   textArea: string = "";
@@ -79,18 +88,37 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(private chatService: ChatService, private userManagementService: UserManagementService) {
+    this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
+      if(value == null) {
+/*         this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
+          this.activeChannelId = value;
+          console.log('Aktive channel id', this.activeChannelId);
+          this.loadData();
+        }); */
+        this.activeChannelId = 'allgemein';
+        this.loadData();
+      } else {
+        this.activeChannelId = value;
+        console.log('Aktive channel id', this.activeChannelId);
+        this.loadData();
+      }
+    });
+
+    this.currentUserSub = userManagementService.activeUserId.subscribe((value) => {
+        this.currentUser = value;
+        console.log('Aktiver user', this.currentUser);
+        this.loadData();
+      }
+    );
   }
 
   ngOnInit(): void {
-    this.getActiveChannelId();
-    //this.getActiveUserId();
-    this.getCurrentChannel();
-    this.getThreadOpenStatus();
-    this.subscribeToThreads();
+    this.loadData();
     setTimeout(() => {
       this.scrollToBottom();
     }, 2000);
     //this.getCurrentDirectMessage();
+
   }
 
   ngOnDestroy(): void {
@@ -98,10 +126,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
-
   loadData() {
-    this.getActiveChannelId();
-    //this.getActiveUserId();
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -109,15 +134,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.scrollToBottom();
     }, 2000);
   }
-
-  getActiveChannelId() {
-    this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
-    console.log('Channel id', this.activeChannelId);
-  }
-
-  /*   getActiveUserId() {
-    this.currentUser = this.userManagementService.getActiveUserId();
-  } */
 
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {

@@ -47,6 +47,11 @@ export class ChatService {
     return this.activeChannelIdUpdated.asObservable();
   }
 
+  private activeUserIdUpdated = new BehaviorSubject<string | null>(null);
+  get activeUserIdUpdates() {
+    return this.activeUserIdUpdated.asObservable();
+  }
+
   constructor() { }
 
   // ------------------- Channel Logic --------------------
@@ -66,6 +71,7 @@ export class ChatService {
   setSelectedUserId(userId: string) {
     this.selectedUserId = userId;
     this.activeChannelId = null;
+    this.activeUserIdUpdated.next(userId);
     // console.log(`Ausgewählter User: ${this.selectedUserId}`);
   }
 
