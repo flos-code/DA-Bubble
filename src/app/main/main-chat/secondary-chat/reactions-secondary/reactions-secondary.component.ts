@@ -47,7 +47,6 @@ export class ReactionsSecondaryComponent implements OnInit{
   }
 
   constructor() {
-console.log('PIERCE REACTION PATH:', this.reactionCollectionPath)
   }
 
   getReactions() {
