@@ -76,7 +76,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subcribeThreadId();
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messageId/reactions`;
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/vsyJ6UHEIvgjZ8bLmgNZ/reactions`;
   }
 
   ngOnDestroy(): void {

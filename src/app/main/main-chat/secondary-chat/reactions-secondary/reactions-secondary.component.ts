@@ -33,19 +33,17 @@ const db = getFirestore(app);
 export class ReactionsSecondaryComponent implements OnInit{
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
-  //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
   @Input() userId!: string;
+  @Input() message!: any;
   reactions = [];
   reactionNames = [];
-  @Input() message!: any;
   reactionCount: number;
 
   ngOnInit(): void {
     this.getReactions();
     this.getReactionNames();
-    //this.reactionService.getReactions(this.reactionCollectionPath);
-    //this.reactions = this.reactionService.reactions;
+    console.log('PIERCE', this.reactionCollectionPath)
   }
 
   constructor() {
@@ -53,21 +51,22 @@ export class ReactionsSecondaryComponent implements OnInit{
   }
 
   getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.message.message}/reactions`));
-    return onSnapshot(q, (element) => {
-      this.reactions = [];
-      element.forEach(reaction => {
-        this.reactions.push({
-          'id': reaction.id,
-          'count': reaction.data()['count'],
-          'reaction': reaction.data()['reaction'],
-          'reactedBy': reaction.data()['reactedBy']
-        }
-        )
-      });
-      console.log('Reaction array', this.reactions);
+    const q = query(collection(db, `channels/allgemein/threads/qVp8JcXz4ElKbOWPxX7U/messages/${this.message}/reactions`));
+    onSnapshot(q, (snapshot) => {
+        const updatedReactions = [];
+        snapshot.forEach(doc => {
+            updatedReactions.push({
+                id: doc.id,
+                count: doc.data()['count'],
+                reaction: doc.data()['reaction'],
+                reactedBy: doc.data()['reactedBy']
+            });
+        });
+        this.reactions = updatedReactions;
+        console.log('Reaction array', this.reactions);
     });
-  }
+}
+
 
   getReactionNames() {
     const q = query(collection(db, 'users'));
