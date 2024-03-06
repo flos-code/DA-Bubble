@@ -53,8 +53,8 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
-    console.log('PIERCE', this.reactionCollectionPath)
-    console.log('PIERCE', this.selectedThreadId)
+    // console.log('PIERCE', this.reactionCollectionPath)
+    // console.log('PIERCE', this.selectedThreadId)
   }
 
   ngOnDestroy(): void {
