@@ -174,7 +174,7 @@ export class ReactionEmojiInputComponent implements OnInit {
  
 
   async addReaction(emoji: string, currentUser: string) {
-      let newReaction = await addDoc(collection(db, `channels/allgemein/threads/${this.threadId}/reactions`), {
+      let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
         count: 1,
         reaction: emoji,
         reactedBy: [currentUser],
