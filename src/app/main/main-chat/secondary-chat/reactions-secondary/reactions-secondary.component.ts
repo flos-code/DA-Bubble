@@ -47,7 +47,7 @@ export class ReactionsSecondaryComponent implements OnInit{
   }
 
   constructor() {
-
+console.log('PIERCE REACTION PATH:', this.reactionCollectionPath)
   }
 
   getReactions() {
@@ -58,7 +58,7 @@ export class ReactionsSecondaryComponent implements OnInit{
             updatedReactions.push({
                 id: doc.id,
                 count: doc.data()['count'],
-                reaction: doc.data()['reaction'],
+                reaction: doc.data()['reactionName'],
                 reactedBy: doc.data()['reactedBy']
             });
         });
