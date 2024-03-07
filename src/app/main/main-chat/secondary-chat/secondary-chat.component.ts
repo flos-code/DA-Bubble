@@ -138,6 +138,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  async updateReactionCollectionPath(messageId) {
+    if (this.selectedThreadId && this.threadMessages && this.activeChannelId) {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${messageId}/reactions`;
+    } else {
+      console.warn('Cannot update reactionCollectionPath due to missing IDs');
+    }
+  }
+
   setCurrentUser() {
     this.currentUser = this.auth.currentUser.uid;
     // console.log('CurrentUserID:', this.currentUser)
@@ -147,7 +155,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
-        console.log('PIERCE THREAD ID:', this.threadId)
+        // console.log('PIERCE THREAD ID:', this.threadId)
       } else {
         console.log('No thread ID available');
       }
@@ -170,9 +178,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       }
     }
   }
-
-
-
 
   /*--------------------------------- Send Messages -----------------------------------*/
 

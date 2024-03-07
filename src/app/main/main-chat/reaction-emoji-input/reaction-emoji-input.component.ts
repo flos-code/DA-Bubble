@@ -113,6 +113,11 @@ export class ReactionEmojiInputComponent implements OnInit {
  */
 
   async saveReaction(emoji: string, currentUser: string) {
+    if (!this.reactionCollectionPath || this.reactionCollectionPath.trim() === '') {
+      console.error('reactionCollectionPath is empty or invalid');
+      return;
+    }
+    
     if(this.reactions.length == 0) {
       console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
