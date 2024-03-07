@@ -7,14 +7,36 @@
       placeholder="An: #channel, oder @jemanden oder E-Mail Adresse"
       (keyup)="onInputChange(userInput.value)"
     />
-  </div>
+    <div class="userSelection" *ngIf="displayUser || displayChannels">
+      <div class="allUser" *ngIf="displayUser">
+        <div class="singleUser" *ngFor="let user of filteredUsers">
+          <img [src]="user.data.imgUrl" [alt]="'Image of ' + user.data.name" />
+          <div class="name">
+            {{ user.data.name }}
+          </div>
+          <span
+            *ngIf="
+              (this.userManagementService.activeUserId$ | async) === user.id
+            "
+            >&nbsp;(Du)</span
+          >
+          <div
+            class="onlineStatus"
+            [ngClass]="{
+              online: user.data.isOnline === true,
+              away: user.data.isOnline === false
+            }"
+          ></div>
+        </div>
+      </div>
 
-  <ul *ngIf="displayUser">
-    <li *ngFor="let user of filteredUsers">{{ user.data.name }}</li>
-  </ul>
-  <ul *ngIf="displayChannels">
-    <li *ngFor="let channel of channels$ | async">{{ channel.data.name }}</li>
-  </ul>
+      <div class="allChannel" *ngIf="displayChannels">
+        <div class="singleChannel" *ngFor="let channel of channels$ | async">
+          #{{ channel.data.name }}
+        </div>
+      </div>
+    </div>
+  </div>
 
   <div class="textBox">
     <app-text-box></app-text-box>

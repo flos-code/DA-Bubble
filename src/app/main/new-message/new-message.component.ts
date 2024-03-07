@@ -22,7 +22,7 @@ export class NewMessageComponent {
 
   private firestore: Firestore = inject(Firestore);
 
-  constructor(private userManagementService: UserManagementService) {}
+  constructor(public userManagementService: UserManagementService) {}
 
   async ngOnInit() {
     this.userManagementService.activeUserId$.subscribe((activeUserId) => {
