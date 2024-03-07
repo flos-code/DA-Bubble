@@ -48,6 +48,7 @@
                 <div>
                     {{thread?.message}}
                 </div>
+                <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px;">
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
@@ -138,6 +139,7 @@
                     <div>
                         {{thread?.message}}
                     </div>
+                    <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px;">
                     <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
                         <div>Letzte Antwort {{lastAnswer}}</div>
                         <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
