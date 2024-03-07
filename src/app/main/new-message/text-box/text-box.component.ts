@@ -209,20 +209,6 @@ export class TextBoxComponent {
     });
   }
 
-  // sendMessage(): void {
-  //   if (
-  //     !this.messageType ||
-  //     !this.targetId ||
-  //     !this.messageInput.nativeElement.value.trim()
-  //   ) {
-  //     console.error('Nachrichtendetails sind unvollständig');
-  //     return;
-  //   }
-  //   console.log(
-  //     `Senden einer Nachricht vom Typ ${this.messageType} an ${this.targetId}: ${this.messageInput.nativeElement.value}`
-  //   );
-  //   this.messageInput.nativeElement.value = '';
-  // }
 
   async sendMessage(): Promise<void> {
     if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
@@ -230,11 +216,14 @@ export class TextBoxComponent {
       return;
     }
 
+    const imageUrlToSend = this.imageURL ? this.imageURL : null;
+
     if (this.messageType === 'channel') {
       const newThread = new Thread({
         createdBy: this.userManagementService.activeUserId.value,
         creationDate: Date.now(),
         message: this.messageModel.trim(),
+        imageUrl: imageUrlToSend,
       });
       try {
         const docRef = await addDoc(
@@ -253,5 +242,7 @@ export class TextBoxComponent {
       }
     }
     this.messageModel = '';
+    this.imageURL = undefined;
+this.filePath = undefined;
   }
 }

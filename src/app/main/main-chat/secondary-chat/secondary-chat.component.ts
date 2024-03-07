@@ -14,6 +14,7 @@ import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
 import { ReactionsSecondaryComponent } from './reactions-secondary/reactions-secondary.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
+import { UserManagementService } from '../../../services/user-management.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -69,6 +70,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private chatService: ChatService,
+    public userManagementService: UserManagementService,
     public inputService: InputService
   ) { }
 
@@ -147,8 +149,9 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   setCurrentUser() {
-    this.currentUser = this.auth.currentUser.uid;
-    // console.log('CurrentUserID:', this.currentUser)
+    this.currentUser = this.userManagementService.activeUserId.value //nur übergangsweise um threads in nicht eingelogten zustand zu sehen
+    // this.currentUser = this.auth.currentUser.uid;
+    console.log('CurrentUserID:', this.currentUser)
   }
 
   subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
@@ -192,6 +195,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
         createdBy: this.currentUser,
         message: this.messageModel,
         creationDate: Date.now(),
+        imageUrl: null,
       });
 
       const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
