@@ -58,7 +58,7 @@
     left: 50px;
     background-color: white;
     width: 320px;
-    height: 240px;
+    max-height: 240px;
     border-radius: 0 30px 30px 30px;
     box-shadow: 0 6px 10px 0 rgba(0, 0, 0, 0.2);
     padding: 20px;
@@ -68,6 +68,7 @@
     justify-content: center;
 
     .allUser {
+      max-height: 200px;
       height: 100%;
       width: 100%;
       display: flex;
@@ -119,6 +120,7 @@
     }
 
     .allChannel {
+      max-height: 200px;
       height: 100%;
       width: 100%;
       display: flex;

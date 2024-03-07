@@ -1,11 +1,10 @@
 import { Component, inject } from '@angular/core';
 import { TextBoxComponent } from './text-box/text-box.component';
-import { Observable } from 'rxjs';
-import { User } from '../../../models/user.class';
+import { Observable, Subscription } from 'rxjs';
 import { UserManagementService } from '../../services/user-management.service';
 import { CommonModule } from '@angular/common';
 import { Channel } from '../../../models/channel.class';
-import { Firestore, collection, onSnapshot } from '@angular/fire/firestore';
+import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-new-message',
@@ -15,65 +14,90 @@ import { Firestore, collection, onSnapshot } from '@angular/fire/firestore';
   styleUrl: './new-message.component.scss',
 })
 export class NewMessageComponent {
-  filteredUsers: { id: string; data: User }[] = [];
+  filteredUsers: any = [];
+  allUsers: any = [];
+  filteredChannel: any = [];
+  allChannel: any = [];
   displayUser: boolean = false;
   displayChannels: boolean = false;
-  channels$: Observable<{ id: string; data: Channel }[]>;
 
   private firestore: Firestore = inject(Firestore);
+  private userSubscription!: Subscription;
+  private channelSubscription!: Subscription;
 
   constructor(public userManagementService: UserManagementService) {}
 
-  async ngOnInit() {
-    this.userManagementService.activeUserId$.subscribe((activeUserId) => {
-      if (activeUserId) {
-        this.channels$ = this.loadChannels(activeUserId);
+  ngOnInit(): void {
+    const usersCollection = collection(this.firestore, 'users');
+    this.userSubscription = collectionData(usersCollection, {
+      idField: 'id',
+    }).subscribe(
+      (changes) => {
+        console.log('Received Changes from DB', changes);
+        this.allUsers = changes;
+        this.sortUsers(this.allUsers);
+        this.filteredUsers = this.allUsers;
+      },
+      (error) => {
+        console.error('Error fetching changes:', error);
       }
-    });
+    );
+
+    const channelCollection = collection(this.firestore, 'channels');
+    this.channelSubscription = collectionData(channelCollection, {
+      idField: 'id',
+    }).subscribe(
+      (changes) => {
+        console.log('Received Changes from DB', changes);
+        this.allChannel = changes;
+        this.sortChannel(this.allChannel);
+        this.filteredChannel = this.allChannel;
+      },
+      (error) => {
+        console.error('Error fetching changes:', error);
+      }
+    );
+
     this.userManagementService.loadUsers();
+  }
+
+  ngOnDestroy(): void {
+    this.userSubscription.unsubscribe();
+    this.channelSubscription.unsubscribe();
+  }
+
+  sortUsers(users): void {
+    users.sort((a, b) => {
+      if (a.id === this.userManagementService.activeUserId.value) return -1;
+      if (b.id === this.userManagementService.activeUserId.value) return 1;
+      return a.name.localeCompare(b.name);
+    });
+  }
+
+  sortChannel(channels): void {
+    const filteredChannels = channels.filter((channel) =>
+      channel.members.includes(this.userManagementService.activeUserId.value)
+    );
+    filteredChannels.sort((a, b) => a.creationDate - b.creationDate);
+    this.allChannel = filteredChannels;
   }
 
   onInputChange(inputValue: string): void {
     this.displayUser = inputValue.startsWith('@');
-    this.displayChannels = inputValue.startsWith('#'); // Anzeigen der Liste, wenn '@' eingegeben wird
+    this.displayChannels = inputValue.startsWith('#');
+
     if (this.displayUser) {
-      this.userManagementService.users$.subscribe((users) => {
-        this.filteredUsers = users; // Alle Benutzer zuweisen, da '@' eingegeben wurde
-      });
-    } else if (this.displayChannels) {
-      this.loadChannels;
-    } else {
-      this.filteredUsers = []; // Leeren der Liste, wenn Bedingung nicht erfüllt ist
-    }
-  }
-
-  loadChannels(
-    activeUserId: string
-  ): Observable<{ id: string; data: Channel }[]> {
-    const channelsCol = collection(this.firestore, 'channels');
-    console.log('Active User ID wegen filter:', activeUserId);
-
-    // Erstellen Sie ein neues Observable
-    return new Observable<{ id: string; data: Channel }[]>((subscriber) => {
-      const unsubscribe = onSnapshot(
-        channelsCol,
-        (snapshot) => {
-          const channels = snapshot.docs
-            .map((doc) => ({
-              id: doc.id,
-              data: new Channel(doc.data()),
-            }))
-            .filter((channel) => channel.data.members.includes(activeUserId))
-            .sort((a, b) => a.data.creationDate - b.data.creationDate);
-          subscriber.next(channels);
-        },
-        (error) => {
-          subscriber.error(error);
-        }
+      const searchTerm = inputValue.slice(1).toLowerCase();
+      this.filteredUsers = this.allUsers.filter((user) =>
+        user.name.toLowerCase().startsWith(searchTerm)
       );
-
-      // Rückgabe einer Cleanup-Funktion, die beim Unsubscribe aufgerufen wird
-      return () => unsubscribe();
-    });
+    } else if (this.displayChannels) {
+      const searchTerm = inputValue.slice(1).toLowerCase();
+      this.filteredChannel = this.allChannel.filter((channel) =>
+        channel.name.toLowerCase().startsWith(searchTerm)
+      );
+    } else {
+      this.filteredUsers = [];
+    }
   }
 }

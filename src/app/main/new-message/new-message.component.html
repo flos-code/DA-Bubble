@@ -10,9 +10,9 @@
     <div class="userSelection" *ngIf="displayUser || displayChannels">
       <div class="allUser" *ngIf="displayUser">
         <div class="singleUser" *ngFor="let user of filteredUsers">
-          <img [src]="user.data.imgUrl" [alt]="'Image of ' + user.data.name" />
+          <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
           <div class="name">
-            {{ user.data.name }}
+            {{ user.name }}
           </div>
           <span
             *ngIf="
@@ -23,16 +23,16 @@
           <div
             class="onlineStatus"
             [ngClass]="{
-              online: user.data.isOnline === true,
-              away: user.data.isOnline === false
+              online: user.isOnline === true,
+              away: user.isOnline === false
             }"
           ></div>
         </div>
       </div>
 
       <div class="allChannel" *ngIf="displayChannels">
-        <div class="singleChannel" *ngFor="let channel of channels$ | async">
-          #{{ channel.data.name }}
+        <div class="singleChannel" *ngFor="let channel of filteredChannel">
+          #{{ channel.name }}
         </div>
       </div>
     </div>
