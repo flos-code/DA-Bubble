@@ -46,7 +46,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   dmMessagesPath = '';
   channelThreadsPath = '';
-
+  channelDmPath = '';
 
   channel: Channel; // Daten des aktuellen Channels
   //activeChannelId: string = 'allgemein';
@@ -107,12 +107,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
           this.activeDmUser = valueDm;
           this.getDmUser(valueDm);
           this.getChannelAndDmPath();
+          this.channelDmPath = this.dmMessagesPath;
           this.loadData();
         });
         //this.activeChannelId = 'allgemein';
       } else {
         this.activeChannelId = value;
         this.getChannelAndDmPath();
+        this.channelDmPath = this.channelThreadsPath;
         this.loadData();
       }
     });
@@ -195,7 +197,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getThreads() {
-    const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
+    const q = query(collection(db, this.channelDmPath), orderBy("creationDate", "asc"), limit(20));
+    // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
       list.forEach(thread => {
