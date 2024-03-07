@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild, inject } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -31,6 +31,9 @@ import { UserManagementService } from '../../../services/user-management.service
 })
 export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
+  @Input() messageType: 'direct' | 'channel' | 'thread';
+  @Input() targetId: string; // ID des Nutzers/Kanals/Threads
+
   inputFocused: boolean = false;
   messageModel: string = '';
   showEmojiPicker: boolean = false;
@@ -196,5 +199,26 @@ export class TextBoxComponent {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
+  }
+
+  sendMessage(): void {
+    if (
+      !this.messageType ||
+      !this.targetId ||
+      !this.messageInput.nativeElement.value.trim()
+    ) {
+      console.error('Nachrichtendetails sind unvollständig');
+      return;
+    }
+
+    // Implementieren Sie hier die Logik zum Senden der Nachricht basierend auf dem messageType und targetId
+    console.log(
+      `Senden einer Nachricht vom Typ ${this.messageType} an ${this.targetId}: ${this.messageInput.nativeElement.value}`
+    );
+
+    // Hier könnten Sie z.B. einen Service aufrufen, der die Nachricht an die Datenbank sendet
+
+    // Nachrichteninhalt zurücksetzen
+    this.messageInput.nativeElement.value = '';
   }
 }

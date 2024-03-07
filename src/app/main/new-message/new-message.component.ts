@@ -21,6 +21,8 @@ export class NewMessageComponent {
   selectedChannel = null;
   displayUser: boolean = false;
   displayChannels: boolean = false;
+  messageType;
+  targetId;
 
   @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
   private firestore: Firestore = inject(Firestore);
@@ -89,6 +91,8 @@ export class NewMessageComponent {
     this.displayChannels = inputValue.startsWith('#');
     this.selectedChannel = null;
     this.selectedUser = null;
+    this.messageType = null;
+    this.targetId = null;
     if (this.displayUser) {
       const searchTerm = inputValue.slice(1).toLowerCase();
       this.filteredUsers = this.allUsers.filter((user) =>
@@ -116,6 +120,8 @@ export class NewMessageComponent {
     console.log(this.selectedChannel);
     this.userInput.nativeElement.value = '#' + channelName;
     this.displayChannels = false;
+    this.messageType = 'channel';
+    this.targetId = channelId;
   }
 
   sendUserMessage(userId, userName) {
@@ -123,5 +129,7 @@ export class NewMessageComponent {
     console.log(this.selectedUser);
     this.userInput.nativeElement.value = '@' + userName;
     this.displayUser = false;
+    this.messageType = 'direct';
+    this.targetId = userId;
   }
 }
