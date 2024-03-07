@@ -121,7 +121,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-/*     this.currentUserSub = this.userManagementService.activeUserId.subscribe((value) => {
+  /* this.currentUserSub = this.userManagementService.activeUserId.subscribe((value) => {
       this.currentUser = value;
       this.loadData();
       }

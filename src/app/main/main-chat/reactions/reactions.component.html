@@ -5,7 +5,7 @@
                 <span class="material-symbols-outlined">add_reaction</span>
             </div>
             @for (reaction of reactions | slice:0:3; track $index) {
-                <div class="reactionContainer">
+                <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
                     <div class="ractionEmoji">
                         <span>{{reaction?.reaction}}</span>
                     </div>
@@ -42,7 +42,7 @@
                 <span class="material-symbols-outlined">add_reaction</span>
             </div>
             @for (reaction of reactions | slice:0:3; track $index) {
-                <div class="reactionContainer">
+                <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
                     <div class="ractionEmoji">
                         <span>{{reaction?.reaction}}</span>
                     </div>

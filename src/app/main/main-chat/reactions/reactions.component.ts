@@ -9,7 +9,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, getFirestore, onSnapshot, query } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, query, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -31,6 +31,7 @@ const db = getFirestore(app);
   styleUrl: './reactions.component.scss'
 })
 export class ReactionsComponent implements OnInit {
+  @ViewChild('reactionEmojiInput') reactionEmojiInput: ReactionEmojiInputComponent;
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
@@ -84,6 +85,59 @@ export class ReactionsComponent implements OnInit {
       console.log('Reaction names', this.reactions);
     });
   }
+
+  async saveReaction(emoji: string, currentUser: string) {
+    if(this.reactions.length == 0) {
+      console.log('Alle Reaktionen', this.reactions);
+      await this.addReaction(emoji, currentUser);
+    } else {
+      if(this.reactions.some(reaction => reaction.reaction == emoji)) {
+        for (let i = 0; i < this.reactions.length; i++) {
+          const reaction = this.reactions[i];
+          if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
+            if(reaction.reactedBy.length > 1) {
+              reaction.count = reaction.count - 1;
+              reaction.reactedBy.splice(currentUser);
+              let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
+              let data = {
+                count: reaction.count,
+                reaction: emoji,
+                reactedBy: reaction.reactedBy,
+              };
+              await updateDoc(currentRef, data).then(() => {
+              });  
+            } else {
+              await deleteDoc(doc(db, this.reactionCollectionPath, reaction.id));
+            }
+          } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
+            reaction.count = reaction.count + 1;
+            reaction.reactedBy.push(currentUser);
+            let currentRef = doc(db, this.reactionCollectionPath + '/' + reaction.id);
+            let data = {
+              count: reaction.count,
+              reaction: emoji,
+              reactedBy: reaction.reactedBy,
+            };
+            await updateDoc(currentRef, data).then(() => {
+            });
+          }         
+        }
+      } else {
+        await this.addReaction(emoji, currentUser); 
+      }
+    }
+  }
+
+  async addReaction(emoji: string, currentUser: string) {
+    let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
+        count: 1,
+        reaction: emoji,
+        reactedBy: [currentUser],
+      });
+      console.log('New reaction added', newReaction);
+  }
+
+
 
 /*   onInputFocus(): void {
     this.inputFocused = true;
