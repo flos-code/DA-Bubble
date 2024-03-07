@@ -6,7 +6,7 @@ import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
-import { Subscription } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -33,8 +33,6 @@ const db = getFirestore(app);
   styleUrl: './reaction-emoji-input.component.scss'
 })
 export class ReactionEmojiInputComponent implements OnInit {
-  clickEventReaction: Subscription;
-
   @Input() showMoreEmojis!: boolean;
   @Output() showMoreEmojisChild = new EventEmitter();
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
@@ -43,21 +41,18 @@ export class ReactionEmojiInputComponent implements OnInit {
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
+
+  //emoji: string = '';
+  //emojiSub: Subscription = new Subscription();
+  //currentUserSub: Subscription = new Subscription();
+
   @Input() threadId!: string;
   @Input() messageId!: string;
   @Input() reactions!: any;
 
-
-  constructor(private reactionServie: ReactionsService) {
-/*     this.clickEventReaction =  this.reactionServie.getReaction().subscribe(reaction => {
-        this.saveReaction(reaction['emoji'], reaction['currentUser']);
-    }) */
-  }
+  constructor() { }
 
   ngOnInit(): void {
-    console.log('Current thread id', this.threadId);
-    console.log('reactionCollectionPath', this.reactionCollectionPath);
-    //this.reactionServie.getReactions(this.reactionCollectionPath);
   }
 
   onInputFocus(): void {
@@ -117,9 +112,9 @@ export class ReactionEmojiInputComponent implements OnInit {
   });
  */
 
-
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {
+      console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
     } else {
       if(this.reactions.some(reaction => reaction.reaction == emoji)) {

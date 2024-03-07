@@ -23,30 +23,27 @@ const db = getFirestore(app);
   providedIn: 'root'
 })
 export class ReactionsService {
-  emoji: string;
-  currentUser: string;
+  private emoji: string;
+  private currentUser: string;
 
-  private reactionValues = new BehaviorSubject<[string, string]>(['', '']);
-
-  reactions = [];
-  reactionCollectionPath: string;
-
-  constructor(private chatService: ChatService) { 
-/*     this.setReactionValues();
- */  }
-
-/*   setReactionValues(emoji: string, currentUser: string) {
-    this.emoji = emoji;
-    this.currentUser = currentUser;
-  } */
-
-  sendReaction(emoji: string, currentUser: string): void {
-    this.reactionValues.next([emoji, currentUser]);
+  private emojiUpdated = new BehaviorSubject<string | null>(null);
+  get emojiUpdateds() {
+    return this.emojiUpdated.asObservable();
+  }
+  private currentUserUpdated = new BehaviorSubject<string | null>(null);
+  get currentUserUpdates() {
+    return this.currentUserUpdated.asObservable();
   }
 
-  getReaction():Observable<any> {
-    return this.reactionValues.asObservable();
-  }
+  constructor() { }
+
+ setReaction(emoji: string, currentUser: string) {
+  this.emoji = emoji;
+  this.currentUser = currentUser;
+  this.emojiUpdated.next(emoji);
+  this.currentUserUpdated.next(currentUser);
+ }
+
 
 
 /* getReactions(reactionCollectionPath: string) {

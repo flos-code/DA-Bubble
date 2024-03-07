@@ -9,7 +9,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, getCountFromServer, getFirestore, onSnapshot, orderBy, query } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import { BehaviorSubject } from 'rxjs';
 import { ReactionsService } from '../../../services/reactions.service';
 
@@ -111,9 +111,56 @@ export class ThreadComponent implements OnInit {
     this.lastAnswer
   }
 
- /*  addReaction(emoji: string, currentUser: string) {
-    this.reactionService.sendReaction(emoji, currentUser);
-  } */
+  async saveReaction(emoji: string, currentUser: string) {
+    if(this.reactions.length == 0) {
+      console.log('Alle Reaktionen', this.reactions);
+      await this.addReaction(emoji, currentUser);
+    } else {
+      if(this.reactions.some(reaction => reaction.reaction == emoji)) {
+        for (let i = 0; i < this.reactions.length; i++) {
+          const reaction = this.reactions[i];
+          if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
+            if(reaction.reactedBy.length > 1) {
+              reaction.count = reaction.count - 1;
+              reaction.reactedBy.splice(currentUser);
+              let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
+              let data = {
+                count: reaction.count,
+                reaction: emoji,
+                reactedBy: reaction.reactedBy,
+              };
+              await updateDoc(currentRef, data).then(() => {
+              });  
+            } else {
+              await deleteDoc(doc(db, this.reactionCollectionPath, reaction.id));
+            }
+          } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
+            reaction.count = reaction.count + 1;
+            reaction.reactedBy.push(currentUser);
+            let currentRef = doc(db, this.reactionCollectionPath + '/' + reaction.id);
+            let data = {
+              count: reaction.count,
+              reaction: emoji,
+              reactedBy: reaction.reactedBy,
+            };
+            await updateDoc(currentRef, data).then(() => {
+            });
+          }         
+        }
+      } else {
+        await this.addReaction(emoji, currentUser); 
+      }
+    }
+  }
+
+  async addReaction(emoji: string, currentUser: string) {
+    let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
+        count: 1,
+        reaction: emoji,
+        reactedBy: [currentUser],
+      });
+      console.log('New reaction added', newReaction);
+  }
 
   openMoreEmojis() {
     this.showMoreEmojis = true;
