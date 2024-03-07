@@ -1,9 +1,8 @@
-import { Component, inject } from '@angular/core';
+import { Component, ElementRef, ViewChild, inject } from '@angular/core';
 import { TextBoxComponent } from './text-box/text-box.component';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { UserManagementService } from '../../services/user-management.service';
 import { CommonModule } from '@angular/common';
-import { Channel } from '../../../models/channel.class';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 
 @Component({
@@ -16,11 +15,14 @@ import { Firestore, collection, collectionData } from '@angular/fire/firestore';
 export class NewMessageComponent {
   filteredUsers: any = [];
   allUsers: any = [];
+  selectedUser = null;
   filteredChannel: any = [];
   allChannel: any = [];
+  selectedChannel = null;
   displayUser: boolean = false;
   displayChannels: boolean = false;
 
+  @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
   private firestore: Firestore = inject(Firestore);
   private userSubscription!: Subscription;
   private channelSubscription!: Subscription;
@@ -85,7 +87,8 @@ export class NewMessageComponent {
   onInputChange(inputValue: string): void {
     this.displayUser = inputValue.startsWith('@');
     this.displayChannels = inputValue.startsWith('#');
-
+    this.selectedChannel = null;
+    this.selectedUser = null;
     if (this.displayUser) {
       const searchTerm = inputValue.slice(1).toLowerCase();
       this.filteredUsers = this.allUsers.filter((user) =>
@@ -98,6 +101,27 @@ export class NewMessageComponent {
       );
     } else {
       this.filteredUsers = [];
+      this.filteredChannel = [];
     }
+    console.log(
+      'ausgewähleter nutzer:',
+      this.selectedUser,
+      'ausgewähleter channel:',
+      this.selectedChannel
+    );
+  }
+
+  sendChannelMessage(channelId, channelName) {
+    this.selectedChannel = channelId;
+    console.log(this.selectedChannel);
+    this.userInput.nativeElement.value = '#' + channelName;
+    this.displayChannels = false;
+  }
+
+  sendUserMessage(userId, userName) {
+    this.selectedUser = userId;
+    console.log(this.selectedUser);
+    this.userInput.nativeElement.value = '@' + userName;
+    this.displayUser = false;
   }
 }
