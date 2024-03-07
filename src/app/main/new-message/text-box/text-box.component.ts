@@ -12,9 +12,17 @@ import {
   uploadBytes,
 } from '@angular/fire/storage';
 import { User } from '../../../../models/user.class';
-import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  collectionData,
+  doc,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { UserManagementService } from '../../../services/user-management.service';
+import { Thread } from '../../../../models/thread.class';
 
 @Component({
   selector: 'app-text-box',
@@ -201,24 +209,49 @@ export class TextBoxComponent {
     });
   }
 
-  sendMessage(): void {
-    if (
-      !this.messageType ||
-      !this.targetId ||
-      !this.messageInput.nativeElement.value.trim()
-    ) {
+  // sendMessage(): void {
+  //   if (
+  //     !this.messageType ||
+  //     !this.targetId ||
+  //     !this.messageInput.nativeElement.value.trim()
+  //   ) {
+  //     console.error('Nachrichtendetails sind unvollständig');
+  //     return;
+  //   }
+  //   console.log(
+  //     `Senden einer Nachricht vom Typ ${this.messageType} an ${this.targetId}: ${this.messageInput.nativeElement.value}`
+  //   );
+  //   this.messageInput.nativeElement.value = '';
+  // }
+
+  async sendMessage(): Promise<void> {
+    if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
       console.error('Nachrichtendetails sind unvollständig');
       return;
     }
 
-    // Implementieren Sie hier die Logik zum Senden der Nachricht basierend auf dem messageType und targetId
-    console.log(
-      `Senden einer Nachricht vom Typ ${this.messageType} an ${this.targetId}: ${this.messageInput.nativeElement.value}`
-    );
-
-    // Hier könnten Sie z.B. einen Service aufrufen, der die Nachricht an die Datenbank sendet
-
-    // Nachrichteninhalt zurücksetzen
-    this.messageInput.nativeElement.value = '';
+    if (this.messageType === 'channel') {
+      const newThread = new Thread({
+        createdBy: this.userManagementService.activeUserId.value,
+        creationDate: Date.now(),
+        message: this.messageModel.trim(),
+      });
+      try {
+        const docRef = await addDoc(
+          collection(this.firestore, `channels/${this.targetId}/threads`),
+          newThread.toJSON()
+        );
+        console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
+        await updateDoc(
+          doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
+          {
+            messageId: docRef.id,
+          }
+        );
+      } catch (error) {
+        console.error('Fehler beim Senden der Nachricht: ', error);
+      }
+    }
+    this.messageModel = '';
   }
 }

@@ -94,7 +94,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   };
   /* ============================================== */
 
-  constructor(private chatService: ChatService, private userManagementService: UserManagementService) {
+  constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
     this.currentUserSub = userManagementService.activeUserId.subscribe((value) => {
       this.currentUser = value;
       this.loadData();
