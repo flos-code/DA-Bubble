@@ -121,7 +121,7 @@
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
 
         <div class="mainChatInput">
-            <app-text-box></app-text-box>
+            <app-text-box [messageType]="'channel'" [targetId]="'allgemein'"></app-text-box>
 <!--             <div class="mainChatInputSubContainer">
                 <textarea [(ngModel)]="textArea" name="textarea"
                     placeholder="Nachricht an #{{channel?.name}}"></textarea>
