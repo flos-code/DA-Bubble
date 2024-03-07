@@ -43,6 +43,11 @@ const db = getFirestore(app);
 export class MainChatComponent implements OnInit, OnDestroy {
   /* ========== MAIN VARIABLES ========== */
   @ViewChild('mainChat') private mainChat: ElementRef;
+
+  dmMessagesPath = '';
+  channelThreadsPath = '';
+
+
   channel: Channel; // Daten des aktuellen Channels
   //activeChannelId: string = 'allgemein';
   activeChannelId: string = 'allgemein';
@@ -53,6 +58,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   currentUserSub: Subscription = new Subscription();
 
   activeDmUser: string = '';
+  activeDmUserName: string = '';
+  activeDmUserStatus: string = '';
   activeDmUserSub: Subscription = new Subscription();
 
 
@@ -88,37 +95,57 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(private chatService: ChatService, private userManagementService: UserManagementService) {
+    this.currentUserSub = userManagementService.activeUserId.subscribe((value) => {
+      this.currentUser = value;
+      this.loadData();
+      }
+    );
+
     this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
       if(value == null) {
-/*         this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
-          this.activeChannelId = value;
-          console.log('Aktive channel id', this.activeChannelId);
+        this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((valueDm) => {
+          this.activeDmUser = valueDm;
+          this.getDmUser(valueDm);
+          this.getChannelAndDmPath();
           this.loadData();
-        }); */
-        this.activeChannelId = 'allgemein';
-        this.loadData();
+        });
+        //this.activeChannelId = 'allgemein';
       } else {
         this.activeChannelId = value;
-        console.log('Aktive channel id', this.activeChannelId);
+        this.getChannelAndDmPath();
         this.loadData();
       }
     });
-
-    this.currentUserSub = userManagementService.activeUserId.subscribe((value) => {
-        this.currentUser = value;
-        console.log('Aktiver user', this.currentUser);
-        this.loadData();
-      }
-    );
   }
 
   ngOnInit(): void {
+/*     this.currentUserSub = this.userManagementService.activeUserId.subscribe((value) => {
+      this.currentUser = value;
+      this.loadData();
+      }
+    );
+
+    this.activeChannelSub = this.chatService.activeChannelIdUpdates.subscribe((value) => {
+      if(value == null) {
+        this.activeDmUserSub = this.chatService.activeUserIdUpdates.subscribe((valueDm) => {
+          this.activeDmUser = valueDm;
+          this.getDmUser(valueDm);
+          this.getChannelAndDmPath();
+          this.loadData();
+        });
+        //this.activeChannelId = 'allgemein';
+      } else {
+        this.activeChannelId = value;
+        this.getChannelAndDmPath();
+        this.loadData();
+      }
+    }); */
+
+    this.activeChannelId = "allgemein";
     this.loadData();
     setTimeout(() => {
       this.scrollToBottom();
     }, 2000);
-    //this.getCurrentDirectMessage();
-
   }
 
   ngOnDestroy(): void {
@@ -126,6 +153,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
+  getChannelAndDmPath() {
+    this.dmMessagesPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages`;
+    this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
+  }
+
+
   loadData() {
     this.getCurrentChannel();
     this.getThreadOpenStatus();
@@ -190,6 +223,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   getThreadCreationDates() {
     this.channelThreadsDateTime = [];
+    this.threadCreationDates = [];
     for (let i = 0; i < this.channelThreads.length; i++) {
       let message = this.channelThreads[i];
       let creationDate = message['creationDate'];
@@ -268,6 +302,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
       }
     }
     return user;
+  }
+
+  async getDmUser(userId: string) {
+    this.activeDmUserName = ""; 
+    const docRef = doc(db, "users", this.activeDmUser);
+    const docSnap = await getDoc(docRef);   
+    this.activeDmUserName = docSnap.data()['name']; 
+    this.activeDmUserStatus = docSnap.data()['isOnline'];
   }
 
   /*   getCurrentDirectMessage() {

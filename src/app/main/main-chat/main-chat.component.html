@@ -6,7 +6,7 @@
     <!--     <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}"> -->
     <div class="mainChatContainer">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
-        @if(typeChannel) {
+        @if(activeChannelId !== null) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
         <div class="mainChatHeader">
             <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
@@ -59,10 +59,9 @@
                 <div class="mainChatHeaderLeft">
                     <div class="userImage">
                         <img src="/assets/img/main-chat/member2.svg">
-    <!--                <div class="onlineStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div> -->
-                        <div class="onlineStatus" [ngStyle]="{'background-color': '#92c83e'}"></div>
+                        <div class="userStatus" [ngStyle]="{'background-color': activeDmUserStatus ? '#92c83e' : '#686868' }"></div>
                     </div>
-                    <div>Tobias Odermatt</div>
+                    <div>{{activeDmUserName}}</div>
                 </div>
             </div>
         }
@@ -71,7 +70,7 @@
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages" #mainChat>
 <!--        <div class="mainChatMessagesSubContainer"> -->            
-                @if(typeChannel) {
+                @if(activeChannelId !== null) {
                     <!-- =========== Template main chat beginning - Channel ============= -->
                     <div class="beginningOfChannel">
                         <div>
@@ -79,14 +78,13 @@
                             <div>{{channel?.name}}</div>
                         </div>
                         <div>
-                            Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span
-                                style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>
+                            Du hast den Channel heute erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>
                         </div>
                     </div>
                     <!-- ================================================================ -->
                 } @else {
                     <!-- =========== Template main chat beginning - DM ============= -->
-    <!--                 <div class="beginningOfChannel">
+                    <div class="beginningOfChannel">
                         <div>
                             <div>
                                 <img [src]="channel[0].members[0].photo">
@@ -94,11 +92,9 @@
                             <div>{{channel[0].members[0].name}}</div>
                         </div>
                         <div>
-                            Diese Unterhaltung findet nur zwischen <span
-                                style="color: rgba(83, 90, 241, 1)">&#64;{{channels[0].members[0].name}}
-                                {{channels[0].members[0].surname}}</span> und dir statt.
+                            Diese Unterhaltung findet nur zwischen <span style="color: rgba(83, 90, 241, 1)">&#64;{{activeDmUserName}}</span> und dir statt.
                         </div>
-                    </div> -->
+                    </div>
                     <!-- ================================================================ -->
                 }
 

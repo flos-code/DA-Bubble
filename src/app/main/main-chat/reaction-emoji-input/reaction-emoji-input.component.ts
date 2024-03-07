@@ -123,8 +123,6 @@ export class ReactionEmojiInputComponent implements OnInit {
       await this.addReaction(emoji, currentUser);
     } else {
       if(this.reactions.some(reaction => reaction.reaction == emoji)) {
-
-
         for (let i = 0; i < this.reactions.length; i++) {
           const reaction = this.reactions[i];
           if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
