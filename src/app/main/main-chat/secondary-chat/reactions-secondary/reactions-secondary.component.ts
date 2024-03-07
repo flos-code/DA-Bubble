@@ -35,6 +35,7 @@ const db = getFirestore(app);
 export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
+  secondaryReactionPath!: string;
   @Input() currentUser!: string;
   @Input() userId!: string;
   @Input() messageId!: any;
@@ -53,9 +54,10 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
-    console.log('PIERCE reactionCollectionPath', this.reactionCollectionPath)
-    console.log('PIERCE selectedThreadId', this.selectedThreadId)
-    console.log('PIERCE messageId', this.messageId)
+    this.secondaryReactionPath = this.reactionCollectionPath
+    console.log('PIERCE reactionCollectionPath', this.secondaryReactionPath)
+    // console.log('PIERCE selectedThreadId', this.selectedThreadId)
+    // console.log('PIERCE messageId', this.messageId)
   }
 
   ngOnDestroy(): void {
@@ -65,11 +67,6 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   }
 
   getReactions() {
-    if (!this.reactionCollectionPath) {
-      console.log('reactionCollectionPath is not set yet.');
-      return;
-    }
-
     const q = query(collection(db, this.reactionCollectionPath));
     onSnapshot(q, (snapshot) => {
       const updatedReactions = [];

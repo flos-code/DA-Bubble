@@ -205,6 +205,34 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  // async sendMessage() {
+  //   if (this.messageModel.trim() === '') {
+  //     console.log('Die Nachricht darf nicht leer sein.');
+  //     return;
+  //   }
+  
+  //   try {
+  //     const newMessage = new ThreadMessage({
+  //       createdBy: this.currentUser,
+  //       message: this.messageModel,
+  //       creationDate: Date.now(),
+  //     });
+  
+  //     // Füge die neue Nachricht zum Firestore hinzu
+  //     const docRef = await addDoc(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`), newMessage.toJSON());
+      
+  //     console.log('Nachricht erfolgreich gesendet.', docRef.id);
+  
+  //     // Erstelle eine leere Reaktionskollektion für die neue Nachricht
+  //     await setDoc(doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${docRef.id}/reactions`, "initial"), {});
+  
+  //     this.messageModel = '';
+  //     this.scrollToBottom();
+  //   } catch (error) {
+  //     console.error('Fehler beim Senden der Nachricht:', error);
+  //   }
+  // }
+
   /*--------------------------------- ThreadMessages -----------------------------------*/
 
   async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
