@@ -88,7 +88,7 @@ export class ChatService {
       (doc) => new Thread({ ...doc.data(), threadId: doc.id })
     );
 
-    console.log('Geladene Threads:', threads);
+    // console.log('Geladene Threads:', threads);
     return threads;
   }
 
@@ -99,8 +99,8 @@ export class ChatService {
 
   // ------------------- SecondaryChat Logic --------------------
 
-  openThread(threadId: string): void {
-    this.closeThread();
+  async openThread(threadId: string) {
+    await this.closeThread();
     this.selectedThreadIdSource.next(threadId);
     this.threadOpenSource.next(true);
   }
