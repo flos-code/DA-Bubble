@@ -44,7 +44,7 @@
                         </div>
                     </div>
         
-                    <app-reaction-emoji-input class="" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+                    <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
                     [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="messageId">
                     </app-reaction-emoji-input>
                 </div>
@@ -58,12 +58,10 @@
                 <button class="add-reaction"></button>
             </div>
         </div>
-        <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+        <app-reaction-emoji-input class="reactionOtherMessagesActionbar" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
         [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="messageId">
         </app-reaction-emoji-input>
     </div>
-
-
 } @else {
     <!-------------------- Template of own message ------------------------>
     <div class="user-message own-message">
@@ -86,7 +84,7 @@
 
             <!-- ================ REACTION CONTAINER ================ -->
             @if(reactions.length !== 0) {
-                <div class="mainThreadReactions">
+                <div class="mainThreadReactionsOwn">
                     <div (click)="openMoreEmojis()">
                         <span class="material-symbols-outlined">add_reaction</span>
                     </div>
@@ -117,7 +115,7 @@
                         </div>
                     </div>
         
-                    <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+                    <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
                     [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="messageId">
                     </app-reaction-emoji-input>
                 </div>
@@ -132,7 +130,7 @@
                 alt="Optionen"></button>
         </div>
 
-        <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+        <app-reaction-emoji-input class="reactionOwnMessagesToolbar" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
         [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="messageId">
         </app-reaction-emoji-input>
 

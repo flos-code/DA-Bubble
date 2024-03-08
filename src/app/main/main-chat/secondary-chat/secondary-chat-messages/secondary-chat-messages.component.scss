@@ -29,13 +29,13 @@ $bg-color: #ECEEFE;
         gap: 10px;
     }
 
-    .reactionOtherMessages {
+    .reactionOtherMessagesActionbar {
         position: absolute;
         left: 55px;
         top: 30px;
     }
 
-    .reactionOwnMessages {
+    .reactionOwnMessagesToolbar {
         position: absolute;
         left: 45px;
         top: 20px;
@@ -335,13 +335,27 @@ $bg-color: #ECEEFE;
             }
         }
     }
+
+    > .reactionOtherMessages {
+        position: absolute;
+        left: 0;
+        bottom: 15px;
+    }
+
+    > .reactionOwnMessages {
+        position: absolute;
+        right: 380px;
+        bottom: 25px;
+
+    }
+
 }
 
 .mainThreadReactionsOwn {
     flex-direction: row-reverse;
 }
 
-.mainThreadReactions > app-reaction-emoji-input {
+/* .mainThreadReactions > app-reaction-emoji-input {
     position: absolute;
     top: 170px;
     left: 145px;
@@ -352,3 +366,4 @@ $bg-color: #ECEEFE;
     top: 170px;
     right: 145px;
 }
+ */

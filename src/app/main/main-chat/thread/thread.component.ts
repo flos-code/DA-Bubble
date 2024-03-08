@@ -56,7 +56,6 @@ export class ThreadComponent implements OnInit {
   ngOnInit(): void {
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
     this.getReactions();
-    this.getReactionNames();
     this.getMessageCountAndAnswer();
   }
 
@@ -82,6 +81,7 @@ export class ThreadComponent implements OnInit {
         }
         )
       });
+      this.getReactionNames()
     });
   }
   

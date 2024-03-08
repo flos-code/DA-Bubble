@@ -41,14 +41,11 @@ export class SecondaryChatMessagesComponent implements OnInit {
   showMoreEmojis: boolean = false;
   showMoreEmojisToolbar: boolean = false;
 
-  constructor() {
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`;
-  }
+  constructor() { }
 
   ngOnInit(): void {
       this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`;
       this.getReactions();
-      this.getReactionNames();  
   }
 
   getReactions() {
@@ -64,6 +61,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
         }
         )
       });
+      this.getReactionNames();
     });
   }
   
