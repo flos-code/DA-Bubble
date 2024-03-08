@@ -51,7 +51,7 @@
         <div class="login-btns-container">
             <button class="login-btn" type="login" [disabled]="!signInForm.valid"
                 [class.btn-disabled]="!signInForm.valid" (click)="signIn()">Anmelden</button>
-            <button class="guest-login-btn">Gäste-Login</button>
+            <button class="guest-login-btn" (click)="signInAsGuest()">Gäste-Login</button>
         </div>
     </div>
     <div class="lower-links-container">
