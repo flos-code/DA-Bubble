@@ -25,6 +25,7 @@ import { UserManagementService } from '../../../services/user-management.service
 import { Thread } from '../../../../models/thread.class';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { ChatService } from '../../../services/chat.service';
+import { DirectMessage } from '../../../../models/directMessage.class';
 
 @Component({
   selector: 'app-text-box',
@@ -243,6 +244,67 @@ export class TextBoxComponent {
           doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
           {
             messageId: docRef.id,
+          }
+        );
+      } catch (error) {
+        console.error('Fehler beim Senden der Nachricht: ', error);
+      }
+    } else if (this.messageType === 'direct') {
+      const newDmSender = new DirectMessage({
+        yourMessage: true,
+        creationDate: Date.now(),
+        message: this.messageModel.trim(),
+        imageUrl: imageUrlToSend,
+      });
+      const newDmReceiver = new DirectMessage({
+        yourMessage: false,
+        creationDate: Date.now(),
+        message: this.messageModel.trim(),
+        imageUrl: imageUrlToSend,
+      });
+      try {
+        const docRefSender = await addDoc(
+          collection(
+            this.firestore,
+            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+          ),
+          newDmSender.toJSON()
+        );
+        const docRefReceiver = await addDoc(
+          collection(
+            this.firestore,
+            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
+          ),
+          newDmReceiver.toJSON()
+        );
+        console.log(
+          'Nachricht wurde erfolgreich gesendet mit Sender-ID: ',
+          docRefSender.id,
+          'Und Receiver-ID:',
+          docRefReceiver.id
+        );
+        // this.chatService.setActiveChannelId(this.targetId);
+        // this.viewManagementService.changeView('showMainChat');
+
+        await updateDoc(
+          doc(
+            this.firestore,
+            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
+            docRefSender.id
+          ),
+          {
+            messageId: docRefSender.id,
+          }
+        );
+
+        await updateDoc(
+          doc(
+            this.firestore,
+            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
+            docRefReceiver.id
+          ),
+          {
+            messageId: docRefReceiver.id,
           }
         );
       } catch (error) {
