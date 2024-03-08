@@ -60,7 +60,7 @@
         </div>
         <!--------------------------------------Chat Content-------------------------------------->
         <!--------------------------------------Input Contnent-------------------------------------->
-        <div class="input-content" (click)="message.focus()">
+        <!-- <div class="input-content" (click)="message.focus()">
 
             <textarea (keydown.enter)="sendMessage()" #message [(ngModel)]="messageModel" (input)="updateCursorPosition($event)"
                 placeholder="Antworten..." name="second-chat-input" cols="30" rows="10">
@@ -81,7 +81,9 @@
                 </div>
                 <button class="send-button" (click)="sendMessage()"></button>
             </div>
-        </div>
+        </div> -->
+
+        <app-text-box [messageType]="'thread'" [targetId]="this.chatService.getActiveChannelId()"></app-text-box>
         <!--------------------------------------Input Contnent-------------------------------------->
     </div>
 </section>
