@@ -47,95 +47,14 @@
             </div>
             @for (message of threadMessages; track $index) {
                 <!-------------------- Template of others awnsers ------------------------>
-                <app-secondary-chat-messages [channelMembers]="channelMembers" [threadId]="threadId" [messageId]="message.messageId" [message]="message" [currentUser]="currentUser" [activeChannelId]="activeChannelId"></app-secondary-chat-messages>
-
-
-<!--                 @if(currentUser !== threadMessages[$index].createdBy){
-                    <div class="user-message">
-                        <img class="profile-picture" src="/assets/img/userImages/userImage5.svg" alt="">
-                        <div>
-                            <div class="user-time">
-                                <p>{{ getUserName(message.createdBy) }}</p>
-                                <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
-                            </div>
-                            <div class="thread-message">
-                                <span>{{ message.message }}</span>
-                            </div>
-                            
-                        <app-reactions-secondary 
-                        [userId]="message.createdBy" 
-                        [messageId]="message.messageId" 
-                        [reactionCollectionPath]="reactionCollectionPath" 
-                        [currentUser]="currentUser">
-                        </app-reactions-secondary>
-
-                        </div>
-                        <div class="action-bar" (click)="openMoreEmojis(message.messageId)">
-                            <button class="add-reaction" alt=""></button>
-                        </div>
-
-                        <app-reaction-emoji-input 
-                        class="reactionOtherMessages" 
-                        *ngIf="showMoreEmojis[message.messageId]" 
-                        [showMoreEmojis]="showMoreEmojis[message.messageId]" 
-                        (showMoreEmojisChild)="closeMoreEmojis(message.messageId)"
-                        [reactionCollectionPath]="reactionCollectionPath" 
-                        [currentUser]="currentUser"
-                        [reactions]="reactions" 
-                        [messageId]="message.messageId">
-                        </app-reaction-emoji-input>
-                    </div>
-                } @else {
- -->                    <!-------------------- Template of own message ------------------------>
-<!--                     <div class="user-message own-message">
-                        <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
-                        <div class="message-box">
-                            <div class="user-time own-message">
-                                <p>{{ getUserName(message.createdBy) }}</p>
-                                <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
-                            </div>
-                            <div class="thread-message own-bubble">
-
-                                <div *ngIf="editingMessageId === message.messageId && !openEditOwnMessage; else displayMessage">
-                                    <input class="edit-message-input" [(ngModel)]="editingMessageText"
-                                        (keyup.enter)="saveMessageChanges()" type="text">
-                                </div>
-                                <ng-template #displayMessage>
-                                    <span>{{ message.message }}</span>
-                                </ng-template>
-                            </div>
-                            <app-reactions-secondary 
-                            [userId]="message.createdBy" 
-                            [messageId]="message.messageId" 
-                            [reactionCollectionPath]="reactionCollectionPath" 
-                            [currentUser]="currentUser">
-                            </app-reactions-secondary>
-                        </div>
-                        <div class="own-action-bar">
-                            <button class="add-reaction" (click)="openMoreEmojis(message.messageId)" alt=""></button>
-                            <button class="options" (click)="openEditOwnMessageField(message.messageId)"
-                                alt="Optionen"></button>
-                        </div>
-
-                        <app-reaction-emoji-input 
-                        class="reactionOtherMessages" 
-                        *ngIf="showMoreEmojis[message.messageId]" 
-                        [showMoreEmojis]="showMoreEmojis[message.messageId]" 
-                        (showMoreEmojisChild)="closeMoreEmojis(message.messageId)"
-                        [reactionCollectionPath]="reactionCollectionPath" 
-                        [currentUser]="currentUser"
-                        [reactions]="reactions" 
-                        [messageId]="message.messageId">
-                        </app-reaction-emoji-input>
-
-                        <div *ngIf="editingMessageId === message.messageId && openEditOwnMessage"
-                            (click)="startEditMessage(message)" class="edit-message">
-                            <span>Nachricht bearbeiten</span>
-                        </div>
-                    </div>
-                }
- -->
-
+            <app-secondary-chat-messages
+                [channelMembers]="channelMembers" 
+                [threadId]="threadId" 
+                [messageId]="message.messageId" 
+                [message]="message" 
+                [currentUser]="currentUser" 
+                [activeChannelId]="activeChannelId">
+            </app-secondary-chat-messages>
             }
 
         </div>

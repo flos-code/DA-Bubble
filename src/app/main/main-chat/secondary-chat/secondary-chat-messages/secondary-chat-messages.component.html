@@ -50,10 +50,6 @@
                 </div>
             }
         
-            
-<!--        <app-reactions-secondary [userId]="message.createdBy" [messageId]="messageId" [reactionCollectionPath]="reactionCollectionPath" 
-            [currentUser]="currentUser"> </app-reactions-secondary> -->
-        
             <div class="action-bar" (click)="openMoreEmojisToolbar()">
                 <button class="add-reaction"></button>
             </div>
@@ -68,7 +64,7 @@
         <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
         <div class="message-box">
             <div class="user-time own-message">
-                <p>{{ message.createdBy }}</p>
+                <p>{{ getUserName(message.createdBy) }}</p>
                 <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
             </div>
             <div class="thread-message own-bubble">
@@ -120,9 +116,7 @@
                     </app-reaction-emoji-input>
                 </div>
             }
-
-<!--        <app-reactions-secondary [userId]="message.createdBy" [messageId]="message.messageId" [reactionCollectionPath]="reactionCollectionPath"[currentUser]="currentUser">
-            </app-reactions-secondary> -->        
+       
         </div>
         <div class="own-action-bar">
             <button class="add-reaction" (click)="openMoreEmojisToolbar()" alt=""></button>
