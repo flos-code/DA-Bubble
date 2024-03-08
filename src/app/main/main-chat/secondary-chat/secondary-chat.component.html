@@ -1,66 +1,84 @@
 <section *ngIf="!isLoading">
-    <div class="closePicker" *ngIf="emojiWindowOpen" (click)="toggleEmojis()"></div>
-    <div class="chat-box">
-        <!-------------------------------------Chat Head-------------------------------------->
-        <div class="thread-head">
-            <div class="left-side-head">
-                <h3>Thread</h3>
-                <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag">
-                <p>Entwicklerteam</p>
-            </div>
-            <button (click)="closeThread()" class="close-button"></button>
+  <div
+    class="closePicker"
+    *ngIf="emojiWindowOpen"
+    (click)="toggleEmojis()"
+  ></div>
+  <div class="chat-box">
+    <!-------------------------------------Chat Head-------------------------------------->
+    <div class="thread-head">
+      <div class="left-side-head">
+        <h3>Thread</h3>
+        <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag" />
+        <p>Entwicklerteam</p>
+      </div>
+      <button (click)="closeThread()" class="close-button"></button>
+    </div>
+    <!-----------------------------------Chat Head------------------------------------>
+    <!---------------------------------------Chat Content--------------------------------------->
+    <div #chatContent class="chat-content">
+      @if (currentUser !== firstThreadMessage?.createdBy) {
+      <div *ngIf="firstThreadMessage" class="user-message">
+        <!-- Thread Message -->
+        <img
+          class="profile-picture"
+          src="/assets/img/userImages/userImage4.svg"
+          alt=""
+        />
+        <div>
+          <div class="user-time">
+            <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
+            <span
+              >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
+            >
+          </div>
+          <div class="thread-message">
+            <span>{{ firstThreadMessage?.message }}</span>
+          </div>
         </div>
-        <!-----------------------------------Chat Head------------------------------------>
-        <!---------------------------------------Chat Content--------------------------------------->
-        <div #chatContent class="chat-content">
-            @if (currentUser !== firstThreadMessage?.createdBy) {
-            <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
-                <img class="profile-picture" src="/assets/img/userImages/userImage4.svg" alt="">
-                <div>
-                    <div class="user-time">
-                        <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
-                        <span>{{ firstThreadMessage?.creationDate | date:'HH:mm' }} Uhr</span>
-                    </div>
-                    <div class="thread-message">
-                        <span>{{ firstThreadMessage?.message }}</span>
-                    </div>
-                </div>
-            </div>
-            } @else {
-            <div *ngIf="firstThreadMessage" class="user-message own-message">
-                <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
-                <div>
-                    <div class="user-time own-message">
-                        <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
-                        <span>{{ firstThreadMessage?.creationDate | date:'HH:mm' }} Uhr</span>
-                    </div>
-                    <div class="thread-message own-bubble">
-                        <span>{{ firstThreadMessage.message }}</span>
-                    </div>
-                </div>
-            </div>
-            }
-
-            <div class="answer-line-container"> <!-- Marker for seperate thread quiry to answers -->
-                <p>{{ threadMessages.length }} Antworten</p>
-                <div class="purple-line"></div>
-            </div>
-            @for (message of threadMessages; track $index) {
-                <!-------------------- Template of others awnsers ------------------------>
-            <app-secondary-chat-messages
-                [channelMembers]="channelMembers" 
-                [threadId]="threadId" 
-                [messageId]="message.messageId" 
-                [message]="message" 
-                [currentUser]="currentUser" 
-                [activeChannelId]="activeChannelId">
-            </app-secondary-chat-messages>
-            }
-
+      </div>
+      } @else {
+      <div *ngIf="firstThreadMessage" class="user-message own-message">
+        <img
+          class="profile-picture"
+          src="/assets/img/userImages/userImage6.svg"
+          alt=""
+        />
+        <div>
+          <div class="user-time own-message">
+            <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
+            <span
+              >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
+            >
+          </div>
+          <div class="thread-message own-bubble">
+            <span>{{ firstThreadMessage.message }}</span>
+          </div>
         </div>
-        <!--------------------------------------Chat Content-------------------------------------->
-        <!--------------------------------------Input Contnent-------------------------------------->
-        <!-- <div class="input-content" (click)="message.focus()">
+      </div>
+      }
+
+      <div class="answer-line-container">
+        <!-- Marker for seperate thread quiry to answers -->
+        <p>{{ threadMessages.length }} Antworten</p>
+        <div class="purple-line"></div>
+      </div>
+      @for (message of threadMessages; track $index) {
+      <!-------------------- Template of others awnsers ------------------------>
+      <app-secondary-chat-messages
+        [channelMembers]="channelMembers"
+        [threadId]="threadId"
+        [messageId]="message.messageId"
+        [message]="message"
+        [currentUser]="currentUser"
+        [activeChannelId]="activeChannelId"
+      >
+      </app-secondary-chat-messages>
+      }
+    </div>
+    <!--------------------------------------Chat Content-------------------------------------->
+    <!--------------------------------------Input Contnent-------------------------------------->
+    <!-- <div class="input-content" (click)="message.focus()">
 
             <textarea (keydown.enter)="sendMessage()" #message [(ngModel)]="messageModel" (input)="updateCursorPosition($event)"
                 placeholder="Antworten..." name="second-chat-input" cols="30" rows="10">
@@ -83,7 +101,10 @@
             </div>
         </div> -->
 
-        <app-text-box [messageType]="'thread'" [targetId]="this.chatService.getActiveChannelId()"></app-text-box>
-        <!--------------------------------------Input Contnent-------------------------------------->
-    </div>
+    <app-text-box
+      [messageType]="'thread'"
+      [targetId]="selectedThreadId"
+    ></app-text-box>
+    <!--------------------------------------Input Contnent-------------------------------------->
+  </div>
 </section>

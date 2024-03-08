@@ -329,6 +329,41 @@ export class TextBoxComponent {
       } catch (error) {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
+    } else if (this.messageType === 'thread') {
+      const newThread = new Thread({
+        createdBy: this.userManagementService.activeUserId.value,
+        creationDate: Date.now(),
+        message: this.messageModel.trim(),
+        imageUrl: imageUrlToSend,
+      });
+      try {
+        const docRefThread = await addDoc(
+          collection(
+            this.firestore,
+            `channels/${this.chatService.getActiveChannelId()}/threads/${
+              this.targetId
+            }/messages`
+          ),
+          newThread.toJSON()
+        );
+        console.log(
+          'Nachricht wurde erfolgreich gesendet mit ID: ',
+          docRefThread.id
+        );
+
+        await updateDoc(
+          doc(
+            this.firestore,
+            `channels/${this.targetId}/threads`,
+            docRefThread.id
+          ),
+          {
+            messageId: docRefThread.id,
+          }
+        );
+      } catch (error) {
+        console.error('Fehler beim Senden der Nachricht: ', error);
+      }
     }
     this.messageModel = '';
     this.imageURL = undefined;
