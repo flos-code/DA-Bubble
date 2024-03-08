@@ -10,6 +10,7 @@
             <div class="thread-message">
                 <span>{{ message.message }}</span>
             </div>
+            <img *ngIf="message?.imageUrl" [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}" style="height: 100px; width: 100px;">
         
             <!-- ================ REACTION CONTAINER ================ -->
             @if(reactions.length !== 0) {
@@ -79,6 +80,8 @@
                     <span>{{ message.message }}</span>
                 </ng-template>
             </div>
+
+            <img *ngIf="message?.imageUrl" [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}" style="height: 100px; width: 100px;">
 
             <!-- ================ REACTION CONTAINER ================ -->
             @if(reactions.length !== 0) {
