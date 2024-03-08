@@ -1,40 +1,5 @@
 @if(currentUser !== thread.userId){
     <!-- ========================= Template Other Messages ========================= -->
-    @if(activeChannelId == null) {
-        <!-- ========================= Template Other Messages - DM ========================= -->
-        <div class="messageContainer">
-            <div class="messageProfileIcon">
-                <img src="/assets/img/main-chat/member1.svg">
-            </div>
-            <div class="mainMessage">
-                <div>
-                    <div>{{thread?.createdBy}}</div>
-                    <div>{{thread?.time}} Uhr</div>
-                </div>
-                <div>
-                    {{thread?.message}}
-                </div>
-                <app-reactions [userId]="thread.userId" [thread]="thread" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                </app-reactions>
-            </div>
-    
-            <!-- ========== Toolbar ========== -->
-            <div class="toolBar">
-                <div (click)="saveReaction('✅', this.currentUser)">
-                    <img src="/assets/img/main-chat/check_mark.svg">
-                </div>
-                <div (click)="saveReaction('🙌', this.currentUser)">
-                    <img src="/assets/img/main-chat/raising_hands.svg">
-                </div>
-                <div (click)="openMoreEmojis()">
-                    <span class="material-symbols-outlined">add_reaction</span>
-                </div>
-            </div>
-            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
-        </div>
-        <!-- ============================================================================ -->                
-    } @else {
         <!-- ========================= Template Other Messages - CHANNEL ========================= -->
         <div class="messageContainer">
             <div class="messageProfileIcon">
@@ -52,8 +17,49 @@
                     <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
                 </div>
-                <app-reactions [userId]="thread.userId" [thread]="thread" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                </app-reactions>
+
+                <!-- ================ REACTION CONTAINER ================ -->
+                @if(reactions.length !== 0) {
+                    <div class="mainThreadReactions">
+                        <div (click)="openMoreEmojis()">
+                            <span class="material-symbols-outlined">add_reaction</span>
+                        </div>
+                        @for (reaction of reactions | slice:0:3; track $index) {
+                            <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
+                                <div class="ractionEmoji">
+                                    <span>{{reaction?.reaction}}</span>
+                                </div>
+                                <div class="ractionCount">
+                                    <div>{{reaction.count}}</div>
+                                </div>
+                                <div class="reactionHoverBubble">
+                                    <div class="ractionEmoji">
+                                        <span>{{reaction?.reaction}}</span>
+                                    </div>                        
+                                    <div>{{reaction?.reactedByName}}</div>
+                                    <div>hat reagiert</div>
+                                </div>
+                            </div>    
+                        }
+            
+                        <div *ngIf="reactions?.length > 3" class="reactionContainer">
+                            <div class="ractionEmoji">
+                                <span>+</span>
+                            </div>
+                            <div class="ractionCount">
+                                <div>{{reactions?.length - 3}}</div>
+                            </div>
+                        </div>
+            
+                        <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+                    </div>
+                }
+                <!-- ================================================ -->
+
+<!--            <app-reactions [userId]="thread.userId" [thread]="thread" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                </app-reactions> -->
+
             </div>
     
             <!-- ========== Toolbar ========== -->
@@ -64,124 +70,115 @@
                 <div (click)="saveReaction('🙌', this.currentUser)">
                     <img src="/assets/img/main-chat/raising_hands.svg">
                 </div>
-                <div (click)="openMoreEmojis()">
+                <div (click)="openMoreEmojisToolbar()">
                     <span class="material-symbols-outlined">add_reaction</span>
                 </div>
                 <div (click)="openThread(thread.threadId)">
                     <span class="material-symbols-outlined">comment</span>
                 </div>
             </div>
-            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
             [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
         </div>
         <!-- ============================================================================ -->        
-    }
-    } @else {
+
+} @else {
     <!-- ========================= Template Own Message ========================= -->
-        @if(activeChannelId == null) {
-            <!-- ========================= Template Own Message - DM ========================= -->
-            <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
-                <div class="mainMessageOwn">
-                    <div>
-                        <div>{{thread?.createdBy}}</div>
-                        <div>{{thread?.time}} Uhr</div>
-                    </div>
-                    <div>
-                        {{thread?.message}}
-                    </div>
-                    <app-reactions [userId]="thread.userId" [thread]="thread"  [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                    </app-reactions>
+        <!-- ========================= Template Own Message - CHANNEL ========================= -->
+        <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
+            <div class="mainMessageOwn">
+                <div>
+                    <div>{{thread?.createdBy}}</div>
+                    <div>{{thread?.time}} Uhr</div>
                 </div>
-                <div class="messageProfileIcon">
-                    <img src="/assets/img/main-chat/member1.svg">
+                <div>
+                    {{thread?.message}}
                 </div>
-        
-                <!-- ========== Toolbar own ========== -->
-                <div class="toolBarOwn">
-                    <div (click)="saveReaction('✅', this.currentUser)">
-                        <img src="/assets/img/main-chat/check_mark.svg">
-                    </div>
-                    <div (click)="saveReaction('🙌', this.currentUser)">
-                        <img src="/assets/img/main-chat/raising_hands.svg">
-                    </div>
-                    <div (click)="openMoreEmojis()">
-                        <span class="material-symbols-outlined">add_reaction</span>
-                    </div>
-                    <div (click)="moreOptions()">
-                        <span class="material-symbols-outlined">more_vert</span>
-                    </div>
+                <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
+                    <div>Letzte Antwort {{lastAnswer}}</div>
+                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
-                <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
-
-                <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
-                <div *ngIf="editMessagePopupOpen" class="editMessagePopup" (click)="doNotClose($event)">
-                    <div (click)="editMessage()">
-                        <div>Nachricht bearbeiten</div>
-                    </div>
-                </div>
-            </div>
-
-            <!-- ========================= Template Own Message - EDIT ========================= -->
-            <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
-            [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
-            (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>  
+                <!-- ================ REACTION CONTAINER ================ -->
+                @if(reactions.length !== 0) {
+                    <div class="mainThreadReactions">
+                        <div (click)="openMoreEmojis()">
+                            <span class="material-symbols-outlined">add_reaction</span>
+                        </div>
+                        @for (reaction of reactions | slice:0:3; track $index) {
+                            <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
+                                <div class="ractionEmoji">
+                                    <span>{{reaction?.reaction}}</span>
+                                </div>
+                                <div class="ractionCount">
+                                    <div>{{reaction.count}}</div>
+                                </div>
+                                <div class="reactionHoverBubble">
+                                    <div class="ractionEmoji">
+                                        <span>{{reaction?.reaction}}</span>
+                                    </div>                        
+                                    <div>{{reaction?.reactedByName}}</div>
+                                    <div>hat reagiert</div>
+                                </div>
+                            </div>    
+                        }
             
-        } @else {
-            <!-- ========================= Template Own Message - CHANNEL ========================= -->
-            <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
-                <div class="mainMessageOwn">
-                    <div>
-                        <div>{{thread?.createdBy}}</div>
-                        <div>{{thread?.time}} Uhr</div>
+                        <div *ngIf="reactions?.length > 3" class="reactionContainer">
+                            <div class="ractionEmoji">
+                                <span>+</span>
+                            </div>
+                            <div class="ractionCount">
+                                <div>{{reactions?.length - 3}}</div>
+                            </div>
+                        </div>
+            
+                        <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojisToolbar" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
                     </div>
-                    <div>
-                        {{thread?.message}}
-                    </div>
-                    <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
-                        <div>Letzte Antwort {{lastAnswer}}</div>
-                        <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
-                    </div>
-                    <app-reactions [userId]="thread.userId" [thread]="thread"  [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                    </app-reactions>
-                </div>
-                <div class="messageProfileIcon">
-                    <img src="/assets/img/main-chat/member1.svg">
-                </div>
-        
-                <!-- ========== Toolbar own ========== -->
-                <div class="toolBarOwn">
-                    <div (click)="saveReaction('✅', this.currentUser)">
-                        <img src="/assets/img/main-chat/check_mark.svg">
-                    </div>
-                    <div (click)="saveReaction('🙌', this.currentUser)">
-                        <img src="/assets/img/main-chat/raising_hands.svg">
-                    </div>
-                    <div (click)="openMoreEmojis()">
-                        <span class="material-symbols-outlined">add_reaction</span>
-                    </div>
-                    <div (click)="openThread(thread.threadId)">
-                        <span class="material-symbols-outlined">comment</span>
-                    </div>
-                    <div (click)="moreOptions()">
-                        <span class="material-symbols-outlined">more_vert</span>
-                    </div>
-                </div>
-                <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
-    
-    
-                <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
-                <div *ngIf="editMessagePopupOpen" class="editMessagePopup" (click)="doNotClose($event)">
-                    <div (click)="editMessage()">
-                        <div>Nachricht bearbeiten</div>
-                    </div>
-                </div>
+                }
+                <!-- ================================================ -->
+
+<!--                 <app-reactions [userId]="thread.userId" [thread]="thread"  [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
+                </app-reactions>
+ -->
+
+            </div>
+            <div class="messageProfileIcon">
+                <img src="/assets/img/main-chat/member1.svg">
             </div>
     
-            <!-- ========================= Template Own Message - EDIT ========================= -->
-            <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
-            [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
-            (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
-        }
-    }
+            <!-- ========== Toolbar own ========== -->
+            <div class="toolBarOwn">
+                <div (click)="saveReaction('✅', this.currentUser)">
+                    <img src="/assets/img/main-chat/check_mark.svg">
+                </div>
+                <div (click)="saveReaction('🙌', this.currentUser)">
+                    <img src="/assets/img/main-chat/raising_hands.svg">
+                </div>
+                <div (click)="openMoreEmojisToolbar()">
+                    <span class="material-symbols-outlined">add_reaction</span>
+                </div>
+                <div (click)="openThread(thread.threadId)">
+                    <span class="material-symbols-outlined">comment</span>
+                </div>
+                <div (click)="moreOptions()">
+                    <span class="material-symbols-outlined">more_vert</span>
+                </div>
+            </div>
+            <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+
+
+            <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>
+            <div *ngIf="editMessagePopupOpen" class="editMessagePopup" (click)="doNotClose($event)">
+                <div (click)="editMessage()">
+                    <div>Nachricht bearbeiten</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================= Template Own Message - EDIT ========================= -->
+        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
+        [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
+        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
+        
+}

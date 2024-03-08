@@ -42,17 +42,20 @@ export class ThreadComponent implements OnInit {
   answers: string;
   lastAnswer: any;
   showMoreEmojis: boolean = false;
+  showMoreEmojisToolbar: boolean = false;
   reactionCollectionPath: string;
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
   //@Input() textAreaEditMessage: string;
   reactions = [];
+  reactionNames = [];
+  reactionCount: number;
 
-
-  constructor(private chatService: ChatService, private main: MainChatComponent, private reactionService: ReactionsService) { }
+  constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
   ngOnInit(): void {
     this.getReactions();
+    this.getReactionNames();
     this.getMessageCountAndAnswer();
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
   }
@@ -78,6 +81,20 @@ export class ThreadComponent implements OnInit {
           'reactedBy': reaction.data()['reactedBy']
         }
         )
+      });
+    });
+  }
+  
+  getReactionNames() {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      list.forEach(name => {
+        for (let i = 0; i < this.reactions.length; i++) {
+          let reaction = this.reactions[i];
+          if(name.id == reaction.reactedBy) {
+            this.reactions = this.reactions.map(obj => ({ ...obj, reactedByName: name.data()['name'] }));
+          }
+        };
       });
     });
   }
@@ -161,13 +178,18 @@ export class ThreadComponent implements OnInit {
       });
       console.log('New reaction added', newReaction);
   }
-
+  
   openMoreEmojis() {
     this.showMoreEmojis = true;
   }
 
+  openMoreEmojisToolbar() {
+    this.showMoreEmojisToolbar = true;
+  }
+
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
+    this.showMoreEmojisToolbar = false;
   }
 
   moreOptions() {

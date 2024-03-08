@@ -31,7 +31,6 @@ const db = getFirestore(app);
   styleUrl: './reactions.component.scss'
 })
 export class ReactionsComponent implements OnInit {
-  @ViewChild('reactionEmojiInput') reactionEmojiInput: ReactionEmojiInputComponent;
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
