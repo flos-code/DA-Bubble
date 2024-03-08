@@ -46,6 +46,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
   ngOnInit(): void {
       this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`;
       this.getReactions();
+      console.log('openEditOwnMessage:', this.openEditOwnMessage)
   }
 
   getReactions() {

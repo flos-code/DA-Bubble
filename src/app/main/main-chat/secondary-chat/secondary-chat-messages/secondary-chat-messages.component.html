@@ -67,12 +67,14 @@
                 <p>{{ getUserName(message.createdBy) }}</p>
                 <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
             </div>
+            
             <div class="thread-message own-bubble">
 
                 <div *ngIf="openEditOwnMessage; else displayMessage">
                     <input class="edit-message-input" [(ngModel)]="editingMessageText"
                         (keyup.enter)="saveMessageChanges()" type="text">
                 </div>
+
                 <ng-template #displayMessage>
                     <span>{{ message.message }}</span>
                 </ng-template>
@@ -129,7 +131,7 @@
         </app-reaction-emoji-input>
 
 
-        <div *ngIf="!openEditOwnMessage"
+        <div *ngIf="openEditOwnMessage"
             (click)="startEditMessage()" class="edit-message">
             <span>Nachricht bearbeiten</span>
         </div>
