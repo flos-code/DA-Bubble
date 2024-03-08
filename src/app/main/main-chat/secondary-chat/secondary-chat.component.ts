@@ -12,9 +12,9 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
 import { Subscription } from 'rxjs';
 import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
-import { ReactionsSecondaryComponent } from './reactions-secondary/reactions-secondary.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { UserManagementService } from '../../../services/user-management.service';
+import { SecondaryChatMessagesComponent } from './secondary-chat-messages/secondary-chat-messages.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -30,7 +30,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionsSecondaryComponent, ReactionEmojiInputComponent],
+  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionEmojiInputComponent, SecondaryChatMessagesComponent],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss'
 })
@@ -72,7 +72,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     private chatService: ChatService,
     public userManagementService: UserManagementService,
     public inputService: InputService
-  ) { }
+  ) { this.getActualThreadId();
+  }
 
   ngOnInit(): void {
     this.setCurrentUser();

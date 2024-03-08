@@ -36,7 +36,6 @@ export class UserManagementService {
     this.users.asObservable();
 
   private updatedUserIds = new BehaviorSubject<string[]>([]);
-  // public filteredUsers$: Observable<{ id: string; data: User }[]>;
 
   public filteredUsers$: Observable<{ id: string; data: User }[]> =
     combineLatest([this.users$, this.updatedUserIds]).pipe(
@@ -101,6 +100,7 @@ export class UserManagementService {
       );
       const snapshot = await getDocs(dmCollectionRef);
       const userIds = snapshot.docs.map((doc) => doc.id);
+      console.log('Direktnachrichten-Partner-IDs:', userIds);
       return userIds;
     } catch (error) {
       console.error(

@@ -13,10 +13,18 @@
     }
 }
 
-.reactionOtherMessages {
+.messageContainer > app-reaction-emoji-input {
     position: absolute;
-    right: 45px;
+    right: 395px;
     top: 20px;
+    height: 46px;
+    z-index: 10;
+}
+
+.messageContainerOwn > app-reaction-emoji-input {
+    position: absolute;
+    left: 45px;
+    top: 15px;
     height: 46px;
     z-index: 10;
 }
@@ -57,6 +65,7 @@
 }
 
 .mainMessage {
+    position: relative;
     width: 100%;
     display: flex;
     flex-direction: column;
@@ -180,6 +189,126 @@
     }
 }
 
+/* ================= REACTIONS ================= */
+.mainThreadReactions,
+.mainThreadReactionsOwn {
+    width: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 1rem;
+    cursor: pointer;
+    &:hover {
+      color: $purple3;
+    }
+
+    > div:first-of-type {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        background-color: white;
+        &:hover {
+            cursor: pointer;
+            color: $purple2;
+        }
+
+    }
+
+    > .reactionContainer {
+        box-sizing: border-box;
+        height: 40px;
+        position: relative;
+        display: flex;
+        gap: 10px;
+        border-radius: 20px;
+        border: 1px solid $lightPurple;
+        padding: 5px 10px 5px 10px;
+        background-color: white;
+        &:hover {
+            cursor: pointer;
+            border-color: $purple2;
+        }
+
+        &:hover .reactionHoverBubble {
+            display: block;
+        }
+
+        .ractionEmoji {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ractionCount {
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            > div {
+                font-weight: 16px;
+
+            }
+        }
+
+        .reactionHoverBubble {
+            position: absolute;
+            top: -105px;
+            left: 30px;
+            display: none;
+            width: 158px;
+            border-radius: 30px 30px 30px 0px;
+            padding: 15px 10px 15px 10px;
+            background-color: $purple1;
+            z-index: 2;
+            > div {
+                width: 100%;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+            }
+
+            > div:first-of-type {
+
+            }
+            
+            > div:nth-of-type(2) {
+                color: white;
+                font-weight: 700;
+                font-size: 18px;
+            }
+            > div:last-of-type {
+                color: white;
+                font-size: 16px;
+                font-weight: 400;
+            }
+        }
+    }
+
+    .reactionContainerMoreEmojisOther {
+        position: absolute;
+        left: 0px;
+        top: 160px;
+        height: 46px;
+        z-index: 10;
+    }
+
+    .reactionContainerMoreEmojisOwn{
+        position: absolute;
+        right: 0px;
+        top: 160px;
+        height: 46px;
+        z-index: 10; 
+    }
+}
+
+.mainThreadReactionsOwn {
+    flex-direction: row-reverse;
+}
+
+/* ================= TOOLBAR ================= */
 .toolBar, .toolBarOwn {
     position: absolute;
     right: 45px;
@@ -218,6 +347,9 @@
     display: flex;
 }
 
+/* ============================================= */
+
+/* =============== EDIT MESSAGE =============== */
 .editMessagePopupBackground {
     position: fixed;
     top: 0;

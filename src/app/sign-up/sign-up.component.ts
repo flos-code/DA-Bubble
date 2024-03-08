@@ -98,7 +98,7 @@ export class SignUpComponent {
   async signUp() {
     await createUserWithEmailAndPassword(this.auth, this.registerForm.value.email, this.registerForm.value.password);
     await updateProfile(this.auth.currentUser, {
-      displayName: this.registerForm.value.nameAndSurname, 
+      displayName: this.registerForm.value.nameAndSurname,
       photoURL: this.imgUrl,
     });
     await this.createUserDetailsDoc();
@@ -127,11 +127,11 @@ export class SignUpComponent {
     });
   }
 
-  animateAndGoBackToLogin(){
+  animateAndGoBackToLogin() {
     this.userCreationSuccess = true;
     setTimeout(() => {
-      this.goBackToLogin();
       this.userCreationSuccess = false;
+      this.goBackToLogin();
     }, 1500);
   }
 

@@ -33,6 +33,7 @@ export class ProfilCardService {
   userEmailAddress: string = '';
   headerProfilePic: string = '';
   headerUserNameandSurname: string = '';
+  currentUserId: string = '';
 
   isProfilCardActive: boolean = false;
   isOverlayActive: boolean = false;
@@ -87,6 +88,7 @@ export class ProfilCardService {
         this.userNameandSurname = user.displayName;
         this.headerUserNameandSurname = user.displayName;
         this.userEmailAddress = user.email;
+        this.currentUserId = user.uid;
       } else {
         this.profilePic = '/assets/img/login/profile_generic_big.png';
         this.userNameandSurname = 'Max Mustermann';

@@ -82,8 +82,12 @@ export class LoginComponent implements OnInit {
    }
 
   async signIn() {
-    const userCredentials = await signInWithEmailAndPassword(this.auth, this.signInForm.value.email, this.signInForm.value.password);
-    console.log(userCredentials.user.uid);
+    await signInWithEmailAndPassword(this.auth, this.signInForm.value.email, this.signInForm.value.password);
+    this.router.navigateByUrl('');
+  }
+
+  async signInAsGuest(){
+    await signInWithEmailAndPassword(this.auth, 'guest@dabubble77.com', '123456');
     this.router.navigateByUrl('');
   }
 }
