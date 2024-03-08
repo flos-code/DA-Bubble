@@ -18,6 +18,7 @@ import {
   collection,
   collectionData,
   doc,
+  setDoc,
   updateDoc,
 } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
@@ -262,30 +263,45 @@ export class TextBoxComponent {
         message: this.messageModel.trim(),
         imageUrl: imageUrlToSend,
       });
+      const dmSenderRef = doc(
+        this.firestore,
+        `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
+        this.targetId
+      );
+      const dmReceiverRef = doc(
+        this.firestore,
+        `users/${this.targetId}/allDirectMessages`,
+        this.userManagementService.activeUserId.value
+      );
+
       try {
+        await setDoc(dmSenderRef, {}, { merge: true });
+        await setDoc(dmReceiverRef, {}, { merge: true });
+
+        const directMessagesSenderCollection = collection(
+          this.firestore,
+          `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+        );
+        const directMessagesReceiverCollection = collection(
+          this.firestore,
+          `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
+        );
+
         const docRefSender = await addDoc(
-          collection(
-            this.firestore,
-            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-          ),
+          directMessagesSenderCollection,
           newDmSender.toJSON()
         );
         const docRefReceiver = await addDoc(
-          collection(
-            this.firestore,
-            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
-          ),
+          directMessagesReceiverCollection,
           newDmReceiver.toJSON()
         );
+
         console.log(
-          'Nachricht wurde erfolgreich gesendet mit Sender-ID: ',
+          'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
           docRefSender.id,
-          'Und Receiver-ID:',
+          'und Receiver-ID:',
           docRefReceiver.id
         );
-        // this.chatService.setActiveChannelId(this.targetId);
-        // this.viewManagementService.changeView('showMainChat');
-
         await updateDoc(
           doc(
             this.firestore,
@@ -307,6 +323,9 @@ export class TextBoxComponent {
             messageId: docRefReceiver.id,
           }
         );
+        this.userManagementService.loadUsers();
+        this.chatService.setSelectedUserId(this.targetId);
+        this.viewManagementService.changeView('showDms');
       } catch (error) {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
