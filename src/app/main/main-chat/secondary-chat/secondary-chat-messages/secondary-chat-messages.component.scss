@@ -174,7 +174,7 @@ $bg-color: #ECEEFE;
     position: absolute;
     right: -80px;
     opacity: 0;
-    top: -12px;
+    top: -30px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -249,7 +249,7 @@ $bg-color: #ECEEFE;
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
+    gap: 0.5rem;
     cursor: pointer;
     &:hover {
       color: $purple3;
