@@ -71,8 +71,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   constructor(
     private chatService: ChatService,
     public userManagementService: UserManagementService,
-    public inputService: InputService
-  ) { this.getActualThreadId();
+    public inputService: InputService) { 
+      this.getActualThreadId();
   }
 
   ngOnInit(): void {

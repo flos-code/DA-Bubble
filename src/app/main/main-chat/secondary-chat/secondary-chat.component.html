@@ -13,16 +13,16 @@
         <!-----------------------------------Chat Head------------------------------------>
         <!---------------------------------------Chat Content--------------------------------------->
         <div #chatContent class="chat-content">
-            @if (currentUser !== firstThreadMessage.createdBy) {
+            @if (currentUser !== firstThreadMessage?.createdBy) {
             <div *ngIf="firstThreadMessage" class="user-message"> <!-- Thread Message -->
                 <img class="profile-picture" src="/assets/img/userImages/userImage4.svg" alt="">
                 <div>
                     <div class="user-time">
-                        <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
-                        <span>{{ firstThreadMessage.creationDate | date:'HH:mm' }} Uhr</span>
+                        <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
+                        <span>{{ firstThreadMessage?.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message">
-                        <span>{{ firstThreadMessage.message }}</span>
+                        <span>{{ firstThreadMessage?.message }}</span>
                     </div>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                 <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
                 <div>
                     <div class="user-time own-message">
-                        <p>{{ getUserName(firstThreadMessage.createdBy) }}</p>
-                        <span>{{ firstThreadMessage.creationDate | date:'HH:mm' }} Uhr</span>
+                        <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
+                        <span>{{ firstThreadMessage?.creationDate | date:'HH:mm' }} Uhr</span>
                     </div>
                     <div class="thread-message own-bubble">
                         <span>{{ firstThreadMessage.message }}</span>

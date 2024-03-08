@@ -5,7 +5,7 @@ $light-purple: #ADB0D9;
 $light-grey: #686868;
 $bg-color: #ECEEFE;
 
-
+// --------------------------------- Chat Content ---------------------------------
 .user-message {
     position: relative;
     display: flex;
@@ -238,7 +238,7 @@ $bg-color: #ECEEFE;
     overflow: hidden;
 }
 
-/* ================= REACTIONS ================= */
+// --------------------------------- REACTIONS ---------------------------------
 .mainThreadReactions,
 .mainThreadReactionsOwn {
     width: 100%;
@@ -318,11 +318,7 @@ $bg-color: #ECEEFE;
                 justify-content: center;
                 align-items: center;
             }
-
-            > div:first-of-type {
-
-            }
-            
+           
             > div:nth-of-type(2) {
                 color: white;
                 font-weight: 700;
@@ -348,22 +344,8 @@ $bg-color: #ECEEFE;
         bottom: 25px;
 
     }
-
 }
 
 .mainThreadReactionsOwn {
     flex-direction: row-reverse;
 }
-
-/* .mainThreadReactions > app-reaction-emoji-input {
-    position: absolute;
-    top: 170px;
-    left: 145px;
-}
-
-.mainThreadReactionsOwn > app-reaction-emoji-input {
-    position: absolute;
-    top: 170px;
-    right: 145px;
-}
- */

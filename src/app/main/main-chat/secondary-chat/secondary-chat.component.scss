@@ -170,12 +170,13 @@ emoji-mart {
     }
 }
 
+/*
 .message-box {
     display: flex;
     flex-direction: column;
     align-items: flex-end;
 }
-
+*/
 .thread-message {
     margin-top: 8px;
     max-width: calc(315px - 30px);
@@ -191,6 +192,7 @@ emoji-mart {
     }
 }
 
+/*
 .own-action-bar {
     position: absolute;
     left: 44px;
@@ -316,6 +318,7 @@ emoji-mart {
     border: unset;
     overflow: hidden;
 }
+*/
 
 // --------------------------------- Input Content ---------------------------------
 
