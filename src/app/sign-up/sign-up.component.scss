@@ -288,7 +288,7 @@
     }
 }
 
-.chosen-profile-pic{
+.chosen-profile-pic {
     width: 170px;
     height: 170px;
     border-radius: 100%;
@@ -329,7 +329,8 @@
             height: 64px;
             border-radius: 41px;
             padding: 4px;
-            &:hover{
+
+            &:hover {
                 cursor: pointer;
             }
         }
@@ -377,10 +378,53 @@
     }
 }
 
-.btn-disabled{
+.btn-disabled {
     background-color: #686868;
-    &:hover{
+
+    &:hover {
         background-color: #686868;
         cursor: unset;
+    }
+}
+
+.successfull-sign-up-overlay {
+    display: flex;
+    height: 100vh;
+    width: 100vw;
+    position: absolute;
+    top: 0;
+    z-index: 3;
+}
+
+.successfull-sign-up-main {
+    padding: 50px;
+    background: #444DF2;
+    border-radius: 30px 30px 0px 30px;
+    font-family: Nunito;
+    font-size: 36px;
+    font-weight: 700;
+    line-height: 49px;
+    letter-spacing: 0em;
+    text-align: left;
+    color: white;
+
+    p {
+        margin: 0;
+    }
+
+    position: absolute;
+    bottom: 50px;
+    right: 50px;
+    animation: slideSignUpFromRight 125ms ease-out;
+    overflow-x: hidden;
+}
+
+@keyframes slideSignUpFromRight {
+    0% {
+        transform: translateX(600px);
+    }
+
+    100% {
+        transform: translateX(0px);
     }
 }
