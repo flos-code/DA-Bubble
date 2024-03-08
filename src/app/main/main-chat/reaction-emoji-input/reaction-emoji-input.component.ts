@@ -39,7 +39,6 @@ export class ReactionEmojiInputComponent implements OnInit {
   inputFocused: boolean = false;
   messageModel: string = '';
   @Input() reactionCollectionPath!: string;
-  @Input() secondaryReactionPath! : string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
 
@@ -54,7 +53,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
-    console.log('PIERCE RCP INPUT',this.secondaryReactionPath)
+    console.log('PIERCE RCP INPUT',this.reactionCollectionPath)
   }
 
   onInputFocus(): void {

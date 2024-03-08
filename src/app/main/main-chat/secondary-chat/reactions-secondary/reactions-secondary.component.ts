@@ -35,7 +35,6 @@ const db = getFirestore(app);
 export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
-  secondaryReactionPath!: string;
   @Input() currentUser!: string;
   @Input() userId!: string;
   @Input() messageId!: any;
@@ -52,10 +51,10 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     this.getActualThreadId();
+    this.updateReactionCollectionPath();
     this.getReactions();
     this.getReactionNames();
-    this.secondaryReactionPath = this.reactionCollectionPath
-    console.log('PIERCE reactionCollectionPath', this.secondaryReactionPath)
+    console.log('PIERCE reactionCollectionPath', this.reactionCollectionPath)
     // console.log('PIERCE selectedThreadId', this.selectedThreadId)
     // console.log('PIERCE messageId', this.messageId)
   }
@@ -119,8 +118,6 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(threadId => {
       this.selectedThreadId = threadId;
     });
-
-    this.updateReactionCollectionPath();
   }
 
   openMoreEmojis() {
