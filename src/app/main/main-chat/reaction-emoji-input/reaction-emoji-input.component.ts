@@ -4,13 +4,11 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-import { ReactionsService } from '../../../services/reactions.service';
 import { PickerModule } from '@ctrl/ngx-emoji-mart';
-import { Observable, Subscription } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, setDoc, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getFirestore, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -23,7 +21,6 @@ const firebaseConfig = {
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 /* =============================== */
-
 
 @Component({
   selector: 'app-reaction-emoji-input',
@@ -42,21 +39,12 @@ export class ReactionEmojiInputComponent implements OnInit {
   @Input() secondaryReactionPath!: string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
-
-  //emoji: string = '';
-  //emojiSub: Subscription = new Subscription();
-  //currentUserSub: Subscription = new Subscription();
-
   @Input() threadOrMessageId: string
-  @Input() threadId!: string;
-  @Input() messageId!: string;
   @Input() reactions!: any;
 
   constructor() { }
 
-  ngOnInit(): void {
-    //console.log('PIERCE RCP INPUT',this.secondaryReactionPath)
-  }
+  ngOnInit(): void { }
 
   onInputFocus(): void {
     this.inputFocused = true;
@@ -115,12 +103,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   });
  */
 
-  async saveReaction(emoji: string, currentUser: string) {
-/*     if (!this.reactionCollectionPath || this.reactionCollectionPath.trim() === '') {
-      console.error('reactionCollectionPath is empty or invalid', this.reactionCollectionPath);
-      return;
-    } */
-    
+  async saveReaction(emoji: string, currentUser: string) {   
     if(this.reactions.length == 0) {
       console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);

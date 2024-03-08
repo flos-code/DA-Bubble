@@ -4,10 +4,8 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
-import { ReactionsComponent } from '../reactions/reactions.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { BehaviorSubject } from 'rxjs';
-import { ReactionsService } from '../../../services/reactions.service';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -28,7 +26,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionsComponent, ReactionEmojiInputComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionEmojiInputComponent],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, query, updateDoc } from 'firebase/firestore';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {

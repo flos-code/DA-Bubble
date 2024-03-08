@@ -73,7 +73,7 @@
             </div>
             <div class="thread-message own-bubble">
 
-                <div *ngIf="openEditOwnMessage">
+                <div *ngIf="openEditOwnMessage; else displayMessage">
                     <input class="edit-message-input" [(ngModel)]="editingMessageText"
                         (keyup.enter)="saveMessageChanges()" type="text">
                 </div>
@@ -135,7 +135,7 @@
         </app-reaction-emoji-input>
 
 
-        <div *ngIf="openEditOwnMessage"
+        <div *ngIf="!openEditOwnMessage"
             (click)="startEditMessage()" class="edit-message">
             <span>Nachricht bearbeiten</span>
         </div>
