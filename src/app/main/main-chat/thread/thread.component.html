@@ -53,7 +53,7 @@
                         </div>
             
                         <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="thread?.threadId"></app-reaction-emoji-input>
                     </div>
                 }
                 <!-- ================================================ -->
@@ -79,7 +79,7 @@
                 </div>
             </div>
             <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="thread?.threadId"></app-reaction-emoji-input>
         </div>
         <!-- ============================================================================ -->        
 
@@ -133,7 +133,7 @@
                         </div>
             
                         <app-reaction-emoji-input *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojisToolbar" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+                        [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="thread?.threadId"></app-reaction-emoji-input>
                     </div>
                 }
                 <!-- ================================================ -->
@@ -165,8 +165,8 @@
                     <span class="material-symbols-outlined">more_vert</span>
                 </div>
             </div>
-            <app-reaction-emoji-input class="reactionOwnMessages" *ngIf="showMoreEmojis" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
-            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadId]="thread?.threadId"></app-reaction-emoji-input>
+            <app-reaction-emoji-input class="reactionOtherMessages" *ngIf="showMoreEmojisToolbar" [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
+            [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions" [threadOrMessageId]="thread?.threadId"></app-reaction-emoji-input>
 
 
             <div *ngIf="editMessagePopupOpen" class="editMessagePopupBackground" (click)="closeEditMessagePopUp()"></div>

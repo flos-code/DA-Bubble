@@ -46,15 +46,16 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   reactionCount: number;
   activeChannelId: string = '';
 
-  constructor(
-    private chatService: ChatService,
-  ) { }
+  constructor(private chatService: ChatService) { 
+
+  }
 
   ngOnInit(): void {
+    console.log('Original reactionCollectionPath', this.reactionCollectionPath)
     this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
-    this.secondaryReactionPath = this.reactionCollectionPath
+    //this.secondaryReactionPath = this.reactionCollectionPath;
     console.log('PIERCE reactionCollectionPath', this.secondaryReactionPath)
     // console.log('PIERCE selectedThreadId', this.selectedThreadId)
     // console.log('PIERCE messageId', this.messageId)
@@ -100,7 +101,8 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
 
   async updateReactionCollectionPath() {
     if (this.selectedThreadId && this.messageId && this.activeChannelId) {
-      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
+      this.secondaryReactionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
+      //this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
       // Aufruf von getReactions, nachdem der Pfad aktualisiert wurde
       await this.getReactions();
     } else {

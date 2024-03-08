@@ -1,17 +1,12 @@
-import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ChatService } from '../../../services/chat.service';
-import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
-import { MainChatComponent } from '../main-chat.component';
-import { ReactionsComponent } from '../reactions/reactions.component';
-import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
-import { BehaviorSubject } from 'rxjs';
-import { ReactionsService } from '../../../services/reactions.service';
+
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,51 +21,38 @@ const db = getFirestore(app);
 /* =============================== */
 
 @Component({
-  selector: 'app-thread',
+  selector: 'app-secondary-chat-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionsComponent, ReactionEmojiInputComponent],
-  templateUrl: './thread.component.html',
-  styleUrl: './thread.component.scss'
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent],
+  templateUrl: './secondary-chat-messages.component.html',
+  styleUrl: './secondary-chat-messages.component.scss'
 })
-export class ThreadComponent implements OnInit {
-  @Input() thread!: any;
-  //Input() currentUser!: BehaviorSubject<string | null>;
+export class SecondaryChatMessagesComponent implements OnInit {
   @Input() currentUser!: string;
+  @Input() message!: any;
+  @Input() messageId: string;
+  @Input() threadId!: string;
   @Input() activeChannelId!: string;
-  messageCount: number;
-  threadMessagesTimestamps = [];
-  answers: string;
-  lastAnswer: any;
+  @Input() channelMembers!: any;
+  reactions = [];
+  reactionCollectionPath: string;
+  editingMessageText: string;
+  openEditOwnMessage: boolean = false;
   showMoreEmojis: boolean = false;
   showMoreEmojisToolbar: boolean = false;
-  reactionCollectionPath: string;
-  editMessagePopupOpen: boolean = false;
-  ownMessageEdit: boolean = false;
-  //@Input() textAreaEditMessage: string;
-  reactions = [];
-  reactionNames = [];
-  reactionCount: number;
 
-  constructor(private chatService: ChatService, private main: MainChatComponent) { }
-
-  ngOnInit(): void {
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
-    this.getReactions();
-    this.getReactionNames();
-    this.getMessageCountAndAnswer();
+  constructor() {
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`;
   }
 
-/*   async getThreadMessageCount() {
-    const messages = collection(db, 'channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/messages');
-    const snapshot = await getCountFromServer(messages);
-    this.messageCount = snapshot.data().count;
-    console.log('Message count', this.messageCount);
-    console.log('Message count', snapshot.data().count);
-    this.formatMessageCount();
-  } */
+  ngOnInit(): void {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`;
+      this.getReactions();
+      this.getReactionNames();  
+  }
 
   getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
+    const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
@@ -97,35 +79,6 @@ export class ThreadComponent implements OnInit {
         };
       });
     });
-  }
-
-  async getMessageCountAndAnswer() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
-    const count = await getCountFromServer(q);
-    this.messageCount = count.data().count;
-    this.formatMessageCount();
-
-    return onSnapshot(q, (element) => {
-      this.threadMessagesTimestamps = [];
-      element.forEach(thread => {
-        this.threadMessagesTimestamps.push(thread.data()['creationDate']);
-      }
-    )  
-    this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-    this.formatMessageCount; 
-    });
-  }
-
-  formatMessageCount() {
-    if(this.messageCount > 1 || this.messageCount == 0) {
-      this.answers = 'Antworten';
-    } else {
-      this.answers = 'Antwort';
-    }
-  }
-
-  getLastAnswer() {
-    this.lastAnswer
   }
 
   async saveReaction(emoji: string, currentUser: string) {
@@ -178,7 +131,7 @@ export class ThreadComponent implements OnInit {
       });
       console.log('New reaction added', newReaction);
   }
-  
+
   openMoreEmojis() {
     this.showMoreEmojis = true;
   }
@@ -187,33 +140,28 @@ export class ThreadComponent implements OnInit {
     this.showMoreEmojisToolbar = true;
   }
 
+  async saveMessageChanges() {
+    const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
+    await updateDoc(messageRef, { message: this.editingMessageText });
+    this.editingMessageText = '';
+  }
+
+  openEditOwnMessageField() {
+    this.openEditOwnMessage = true;
+  }
+
+  startEditMessage() {
+    this.openEditOwnMessage = true;
+    this.editingMessageText = this.message.message;
+  }
+
+  getUserName(userId: string): string {
+    const user = this.channelMembers.find(member => member.userId === userId);
+    return user ? user.name : 'Unbekannter Benutzer';
+  }
+
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
     this.showMoreEmojisToolbar = false;
-  }
-
-  moreOptions() {
-    this.editMessagePopupOpen = true;
-  }
-
-  editMessage() {
-    this.editMessagePopupOpen = false;
-    this.ownMessageEdit = true;
-  }
-
-  closeEditMessagePopUp() {
-    this.editMessagePopupOpen = false;
-  }
-
-  openThread(threadId: string): void {
-    this.chatService.openThread(threadId);
-  }
-
-  closeEditedMessage(dialogBoolen: boolean) {
-    this.ownMessageEdit = false;
-  }
-
-  doNotClose($event: any) {
-    $event.stopPropagation();
   }
 }
