@@ -39,6 +39,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   inputFocused: boolean = false;
   messageModel: string = '';
   @Input() reactionCollectionPath!: string;
+  @Input() secondaryReactionPath! : string;
   //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
 
@@ -53,6 +54,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   constructor() { }
 
   ngOnInit(): void {
+    console.log('PIERCE RCP INPUT',this.secondaryReactionPath)
   }
 
   onInputFocus(): void {
@@ -113,6 +115,11 @@ export class ReactionEmojiInputComponent implements OnInit {
  */
 
   async saveReaction(emoji: string, currentUser: string) {
+    if (!this.reactionCollectionPath || this.reactionCollectionPath.trim() === '') {
+      console.error('reactionCollectionPath is empty or invalid', this.reactionCollectionPath);
+      return;
+    }
+    
     if(this.reactions.length == 0) {
       console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
@@ -161,5 +168,6 @@ export class ReactionEmojiInputComponent implements OnInit {
         reactedBy: [currentUser],
       });
       console.log('New reaction added', newReaction);
+      console.log('PIERCE ADDED REACTION', this.reactionCollectionPath);
   }
 }

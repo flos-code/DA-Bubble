@@ -14,6 +14,7 @@ import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
 import { ReactionsSecondaryComponent } from './reactions-secondary/reactions-secondary.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
+import { UserManagementService } from '../../../services/user-management.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -69,6 +70,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   constructor(
     private chatService: ChatService,
+    public userManagementService: UserManagementService,
     public inputService: InputService
   ) { }
 
@@ -138,16 +140,25 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  async updateReactionCollectionPath(messageId) {
+    if (this.selectedThreadId && this.threadMessages && this.activeChannelId) {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${messageId}/reactions`;
+    } else {
+      console.warn('Cannot update reactionCollectionPath due to missing IDs');
+    }
+  }
+
   setCurrentUser() {
-    this.currentUser = this.auth.currentUser.uid;
-    // console.log('CurrentUserID:', this.currentUser)
+    this.currentUser = this.userManagementService.activeUserId.value //nur übergangsweise um threads in nicht eingelogten zustand zu sehen
+    // this.currentUser = this.auth.currentUser.uid;
+    console.log('CurrentUserID:', this.currentUser)
   }
 
   subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
     this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
       if (threadId) {
         this.loadThreadMessages(threadId);
-        console.log('PIERCE THREAD ID:', this.threadId)
+        // console.log('PIERCE THREAD ID:', this.threadId)
       } else {
         console.log('No thread ID available');
       }
@@ -171,9 +182,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     }
   }
 
-
-
-
   /*--------------------------------- Send Messages -----------------------------------*/
 
   async sendMessage() {
@@ -187,6 +195,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
         createdBy: this.currentUser,
         message: this.messageModel,
         creationDate: Date.now(),
+        imageUrl: null,
       });
 
       const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
@@ -199,6 +208,34 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error('Fehler beim Senden der Nachricht:', error);
     }
   }
+
+  // async sendMessage() {
+  //   if (this.messageModel.trim() === '') {
+  //     console.log('Die Nachricht darf nicht leer sein.');
+  //     return;
+  //   }
+  
+  //   try {
+  //     const newMessage = new ThreadMessage({
+  //       createdBy: this.currentUser,
+  //       message: this.messageModel,
+  //       creationDate: Date.now(),
+  //     });
+  
+  //     // Füge die neue Nachricht zum Firestore hinzu
+  //     const docRef = await addDoc(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`), newMessage.toJSON());
+      
+  //     console.log('Nachricht erfolgreich gesendet.', docRef.id);
+  
+  //     // Erstelle eine leere Reaktionskollektion für die neue Nachricht
+  //     await setDoc(doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${docRef.id}/reactions`, "initial"), {});
+  
+  //     this.messageModel = '';
+  //     this.scrollToBottom();
+  //   } catch (error) {
+  //     console.error('Fehler beim Senden der Nachricht:', error);
+  //   }
+  // }
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
 

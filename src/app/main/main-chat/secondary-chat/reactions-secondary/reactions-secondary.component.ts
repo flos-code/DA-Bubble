@@ -35,6 +35,7 @@ const db = getFirestore(app);
 export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   showMoreEmojis: boolean = false;
   @Input() reactionCollectionPath!: string;
+  secondaryReactionPath!: string;
   @Input() currentUser!: string;
   @Input() userId!: string;
   @Input() messageId!: any;
@@ -53,9 +54,10 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.getActualThreadId();
     this.getReactions();
     this.getReactionNames();
-    console.log('PIERCE', this.reactionCollectionPath)
-    console.log('PIERCE', this.selectedThreadId)
-    console.log('PIERCE', this.messageId)
+    this.secondaryReactionPath = this.reactionCollectionPath
+    console.log('PIERCE reactionCollectionPath', this.secondaryReactionPath)
+    // console.log('PIERCE selectedThreadId', this.selectedThreadId)
+    // console.log('PIERCE messageId', this.messageId)
   }
 
   ngOnDestroy(): void {
@@ -65,12 +67,6 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
   }
 
   getReactions() {
-    // Stellen Sie sicher, dass reactionCollectionPath gültig ist
-    if (!this.reactionCollectionPath) {
-      console.warn('reactionCollectionPath is not set yet.');
-      return;
-    }
-    
     const q = query(collection(db, this.reactionCollectionPath));
     onSnapshot(q, (snapshot) => {
       const updatedReactions = [];
@@ -86,8 +82,6 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
       // console.log('Reaction array', this.reactions);
     });
   }
-  
-
 
   getReactionNames() {
     const q = query(collection(db, 'users'));
@@ -104,16 +98,16 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateReactionCollectionPath() {
+  async updateReactionCollectionPath() {
     if (this.selectedThreadId && this.messageId && this.activeChannelId) {
       this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages/${this.messageId}/reactions`;
       // Aufruf von getReactions, nachdem der Pfad aktualisiert wurde
-      this.getReactions();
+      await this.getReactions();
     } else {
       console.warn('Cannot update reactionCollectionPath due to missing IDs');
     }
   }
-  
+
 
   getActualChannelId() {
     this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
@@ -124,8 +118,9 @@ export class ReactionsSecondaryComponent implements OnInit, OnDestroy {
     this.getActualChannelId();
     this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(threadId => {
       this.selectedThreadId = threadId;
-      this.updateReactionCollectionPath();
     });
+
+    this.updateReactionCollectionPath();
   }
 
   openMoreEmojis() {

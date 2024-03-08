@@ -235,6 +235,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let formattedDateTimeSeparator = this.getTimeSeparatorDate(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
       let createdBy = this.getUserCreated(userId);
+      let imageUrl = message['imageUrl'] || null;
+ 
 
       this.channelThreadsDateTime.push({
         'threadId': message['messageId'],
@@ -244,7 +246,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'time': formattedTime,
         'message': this.channelThreads[i]['message'],
         'userId': userId,
-        'createdBy': createdBy
+        'createdBy': createdBy,
+        'imageUrl': imageUrl
       });
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
