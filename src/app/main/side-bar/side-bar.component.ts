@@ -246,7 +246,7 @@ export class SideBarComponent {
 
   setSelectedUser(userId: string) {
     this.chatService.setSelectedUserId(userId);
-    this.showChat('showDms');
+    this.showChat('showMainChat');
   }
 
   getSelectedUserId() {
