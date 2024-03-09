@@ -51,12 +51,14 @@ export class ProfilCardService {
   }
 
   toggleProfilCard(active: boolean, currentUser: boolean, userId: string) {
+    if (!this.isOverlayActive) {
+      this.isOverlayActive = true;
+    }
     this.isProfilCardActive = active;
     this.isCurrentUserActive = currentUser;
     if (currentUser == false) {
       let userDocRef = doc(this.userRef, userId);
       onSnapshot(userDocRef, (element) => {
-        console.log(element.data());
         let userData = element.data();
         this.userNameandSurname = userData['name'];
         this.userEmailAddress = userData['email'];

@@ -6,18 +6,13 @@
         <div class="searchField" (document:click)="onDocumentClick($event)">
             <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
                 <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"
-                    (ngModelChange)="onInputChange($event)">
+                    (ngModelChange)="onInputChange()">
                 <img src="assets/img/search.png" alt="">
             </div>
             <div *ngIf="isInputValueGreaterThanOne()" class="resultFeld" id="ergebnisFeld">
                 <ng-container *ngFor="let result of searchService.searchResult">
-                    <p>{{ result }}</p>
+                <p (click)="serviceProfilCard.toggleProfilCard(true, false, result['id'])">{{ result['name'] }}</p>
                 </ng-container>
-
-                <!-- <p>Hier sind die Suchergebnisse.</p>
-                    <p>Hier sind die Suchergebnisse.</p>
-                    <p>Hier sind die Suchergebnisse.</p>
-                    <p>Hier sind die Suchergebnisse.</p> -->
             </div>
         </div>
     </div>
