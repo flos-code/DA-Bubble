@@ -117,7 +117,11 @@
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
 
         <div class="mainChatInput">
-            <app-text-box [messageType]="'channel'" [targetId]="this.chatService.getActiveChannelId()"></app-text-box>
+            <app-text-box
+            [messageType]="'channel'"
+            [targetId]="this.chatService.getActiveChannelId()"
+            [placeholderText]="'Nachricht an #' + channel?.name"
+          ></app-text-box>
 <!--             <div class="mainChatInputSubContainer">
                 <textarea [(ngModel)]="textArea" name="textarea"
                     placeholder="Nachricht an #{{channel?.name}}"></textarea>

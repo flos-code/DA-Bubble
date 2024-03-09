@@ -45,6 +45,7 @@ export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @Input() messageType: 'direct' | 'channel' | 'thread';
   @Input() targetId: string; // ID des Nutzers/Kanals/Threads
+  @Input() placeholderText: string;
 
   inputFocused: boolean = false;
   messageModel: string = '';
