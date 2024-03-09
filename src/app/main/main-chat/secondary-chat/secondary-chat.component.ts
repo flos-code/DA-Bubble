@@ -1,9 +1,30 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  Input,
+  OnDestroy,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, limit, query, doc, getDoc, updateDoc, addDoc, getDocs, deleteDoc, orderBy, Timestamp } from "firebase/firestore";
+import { initializeApp } from 'firebase/app';
+import {
+  getFirestore,
+  collection,
+  onSnapshot,
+  limit,
+  query,
+  doc,
+  getDoc,
+  updateDoc,
+  addDoc,
+  getDocs,
+  deleteDoc,
+  orderBy,
+  Timestamp,
+} from 'firebase/firestore';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
@@ -14,15 +35,16 @@ import { Thread } from '../../../../models/thread.class';
 import { Channel } from '../../../../models/channel.class';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { UserManagementService } from '../../../services/user-management.service';
+import { TextBoxComponent } from '../../new-message/text-box/text-box.component';
 import { SecondaryChatMessagesComponent } from './secondary-chat-messages/secondary-chat-messages.component';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
+  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
+  authDomain: 'da-bubble-87fea.firebaseapp.com',
+  projectId: 'da-bubble-87fea',
+  storageBucket: 'da-bubble-87fea.appspot.com',
+  messagingSenderId: '970901942782',
+  appId: '1:970901942782:web:56b67253649b6206f290af',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -30,11 +52,18 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
-  imports: [PickerComponent, EmojiComponent, CommonModule, FormsModule, ReactionEmojiInputComponent, SecondaryChatMessagesComponent],
+  imports: [
+    PickerComponent,
+    EmojiComponent,
+    CommonModule,
+    FormsModule,
+    ReactionEmojiInputComponent,
+    SecondaryChatMessagesComponent,
+    TextBoxComponent,
+  ],
   templateUrl: './secondary-chat.component.html',
-  styleUrl: './secondary-chat.component.scss'
+  styleUrl: './secondary-chat.component.scss',
 })
-
 export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('chatContent') private chatContent: ElementRef;
@@ -61,7 +90,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   activeChannelId: string = '';
   threadId: string = ''; //TODO: get actual thread ID
   private threadIdSubscription!: Subscription;
-  private selectedThreadId!: string;
+  public selectedThreadId!: string;
   DialogRef: any; //unknown variable, maybe delete later
 
   showMoreEmojis: { [key: string]: boolean } = {};
@@ -69,10 +98,11 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   reactions = [];
 
   constructor(
-    private chatService: ChatService,
+    public chatService: ChatService,
     public userManagementService: UserManagementService,
-    public inputService: InputService) { 
-      this.getActualThreadId();
+    public inputService: InputService
+  ) {
+    this.getActualThreadId();
   }
 
   ngOnInit(): void {
@@ -99,7 +129,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.openEditOwnMessage = !this.openEditOwnMessage; // Umschalten des Bearbeitungsdialogfelds
   }
 
-
   startEditMessage(message: ThreadMessage) {
     this.editingMessageId = message.messageId;
     this.editingMessageText = message.message;
@@ -108,12 +137,15 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   async saveMessageChanges() {
     if (!this.editingMessageId) return;
-    const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.editingMessageId);
+    const messageRef = doc(
+      db,
+      `channels/${this.activeChannelId}/threads/${this.threadId}/messages`,
+      this.editingMessageId
+    );
     await updateDoc(messageRef, { message: this.editingMessageText });
     this.editingMessageId = null;
     this.editingMessageText = '';
   }
-
 
   closeEditMessageField() {
     this.openEditOwnMessage = false;
@@ -135,10 +167,12 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   getActualThreadId() {
-    this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(threadId => {
-      this.selectedThreadId = threadId;
-      this.threadId = this.selectedThreadId;
-    });
+    this.threadIdSubscription = this.chatService.selectedThreadId$.subscribe(
+      (threadId) => {
+        this.selectedThreadId = threadId;
+        this.threadId = this.selectedThreadId;
+      }
+    );
   }
 
   async updateReactionCollectionPath(messageId) {
@@ -150,20 +184,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   setCurrentUser() {
-    this.currentUser = this.userManagementService.activeUserId.value //nur übergangsweise um threads in nicht eingelogten zustand zu sehen
+    this.currentUser = this.userManagementService.activeUserId.value; //nur übergangsweise um threads in nicht eingelogten zustand zu sehen
     // this.currentUser = this.auth.currentUser.uid;
-    console.log('CurrentUserID:', this.currentUser)
+    console.log('CurrentUserID:', this.currentUser);
   }
 
-  subcribeThreadId() { //TODO: dont need to subcribe, it can causes performace issues
-    this.subscription.add(this.chatService.selectedThreadId$.subscribe(threadId => {
-      if (threadId) {
-        this.loadThreadMessages(threadId);
-        // console.log('PIERCE THREAD ID:', this.threadId)
-      } else {
-        console.log('No thread ID available');
-      }
-    }));
+  subcribeThreadId() {
+    //TODO: dont need to subcribe, it can causes performace issues
+    this.subscription.add(
+      this.chatService.selectedThreadId$.subscribe((threadId) => {
+        if (threadId) {
+          this.loadThreadMessages(threadId);
+          // console.log('PIERCE THREAD ID:', this.threadId)
+        } else {
+          console.log('No thread ID available');
+        }
+      })
+    );
   }
 
   closeThread(): void {
@@ -175,7 +212,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       try {
         this.chatContent.nativeElement.scrollTo({
           top: this.chatContent.nativeElement.scrollHeight,
-          behavior: 'smooth'
+          behavior: 'smooth',
         });
       } catch (err) {
         console.error('Fehler beim Scrollen:', err);
@@ -199,7 +236,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
         imageUrl: null,
       });
 
-      const threadMessagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`);
+      const threadMessagesRef = collection(
+        db,
+        `channels/${this.activeChannelId}/threads/${this.threadId}/messages`
+      );
       await addDoc(threadMessagesRef, newMessage.toJSON());
 
       this.messageModel = '';
@@ -215,22 +255,22 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   //     console.log('Die Nachricht darf nicht leer sein.');
   //     return;
   //   }
-  
+
   //   try {
   //     const newMessage = new ThreadMessage({
   //       createdBy: this.currentUser,
   //       message: this.messageModel,
   //       creationDate: Date.now(),
   //     });
-  
+
   //     // Füge die neue Nachricht zum Firestore hinzu
   //     const docRef = await addDoc(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`), newMessage.toJSON());
-      
+
   //     console.log('Nachricht erfolgreich gesendet.', docRef.id);
-  
+
   //     // Erstelle eine leere Reaktionskollektion für die neue Nachricht
   //     await setDoc(doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${docRef.id}/reactions`, "initial"), {});
-  
+
   //     this.messageModel = '';
   //     this.scrollToBottom();
   //   } catch (error) {
@@ -240,30 +280,48 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
 
-  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
-    const threadMessagesRef = collection(db, `channels/${channelId}/threads/${threadId}/messages`);
+  async getThreadMessages(
+    channelId: string,
+    threadId: string
+  ): Promise<ThreadMessage[]> {
+    const threadMessagesRef = collection(
+      db,
+      `channels/${channelId}/threads/${threadId}/messages`
+    );
     const snapshot = await getDocs(threadMessagesRef);
-    const threadMessages = snapshot.docs.map(
-      (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id }))
+    const threadMessages = snapshot.docs
+      .map((doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id }))
       .reverse();
     return threadMessages;
   }
 
   loadThreadMessages(threadId: string) {
     const channelId = this.activeChannelId;
-    const threadMessagesRef = query(collection(db, `channels/${channelId}/threads/${threadId}/messages`), orderBy('creationDate', 'asc'));
+    const threadMessagesRef = query(
+      collection(db, `channels/${channelId}/threads/${threadId}/messages`),
+      orderBy('creationDate', 'asc')
+    );
 
-    onSnapshot(threadMessagesRef, (snapshot) => {
-      const threadMessages = snapshot.docs.map(doc => new ThreadMessage({ ...doc.data(), messageId: doc.id }));
-      this.threadMessages = threadMessages;
-      console.log(this.threadMessages);
-      this.scrollToBottom();
-    }, (error) => {
-      console.error("Fehler beim Abonnieren der Thread-Nachrichten: ", error);
-    });
+    onSnapshot(
+      threadMessagesRef,
+      (snapshot) => {
+        const threadMessages = snapshot.docs.map(
+          (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
+        );
+        this.threadMessages = threadMessages;
+        console.log(this.threadMessages);
+        this.scrollToBottom();
+      },
+      (error) => {
+        console.error('Fehler beim Abonnieren der Thread-Nachrichten: ', error);
+      }
+    );
   }
 
-  async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
+  async getInitialThreadMessage(
+    channelId: string,
+    threadId: string
+  ): Promise<Thread> {
     const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
     const docSnap = await getDoc(threadRef);
 
@@ -271,20 +329,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       const threadData = docSnap.data();
       return new Thread(threadData);
     } else {
-      console.log("Kein Thread-Dokument gefunden!");
+      console.log('Kein Thread-Dokument gefunden!');
       return null;
     }
   }
 
   async loadThreadInitMessage() {
     this.isLoading = true; // Start loading
-    this.firstThreadMessage = await this.getInitialThreadMessage(this.activeChannelId, this.threadId);
+    this.firstThreadMessage = await this.getInitialThreadMessage(
+      this.activeChannelId,
+      this.threadId
+    );
     // console.log('first Thread Message:', this.firstThreadMessage)
     this.isLoading = false; // End loading
   }
 
-
-  getCurrentChannelData() { /** fetching data works */
+  getCurrentChannelData() {
+    /** fetching data works */
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
       // console.log('actual channel data:', this.channel)
@@ -303,7 +364,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
         if (this.channel['members'].includes(doc.id)) {
           this.channelMembers.push({
             ...userData,
-            userId: doc.id
+            userId: doc.id,
           });
         }
       });
@@ -312,7 +373,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   getUserName(userId: string): string {
-    const user = this.channelMembers.find(member => member.userId === userId);
+    const user = this.channelMembers.find((member) => member.userId === userId);
     return user ? user.name : 'Unbekannter Benutzer';
   }
 

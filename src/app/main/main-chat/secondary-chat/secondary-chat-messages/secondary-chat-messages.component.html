@@ -10,6 +10,7 @@
             <div class="thread-message">
                 <span>{{ message.message }}</span>
             </div>
+            <img *ngIf="message?.imageUrl" [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}" style="height: 100px; width: 100px;">
         
             <!-- ================ REACTION CONTAINER ================ -->
             @if(reactions.length !== 0) {
@@ -50,10 +51,6 @@
                 </div>
             }
         
-            
-<!--        <app-reactions-secondary [userId]="message.createdBy" [messageId]="messageId" [reactionCollectionPath]="reactionCollectionPath" 
-            [currentUser]="currentUser"> </app-reactions-secondary> -->
-        
             <div class="action-bar" (click)="openMoreEmojisToolbar()">
                 <button class="add-reaction"></button>
             </div>
@@ -66,21 +63,25 @@
     <!-------------------- Template of own message ------------------------>
     <div class="user-message own-message">
         <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
-        <div class="message-box">
+        <div class="own-main-message-content">
             <div class="user-time own-message">
-                <p>{{ message.createdBy }}</p>
+                <p>{{ getUserName(message.createdBy) }}</p>
                 <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
             </div>
+            
             <div class="thread-message own-bubble">
 
-                <div *ngIf="openEditOwnMessage; else displayMessage">
+                <div *ngIf="openEditOwnInput; else displayMessage">
                     <input class="edit-message-input" [(ngModel)]="editingMessageText"
                         (keyup.enter)="saveMessageChanges()" type="text">
                 </div>
+
                 <ng-template #displayMessage>
                     <span>{{ message.message }}</span>
                 </ng-template>
             </div>
+
+            <img *ngIf="message?.imageUrl" [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}" style="height: 100px; width: 100px;">
 
             <!-- ================ REACTION CONTAINER ================ -->
             @if(reactions.length !== 0) {
@@ -120,9 +121,7 @@
                     </app-reaction-emoji-input>
                 </div>
             }
-
-<!--        <app-reactions-secondary [userId]="message.createdBy" [messageId]="message.messageId" [reactionCollectionPath]="reactionCollectionPath"[currentUser]="currentUser">
-            </app-reactions-secondary> -->        
+       
         </div>
         <div class="own-action-bar">
             <button class="add-reaction" (click)="openMoreEmojisToolbar()" alt=""></button>
@@ -135,7 +134,7 @@
         </app-reaction-emoji-input>
 
 
-        <div *ngIf="!openEditOwnMessage"
+        <div *ngIf="openEditOwnMessage"
             (click)="startEditMessage()" class="edit-message">
             <span>Nachricht bearbeiten</span>
         </div>

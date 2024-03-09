@@ -38,6 +38,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
   reactionCollectionPath: string;
   editingMessageText: string;
   openEditOwnMessage: boolean = false;
+  openEditOwnInput: boolean = false;
   showMoreEmojis: boolean = false;
   showMoreEmojisToolbar: boolean = false;
 
@@ -142,6 +143,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
     const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
     await updateDoc(messageRef, { message: this.editingMessageText });
     this.editingMessageText = '';
+    this.openEditOwnInput = false;
   }
 
   openEditOwnMessageField() {
@@ -149,7 +151,8 @@ export class SecondaryChatMessagesComponent implements OnInit {
   }
 
   startEditMessage() {
-    this.openEditOwnMessage = true;
+    this.openEditOwnInput = true;
+    this.openEditOwnMessage = false;
     this.editingMessageText = this.message.message;
   }
 

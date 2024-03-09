@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
 import { ProfilCardService } from '../../services/profil-card.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
+import { SearchService } from '../../services/search.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -67,6 +68,7 @@ export class HeaderComponent implements OnInit {
     public dialog: MatDialog,
     private router: Router,
     public serviceProfilCard: ProfilCardService,
+    public searchService: SearchService,
   ) {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes
@@ -75,11 +77,19 @@ export class HeaderComponent implements OnInit {
 
   onInputChange(value: string) {
     // Hier kannst du die inputValue überprüfen und weitere Aktionen durchführen
-    console.log('Neuer Wert:', value);
-    if (value.length > 0) {
-      // Führe Aktionen aus, wenn der Wert größer als eins ist
-      console.log('Wert ist größer als null.');
-    }
+    // console.log('Neuer Wert:', value);
+    this.searchUsers();
+    // if (value.length > 0) {
+    //   // Führe Aktionen aus, wenn der Wert größer als eins ist
+    //   console.log('Wert ist größer als null.');
+    // }
+  }
+
+  searchUsers() {
+    this.searchService.searchUsers(this.inputValue);
+    // .subscribe(users => {
+    //   console.log(users); // Hier können Sie die Benutzerdaten verwenden oder anzeigen
+    // });
   }
 
   isInputValueGreaterThanOne(): boolean {
