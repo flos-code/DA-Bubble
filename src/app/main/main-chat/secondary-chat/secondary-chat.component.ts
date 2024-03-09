@@ -216,32 +216,32 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   /*--------------------------------- Send Messages -----------------------------------*/
 
-  async sendMessage() {
-    if (this.messageModel.trim() === '') {
-      console.log('Die Nachricht darf nicht leer sein.');
-      return;
-    }
+  // async sendMessage() {
+  //   if (this.messageModel.trim() === '') {
+  //     console.log('Die Nachricht darf nicht leer sein.');
+  //     return;
+  //   }
 
-    try {
-      const newMessage = new ThreadMessage({
-        createdBy: this.currentUser,
-        message: this.messageModel,
-        creationDate: Date.now(),
-        imageUrl: null,
-      });
+  //   try {
+  //     const newMessage = new ThreadMessage({
+  //       createdBy: this.currentUser,
+  //       message: this.messageModel,
+  //       creationDate: Date.now(),
+  //       imageUrl: null,
+  //     });
 
-      const threadMessagesRef = collection(
-        db,
-        `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages`
-      );
-      await addDoc(threadMessagesRef, newMessage.toJSON());
+  //     const threadMessagesRef = collection(
+  //       db,
+  //       `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages`
+  //     );
+  //     await addDoc(threadMessagesRef, newMessage.toJSON());
 
-      this.messageModel = '';
-      this.scrollToBottom();
-    } catch (error) {
-      console.error('Fehler beim Senden der Nachricht:', error);
-    }
-  }
+  //     this.messageModel = '';
+  //     this.scrollToBottom();
+  //   } catch (error) {
+  //     console.error('Fehler beim Senden der Nachricht:', error);
+  //   }
+  // }
 
   /*--------------------------------- ThreadMessages -----------------------------------*/
 

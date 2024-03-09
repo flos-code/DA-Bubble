@@ -14,6 +14,8 @@
     (input)="adjustTextareaHeight($event)"
     (focus)="onInputFocus()"
     (blur)="onInputBlur()"
+    (keydown.enter)="onKeydown($event)"
+    (keyup.enter)="sendMessage()"
   ></textarea>
   <div
     *ngIf="this.imageURL"
