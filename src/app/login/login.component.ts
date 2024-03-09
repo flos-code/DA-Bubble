@@ -90,4 +90,9 @@ export class LoginComponent implements OnInit {
     await signInWithEmailAndPassword(this.auth, 'guest@dabubble77.com', '123456');
     this.router.navigateByUrl('');
   }
+
+  goToPasswordReset(){
+    this.router.navigateByUrl('/reset_password')
+  }
+
 }
