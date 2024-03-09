@@ -62,12 +62,16 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async saveChannelName() {
-    let currentChannelRef = doc(db, 'channels', this.currentChannelId);
-    let data = {name: this.editedChannelName };
-    await updateDoc(currentChannelRef, data).then(() => {
-    });
-    this.editedChannelName = "";
-    this.showchannelEditionName = true;
+    if(this.editedChannelName) {
+      let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+      let data = {name: this.editedChannelName };
+      await updateDoc(currentChannelRef, data).then(() => {
+      });
+      this.editedChannelName = "";
+      this.showchannelEditionName = true;
+    } else {
+      this.showchannelEditionName = true;
+    }
   }
 
   editChannelDescription() {
@@ -75,12 +79,16 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async saveChannelDescription() {
-    let currentChannelRef = doc(db, 'channels', this.currentChannelId);
-    let data = {description: this.editedChannelDescription };
-    await updateDoc(currentChannelRef, data).then(() => {
-    });
-    this.editedChannelDescription = "";
-    this.showchannelEditionDescription = true;
+    if(this.editedChannelDescription) {
+      let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+      let data = {description: this.editedChannelDescription };
+      await updateDoc(currentChannelRef, data).then(() => {
+      });
+      this.editedChannelDescription = "";
+      this.showchannelEditionDescription = true;  
+    } else {
+      this.showchannelEditionDescription = true;  
+    }
   }
 
   async leaveChannel() {

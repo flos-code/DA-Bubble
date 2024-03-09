@@ -290,15 +290,15 @@
     .reactionContainerMoreEmojisOther {
         position: absolute;
         left: 0px;
-        top: 160px;
+        bottom: -30px;
         height: 46px;
         z-index: 10;
     }
 
     .reactionContainerMoreEmojisOwn{
         position: absolute;
-        right: 0px;
-        top: 160px;
+        right: 495px;
+        bottom: -15px;
         height: 46px;
         z-index: 10; 
     }

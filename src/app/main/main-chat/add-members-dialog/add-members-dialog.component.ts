@@ -79,7 +79,7 @@ export class AddMembersDialogComponent implements OnInit {
 
     if(this.searchText !== "") {
         this.filteredUserList =  this.userList.filter( user =>  {
-          return user.userName.toLowerCase().includes(this.searchText);
+          return user.userName.toLowerCase().includes(this.searchText.toLowerCase());
         });
       } else {
       this.filteredUserList = this.originalUserList;      

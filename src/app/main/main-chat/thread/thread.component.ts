@@ -48,6 +48,7 @@ export class ThreadComponent implements OnInit {
   reactions = [];
   reactionNames = [];
   reactionCount: number;
+  reactionName: string;
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
@@ -71,19 +72,31 @@ export class ThreadComponent implements OnInit {
     return onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
+        this.getReactionNames(reaction.data()['reactedBy']);
         this.reactions.push({
           'id': reaction.id,
           'count': reaction.data()['count'],
           'reaction': reaction.data()['reaction'],
-          'reactedBy': reaction.data()['reactedBy']
-        }
-        )
+          'reactedBy': reaction.data()['reactedBy'],
+          'reactedByName': this.reactionName
+        });
       });
-      this.getReactionNames()
     });
   }
+
+  getReactionNames(userId: string) {
+    const q = query(collection(db, 'users'));
+    return onSnapshot(q, (list) => {
+      list.forEach(name => {
+        if(name.id == userId) {
+          this.reactionName =  name.data()['name'];
+        };
+      });
+    });
+  }
+
   
-  getReactionNames() {
+/*   getReactionNames() {
     const q = query(collection(db, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(name => {
@@ -95,7 +108,7 @@ export class ThreadComponent implements OnInit {
         };
       });
     });
-  }
+  } */
 
   async getMessageCountAndAnswer() {
     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))

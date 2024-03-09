@@ -54,6 +54,7 @@ export class EditOwnThreadComponent implements OnInit {
   }
 
   async saveEditedMessage() {
+    if(this.textAreaEditMessage) {
       let currentThreadRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}`);
       let data = {message: this.textAreaEditMessage };
       //this.main.channelThreadsDateTime = [];
@@ -62,7 +63,10 @@ export class EditOwnThreadComponent implements OnInit {
       });
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
-      this.main.scrollToBottom();
+    } else {
+      this.ownMessageEdit = false;
+      this.ownMessageEditChild.emit(this.ownMessageEdit);
+    }
     }
 
     onInputFocus(): void {
