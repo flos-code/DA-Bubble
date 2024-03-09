@@ -1,7 +1,7 @@
 @if(currentUser !== message.createdBy){
     <!-------------------- Template of others awnsers ------------------------>
     <div class="user-message">
-        <img class="profile-picture" src="/assets/img/userImages/userImage5.svg" alt="">
+        <img class="profile-picture" [src]="getUserProfileImageUrl(message.createdBy)" alt="User profile image">
         <div class="main-message-content">
             <div class="user-time">
                 <p>{{ getUserName(message.createdBy) }}</p>
@@ -62,7 +62,7 @@
 } @else {
     <!-------------------- Template of own message ------------------------>
     <div class="user-message own-message">
-        <img class="profile-picture" src="/assets/img/userImages/userImage6.svg" alt="">
+        <img class="profile-picture" [src]="getUserProfileImageUrl(message.createdBy)" alt="">
         <div class="own-main-message-content">
             <div class="user-time own-message">
                 <p>{{ getUserName(message.createdBy) }}</p>

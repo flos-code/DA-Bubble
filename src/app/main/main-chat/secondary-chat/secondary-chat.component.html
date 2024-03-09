@@ -22,7 +22,7 @@
         <!-- Thread Message -->
         <img
           class="profile-picture"
-          src="/assets/img/userImages/userImage4.svg"
+          [src]="getUserProfileImageUrl(firstThreadMessage?.createdBy)"
           alt=""
         />
         <div>
@@ -67,7 +67,7 @@
       <!-------------------- Template of awnsers ------------------------>
       <app-secondary-chat-messages
         [channelMembers]="channelMembers"
-        [threadId]="threadId"
+        [threadId]="selectedThreadId"
         [messageId]="message.messageId"
         [message]="message"
         [currentUser]="currentUser"
@@ -78,32 +78,10 @@
     </div>
     <!--------------------------------------Chat Content-------------------------------------->
     <!--------------------------------------Input Contnent-------------------------------------->
-    <!-- <div class="input-content" (click)="message.focus()">
-
-            <textarea (keydown.enter)="sendMessage()" #message [(ngModel)]="messageModel" (input)="updateCursorPosition($event)"
-                placeholder="Antworten..." name="second-chat-input" cols="30" rows="10">
-          </textarea>
-
-            <div class="action-icons-container">
-
-                <div class="left-actions">
-                    <button class="add-button"></button>
-                    <img src="/assets/img/main-chat/separatingLine.svg">
-                    <button (click)="toggleEmojis()" class="emoji-button"></button>
-
-                    <emoji-mart #emojiPicker *ngIf="emojiWindowOpen" class="emoji-mart"
-                        (emojiSelect)="onEmojiSelect($event)" title="Pick your emoji…" emoji="point_up">
-                    </emoji-mart>
-
-                    <button class="tag-button"></button>
-                </div>
-                <button class="send-button" (click)="sendMessage()"></button>
-            </div>
-        </div> -->
-
     <app-text-box
-      [messageType]="'thread'"
+      [messageType]="'threadMessage'"
       [targetId]="selectedThreadId"
+      [placeholderText]="'Antworten...'"
     ></app-text-box>
     <!--------------------------------------Input Contnent-------------------------------------->
   </div>

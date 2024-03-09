@@ -10,7 +10,7 @@
     type="text"
     [(ngModel)]="messageModel"
     required
-    placeholder="Starte eine neue Nachricht"
+    [placeholder]="placeholderText"
     (input)="adjustTextareaHeight($event)"
     (focus)="onInputFocus()"
     (blur)="onInputBlur()"
@@ -43,7 +43,10 @@
         fontIcon="add"
       ></mat-icon>
       <div>
-        <img _ngcontent-ng-c3762648241="" src="/assets/img/main-chat/separatingLine.svg">
+        <img
+          _ngcontent-ng-c3762648241=""
+          src="/assets/img/main-chat/separatingLine.svg"
+        />
       </div>
       <mat-icon
         (click)="toggleEmojiPicker()"
