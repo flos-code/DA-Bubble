@@ -3,8 +3,10 @@ import {
   Component,
   ElementRef,
   Input,
+  OnChanges,
   OnDestroy,
   OnInit,
+  SimpleChanges,
   ViewChild,
 } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -73,7 +75,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   /*---------- Main Variables -----------*/
   threadMessages: ThreadMessage[] = [];
   firstThreadMessage?: ThreadMessage;
-  threadOpen: boolean = true;
+  threadOpen: boolean = false;
   creationDate: Date;
   isLoading: boolean = true;
   editingMessageId: string | null = null;
@@ -101,9 +103,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     public chatService: ChatService,
     public userManagementService: UserManagementService,
     public inputService: InputService
-  ) {
-    this.getActualThreadId();
-  }
+  ) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
@@ -112,6 +112,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.subcribeThreadId();
     this.getCurrentChannelData();
     this.loadThreadInitMessage();
+    console.log('setted thread id PPP', this.threadId)
   }
 
   ngOnDestroy(): void {
@@ -195,6 +196,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       this.chatService.selectedThreadId$.subscribe((threadId) => {
         if (threadId) {
           this.loadThreadMessages(threadId);
+          this.loadThreadInitMessage();
           // console.log('PIERCE THREAD ID:', this.threadId)
         } else {
           console.log('No thread ID available');
@@ -250,34 +252,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     }
   }
 
-  // async sendMessage() {
-  //   if (this.messageModel.trim() === '') {
-  //     console.log('Die Nachricht darf nicht leer sein.');
-  //     return;
-  //   }
-
-  //   try {
-  //     const newMessage = new ThreadMessage({
-  //       createdBy: this.currentUser,
-  //       message: this.messageModel,
-  //       creationDate: Date.now(),
-  //     });
-
-  //     // Füge die neue Nachricht zum Firestore hinzu
-  //     const docRef = await addDoc(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`), newMessage.toJSON());
-
-  //     console.log('Nachricht erfolgreich gesendet.', docRef.id);
-
-  //     // Erstelle eine leere Reaktionskollektion für die neue Nachricht
-  //     await setDoc(doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${docRef.id}/reactions`, "initial"), {});
-
-  //     this.messageModel = '';
-  //     this.scrollToBottom();
-  //   } catch (error) {
-  //     console.error('Fehler beim Senden der Nachricht:', error);
-  //   }
-  // }
-
   /*--------------------------------- ThreadMessages -----------------------------------*/
 
   async getThreadMessages(
@@ -318,10 +292,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     );
   }
 
-  async getInitialThreadMessage(
-    channelId: string,
-    threadId: string
-  ): Promise<Thread> {
+  async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
     const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
     const docSnap = await getDoc(threadRef);
 

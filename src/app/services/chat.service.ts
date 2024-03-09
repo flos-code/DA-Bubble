@@ -99,8 +99,8 @@ export class ChatService {
 
   // ------------------- SecondaryChat Logic --------------------
 
-  async openThread(threadId: string) {
-    await this.closeThread();
+  openThread(threadId: string) {
+    this.threadOpenSource.next(false);
     this.selectedThreadIdSource.next(threadId);
     this.threadOpenSource.next(true);
   }
