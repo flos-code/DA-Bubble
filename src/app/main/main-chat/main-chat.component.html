@@ -61,7 +61,7 @@
                 <div class="mainChatHeaderLeftDm" (click)="openProfileCard()">
                     <div class="userImg">
                         <img src="/assets/img/main-chat/member2.svg">
-                        <div class="userStatus" [ngStyle]="{'background-color': activeDmUserData.isOnline ? '#92c83e' : '#686868' }"></div>
+                        <div class="userStatus" [ngStyle]="{'background-color': activeDmUserData?.isOnline ? '#92c83e' : '#686868' }"></div>
                     </div>
                     <div>{{activeDmUserName}}</div>
                 </div>

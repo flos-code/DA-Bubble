@@ -47,17 +47,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   dmMessagesPath = '';
   channelThreadsPath = '';
-  channelDmPath = '';
+  channelPath = '';
 
   channel: Channel; // Daten des aktuellen Channels
-  activeChannelId: string = null;
+  activeChannelId: string;
+  //activeChannelId: string = null;
   activeChannelSub: Subscription = new Subscription();
 
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   currentUserSub: Subscription = new Subscription();
 
-  activeDmUser: string = 'n2gxPYqotIhMceOiDdUSv6Chkiu1';
+  dmMessages = [];
+  activeDmUser: string;
+  //activeDmUser: string = 'n2gxPYqotIhMceOiDdUSv6Chkiu1';
   activeDmUserData: any;
   activeDmUserName: string = 'Tobias Odermatt';
   //activeDmUserStatus: string = '';
@@ -70,7 +73,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
 
-  dmUser = [];
   textArea: string = "";
   typeChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
@@ -95,7 +97,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
-/*     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
+    this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       this.currentUser = value;
       console.log('CURRENT USER', this.currentUser);
       }
@@ -107,8 +109,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.activeDmUser = null;
         console.log('ACITVE CHANNEL ID', this.activeChannelId);
         this.getChannelAndDmPath();
-        this.channelDmPath = this.channelThreadsPath;
-        this.loadData();
+        this.channelPath = this.channelThreadsPath;
+        this.loadChannelData();
       }
     });
 
@@ -117,45 +119,55 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.activeDmUser = value;
         this.activeChannelId = null;
         console.log('ACITVE DM USER', this.activeDmUser);
-        this.getDmUser(value);
         this.getChannelAndDmPath();
-        this.channelDmPath = this.dmMessagesPath;
-        this.loadData();  
+        this.channelPath = this.dmMessagesPath;
+        this.loadDmData();  
       }
-    }); */
+    });
   }
 
   ngOnInit(): void {
-    this.loadData();
-    this.scrollToBottom();
+    this.getChannelAndDmPath();
+    if(this.activeChannelId !== null) {
+      this.loadChannelData();
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 1500);  
+    }
+    if(this.activeDmUser !== null) {
+      this.loadDmData();
+      setTimeout(() => {
+        this.scrollToBottom();
+      }, 1500);  
+    }
   }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
-  /* ================== MAIN CHAT CHANNEL DATA ================== */
+  /* ================== ID's FOM SERVICE ================== */
   getChannelAndDmPath() {
+    //this.channelDmPath
     this.dmMessagesPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages`;
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
   }
 
-
-  loadData() {
-    this.getDmUser();
+  /* ================== MAIN CHAT CHANNEL DATA ================== */
+  loadChannelData() {
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 2000);
+  }
+
+  loadDmData() {
+    console.log('DM Data is Loading');
+    this.getDmUser();
   }
 
   getCurrentChannel() {
     onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
-      console.log(this.channel);
-
       setTimeout(() => {
         this.getMembers();
       }, 200);
@@ -178,7 +190,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getThreads() {
-    const q = query(collection(db, this.channelDmPath), orderBy("creationDate", "asc"), limit(20));
+    const q = query(collection(db, this.channelPath), orderBy("creationDate", "asc"), limit(20));
     // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
@@ -186,13 +198,50 @@ export class MainChatComponent implements OnInit, OnDestroy {
           this.channelThreads.push(thread.data());
         }
       )
-      this.sortChannelThreadsArray();
-      this.getThreadCreationDates();
+      this.sortChannelThreadsArray(this.channelThreads);
+      this.getThreadCreationDates(this.channelThreads);
     });
   }
 
-  sortChannelThreadsArray() {
-    this.channelThreads.sort(this.compareByCreationDate);
+  getDmUser() {
+    onSnapshot(doc(collection(db, 'users'), this.activeDmUser), (dmUser) => {
+      this.activeDmUserData = dmUser.data();
+      console.log('Active DM User Data received', this.activeDmUserData);
+      this.getDmUserName(dmUser.id);
+      setTimeout(() => {
+        this.getCurrentDmUserMessages();
+      }, 200);
+
+    });
+  }
+
+  getCurrentDmUserMessages() {
+      const q = query(collection(db, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
+      // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
+      return onSnapshot(q, (list) => {
+        this.dmMessages = [];
+        list.forEach(dmMessage => {
+            this.dmMessages.push(dmMessage.data());
+          }
+        )
+        console.log('All Dm Messages received', this.dmMessages);
+        this.sortChannelThreadsArray(this.dmMessages);
+        this.getThreadCreationDates(this.dmMessages);
+      });
+    }
+
+
+  async getDmUserName(userId: string) {
+    this.activeDmUserName = ""; 
+    const docRef = doc(db, "users", userId);
+    const docSnap = await getDoc(docRef);   
+    this.activeDmUserName = docSnap.data()['name']; 
+    console.log('Active DM User NAme set', this.activeDmUserName);
+    //this.activeDmUserStatus = docSnap.data()['isOnline'];
+  }
+
+  sortChannelThreadsArray(threadsOrDms: any) {
+    threadsOrDms.sort(this.compareByCreationDate);
   }
 
   compareByCreationDate(b: any, a: any) {
@@ -205,11 +254,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return 0;
   }
 
-  getThreadCreationDates() {
+  getThreadCreationDates(threadsOrDms: any) {
     this.channelThreadsDateTime = [];
     this.threadCreationDates = [];
-    for (let i = 0; i < this.channelThreads.length; i++) {
-      let message = this.channelThreads[i];
+    for (let i = 0; i < threadsOrDms.length; i++) {
+      let message = threadsOrDms[i];
       let creationDate = message['creationDate'];
       let userId = message['createdBy'];
       let formattedDate = this.formattedDate(creationDate);
@@ -217,7 +266,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let formattedTime = this.getFormattedTime(creationDate);
       let createdBy = this.getUserCreated(userId);
       let imageUrl = message['imageUrl'] || null;
- 
 
       this.channelThreadsDateTime.push({
         'threadId': message['messageId'],
@@ -225,7 +273,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'dateString': formattedDate,
         'timeSeparatorDate': formattedDateTimeSeparator,
         'time': formattedTime,
-        'message': this.channelThreads[i]['message'],
+        'message': threadsOrDms[i]['message'],
         'userId': userId,
         'createdBy': createdBy,
         'imageUrl': imageUrl
@@ -240,6 +288,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
     this.threadCreationDates.sort(this.compareByCreationDate);
     this.channelThreadsDateTime.sort(this.compareByCreationDate);
+    console.log('Arry Channel Threads Date Time created', this.channelThreadsDateTime);
+    console.log('Arry Threads Creations Dates created', this.threadCreationDates);
   } 
 
   formattedDate(creationDate: any) {
@@ -291,21 +341,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return user;
   }
 
-  getDmUser() {
-      onSnapshot(doc(collection(db, 'users'), this.activeDmUser), (dmUser) => {
-        this.activeDmUserData = dmUser.data();
-        this.getDmUserName(dmUser.id);
-        console.log(this.channel);
-      });
-  }
-
-  async getDmUserName(userId: string) {
-    this.activeDmUserName = ""; 
-    const docRef = doc(db, "users", this.activeDmUser);
-    const docSnap = await getDoc(docRef);   
-    this.activeDmUserName = docSnap.data()['name']; 
-    //this.activeDmUserStatus = docSnap.data()['isOnline'];
-  }
 
   /*   getCurrentDirectMessage() {
     if(this.channel = []) {
@@ -324,36 +359,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       }, 100)
     }
   
-
-  
-  /* ======================================================== */
-
-  /* ================== MAIN ACHT DM DATA ================== */
-/*   getCurrentDmUser() {
-    const q = query(collection(db, 'users'));
-    console.log('Querry users colelction', q);
-
-    return onSnapshot(q, (list) => {
-      this.dmUser = [];
-      list.forEach(element => {
-        this.dmUser.push(element.data());
-
-        const dmq = query(collection(db, element.data()["directMessages"]));
-        console.log('subcollection direct messages', dmq);
-         return onSnapshot(dmq, (list) => {
-          list.forEach(dmElement => {
-            if(dmElement.data()["isActive"] == true) {
-              this.dmUser.push(element.data());
-            }
-          });
-        })
-      });
-
-      console.log('DM user data', this.dmUser);
-    }); 
-  } */
-
-  /* ======================================================== */
 
   /* ================== MAIN CHAT OTHER FUNCTIONS ================== */
   toggleDialog(dialog: string) {
