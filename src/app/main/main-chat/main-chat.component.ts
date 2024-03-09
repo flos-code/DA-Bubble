@@ -1,5 +1,5 @@
-import { Component, ElementRef, Input, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
-import { CommonModule, DatePipe } from '@angular/common';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatIconModule } from '@angular/material/icon';
@@ -8,7 +8,7 @@ import { ShowMembersDialogComponent } from './show-members-dialog/show-members-d
 import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
 import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 import { ChatService } from '../../services/chat.service';
-import { BehaviorSubject, Subscription, empty } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Thread } from '../../../models/thread.class';
 import { ThreadComponent } from './thread/thread.component';
@@ -16,8 +16,9 @@ import { UserManagementService } from '../../services/user-management.service';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore, limit, onSnapshot, orderBy, query, where } from 'firebase/firestore';
+import { collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 import { TextBoxComponent } from '../new-message/text-box/text-box.component';
+import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profilecards-other-users/profilecards-other-users.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -35,7 +36,7 @@ const db = getFirestore(app);
   selector: 'app-main-chat',
   standalone: true,
   imports: [CommonModule, FormsModule, MatIconModule, ReactiveFormsModule, MatFormFieldModule,
-    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent, ThreadComponent,TextBoxComponent],
+    ChannelEditionDialogComponent, ShowMembersDialogComponent, AddMembersDialogComponent, SecondaryChatComponent, ThreadComponent,TextBoxComponent, ProfilecardsOtherUsersComponent],
   templateUrl: './main-chat.component.html',
   styleUrl: './main-chat.component.scss'
 })
@@ -49,20 +50,18 @@ export class MainChatComponent implements OnInit, OnDestroy {
   channelDmPath = '';
 
   channel: Channel; // Daten des aktuellen Channels
-  //activeChannelId: string = 'allgemein';
-  activeChannelId: string = 'allgemein';
+  activeChannelId: string = null;
   activeChannelSub: Subscription = new Subscription();
 
-  currentUser: string = '';
+  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   currentUserSub: Subscription = new Subscription();
 
-  activeDmUser: string = '';
-  activeDmUserName: string = '';
-  activeDmUserStatus: string = '';
+  activeDmUser: string = 'n2gxPYqotIhMceOiDdUSv6Chkiu1';
+  activeDmUserData: any;
+  activeDmUserName: string = 'Tobias Odermatt';
+  //activeDmUserStatus: string = '';
   activeDmUserSub: Subscription = new Subscription();
-
-
 
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
   //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
@@ -79,6 +78,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   showMembersDialogOpen: boolean = false;
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
+  showProfileCard: boolean = false
   /* ============================================= */
 
   /* ========== SECONDARY CHAT VARIABLES========== */
@@ -95,59 +95,39 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
-    this.currentUserSub = userManagementService.activeUserId.subscribe((value) => {
+/*     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       this.currentUser = value;
-      this.loadData();
+      console.log('CURRENT USER', this.currentUser);
       }
     );
 
     this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
-      if(value == null) {
-        this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((valueDm) => {
-          this.activeDmUser = valueDm;
-          this.getDmUser(valueDm);
-          this.getChannelAndDmPath();
-          this.channelDmPath = this.dmMessagesPath;
-          this.loadData();
-        });
-        //this.activeChannelId = 'allgemein';
-      } else {
+      if(value !== null) {
         this.activeChannelId = value;
+        this.activeDmUser = null;
+        console.log('ACITVE CHANNEL ID', this.activeChannelId);
         this.getChannelAndDmPath();
         this.channelDmPath = this.channelThreadsPath;
         this.loadData();
       }
     });
+
+    this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
+      if(value !== null) {
+        this.activeDmUser = value;
+        this.activeChannelId = null;
+        console.log('ACITVE DM USER', this.activeDmUser);
+        this.getDmUser(value);
+        this.getChannelAndDmPath();
+        this.channelDmPath = this.dmMessagesPath;
+        this.loadData();  
+      }
+    }); */
   }
 
   ngOnInit(): void {
-  /* this.currentUserSub = this.userManagementService.activeUserId.subscribe((value) => {
-      this.currentUser = value;
-      this.loadData();
-      }
-    );
-
-    this.activeChannelSub = this.chatService.activeChannelIdUpdates.subscribe((value) => {
-      if(value == null) {
-        this.activeDmUserSub = this.chatService.activeUserIdUpdates.subscribe((valueDm) => {
-          this.activeDmUser = valueDm;
-          this.getDmUser(valueDm);
-          this.getChannelAndDmPath();
-          this.loadData();
-        });
-        //this.activeChannelId = 'allgemein';
-      } else {
-        this.activeChannelId = value;
-        this.getChannelAndDmPath();
-        this.loadData();
-      }
-    }); */
-
-    this.activeChannelId = "allgemein";
     this.loadData();
-    setTimeout(() => {
-      this.scrollToBottom();
-    }, 2000);
+    this.scrollToBottom();
   }
 
   ngOnDestroy(): void {
@@ -162,6 +142,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
 
   loadData() {
+    this.getDmUser();
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -310,12 +291,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return user;
   }
 
-  async getDmUser(userId: string) {
+  getDmUser() {
+      onSnapshot(doc(collection(db, 'users'), this.activeDmUser), (dmUser) => {
+        this.activeDmUserData = dmUser.data();
+        this.getDmUserName(dmUser.id);
+        console.log(this.channel);
+      });
+  }
+
+  async getDmUserName(userId: string) {
     this.activeDmUserName = ""; 
     const docRef = doc(db, "users", this.activeDmUser);
     const docSnap = await getDoc(docRef);   
     this.activeDmUserName = docSnap.data()['name']; 
-    this.activeDmUserStatus = docSnap.data()['isOnline'];
+    //this.activeDmUserStatus = docSnap.data()['isOnline'];
   }
 
   /*   getCurrentDirectMessage() {
@@ -430,4 +419,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
       })
     );
   }
+
+  openProfileCard() {
+    this.showProfileCard = true;
+  }
+
+  closeProfileCard(closeProfileCard: boolean) {
+    this.showProfileCard = false;
+  }
+
 }

@@ -86,6 +86,44 @@
     }
 }
 
+.mainChatHeaderLeftDm {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    border-radius: 30px;
+    padding: 4px 8px 4px 8px;
+    gap: 15px;
+    &:hover {
+        background-color: $bgColor;
+        color: $purple3;
+        cursor: pointer;
+    }
+
+    > .userImg {
+        position: relative;
+        height: 50px;
+        width: 50px;
+
+        > img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 50px;
+            width: 50px;
+            }
+
+        > div {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+    }
+}
+
 .mainChatHeaderRight {
     height: 100%;
     display: flex;

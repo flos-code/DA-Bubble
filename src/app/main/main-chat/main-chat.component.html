@@ -6,71 +6,75 @@
     <!--     <div class="mainChatContainer" [ngClass]="{'mainChatFullWidth': !threadOpen}"> -->
     <div class="mainChatContainer">
         <!-- ======================================== MAIN CHAT HEADER ========================================== -->
-        @if(activeChannelId !== null) {
+        @if(activeChannelId) {
         <!-- =========== TEMPLATE MAIN CHAT HEADER - CHANNELS ============= -->
-        <div class="mainChatHeader">
-            <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
-                <div>&#35;</div>
-                <div>{{channel?.name}}</div>
-                <div>
-                    <mat-icon class="material-symbols-outlined" fontIcon="keyboard_arrow_down"></mat-icon>
-                </div>
-            </div>
-
-            <div class="mainChatHeaderRight">
-                <div (click)="toggleDialog('showMembers')">
-                    <div class="memberPhotos">
-                        @for (member of channel?.members | slice:0:3; track $index) {
-                        <div>
-                            <img src="/assets/img/main-chat/member2.svg">
-                        </div>
-                        }
-                        <div *ngIf="channel?.members.length > 3">
-                            <div>+{{channel?.members.length - 3}}</div>
-                        </div>
+            <div class="mainChatHeader">
+                <div class="mainChatHeaderLeft" (click)="toggleDialog('channelEdition')">
+                    <div>&#35;</div>
+                    <div>{{channel?.name}}</div>
+                    <div>
+                        <mat-icon class="material-symbols-outlined" fontIcon="keyboard_arrow_down"></mat-icon>
                     </div>
-                    <div>{{channel?.members.length}}</div>
                 </div>
-                <div (click)="toggleDialog('addMember'); scrollToBottom()" >
-                    <span class="material-symbols-outlined">person_add</span>
+
+                <div class="mainChatHeaderRight">
+                    <div (click)="toggleDialog('showMembers')">
+                        <div class="memberPhotos">
+                            @for (member of channel?.members | slice:0:3; track $index) {
+                            <div>
+                                <img src="/assets/img/main-chat/member2.svg">
+                            </div>
+                            }
+                            <div *ngIf="channel?.members.length > 3">
+                                <div>+{{channel?.members.length - 3}}</div>
+                            </div>
+                        </div>
+                        <div>{{channel?.members.length}}</div>
+                    </div>
+                    <div (click)="toggleDialog('addMember'); scrollToBottom()" >
+                        <span class="material-symbols-outlined">person_add</span>
+                    </div>
                 </div>
+
+                <!--========== Channel Edition/ Dialog ============-->
+                <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" *ngIf="channelEditionDialogOpen"
+                    (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
+                <!--=================================================-->
+
+                <!--============== Show member Dialog ================-->
+                <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" [currentUser]="currentUser" *ngIf="showMembersDialogOpen"
+                    (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
+                    (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
+                <!--=================================================-->
+
+                <!--========== Add member Dialog ============-->
+                <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId"  *ngIf="addMemberDialogOpen"
+                    (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
+                <!--=================================================-->
             </div>
-
-            <!--========== Channel Edition/ Dialog ============-->
-            <app-channel-edition-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" *ngIf="channelEditionDialogOpen"
-                (channelEditionDialogOpenChild)="setBoolean(channelEditionDialogOpen)"></app-channel-edition-dialog>
-            <!--=================================================-->
-
-            <!--============== Show member Dialog ================-->
-            <app-show-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId" [channelMembers]="channelMembers" [currentUser]="currentUser" *ngIf="showMembersDialogOpen"
-                (addMembersDialogOpenOpenChildShow)="switchToAddMembers(addMemberDialogOpen)"
-                (showMembersDialogOpenChild)="setBoolean(showMembersDialogOpen)"></app-show-members-dialog>
-            <!--=================================================-->
-
-            <!--========== Add member Dialog ============-->
-            <app-add-members-dialog [channelData]="channel" [currentChannelId]="activeChannelId"  *ngIf="addMemberDialogOpen"
-                (addMemberDialogOpenChild)="setBoolean(addMemberDialogOpen)"></app-add-members-dialog>
-            <!--=================================================-->
-        </div>
-        <!-- ================================================== -->
-        } @else {
+            <!-- ================================================== -->
+        } 
+        
+        @if(activeDmUser) {
             <!-- =========== TEMPLATE MAIN CHAT HEADER - DM ============= -->
             <div class="mainChatHeader">
-                <div class="mainChatHeaderLeft">
-                    <div class="userImage">
+                <div class="mainChatHeaderLeftDm" (click)="openProfileCard()">
+                    <div class="userImg">
                         <img src="/assets/img/main-chat/member2.svg">
-                        <div class="userStatus" [ngStyle]="{'background-color': activeDmUserStatus ? '#92c83e' : '#686868' }"></div>
+                        <div class="userStatus" [ngStyle]="{'background-color': activeDmUserData.isOnline ? '#92c83e' : '#686868' }"></div>
                     </div>
                     <div>{{activeDmUserName}}</div>
                 </div>
             </div>
+            <app-profilecards-other-users *ngIf="showProfileCard" [memberData]="activeDmUserData" [showProfileCard]="showProfileCard" 
+            (showProfileCardChild)="closeProfileCard(showProfileCard)"></app-profilecards-other-users>
         }
         <!-- ===================================================================================================== -->
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages" #mainChat>
 <!--        <div class="mainChatMessagesSubContainer"> -->            
-                @if(activeChannelId !== null) {
+                @if(activeChannelId) {
                     <!-- =========== Template main chat beginning - Channel ============= -->
                     <div class="beginningOfChannel">
                         <div>
@@ -82,14 +86,16 @@
                         </div>
                     </div>
                     <!-- ================================================================ -->
-                } @else {
+                }
+
+                @if(activeDmUser) {
                     <!-- =========== Template main chat beginning - DM ============= -->
                     <div class="beginningOfChannel">
                         <div>
                             <div>
-                                <img [src]="channel[0].members[0].photo">
+                                <img src="assets/img/main-chat/member2.svg">
                             </div>
-                            <div>{{channel[0].members[0].name}}</div>
+                            <div>{{activeDmUserName}}</div>
                         </div>
                         <div>
                             Diese Unterhaltung findet nur zwischen <span style="color: rgba(83, 90, 241, 1)">&#64;{{activeDmUserName}}</span> und dir statt.
