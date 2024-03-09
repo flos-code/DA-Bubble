@@ -368,4 +368,8 @@ export class TextBoxComponent {
     this.imageURL = undefined;
     this.filePath = undefined;
   }
+
+  onKeydown(event){
+    event.preventDefault();
+  }
 }
