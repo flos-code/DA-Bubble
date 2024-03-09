@@ -75,10 +75,10 @@ export class HeaderComponent implements OnInit {
     });
   }
 
-  onInputChange(value: string) {
+  onInputChange() {
     // Hier kannst du die inputValue überprüfen und weitere Aktionen durchführen
     // console.log('Neuer Wert:', value);
-    this.searchUsers();
+    this.searchService.searchUsers(this.inputValue);
     // if (value.length > 0) {
     //   // Führe Aktionen aus, wenn der Wert größer als eins ist
     //   console.log('Wert ist größer als null.');
@@ -86,10 +86,7 @@ export class HeaderComponent implements OnInit {
   }
 
   searchUsers() {
-    this.searchService.searchUsers(this.inputValue);
-    // .subscribe(users => {
-    //   console.log(users); // Hier können Sie die Benutzerdaten verwenden oder anzeigen
-    // });
+
   }
 
   isInputValueGreaterThanOne(): boolean {
@@ -129,7 +126,6 @@ export class HeaderComponent implements OnInit {
   onDocumentClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
     const isClickedOutside = !this.isDescendant(clickedElement, 'searchField');
-
     if (isClickedOutside) {
       this.inputValue = '';
     }

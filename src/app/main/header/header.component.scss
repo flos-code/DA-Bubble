@@ -160,15 +160,28 @@
     // top: 100%;
     width: 100%;
     max-width: 989px;
-    left: 0; 
+    left: 0;
     background-color: white;
-    z-index: 999;
+    z-index: 9;
     border-radius: 0 0 42px 42px;
     box-shadow: 0 18px 16px rgba(0, 0, 0, 0.4);
     border-top: 0;
 
     p {
         margin-left: 45px;
+        cursor: pointer;
+        width: max-content;
+        display: flex;
+        justify-content: center;
+        border-radius: 30px;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        &:hover {
+            background-color: #ECEEFE;
+            color: #535AF1;
+            transform: scale(1.05);
+        }
     }
 }
 

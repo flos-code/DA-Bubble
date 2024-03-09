@@ -42,10 +42,12 @@ export class SearchService {
     const q = query(this.userRef);
     return onSnapshot(q, (list) => {
       list.forEach(element => {
-        let test = element.data()['name'];
-        if (test.includes(input)) {
+        let compare = element.data()['name'].toLowerCase();
+        let result = element.data();
+        if (compare.includes(input.toLowerCase())) {
           // console.log(test);
-          this.searchResult.push(test);
+          this.searchResult.push(result);
+          // console.log(this.searchResult);
         }
       })
     })
