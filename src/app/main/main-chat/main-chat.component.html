@@ -118,30 +118,7 @@
 
         <div class="mainChatInput">
             <app-text-box [messageType]="'channel'" [targetId]="this.chatService.getActiveChannelId()"></app-text-box>
-<!--             <div class="mainChatInputSubContainer">
-                <textarea [(ngModel)]="textArea" name="textarea"
-                    placeholder="Nachricht an #{{channel?.name}}"></textarea>
-                <div>
-                    <div>
-                        <div>
-                            <span class="material-symbols-outlined">add</span>
-                        </div>
-                        <div>
-                            <img src="/assets/img/main-chat/separatingLine.svg">
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">sentiment_satisfied</span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">alternate_email</span>
-                        </div>
-                    </div>
-                    <div (click)="sendMessage()">
-                        <img src="/assets/img/main-chat/sendIconDefault.svg">
-                    </div>
-                </div>
-            </div>
- -->    </div>        
+        </div>        
         <!-- =================================================================================================== -->
     </div>
     <app-secondary-chat *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>

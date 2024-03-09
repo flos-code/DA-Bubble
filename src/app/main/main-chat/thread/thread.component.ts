@@ -180,6 +180,18 @@ export class ThreadComponent implements OnInit {
       }
     }
   }
+  /* const myArray = [1, 2, 3, 4, 5];
+
+  const index = myArray.indexOf(2);
+
+  const x = myArray.splice(index, 1);
+
+  console.log(`myArray values: ${myArray}`);
+  console.log(`variable x value: ${x}`); */
+
+
+
+
 
   async addReaction(emoji: string, currentUser: string) {
     let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
