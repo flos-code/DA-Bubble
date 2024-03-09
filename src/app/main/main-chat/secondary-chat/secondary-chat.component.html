@@ -22,7 +22,7 @@
         <!-- Thread Message -->
         <img
           class="profile-picture"
-          src="/assets/img/userImages/userImage4.svg"
+          [src]="getUserProfileImageUrl(firstThreadMessage?.createdBy)"
           alt=""
         />
         <div>

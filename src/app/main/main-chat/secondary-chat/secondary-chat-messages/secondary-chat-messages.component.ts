@@ -161,6 +161,11 @@ export class SecondaryChatMessagesComponent implements OnInit {
     return user ? user.name : 'Unbekannter Benutzer';
   }
 
+  getUserProfileImageUrl(userId: string): string {
+    const user = this.channelMembers.find(member => member.userId === userId);
+    return user ? user.imgUrl : 'imgUrl';
+  }  
+
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
     this.showMoreEmojisToolbar = false;
