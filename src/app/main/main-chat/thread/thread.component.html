@@ -38,6 +38,7 @@
                                         <span>{{reaction?.reaction}}</span>
                                     </div>                        
                                     <div>{{reactionName}}</div>
+                                    <div *ngIf="reaction?.reactedBy.includes(currentUser)">und Du</div>
                                     <div>hat reagiert</div>
                                 </div>
                             </div>    
