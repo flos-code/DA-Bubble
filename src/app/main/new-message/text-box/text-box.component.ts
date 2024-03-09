@@ -27,6 +27,7 @@ import { Thread } from '../../../../models/thread.class';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { ChatService } from '../../../services/chat.service';
 import { DirectMessage } from '../../../../models/directMessage.class';
+import { ThreadMessage } from '../../../../models/threadMessage.class';
 
 @Component({
   selector: 'app-text-box',
@@ -43,7 +44,7 @@ import { DirectMessage } from '../../../../models/directMessage.class';
 })
 export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
-  @Input() messageType: 'direct' | 'channel' | 'thread';
+  @Input() messageType: 'direct' | 'channel' | 'thread' | 'threadMessage';
   @Input() targetId: string; // ID des Nutzers/Kanals/Threads
   @Input() placeholderText: string;
 
@@ -330,8 +331,8 @@ export class TextBoxComponent {
       } catch (error) {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
-    } else if (this.messageType === 'thread') {
-      const newThread = new Thread({
+    } else if (this.messageType === 'threadMessage') {
+      const newThread = new ThreadMessage({
         createdBy: this.userManagementService.activeUserId.value,
         creationDate: Date.now(),
         message: this.messageModel.trim(),
@@ -341,10 +342,7 @@ export class TextBoxComponent {
         const docRefThread = await addDoc(
           collection(
             this.firestore,
-            `channels/${this.chatService.getActiveChannelId()}/threads/${
-              this.targetId
-            }/messages`
-          ),
+            `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`),
           newThread.toJSON()
         );
         console.log(
@@ -355,7 +353,7 @@ export class TextBoxComponent {
         await updateDoc(
           doc(
             this.firestore,
-            `channels/${this.targetId}/threads`,
+            `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`,
             docRefThread.id
           ),
           {
