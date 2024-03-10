@@ -430,4 +430,9 @@ export class TextBoxComponent {
   onKeydown(event) {
     event.preventDefault();
   }
+
+  isMessageNotEmpty(): boolean {
+  return this.messageModel.trim().length > 0;
+  }
+
 }

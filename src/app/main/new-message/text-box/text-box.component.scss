@@ -81,9 +81,13 @@
         color: $purple2;
         font-variation-settings: "FILL" 1;
 
-        &:hover {
-          cursor: pointer;
+        .mat-icon.disabled {
+          cursor: not-allowed;
+        }
+
+        &:not(.disabled) {
           color: $purple1;
+          cursor: pointer;
         }
       }
     }
