@@ -103,6 +103,15 @@ export class NewMessageComponent {
       this.filteredChannel = this.allChannel.filter((channel) =>
         channel.name.toLowerCase().startsWith(searchTerm)
       );
+    } else if (inputValue.includes('@') && inputValue.includes('.')) {
+      const foundUser = this.allUsers.find(
+        (user) => user.email.toLowerCase() === inputValue.toLowerCase()
+      );
+      if (foundUser) {
+        this.sendUserMessage(foundUser.id, foundUser.name);
+      } else {
+        this.filteredUsers = [];
+      }
     } else {
       this.filteredUsers = [];
       this.filteredChannel = [];

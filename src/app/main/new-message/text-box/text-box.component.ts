@@ -241,7 +241,7 @@ export class TextBoxComponent {
         );
         console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
         this.chatService.setActiveChannelId(this.targetId);
-        //this.viewManagementService.changeView('showMainChat');
+        this.viewManagementService.changeView('showMainChat');
 
         await updateDoc(
           doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
@@ -330,7 +330,7 @@ export class TextBoxComponent {
           );
           this.userManagementService.loadUsers();
           this.chatService.setSelectedUserId(this.targetId);
-          //this.viewManagementService.changeView('showDms');
+          this.viewManagementService.changeView('showMainChat');
         } catch (error) {
           console.error('Fehler beim Senden der Nachricht: ', error);
         }
@@ -379,7 +379,7 @@ export class TextBoxComponent {
 
           this.userManagementService.loadUsers();
           this.chatService.setSelectedUserId(this.targetId);
-          //this.viewManagementService.changeView('showDms');
+          this.viewManagementService.changeView('showMainChat');
         } catch (error) {
           console.error('Fehler beim Senden der Nachricht: ', error);
         }
