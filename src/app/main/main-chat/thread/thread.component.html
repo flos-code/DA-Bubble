@@ -1,4 +1,4 @@
-@if(currentUser !== thread.userId){
+@if(currentUser !== thread?.userId){
     <!-- ========================= Template Other Messages ========================= -->
         <!-- ========================= Template Other Messages - CHANNEL ========================= -->
         <div class="messageContainer">
@@ -15,12 +15,12 @@
                 </div>
                 <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px;">
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
+                    <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
                 </div>
 
                 <!-- ================ REACTION CONTAINER ================ -->
-                @if(reactions.length !== 0) {
+                @if(reactions?.length !== 0) {
                     <div class="mainThreadReactions">
                         <div (click)="openMoreEmojis()">
                             <span class="material-symbols-outlined">add_reaction</span>
@@ -31,15 +31,35 @@
                                     <span>{{reaction?.reaction}}</span>
                                 </div>
                                 <div class="ractionCount">
-                                    <div>{{reaction.count}}</div>
+                                    <div>{{reaction?.count}}</div>
                                 </div>
                                 <div class="reactionHoverBubble">
                                     <div class="ractionEmoji">
                                         <span>{{reaction?.reaction}}</span>
-                                    </div>                        
-                                    <div>{{reactionName}}</div>
-                                    <div *ngIf="reaction?.reactedBy.includes(currentUser)">und Du</div>
-                                    <div>hat reagiert</div>
+                                    </div>      
+                                    @if (reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
+                                        <div>
+                                            <div>Du</div>
+                                        </div> 
+                                        <div>hast reagiert</div>
+                                    } @else if(reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                            <div>und Du</div>    
+                                        </div> 
+                                        <div>haben reagiert</div>
+                                    } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                        </div> 
+                                        <div>hat reagiert</div>
+                                    } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                            <div>und Andere</div>    
+                                        </div> 
+                                        <div>haben reagiert</div>
+                                    }
                                 </div>
                             </div>    
                         }
@@ -75,7 +95,7 @@
                 <div (click)="openMoreEmojisToolbar()">
                     <span class="material-symbols-outlined">add_reaction</span>
                 </div>
-                <div (click)="openThread(thread.threadId)">
+                <div (click)="openThread(thread?.threadId)">
                     <span class="material-symbols-outlined">comment</span>
                 </div>
             </div>
@@ -100,7 +120,7 @@
 
                 <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
                     <div>Letzte Antwort {{lastAnswer}}</div>
-                    <div (click)="openThread(thread.threadId)">{{messageCount}} {{answers}}</div>
+                    <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>
                 </div>
                 <!-- ================ REACTION CONTAINER ================ -->
                 @if(reactions.length !== 0) {
@@ -114,14 +134,35 @@
                                     <span>{{reaction?.reaction}}</span>
                                 </div>
                                 <div class="ractionCount">
-                                    <div>{{reaction.count}}</div>
+                                    <div>{{reaction?.count}}</div>
                                 </div>
                                 <div class="reactionHoverBubble">
                                     <div class="ractionEmoji">
                                         <span>{{reaction?.reaction}}</span>
-                                    </div>                        
-                                    <div>{{reaction?.reactedByName}}</div>
-                                    <div>hat reagiert</div>
+                                    </div>      
+                                    @if (reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
+                                        <div>
+                                            <div>Du</div>
+                                        </div> 
+                                        <div>hast reagiert</div>
+                                    } @else if(reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                            <div>und Du</div>    
+                                        </div> 
+                                        <div>haben reagiert</div>
+                                    } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                        </div> 
+                                        <div>hat reagiert</div>
+                                    } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
+                                        <div>
+                                            <div>{{reactionName}}</div>
+                                            <div>und Andere</div>    
+                                        </div> 
+                                        <div>haben reagiert</div>
+                                    }
                                 </div>
                             </div>    
                         }
@@ -161,7 +202,7 @@
                 <div (click)="openMoreEmojisToolbar()">
                     <span class="material-symbols-outlined">add_reaction</span>
                 </div>
-                <div (click)="openThread(thread.threadId)">
+                <div (click)="openThread(thread?.threadId)">
                     <span class="material-symbols-outlined">comment</span>
                 </div>
                 <div (click)="moreOptions()">
@@ -181,8 +222,8 @@
         </div>
 
         <!-- ========================= Template Own Message - EDIT ========================= -->
-        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread.threadId" 
-        [activeChannelId]="activeChannelId" [threadMessage]="thread.message"
+        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" 
+        [activeChannelId]="activeChannelId" [threadMessage]="thread?.message"
         (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
         
 }

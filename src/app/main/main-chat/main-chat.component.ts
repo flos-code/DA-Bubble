@@ -98,55 +98,78 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
       this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
-        this.currentUser = value;
-        console.log('CURRENT USER', this.currentUser);
+        if(value) {
+          this.currentUser = value;
+          console.log('CURRENT USER', this.currentUser);
+  
+          this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((valueChannel) => {
+            if(valueChannel !== null) {
+              this.activeChannelId = valueChannel;
+              this.activeDmUser = null;
+              console.log('ACITVE CHANNEL ID', this.activeChannelId);
+              this.getChannelAndDmPath();
+              this.channelPath = this.channelThreadsPath;
+              this.loadChannelData();
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 800);
+            }
+          });
+      
+          this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((valueDm) => {
+            if(valueDm !== null) {
+              this.activeDmUser = valueDm;
+              this.activeChannelId = null;
+              console.log('ACITVE DM USER', this.activeDmUser);
+              this.getChannelAndDmPath();
+              this.channelPath = this.dmMessagesPath;
+              this.loadDmData();
+              setTimeout(() => {
+                this.scrollToBottom();
+              }, 800);  
+            }
+          });
+        }
         }
       );
-
-      this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
-        if(value !== null) {
-          this.activeChannelId = value;
-          this.activeDmUser = null;
-          console.log('ACITVE CHANNEL ID', this.activeChannelId);
-          this.getChannelAndDmPath();
-          this.channelPath = this.channelThreadsPath;
-          this.loadChannelData();
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 800);
-        }
-      });
-  
-      this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
-        if(value !== null) {
-          this.activeDmUser = value;
-          this.activeChannelId = null;
-          console.log('ACITVE DM USER', this.activeDmUser);
-          this.getChannelAndDmPath();
-          this.channelPath = this.dmMessagesPath;
-          this.loadDmData();
-          setTimeout(() => {
-            this.scrollToBottom();
-          }, 800);  
-        }
-      });
   }
 
   ngOnInit(): void {
+/*     this.currentUserSub = this.userManagementService.activeUserId$.subscribe((value) => {
+      if(value) {
+        this.currentUser = value;
+        console.log('CURRENT USER', this.currentUser);
 
-/*     this.getChannelAndDmPath();
-    if(this.activeChannelId !== null) {
-      this.loadChannelData();
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 1500);  
-    }
-    if(this.activeDmUser !== null) {
-      this.loadDmData();
-      setTimeout(() => {
-        this.scrollToBottom();
-      }, 1500);  
-    } */
+        this.activeChannelSub = this.chatService.activeChannelIdUpdates.subscribe((valueChannel) => {
+          if(valueChannel !== null) {
+            this.activeChannelId = valueChannel;
+            this.activeDmUser = null;
+            console.log('ACITVE CHANNEL ID', this.activeChannelId);
+            this.getChannelAndDmPath();
+            this.channelPath = this.channelThreadsPath;
+            this.loadChannelData();
+            setTimeout(() => {
+              this.scrollToBottom();
+            }, 800);
+          }
+        });
+    
+        this.activeDmUserSub = this.chatService.activeUserIdUpdates.subscribe((valueDm) => {
+          if(valueDm !== null) {
+            this.activeDmUser = valueDm;
+            this.activeChannelId = null;
+            console.log('ACITVE DM USER', this.activeDmUser);
+            this.getChannelAndDmPath();
+            this.channelPath = this.dmMessagesPath;
+            this.loadDmData();
+            setTimeout(() => {
+              this.scrollToBottom();
+            }, 800);  
+          }
+        });
+      }
+      }
+    ); */
   }
 
   ngOnDestroy(): void {

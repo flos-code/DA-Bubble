@@ -271,10 +271,19 @@
             }
             
             > div:nth-of-type(2) {
-                color: white;
-                font-weight: 700;
-                font-size: 18px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                gap: 5px;
+
+                > div {
+                    color: white;
+                    font-weight: 700;
+                    font-size: 18px;    
+                }
             }
+            
             > div:last-of-type {
                 color: white;
                 font-size: 16px;
