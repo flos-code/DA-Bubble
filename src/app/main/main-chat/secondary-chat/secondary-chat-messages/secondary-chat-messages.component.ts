@@ -91,7 +91,8 @@ export class SecondaryChatMessagesComponent implements OnInit {
           if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
             if(reaction.reactedBy.length > 1) {
               reaction.count = reaction.count - 1;
-              reaction.reactedBy.splice(currentUser);
+              let index = reaction.reactedBy.indexOf(currentUser);
+              reaction.reactedBy.splice(index, 1);
               let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
               let data = {
                 count: reaction.count,

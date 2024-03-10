@@ -13,12 +13,12 @@ import { Channel } from '../../../models/channel.class';
 import { Thread } from '../../../models/thread.class';
 import { ThreadComponent } from './thread/thread.component';
 import { UserManagementService } from '../../services/user-management.service';
+import { TextBoxComponent } from '../new-message/text-box/text-box.component';
+import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profilecards-other-users/profilecards-other-users.component';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { TextBoxComponent } from '../new-message/text-box/text-box.component';
-import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profilecards-other-users/profilecards-other-users.component';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -97,37 +97,44 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
-    this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
-      this.currentUser = value;
-      console.log('CURRENT USER', this.currentUser);
-      }
-    );
-
-    this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
-      if(value !== null) {
-        this.activeChannelId = value;
-        this.activeDmUser = null;
-        console.log('ACITVE CHANNEL ID', this.activeChannelId);
-        this.getChannelAndDmPath();
-        this.channelPath = this.channelThreadsPath;
-        this.loadChannelData();
-      }
-    });
-
-    this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
-      if(value !== null) {
-        this.activeDmUser = value;
-        this.activeChannelId = null;
-        console.log('ACITVE DM USER', this.activeDmUser);
-        this.getChannelAndDmPath();
-        this.channelPath = this.dmMessagesPath;
-        this.loadDmData();  
-      }
-    });
+      this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
+        this.currentUser = value;
+        console.log('CURRENT USER', this.currentUser);
+        }
+      );
+  
+      this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
+        if(value !== null) {
+          this.activeChannelId = value;
+          this.activeDmUser = null;
+          console.log('ACITVE CHANNEL ID', this.activeChannelId);
+          this.getChannelAndDmPath();
+          this.channelPath = this.channelThreadsPath;
+          this.loadChannelData();
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 800);
+        }
+      });
+  
+      this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((value) => {
+        if(value !== null) {
+          this.activeDmUser = value;
+          this.activeChannelId = null;
+          console.log('ACITVE DM USER', this.activeDmUser);
+          this.getChannelAndDmPath();
+          this.channelPath = this.dmMessagesPath;
+          this.loadDmData();
+          setTimeout(() => {
+            this.scrollToBottom();
+          }, 800);  
+        }
+      });
   }
 
   ngOnInit(): void {
-    this.getChannelAndDmPath();
+
+/*     this.getChannelAndDmPath();
     if(this.activeChannelId !== null) {
       this.loadChannelData();
       setTimeout(() => {
@@ -139,7 +146,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.scrollToBottom();
       }, 1500);  
-    }
+    } */
   }
 
   ngOnDestroy(): void {
@@ -148,7 +155,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   /* ================== ID's FOM SERVICE ================== */
   getChannelAndDmPath() {
-    //this.channelDmPath
     this.dmMessagesPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages`;
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
   }
@@ -206,7 +212,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   getDmUser() {
     onSnapshot(doc(collection(db, 'users'), this.activeDmUser), (dmUser) => {
       this.activeDmUserData = dmUser.data();
-      console.log('Active DM User Data received', this.activeDmUserData);
       this.getDmUserName(dmUser.id);
       setTimeout(() => {
         this.getCurrentDmUserMessages();
@@ -224,7 +229,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
             this.dmMessages.push(dmMessage.data());
           }
         )
-        console.log('All Dm Messages received', this.dmMessages);
         this.sortChannelThreadsArray(this.dmMessages);
         this.getThreadCreationDates(this.dmMessages);
       });
@@ -236,7 +240,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     const docRef = doc(db, "users", userId);
     const docSnap = await getDoc(docRef);   
     this.activeDmUserName = docSnap.data()['name']; 
-    console.log('Active DM User NAme set', this.activeDmUserName);
     //this.activeDmUserStatus = docSnap.data()['isOnline'];
   }
 
@@ -288,8 +291,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
     this.threadCreationDates.sort(this.compareByCreationDate);
     this.channelThreadsDateTime.sort(this.compareByCreationDate);
-    console.log('Arry Channel Threads Date Time created', this.channelThreadsDateTime);
-    console.log('Arry Threads Creations Dates created', this.threadCreationDates);
   } 
 
   formattedDate(creationDate: any) {
@@ -341,24 +342,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return user;
   }
 
-
-  /*   getCurrentDirectMessage() {
-    if(this.channel = []) {
-      this.typeChannel = false;
-      this.getCurrentDmUser();
-    }
-  } */
-
-    scrollToBottom() {
-      setTimeout(() => {
-        this.mainChat.nativeElement.scroll({
-          top: this.mainChat.nativeElement.scrollHeight,
-          left: 0,
-          behavior: 'smooth'
-        });
-      }, 100)
-    }
-  
+  scrollToBottom() {
+    setTimeout(() => {
+      this.mainChat.nativeElement.scroll({
+        top: this.mainChat.nativeElement.scrollHeight,
+        left: 0,
+        behavior: 'smooth'
+      });
+    }, 100)
+  } 
 
   /* ================== MAIN CHAT OTHER FUNCTIONS ================== */
   toggleDialog(dialog: string) {
@@ -432,5 +424,4 @@ export class MainChatComponent implements OnInit, OnDestroy {
   closeProfileCard(closeProfileCard: boolean) {
     this.showProfileCard = false;
   }
-
 }

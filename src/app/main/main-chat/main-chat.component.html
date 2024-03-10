@@ -123,35 +123,11 @@
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
 
         <div class="mainChatInput">
-            <app-text-box
-            [messageType]="'channel'"
-            [targetId]="this.chatService.getActiveChannelId()"
-            [placeholderText]="'Nachricht an #' + channel?.name"
-          ></app-text-box>
-<!--             <div class="mainChatInputSubContainer">
-                <textarea [(ngModel)]="textArea" name="textarea"
-                    placeholder="Nachricht an #{{channel?.name}}"></textarea>
-                <div>
-                    <div>
-                        <div>
-                            <span class="material-symbols-outlined">add</span>
-                        </div>
-                        <div>
-                            <img src="/assets/img/main-chat/separatingLine.svg">
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">sentiment_satisfied</span>
-                        </div>
-                        <div>
-                            <span class="material-symbols-outlined">alternate_email</span>
-                        </div>
-                    </div>
-                    <div (click)="sendMessage()">
-                        <img src="/assets/img/main-chat/sendIconDefault.svg">
-                    </div>
-                </div>
-            </div>
- -->    </div>        
+            <app-text-box *ngIf="this.activeChannelId" [messageType]="'channel'" [targetId]="this.activeChannelId" [placeholderText]="'Nachricht an #' + channel?.name">
+            </app-text-box>
+            <app-text-box *ngIf="this.activeDmUser" [messageType]="'direct'" [targetId]="this.activeDmUser" [placeholderText]="'Nachricht an @' + activeDmUserName">
+            </app-text-box>
+    </div>        
         <!-- =================================================================================================== -->
     </div>
     <app-secondary-chat  *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>

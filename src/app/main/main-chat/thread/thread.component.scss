@@ -311,17 +311,19 @@
 /* ================= TOOLBAR ================= */
 .toolBar, .toolBarOwn {
     position: absolute;
-    right: 45px;
+    right: -80px;
     top: -25px;
     height: 46px;
+    opacity: 0;
     border-radius: 25px 25px 0px 25px;
     border: 1px solid $lightPurple;
     padding: 3px 15px 3px 20px;
-    display: none;
+    display: flex;
     justify-content: center;
     align-items: center;
     background-color: white;
     gap: 5px;
+    transition: all 125ms ease-in-out;
 
     > div {
         width: 40px;
@@ -339,12 +341,19 @@
 
 .toolBarOwn{
     right: unset;
-    left: 45px;
+    left: -80px;
 }
 
-.messageContainer:hover > .toolBar,
+.messageContainer:hover > .toolBar {
+    display: flex;
+    right: 45px;
+    opacity: 1;
+}
+
 .messageContainerOwn:hover > .toolBarOwn {
     display: flex;
+    left: 45px;
+    opacity: 1;
 }
 
 /* ============================================= */
