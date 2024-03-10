@@ -255,12 +255,14 @@ export class TextBoxComponent {
     } else if (this.messageType === 'direct') {
       const newDmSender = new DirectMessage({
         yourMessage: true,
+        createdBy: this.userManagementService.activeUserId.value,
         creationDate: Date.now(),
         message: this.messageModel.trim(),
         imageUrl: imageUrlToSend,
       });
       const newDmReceiver = new DirectMessage({
         yourMessage: false,
+        createdBy: this.userManagementService.activeUserId.value,
         creationDate: Date.now(),
         message: this.messageModel.trim(),
         imageUrl: imageUrlToSend,
