@@ -6,6 +6,7 @@
     align-items: center;
     justify-content: space-between;
     gap: 16px;
+    height: 70px;
 
     img {
         height: 70px;
@@ -40,6 +41,10 @@
     align-items: center;
     gap: 16px;
     cursor: pointer;
+
+    h2 {
+        white-space: nowrap;
+    }
 }
 
 .header-profil:hover mat-icon {
