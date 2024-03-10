@@ -2,6 +2,23 @@ import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 
+/* ========== FIREBASE ========== */
+import { initializeApp } from "firebase/app";
+import { getFirestore, collection, onSnapshot,  query } from "firebase/firestore";
+import { ChatService } from '../../../../services/chat.service';
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+/* =============================== */
+
 
 @Component({
   selector: 'app-profilecards-other-users',
@@ -10,26 +27,45 @@ import { MatIconModule } from '@angular/material/icon';
   templateUrl: './profilecards-other-users.component.html',
   styleUrl: './profilecards-other-users.component.scss'
 })
-export class ProfilecardsOtherUsersComponent implements OnInit {
+export class ProfilecardsOtherUsersComponent {
+  @Input() currentUser!: string;
   @Input() memberData!: any;
-  @Input() showProfileCard: boolean;
+  @Input() showProfileCard!: boolean;
   @Output() showProfileCardChild = new EventEmitter();
+  @Input() showMembersDialogOpen!: boolean;
+  @Output() showMembersDialogOpenChild = new EventEmitter();
 
-  ngOnInit(): void {
-      console.log('Members data', this.memberData);
+  constructor(private chatService: ChatService) { }
+
+  writeDirectMessage() {
+    const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        if(element.id === this.memberData.id) {
+          this.chatService.setSelectedUserId(this.memberData.id);
+          this.closeProfileCard();
+          this.closeShowMembers();
+        } else {
+          // Create new DM Chat
+
+          this.closeProfileCard();
+          this.closeShowMembers();
+        }  
+      });
+    });
   }
-
 
   closeProfileCard() {
     this.showProfileCard = false;
     this.showProfileCardChild.emit(this.showProfileCard);
   }
 
-  doNotClose($event: any) {
-    $event.stopPropagation(); 
+  closeShowMembers() {
+    this.showMembersDialogOpen = false;
+    this.showMembersDialogOpenChild.emit(this.showProfileCard);
   }
 
-  writeMessage() {
-    // open new DM chat or switch to existing one (type: DM / path to collection)
+  doNotClose($event: any) {
+    $event.stopPropagation(); 
   }
 }

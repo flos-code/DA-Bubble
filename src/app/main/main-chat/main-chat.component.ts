@@ -102,7 +102,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         console.log('CURRENT USER', this.currentUser);
         }
       );
-  
+
       this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((value) => {
         if(value !== null) {
           this.activeChannelId = value;
