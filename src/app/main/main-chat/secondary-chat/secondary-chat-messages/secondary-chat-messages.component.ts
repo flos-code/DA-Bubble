@@ -142,9 +142,16 @@ export class SecondaryChatMessagesComponent implements OnInit {
 
   async saveMessageChanges() {
     const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
+    if (this.editingMessageText == '') {
+      await deleteDoc(messageRef);
+      this.editingMessageText = '';
+      this.openEditOwnInput = false;
+    } else {
+    
     await updateDoc(messageRef, { message: this.editingMessageText });
     this.editingMessageText = '';
     this.openEditOwnInput = false;
+    }
   }
 
   openEditOwnMessageField() {
