@@ -31,7 +31,7 @@
 }
 
 .mainChatContainer {
-    height: 940px;
+    height: calc(100vh - 172px);
     width: 100%;
     border-radius: 30px;
     display: flex;
