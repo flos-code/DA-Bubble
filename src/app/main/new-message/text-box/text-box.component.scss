@@ -1,5 +1,9 @@
 @import "../../../../styles.scss";
 
+* {
+  scrollbar-width: thin !important;
+}
+
 .textBoxContainer {
   width: 100%;
   height: 100%;
@@ -50,9 +54,10 @@
       gap: 5px;
 
       div {
-/*         background-color: $lightPurple;
+        /*         background-color: $lightPurple;
         width: 1px;
- */        height: 100%;
+ */
+        height: 100%;
       }
 
       mat-icon {

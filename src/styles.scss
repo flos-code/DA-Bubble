@@ -1,6 +1,5 @@
 @import "fonts.scss";
 
-
 * {
   font-family: "Nunito", sans-serif;
 }
@@ -66,7 +65,7 @@ body {
 }
 
 * {
-  scrollbar-width: thin;
+  scrollbar-width: none;
   scrollbar-color: $purple2 transparent;
 }
 

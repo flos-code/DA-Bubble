@@ -1,5 +1,9 @@
 @import "../../../styles.scss";
 
+* {
+  scrollbar-width: thin !important;
+}
+
 .sideBarContent {
   height: 940px;
   width: 366px;

@@ -253,85 +253,136 @@ export class TextBoxComponent {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
     } else if (this.messageType === 'direct') {
-      const newDmSender = new DirectMessage({
-        yourMessage: true,
-        createdBy: this.userManagementService.activeUserId.value,
-        creationDate: Date.now(),
-        message: this.messageModel.trim(),
-        imageUrl: imageUrlToSend,
-      });
-      const newDmReceiver = new DirectMessage({
-        yourMessage: false,
-        createdBy: this.userManagementService.activeUserId.value,
-        creationDate: Date.now(),
-        message: this.messageModel.trim(),
-        imageUrl: imageUrlToSend,
-      });
-      const dmSenderRef = doc(
-        this.firestore,
-        `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-        this.targetId
-      );
-      const dmReceiverRef = doc(
-        this.firestore,
-        `users/${this.targetId}/allDirectMessages`,
-        this.userManagementService.activeUserId.value
-      );
-
-      try {
-        await setDoc(dmSenderRef, {}, { merge: true });
-        await setDoc(dmReceiverRef, {}, { merge: true });
-
-        const directMessagesSenderCollection = collection(
+      if (this.userManagementService.activeUserId.value !== this.targetId) {
+        const newDmSender = new DirectMessage({
+          yourMessage: true,
+          createdBy: this.userManagementService.activeUserId.value,
+          creationDate: Date.now(),
+          message: this.messageModel.trim(),
+          imageUrl: imageUrlToSend,
+        });
+        const newDmReceiver = new DirectMessage({
+          yourMessage: false,
+          createdBy: this.userManagementService.activeUserId.value,
+          creationDate: Date.now(),
+          message: this.messageModel.trim(),
+          imageUrl: imageUrlToSend,
+        });
+        const dmSenderRef = doc(
           this.firestore,
-          `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+          `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
+          this.targetId
         );
-        const directMessagesReceiverCollection = collection(
+        const dmReceiverRef = doc(
           this.firestore,
-          `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
+          `users/${this.targetId}/allDirectMessages`,
+          this.userManagementService.activeUserId.value
         );
 
-        const docRefSender = await addDoc(
-          directMessagesSenderCollection,
-          newDmSender.toJSON()
-        );
-        const docRefReceiver = await addDoc(
-          directMessagesReceiverCollection,
-          newDmReceiver.toJSON()
-        );
+        try {
+          await setDoc(dmSenderRef, {}, { merge: true });
+          await setDoc(dmReceiverRef, {}, { merge: true });
 
-        console.log(
-          'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-          docRefSender.id,
-          'und Receiver-ID:',
-          docRefReceiver.id
-        );
-        await updateDoc(
-          doc(
+          const directMessagesSenderCollection = collection(
             this.firestore,
-            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-            docRefSender.id
-          ),
-          {
-            messageId: docRefSender.id,
-          }
-        );
-
-        await updateDoc(
-          doc(
+            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+          );
+          const directMessagesReceiverCollection = collection(
             this.firestore,
-            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
+            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
+          );
+
+          const docRefSender = await addDoc(
+            directMessagesSenderCollection,
+            newDmSender.toJSON()
+          );
+          const docRefReceiver = await addDoc(
+            directMessagesReceiverCollection,
+            newDmReceiver.toJSON()
+          );
+
+          console.log(
+            'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
+            docRefSender.id,
+            'und Receiver-ID:',
             docRefReceiver.id
-          ),
-          {
-            messageId: docRefReceiver.id,
-          }
+          );
+          await updateDoc(
+            doc(
+              this.firestore,
+              `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
+              docRefSender.id
+            ),
+            {
+              messageId: docRefSender.id,
+            }
+          );
+
+          await updateDoc(
+            doc(
+              this.firestore,
+              `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
+              docRefReceiver.id
+            ),
+            {
+              messageId: docRefReceiver.id,
+            }
+          );
+          this.userManagementService.loadUsers();
+          this.chatService.setSelectedUserId(this.targetId);
+          //this.viewManagementService.changeView('showDms');
+        } catch (error) {
+          console.error('Fehler beim Senden der Nachricht: ', error);
+        }
+      } else {
+        const newDmSender = new DirectMessage({
+          yourMessage: true,
+          createdBy: this.userManagementService.activeUserId.value,
+          creationDate: Date.now(),
+          message: this.messageModel.trim(),
+          imageUrl: imageUrlToSend,
+        });
+
+        const dmSenderRef = doc(
+          this.firestore,
+          `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
+          this.targetId
         );
-        this.userManagementService.loadUsers();
-        this.chatService.setSelectedUserId(this.targetId);
-        //this.viewManagementService.changeView('showDms');
-      } catch (error) {
-        console.error('Fehler beim Senden der Nachricht: ', error);
+
+        try {
+          await setDoc(dmSenderRef, {}, { merge: true });
+
+          const directMessagesSenderCollection = collection(
+            this.firestore,
+            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+          );
+
+          const docRefSender = await addDoc(
+            directMessagesSenderCollection,
+            newDmSender.toJSON()
+          );
+
+          console.log(
+            'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
+            docRefSender.id
+          );
+          await updateDoc(
+            doc(
+              this.firestore,
+              `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
+              docRefSender.id
+            ),
+            {
+              messageId: docRefSender.id,
+            }
+          );
+
+          this.userManagementService.loadUsers();
+          this.chatService.setSelectedUserId(this.targetId);
+          //this.viewManagementService.changeView('showDms');
+        } catch (error) {
+          console.error('Fehler beim Senden der Nachricht: ', error);
+        }
       }
     } else if (this.messageType === 'threadMessage') {
       const newThread = new ThreadMessage({

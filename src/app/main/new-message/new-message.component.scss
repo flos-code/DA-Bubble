@@ -1,5 +1,9 @@
 @import "../../../styles.scss";
 
+* {
+  scrollbar-width: thin !important;
+}
+
 .newMessageContainer {
   height: 940px;
   width: calc(100vw - 426px);
