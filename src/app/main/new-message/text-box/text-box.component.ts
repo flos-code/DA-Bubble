@@ -327,7 +327,7 @@ export class TextBoxComponent {
         );
         this.userManagementService.loadUsers();
         this.chatService.setSelectedUserId(this.targetId);
-        this.viewManagementService.changeView('showDms');
+        this.viewManagementService.changeView('showMainChat');
       } catch (error) {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
@@ -342,7 +342,10 @@ export class TextBoxComponent {
         const docRefThread = await addDoc(
           collection(
             this.firestore,
-            `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`),
+            `channels/${this.chatService.getActiveChannelId()}/threads/${
+              this.targetId
+            }/messages`
+          ),
           newThread.toJSON()
         );
         console.log(
@@ -353,7 +356,9 @@ export class TextBoxComponent {
         await updateDoc(
           doc(
             this.firestore,
-            `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`,
+            `channels/${this.chatService.getActiveChannelId()}/threads/${
+              this.targetId
+            }/messages`,
             docRefThread.id
           ),
           {
@@ -369,7 +374,7 @@ export class TextBoxComponent {
     this.filePath = undefined;
   }
 
-  onKeydown(event){
+  onKeydown(event) {
     event.preventDefault();
   }
 }
