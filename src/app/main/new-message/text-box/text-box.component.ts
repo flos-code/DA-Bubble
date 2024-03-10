@@ -329,11 +329,7 @@ export class TextBoxComponent {
         );
         this.userManagementService.loadUsers();
         this.chatService.setSelectedUserId(this.targetId);
-<<<<<<< HEAD
         //this.viewManagementService.changeView('showDms');
-=======
-        this.viewManagementService.changeView('showMainChat');
->>>>>>> 0a4f509123cd1388d1022140114040474c716992
       } catch (error) {
         console.error('Fehler beim Senden der Nachricht: ', error);
       }
