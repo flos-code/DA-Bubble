@@ -1,16 +1,6 @@
-// import { Injectable } from '@angular/core';
-
-// @Injectable({
-//   providedIn: 'root'
-// })
-// export class SearchService {
-
-//   constructor() { }
-// }
-
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { debugErrorMap } from 'firebase/auth';
+import { debugErrorMap, getAuth } from 'firebase/auth';
 import { DocumentData, DocumentSnapshot, QuerySnapshot, collection, getFirestore, where, query, onSnapshot } from 'firebase/firestore';
 import { list } from 'firebase/storage';
 import { Observable } from 'rxjs';
@@ -19,6 +9,7 @@ import { elementAt, map } from 'rxjs/operators';
 @Injectable({
   providedIn: 'root'
 })
+
 export class SearchService {
 
   firebaseConfig = {
@@ -32,25 +23,47 @@ export class SearchService {
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
   userRef = collection(this.db, 'users');
+  channelRef = collection(this.db, 'channels');
+  auth = getAuth(this.app);
 
-  searchResult = [];
+  searchUserResult = [];
+  searchChannelsResult = [];
 
   constructor() { }
 
   searchUsers(input: any) {
-    this.searchResult = [];
+    this.searchUserResult = [];
     const q = query(this.userRef);
     return onSnapshot(q, (list) => {
       list.forEach(element => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
         if (compare.includes(input.toLowerCase())) {
-          // console.log(test);
-          this.searchResult.push(result);
-          // console.log(this.searchResult);
+          this.searchUserResult.push(result);
         }
       })
     })
+  }
+
+  searchChannels(input: any) {
+    this.searchChannelsResult = [];
+    const q = query(this.channelRef);
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        let compare = element.data()['name'].toLowerCase();
+        let result = element.data();
+        let members = element.data()['members'];
+        if (members.includes(this.auth.currentUser.uid)) {
+          if (compare.includes(input.toLowerCase())) {
+            this.searchChannelsResult.push(result);
+          }
+        }
+      })
+    })
+  }
+
+  checkIfUserisInChannel() {
+
   }
 
   // searchUsers(input: any): Observable<any[]> {

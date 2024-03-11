@@ -76,13 +76,8 @@ export class HeaderComponent implements OnInit {
   }
 
   onInputChange() {
-    // Hier kannst du die inputValue überprüfen und weitere Aktionen durchführen
-    // console.log('Neuer Wert:', value);
     this.searchService.searchUsers(this.inputValue);
-    // if (value.length > 0) {
-    //   // Führe Aktionen aus, wenn der Wert größer als eins ist
-    //   console.log('Wert ist größer als null.');
-    // }
+    this.searchService.searchChannels(this.inputValue);
   }
 
   searchUsers() {
