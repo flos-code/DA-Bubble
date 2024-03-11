@@ -77,7 +77,8 @@
                 </div>
 
                 <ng-template #displayMessage>
-                    <span>{{ message.message }}</span>
+                    <span *ngIf="!messageDeleted">{{ message.message }}</span>
+                    <span *ngIf="messageDeleted">Nachricht wird gelöscht ..</span>
                 </ng-template>
             </div>
 

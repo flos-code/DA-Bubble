@@ -5,7 +5,7 @@
 }
 
 .sideBarContent {
-  height: 940px;
+  height: calc(100vh - 142px);
   width: 366px;
   border-radius: 30px;
   margin-bottom: 25px;

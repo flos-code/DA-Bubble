@@ -77,6 +77,7 @@ export class SideBarComponent {
       }
     });
     this.userManagementService.loadUsers();
+    this.setActiveChannel('allgemein');
   }
 
   toggleSection(section: string): void {

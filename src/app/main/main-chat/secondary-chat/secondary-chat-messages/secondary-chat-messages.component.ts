@@ -41,6 +41,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
   openEditOwnInput: boolean = false;
   showMoreEmojis: boolean = false;
   showMoreEmojisToolbar: boolean = false;
+  messageDeleted: boolean = false;
 
   constructor() { }
 
@@ -142,11 +143,23 @@ export class SecondaryChatMessagesComponent implements OnInit {
 
   async saveMessageChanges() {
     const messageRef = doc(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
-    await updateDoc(messageRef, { message: this.editingMessageText });
-    this.editingMessageText = '';
-    this.openEditOwnInput = false;
+  
+    if (this.editingMessageText === '') {
+      this.editingMessageText = '';
+      this.openEditOwnInput = false;
+      this.messageDeleted = true;
+      setTimeout(() => {
+        this.messageDeleted = false;
+         deleteDoc(messageRef);
+      }, 1500);
+  
+    } else {
+      await updateDoc(messageRef, { message: this.editingMessageText });
+      this.editingMessageText = '';
+      this.openEditOwnInput = false;
+    }
   }
-
+  
   openEditOwnMessageField() {
     this.openEditOwnMessage = true;
   }

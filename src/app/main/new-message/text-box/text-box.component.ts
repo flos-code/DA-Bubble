@@ -44,6 +44,7 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
 })
 export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
+  @ViewChild('fileUpload') fileUpload: ElementRef;
   @Input() messageType: 'direct' | 'channel' | 'thread' | 'threadMessage';
   @Input() targetId: string; // ID des Nutzers/Kanals/Threads
   @Input() placeholderText: string;
@@ -191,8 +192,15 @@ export class TextBoxComponent {
       await deleteObject(storageRef);
       this.imageURL = undefined;
       this.filePath = undefined;
+      this.resetFileInput();
     } catch (error) {
       console.error('Error deleting file: ', error);
+    }
+  }
+
+  private resetFileInput() {
+    if (this.fileUpload && this.fileUpload.nativeElement) {
+      this.fileUpload.nativeElement.value = '';
     }
   }
 
@@ -429,5 +437,12 @@ export class TextBoxComponent {
 
   onKeydown(event) {
     event.preventDefault();
+  }
+
+  isMessageNotEmpty(): boolean {
+    return (
+      this.messageModel.trim().length > 0 ||
+      (this.imageURL && this.imageURL.trim().length > 0)
+    );
   }
 }
