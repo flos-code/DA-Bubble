@@ -4,7 +4,6 @@ import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-import { PickerModule } from '@ctrl/ngx-emoji-mart';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
@@ -25,7 +24,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-reaction-emoji-input',
   standalone: true,
-  imports: [CommonModule, FormsModule, EmojiComponent, PickerComponent, MatIconModule, PickerModule],
+  imports: [CommonModule, FormsModule, EmojiComponent, PickerComponent, MatIconModule],
   templateUrl: './reaction-emoji-input.component.html',
   styleUrl: './reaction-emoji-input.component.scss'
 })
