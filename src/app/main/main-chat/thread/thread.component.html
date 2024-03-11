@@ -44,18 +44,18 @@
                                         <div>hast reagiert</div>
                                     } @else if(reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[1]}}</div>
                                             <div>und Du</div>    
                                         </div> 
                                         <div>haben reagiert</div>
                                     } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[0]}}</div>
                                         </div> 
                                         <div>hat reagiert</div>
                                     } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[0]}}</div>
                                             <div>und Andere</div>    
                                         </div> 
                                         <div>haben reagiert</div>
@@ -136,7 +136,7 @@
                                 <div class="ractionCount">
                                     <div>{{reaction?.count}}</div>
                                 </div>
-                                <div class="reactionHoverBubble">
+                                <div class="reactionHoverBubble reactionHoverBubbleOwn">
                                     <div class="ractionEmoji">
                                         <span>{{reaction?.reaction}}</span>
                                     </div>      
@@ -147,18 +147,18 @@
                                         <div>hast reagiert</div>
                                     } @else if(reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[1]}}</div>
                                             <div>und Du</div>    
                                         </div> 
                                         <div>haben reagiert</div>
                                     } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length == 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[0]}}</div>
                                         </div> 
                                         <div>hat reagiert</div>
                                     } @else if(!reaction?.reactedBy.includes(currentUser) && reaction?.reactedBy.length > 1) {
                                         <div>
-                                            <div>{{reactionName}}</div>
+                                            <div>{{reaction?.reactedByName[0]}}</div>
                                             <div>und Andere</div>    
                                         </div> 
                                         <div>haben reagiert</div>

@@ -243,13 +243,12 @@ app-add-members-dialog {
 
 /* ======================= MAIN CHAT MESSAGES ===================== */
 .mainChatMessages {
-    //height: calc(940px - 96px - 180px);
     width: 100%;
-    //padding: 25px 0 25px 0;
     height: calc(100vh - 96px);
     display: flex;
     flex-direction: column;
-    overflow: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
 
 /* .mainChatMessagesSubContainer {
