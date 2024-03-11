@@ -34,6 +34,7 @@ export class ThreadComponent implements OnInit {
   @Input() thread!: any;
   //Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
+  currentUserName: string;
   @Input() activeChannelId!: string;
   messageCount: number;
   threadMessagesTimestamps = [];
@@ -46,7 +47,7 @@ export class ThreadComponent implements OnInit {
   ownMessageEdit: boolean = false;
   //@Input() textAreaEditMessage: string;
   reactions = [];
-  reactionNames = [];
+  reactionNames =  [];
   reactionCount: number;
   reactionName: string;
 
@@ -72,28 +73,55 @@ export class ThreadComponent implements OnInit {
     return onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
-        this.getReactionNames(reaction.data()['reactedBy']);
         this.reactions.push({
           'id': reaction.id,
           'count': reaction.data()['count'],
           'reaction': reaction.data()['reaction'],
           'reactedBy': reaction.data()['reactedBy'],
-          'reactedByName': this.reactionName
+          'reactedByName': this.reactionNames
         });
+      });
+      this.getReactionNames();
+      console.log('Reactions retrieved', this.reactions);
+      this.sortReactions();
+    });
+  }
+
+  async getReactionNames() {
+    this.reactionNames = [];
+    const q = query(collection(db, 'users'));
+    return await onSnapshot(q, (list) => {
+      list.forEach(user => {
+       for (let i = 0; i < this.reactions.length; i++) {
+          const reaction = this.reactions[i];
+          for (let r = 0; r < reaction.reactedBy.length; r++) {
+            const reactionId = reaction.reactedBy[r];
+            if(user.id == reactionId) {
+              reaction.reactedByName.push(user.data()['name']);
+            }
+          }
+        }
       });
     });
   }
 
-  getReactionNames(userId: string) {
-    const q = query(collection(db, 'users'));
-    return onSnapshot(q, (list) => {
-      list.forEach(name => {
-        if(name.id == userId) {
-          this.reactionName =  name.data()['name'];
-        };
-      });
-    });
+  sortReactions() {
+    if(this.reactions.some(reaction => reaction.createdBy == this.currentUser)) {
+      for (let i = 0; i < this.reactions.length; i++) {
+        const reaction = this.reactions[i];
+        let index = -1;
+        index = reaction.reactedBy.findIndex(obj => obj.name == this.currentUser);
+        reaction.reactedBy.unshift(index, 1)[0];
+      }
+      for (let i = 0; i < this.reactions.length; i++) {
+        const reaction = this.reactions[i];
+        let index = -1;
+        index = reaction.reactedByName.findIndex(obj => obj.name == this.currentUserName);
+        reaction.reactedByNAme.unshift(index, 1)[0];
+      }
+    }
   }
+
 
   
 /*   getReactionNames() {
