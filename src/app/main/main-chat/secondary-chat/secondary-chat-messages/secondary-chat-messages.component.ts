@@ -151,7 +151,7 @@ export class SecondaryChatMessagesComponent implements OnInit {
       setTimeout(() => {
         this.messageDeleted = false;
          deleteDoc(messageRef);
-      }, 1500);
+      }, 1000);
   
     } else {
       await updateDoc(messageRef, { message: this.editingMessageText });
