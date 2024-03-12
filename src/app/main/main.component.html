@@ -4,7 +4,7 @@
   <app-side-bar></app-side-bar>
   <app-main-chat *ngIf="showMainChat"></app-main-chat>
   <app-new-message *ngIf="showNewMessage"></app-new-message>
-  <app-secondary-chat  *ngIf="threadOpen" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
+  <app-secondary-chat [ngClass]="{ 'dp-unset': threadOpen }" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
 </div>
 
 <app-profil-card></app-profil-card>

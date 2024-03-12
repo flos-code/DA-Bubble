@@ -105,7 +105,9 @@ export class ChatService {
   }
 
   closeThread(): void {
-    this.selectedThreadIdSource.next(null);
-    this.threadOpenSource.next(false);
+    setTimeout (() => {
+      this.selectedThreadIdSource.next(null);
+      this.threadOpenSource.next(false);
+    }, 200);
   }
 }

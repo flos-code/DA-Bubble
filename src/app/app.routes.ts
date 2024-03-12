@@ -12,5 +12,5 @@ export const routes: Routes = [
   { path: 'privacy-policy', component: PrivacyPolicyComponent },
   { path: 'login', component: LoginComponent },
   { path: 'sign_up', component: SignUpComponent },
-  { path: 'reset_password', component: PasswordResetComponent }
+  { path: 'reset_password', component: PasswordResetComponent },
 ];

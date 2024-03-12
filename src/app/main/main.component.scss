@@ -13,6 +13,26 @@ app-main-chat {
   width: 100%;
 }
 
+@keyframes slideInFromRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+app-secondary-chat {
+  animation: slideInFromRight 200ms ease-in-out;
+  display: none;
+}
+
+.dp-unset {
+  display: unset;
+}
+
 .hide {
   display: none;
 }
