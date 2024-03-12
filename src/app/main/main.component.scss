@@ -13,6 +13,8 @@ app-main-chat {
   width: 100%;
 }
 
+//////////////////////// Secondary Animations ////////////////////////
+
 @keyframes slideInFromRight {
   from {
     transform: translateX(100%);
@@ -24,14 +26,16 @@ app-main-chat {
   }
 }
 
-app-secondary-chat {
-  animation: slideInFromRight 200ms ease-in-out;
+.secondary-chat-visible {
+  display: block !important;
+  animation: slideInFromRight 125ms ease-in-out;
+}
+
+.secondary-chat-hidden {
   display: none;
 }
 
-.dp-unset {
-  display: unset;
-}
+//////////////////////// Mobile Responsive //////////////////////// In Work, gerne Helfen bitte.
 
 .hide {
   display: none;
@@ -48,6 +52,8 @@ app-secondary-chat {
 .show-secondary-chat {
   display: block !important;
 }
+
+//////////////////////// @Media Querys ////////////////////////
 
 @media screen and (max-width: 1110px) {
   .main-content {

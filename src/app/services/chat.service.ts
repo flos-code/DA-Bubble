@@ -100,14 +100,15 @@ export class ChatService {
   // ------------------- SecondaryChat Logic --------------------
 
   openThread(threadId: string) {
+    this.threadOpenSource.next(false);
     this.selectedThreadIdSource.next(threadId);
-    this.threadOpenSource.next(true);
+    setTimeout(() => {
+      this.threadOpenSource.next(true);
+    },30);
   }
 
   closeThread(): void {
-    setTimeout (() => {
-      this.selectedThreadIdSource.next(null);
-      this.threadOpenSource.next(false);
-    }, 200);
+    this.selectedThreadIdSource.next(null);
+    this.threadOpenSource.next(false);
   }
 }

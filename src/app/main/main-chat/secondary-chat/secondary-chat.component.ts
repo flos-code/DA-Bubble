@@ -181,7 +181,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   setCurrentUser() {
     this.currentUser = this.userManagementService.activeUserId.value; //nur übergangsweise um threads in nicht eingelogten zustand zu sehen
     // this.currentUser = this.auth.currentUser.uid;
-    // console.log('CurrentUserID:', this.currentUser);
+    console.log('CurrentUserID:', this.currentUser);
   }
 
   subcribeThreadId() {
@@ -274,6 +274,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
           (doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id })
         );
         this.threadMessages = threadMessages;
+        this.setCurrentUser();
         this.scrollToBottom();
       },
       (error) => {
@@ -302,6 +303,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       this.selectedThreadId
     );
     this.isLoading = false;
+    console.log('firstThreadMessage:', this.firstThreadMessage)
   }
 
   getCurrentChannelData() {
