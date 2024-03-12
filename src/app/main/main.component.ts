@@ -44,6 +44,7 @@ export class MainComponent {
         this.showDms = view === 'showDms';
         this.showNewMessage = view === 'showNewMessage';
       });
+      
       this.getThreadOpenStatus();
   }
 
