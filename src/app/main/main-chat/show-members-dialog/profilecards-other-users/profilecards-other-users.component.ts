@@ -4,9 +4,8 @@ import { MatIconModule } from '@angular/material/icon';
 
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, addDoc } from "firebase/firestore";
+import { getFirestore, collection, onSnapshot,  query, addDoc, updateDoc, doc, setDoc } from "firebase/firestore";
 import { ChatService } from '../../../../services/chat.service';
-import { DirectMessage } from '../../../../../models/directMessage.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -36,7 +35,7 @@ export class ProfilecardsOtherUsersComponent {
   @Input() showMembersDialogOpen!: boolean;
   @Output() showMembersDialogOpenChild = new EventEmitter();
 
-  constructor(private chatService: ChatService, private directMessage: DirectMessage) { }
+  constructor(private chatService: ChatService) { }
 
   writeDirectMessage() {
     const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));
@@ -57,19 +56,12 @@ export class ProfilecardsOtherUsersComponent {
   }
 
   async addDirectMessage (): Promise<void> {
-    try {
-      const dmData = new DirectMessage().toJSON();
-      // Füge den neuen Kanal hinzu
-      const docRef = await addDoc(collection(db, `users/${this.currentUser}/allDirectMessages`, this.memberData.id), {
-        ...dmData,
-      });
-      console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
-
-      // Setze die neue erstellte direct message als aktiv
-      this.chatService.setSelectedUserId(this.memberData.id);
-    } catch (error) {
-      console.error('Fehler beim Hinzufügen der DM: ', error);
-    }
+    const dmSenderRef = doc(collection(db, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
+    const dmReceiverRef = doc(collection(db, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
+    let data = { }
+    await setDoc(dmSenderRef, data);
+    await setDoc(dmReceiverRef, data);
+    this.chatService.setSelectedUserId(this.memberData.id);
   }
 
   getActiveChannelId() {

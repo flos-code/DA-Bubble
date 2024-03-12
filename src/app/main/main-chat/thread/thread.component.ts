@@ -9,7 +9,7 @@ import { BehaviorSubject } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -54,6 +54,7 @@ export class ThreadComponent implements OnInit {
 
   ngOnInit(): void {
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
+    this.getCurrentUserName();
     this.getReactions();
     this.getMessageCountAndAnswer();
   }
@@ -68,74 +69,69 @@ export class ThreadComponent implements OnInit {
   } */
 
   async getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/allgemein/reactions`));
+    this.getCurrentUserName();
+    const q = query(collection(db, this.reactionCollectionPath));
     await onSnapshot(q, (element) => {
       this.reactions = [];
+      this.reactionNames = [];
       element.forEach(reaction => {
+        this.getReactionNames(reaction.data()['reactedBy']);
         this.reactions.push({
           'id': reaction.id,
           'count': reaction.data()['count'],
           'reaction': reaction.data()['reaction'],
           'reactedBy': reaction.data()['reactedBy'],
-          'reactedByName': []
+          'reactedByName': this.reactionNames
         });
+        this.sortReactionIds();
+        this.sortReactionNames();
       });
     });
-    this.sortReactions();
-    this.getReactionNames();
-    console.log(this.reactions);
+  }
+  
+  async getCurrentUserName() {
+    let docRef = doc(db, 'users', this.currentUser);
+    const docSnap = await getDoc(docRef);
+    this.currentUserName = docSnap.data()['name'];
   }
 
-  async getReactionNames() {
+  getReactionNames(reactedByArray: any) {
     const q = query(collection(db, 'users'));
-    return await onSnapshot(q, (list) => {
+    onSnapshot(q, (list) => {
       list.forEach(user => {
-       for (let i = 0; i < this.reactions.length; i++) {
-          const reaction = this.reactions[i];
-          reaction.reactedByName = [];
-          for (let r = 0; r < reaction.reactedBy.length; r++) {
-            const reactionId = reaction.reactedBy[r];
-            if(user.id == reactionId) {
-              reaction.reactedByName.push(user.data()['name']);
-            }
+        for (let i = 0; i < reactedByArray.length; i++) {
+          const reactedBy = reactedByArray[i];
+          if(user.id == reactedBy && !this.reactionNames.includes(user.data()['name'])) {
+            this.reactionNames.push(user.data()['name']);
           }
         }
       });
     });
   }
 
-  sortReactions() {
-    if(this.reactions.some(reaction => reaction.createdBy == this.currentUser)) {
-      for (let i = 0; i < this.reactions.length; i++) {
-        const reaction = this.reactions[i];
+  sortReactionIds() {
+    for (let i = 0; i < this.reactions.length; i++) {
+      const userId = this.reactions[i];
+      if(userId.reactedBy.includes(this.currentUser)) {
         let index = -1;
-        index = reaction.reactedBy.findIndex(obj => obj.name == this.currentUser);
-        reaction.reactedBy.unshift(index, 1)[0];
-      }
-      for (let i = 0; i < this.reactions.length; i++) {
-        const reaction = this.reactions[i];
-        let index = -1;
-        index = reaction.reactedByName.findIndex(obj => obj.name == this.currentUserName);
-        reaction.reactedByNAme.unshift(index, 1)[0];
+        index = userId.reactedBy.findIndex(obj => obj == this.currentUser);
+        userId.reactedBy.splice(index, 1);
+        userId.reactedBy.unshift(this.currentUser);
       }
     }
   }
 
-
-  
-/*   getReactionNames() {
-    const q = query(collection(db, 'users'));
-    return onSnapshot(q, (list) => {
-      list.forEach(name => {
-        for (let i = 0; i < this.reactions.length; i++) {
-          let reaction = this.reactions[i];
-          if(name.id == reaction.reactedBy) {
-            this.reactions = this.reactions.map(obj => ({ ...obj, reactedByName: name.data()['name'] }));
-          }
-        };
-      });
-    });
-  } */
+  sortReactionNames() {
+    for (let i = 0; i < this.reactions.length; i++) {
+      const userName = this.reactions[i];
+      if(userName.reactedByName.includes(this.currentUserName)) {
+        let index = -1;
+        index = userName.reactedByName.findIndex(obj => obj == this.currentUserName);
+        userName.reactedBy.splice(index, 1);
+        userName.reactedByName.unshift(this.currentUserName);
+      }
+    }
+  }
 
   async getMessageCountAndAnswer() {
     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
