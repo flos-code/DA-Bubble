@@ -41,7 +41,7 @@
       <div *ngIf="firstThreadMessage" class="user-message own-message">
         <img
           class="profile-picture"
-          src="/assets/img/userImages/userImage6.svg"
+          [src]="getUserProfileImageUrl(firstThreadMessage?.createdBy)"
           alt=""
         />
         <div>
