@@ -49,7 +49,6 @@ export class ThreadComponent implements OnInit {
   reactions = [];
   reactionNames =  [];
   reactionCount: number;
-  reactionName: string;
 
   constructor(private chatService: ChatService, private main: MainChatComponent) { }
 
@@ -68,9 +67,9 @@ export class ThreadComponent implements OnInit {
     this.formatMessageCount();
   } */
 
-  getReactions() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/reactions`));
-    return onSnapshot(q, (element) => {
+  async getReactions() {
+    const q = query(collection(db, `channels/allgemein/threads/allgemein/reactions`));
+    await onSnapshot(q, (element) => {
       this.reactions = [];
       element.forEach(reaction => {
         this.reactions.push({
@@ -78,22 +77,22 @@ export class ThreadComponent implements OnInit {
           'count': reaction.data()['count'],
           'reaction': reaction.data()['reaction'],
           'reactedBy': reaction.data()['reactedBy'],
-          'reactedByName': this.reactionNames
+          'reactedByName': []
         });
       });
-      this.getReactionNames();
-      console.log('Reactions retrieved', this.reactions);
-      this.sortReactions();
     });
+    this.sortReactions();
+    this.getReactionNames();
+    console.log(this.reactions);
   }
 
   async getReactionNames() {
-    this.reactionNames = [];
     const q = query(collection(db, 'users'));
     return await onSnapshot(q, (list) => {
       list.forEach(user => {
        for (let i = 0; i < this.reactions.length; i++) {
           const reaction = this.reactions[i];
+          reaction.reactedByName = [];
           for (let r = 0; r < reaction.reactedBy.length; r++) {
             const reactionId = reaction.reactedBy[r];
             if(user.id == reactionId) {
