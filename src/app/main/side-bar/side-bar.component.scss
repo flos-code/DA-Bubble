@@ -40,7 +40,7 @@
       }
     }
 
-    .editsServerName {
+    .newMessage {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -59,6 +59,10 @@
         font-variation-settings: "wght" 600;
       }
     }
+  }
+
+  .mobileNewMessage {
+    display: none;
   }
 }
 

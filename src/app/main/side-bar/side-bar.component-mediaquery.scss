@@ -1,3 +1,5 @@
+@import "../../../styles.scss";
+
 @media screen and (max-width: 1110px) {
   .sideBarContainer {
     width: calc(100vw - 32px);
@@ -6,6 +8,35 @@
       width: 100%;
       margin-bottom: 16px;
       align-items: flex-start;
+      position: relative;
+
+      .sideBardHeader {
+        .newMessage {
+          display: none;
+        }
+      }
+
+      .mobileNewMessage {
+        position: absolute;
+        bottom: 32px;
+        right: 32px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 60px;
+        height: 60px;
+        border-radius: 50%;
+        background-color: $purple1;
+        filter: drop-shadow(0 6px 10px rgba(0, 0, 0, 0.2));
+
+        mat-icon {
+          color: white;
+        }
+
+        &:active {
+          background-color: $purple2;
+        }
+      }
     }
   }
 }
@@ -17,7 +48,7 @@
     .sideBarContent {
       border-radius: 0;
       margin-bottom: 0;
-      padding: 32px 16px;
+      padding: 16px 16px;
       align-items: center;
     }
   }
