@@ -10,6 +10,7 @@ import { ViewManagementService } from '../services/view-management.service';
 import { Subscription } from 'rxjs';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfilCardService } from '../services/profil-card.service';
+import { ChatService } from '../services/chat.service';
 
 @Component({
   selector: 'app-main',
@@ -33,16 +34,27 @@ export class MainComponent {
   showNewMessage: boolean = false;
   private viewChangeSubscription: Subscription;
 
-  constructor(private viewManagementService: ViewManagementService, public serviceProfilCard: ProfilCardService) {
+  subscription: Subscription = new Subscription();
+  threadOpen: boolean = false;
+
+  constructor(public chatService: ChatService, private viewManagementService: ViewManagementService, public serviceProfilCard: ProfilCardService) {
     this.viewChangeSubscription =
       this.viewManagementService.currentView$.subscribe((view) => {
         this.showMainChat = view === 'showMainChat';
         this.showDms = view === 'showDms';
         this.showNewMessage = view === 'showNewMessage';
       });
+      
+      this.getThreadOpenStatus();
   }
 
   ngOnDestroy(): void {
     this.viewChangeSubscription.unsubscribe();
+  }
+
+  getThreadOpenStatus(): void {
+    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
+      this.threadOpen = open;
+    }));
   }
 }

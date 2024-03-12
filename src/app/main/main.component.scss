@@ -1,14 +1,43 @@
-$bg-color: #ECEEFE;
+$bg-color: #eceefe;
 
 .main-content {
-    height: 100%;
-    display: flex;
-    gap: 20px;
-    margin-left: 20px;
-    margin-right: 20px;
-    box-sizing: border-box;
+  height: 100%;
+  display: flex;
+  gap: 20px;
+  margin-left: 20px;
+  margin-right: 20px;
+  box-sizing: border-box;
 }
 
 app-main-chat {
-    width: 100%;
+  width: 100%;
+}
+
+.hide {
+  display: none;
+}
+
+.show-main-chat {
+  display: block !important;
+}
+
+.show-sidebar {
+  display: block !important;
+}
+
+.show-secondary-chat {
+  display: block !important;
+}
+
+@media screen and (max-width: 1110px) {
+  .main-content {
+    margin: 0px 16px;
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .main-content {
+    margin: 0px;
+    // gap: 0;
+  }
 }
