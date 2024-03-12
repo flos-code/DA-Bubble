@@ -4,8 +4,12 @@
   scrollbar-width: thin !important;
 }
 
-.sideBarContent {
+.sideBarContainer {
   height: calc(100vh - 146px);
+}
+
+.sideBarContent {
+  height: 100%;
   width: 366px;
   border-radius: 30px;
   margin-bottom: 25px;
@@ -36,7 +40,7 @@
       }
     }
 
-    .editsServerName {
+    .newMessage {
       display: flex;
       align-items: center;
       justify-content: center;
@@ -55,6 +59,10 @@
         font-variation-settings: "wght" 600;
       }
     }
+  }
+
+  .mobileNewMessage {
+    display: none;
   }
 }
 
