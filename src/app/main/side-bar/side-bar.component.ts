@@ -44,7 +44,10 @@ const db = getFirestore(app);
     DialogAddUserNewChannelComponent,
   ],
   templateUrl: './side-bar.component.html',
-  styleUrl: './side-bar.component.scss',
+  styleUrls: [
+    './side-bar.component.scss',
+    './side-bar.component-mediaquery.scss',
+  ],
 })
 export class SideBarComponent {
   workspaceVisible: boolean = true;
