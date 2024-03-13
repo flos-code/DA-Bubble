@@ -29,7 +29,7 @@ export class ViewManagementService {
       this.screenSize.next('extraSmall');
     } else if (width > 500 && width <= 1100) {
       this.screenSize.next('small');
-    } else if (width > 1100 && width <= 1400) {
+    } else if (width > 1100 && width <= 1500) {
       this.screenSize.next('medium');
     } else {
       this.screenSize.next('large');
