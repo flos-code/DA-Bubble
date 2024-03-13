@@ -164,6 +164,22 @@ export class ThreadComponent implements OnInit {
   //   this.formatMessageCount; 
   //   });
   // }
+  async getMessageCountAndAnswer() {
+    const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+    const count = await getCountFromServer(q);
+    this.messageCount = count.data().count;
+    this.formatMessageCount();
+
+    return onSnapshot(q, (element) => {
+      this.threadMessagesTimestamps = [];
+      element.forEach(thread => {
+        this.threadMessagesTimestamps.push(thread.data()['creationDate']);
+      }
+    )  
+    this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
+    this.formatMessageCount; 
+    });
+  }
 
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
