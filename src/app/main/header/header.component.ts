@@ -79,7 +79,7 @@ export class HeaderComponent implements OnInit {
     this.searchService.searchUsers(this.inputValue);
     this.searchService.searchChannels(this.inputValue);
     this.searchService.searchThreads(this.inputValue);
-    console.log(this.searchService.threads);
+    // console.log(this.searchService.threads);
   }
 
   searchUsers() {
