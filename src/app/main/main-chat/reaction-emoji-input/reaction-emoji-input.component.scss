@@ -1,6 +1,6 @@
-@import '../../../../styles.scss';
+@import "../../../../styles.scss";
 
-.backgroundReactionEmojiContainer{
+.backgroundReactionEmojiContainer {
   position: fixed;
   top: 0;
   left: 0;
@@ -17,7 +17,7 @@
   align-items: flex-start;
   justify-content: flex-start;
   z-index: 100;
-  white-space: nowrap;
+  // white-space: nowrap;
 
   > input {
     border: none;
