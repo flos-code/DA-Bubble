@@ -134,7 +134,7 @@ export class ThreadComponent implements OnInit {
   }
 
   async getMessageCountAndAnswer() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+    const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
     const count = await getCountFromServer(q);
     this.messageCount = count.data().count;
     this.formatMessageCount();
