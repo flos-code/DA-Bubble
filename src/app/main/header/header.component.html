@@ -22,8 +22,17 @@
                 <div *ngIf="searchService.searchChannelsResult.length > 0" class="channelsResult">
                     <h4>Channels:</h4>
                     <ng-container *ngFor="let result of searchService.searchChannelsResult">
-                        <p>{{ result['name'] }}
-                        </p>
+                        <p>{{ result['name'] }}</p>
+                    </ng-container>
+                </div>
+
+                <div *ngIf="searchService.threads.length > 0" class="channelsResult">
+                    <h4>Threads:</h4>
+                    <ng-container *ngFor="let result of searchService.threads">
+                        <div class="threadsContainer">
+                            <h4>[Channel: {{ result['channelName'] }}]</h4>
+                            <p>*{{ result['message'] }}*</p>
+                        </div>
                     </ng-container>
                 </div>
 
