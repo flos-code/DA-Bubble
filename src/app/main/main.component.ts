@@ -31,6 +31,9 @@ import { ChatService } from '../services/chat.service';
 export class MainComponent {
   showMainChat: boolean = true;
   showNewMessage: boolean = false;
+  // showSecondaryChat: boolean = false;
+  // showSidebar: boolean = false;
+  
   private viewChangeSubscription: Subscription;
 
   subscription: Subscription = new Subscription();

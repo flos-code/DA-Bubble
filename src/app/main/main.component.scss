@@ -7,6 +7,7 @@ $bg-color: #eceefe;
   margin-left: 20px;
   margin-right: 20px;
   box-sizing: border-box;
+  transition: margin 0.2s ease;
 }
 
 app-main-chat {
@@ -28,29 +29,11 @@ app-main-chat {
 
 .secondary-chat-visible {
   display: block !important;
-  animation: slideInFromRight 125ms ease-in-out;
+  animation: slideInFromRight 200ms ease-in-out;
 }
 
 .secondary-chat-hidden {
   display: none;
-}
-
-//////////////////////// Mobile Responsive //////////////////////// In Work, gerne Helfen bitte.
-
-.hide {
-  display: none;
-}
-
-.show-main-chat {
-  display: block !important;
-}
-
-.show-sidebar {
-  display: block !important;
-}
-
-.show-secondary-chat {
-  display: block !important;
 }
 
 //////////////////////// @Media Querys ////////////////////////

@@ -133,22 +133,37 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-  async getMessageCountAndAnswer() {
-    const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
-    const count = await getCountFromServer(q);
-    this.messageCount = count.data().count;
-    this.formatMessageCount();
-
-    return onSnapshot(q, (element) => {
-      this.threadMessagesTimestamps = [];
-      element.forEach(thread => {
-        this.threadMessagesTimestamps.push(thread.data()['creationDate']);
+  async getMessageCountAndAnswer() { //TODO: Tobias, bitte prüfen und falls alles gut, alten code löschen
+    const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
+    const q = query(messagesRef, orderBy('creationDate', 'desc'));
+  
+    onSnapshot(q, (snapshot) => {
+      this.messageCount = snapshot.docs.length;
+      this.formatMessageCount();
+  
+      if (this.messageCount > 0) {
+        const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
+        this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
       }
-    )  
-    this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-    this.formatMessageCount; 
     });
   }
+
+  // async getMessageCountAndAnswer() {
+  //   const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+  //   const count = await getCountFromServer(q);
+  //   this.messageCount = count.data().count;
+  //   this.formatMessageCount();
+
+  //   return onSnapshot(q, (element) => {
+  //     this.threadMessagesTimestamps = [];
+  //     element.forEach(thread => {
+  //       this.threadMessagesTimestamps.push(thread.data()['creationDate']);
+  //     }
+  //   )  
+  //   this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
+  //   this.formatMessageCount; 
+  //   });
+  // }
 
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
