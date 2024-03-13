@@ -4,7 +4,7 @@
     <input
       #userInput
       type="text"
-      placeholder="An: #channel, oder @jemanden oder E-Mail Adresse"
+      [placeholder]="placeholderText"
       (keyup)="onInputChange(userInput.value)"
     />
     <div class="userSelection" *ngIf="displayUser || displayChannels">

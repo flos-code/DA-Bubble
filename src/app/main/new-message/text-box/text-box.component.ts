@@ -40,7 +40,10 @@ import { ThreadMessage } from '../../../../models/threadMessage.class';
     CommonModule,
   ],
   templateUrl: './text-box.component.html',
-  styleUrl: './text-box.component.scss',
+  styleUrls: [
+    './text-box.component.scss',
+    './text-box.component-mediaquery.scss',
+  ],
 })
 export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;

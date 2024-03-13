@@ -30,22 +30,24 @@ import { ChatService } from '../services/chat.service';
 })
 export class MainComponent {
   showMainChat: boolean = true;
-  showDms: boolean = false;
   showNewMessage: boolean = false;
   private viewChangeSubscription: Subscription;
 
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
 
-  constructor(public chatService: ChatService, private viewManagementService: ViewManagementService, public serviceProfilCard: ProfilCardService) {
+  constructor(
+    public chatService: ChatService,
+    private viewManagementService: ViewManagementService,
+    public serviceProfilCard: ProfilCardService
+  ) {
     this.viewChangeSubscription =
       this.viewManagementService.currentView$.subscribe((view) => {
         this.showMainChat = view === 'showMainChat';
-        this.showDms = view === 'showDms';
         this.showNewMessage = view === 'showNewMessage';
       });
-      
-      this.getThreadOpenStatus();
+
+    this.getThreadOpenStatus();
   }
 
   ngOnDestroy(): void {
@@ -53,8 +55,10 @@ export class MainComponent {
   }
 
   getThreadOpenStatus(): void {
-    this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
-      this.threadOpen = open;
-    }));
+    this.subscription.add(
+      this.chatService.threadOpen$.subscribe((open) => {
+        this.threadOpen = open;
+      })
+    );
   }
 }

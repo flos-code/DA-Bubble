@@ -77,3 +77,13 @@ emoji-mart {
     color: $purple2 !important;
   }
 }
+
+@media screen and (max-width: 500px) {
+  emoji-mart {
+    left: 0;
+
+    .emoji-mart {
+      max-width: calc(100vw - 32px) !important;
+    }
+  }
+}

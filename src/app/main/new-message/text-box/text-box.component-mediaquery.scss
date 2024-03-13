@@ -1,0 +1,12 @@
+@media screen and (max-width: 500px) {
+  .textBoxContainer {
+    emoji-mart {
+      left: 0;
+    }
+
+    .mentionUser {
+      left: 0;
+      max-width: calc(100vw - 32px);
+    }
+  }
+}

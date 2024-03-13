@@ -4,13 +4,17 @@ import { Subscription } from 'rxjs';
 import { UserManagementService } from '../../services/user-management.service';
 import { CommonModule } from '@angular/common';
 import { Firestore, collection, collectionData } from '@angular/fire/firestore';
+import { ViewManagementService } from '../../services/view-management.service';
 
 @Component({
   selector: 'app-new-message',
   standalone: true,
   imports: [TextBoxComponent, CommonModule],
   templateUrl: './new-message.component.html',
-  styleUrl: './new-message.component.scss',
+  styleUrls: [
+    './new-message.component.scss',
+    './new-message.component-mediaquery.scss',
+  ],
 })
 export class NewMessageComponent {
   filteredUsers: any = [];
@@ -23,13 +27,18 @@ export class NewMessageComponent {
   displayChannels: boolean = false;
   messageType;
   targetId;
+  placeholderText: string;
 
   @ViewChild('userInput') userInput: ElementRef<HTMLInputElement>;
   private firestore: Firestore = inject(Firestore);
   private userSubscription!: Subscription;
   private channelSubscription!: Subscription;
+  private screenSizeSubscription: Subscription;
 
-  constructor(public userManagementService: UserManagementService) {}
+  constructor(
+    public userManagementService: UserManagementService,
+    private viewManagementService: ViewManagementService
+  ) {}
 
   ngOnInit(): void {
     const usersCollection = collection(this.firestore, 'users');
@@ -63,11 +72,17 @@ export class NewMessageComponent {
     );
 
     this.userManagementService.loadUsers();
+
+    this.screenSizeSubscription =
+      this.viewManagementService.screenSize$.subscribe((size) => {
+        this.adjustPlaceholderText(size);
+      });
   }
 
   ngOnDestroy(): void {
     this.userSubscription.unsubscribe();
     this.channelSubscription.unsubscribe();
+    this.screenSizeSubscription.unsubscribe();
   }
 
   sortUsers(users): void {
@@ -140,5 +155,15 @@ export class NewMessageComponent {
     this.displayUser = false;
     this.messageType = 'direct';
     this.targetId = userId;
+  }
+
+  adjustPlaceholderText(screenSize: string) {
+    if (screenSize === 'extraSmall') {
+      this.placeholderText = 'An: #channel, oder @jemand';
+    } else if (screenSize === 'small') {
+      this.placeholderText = 'An: #channel, @jemanden oder E-Mail';
+    } else {
+      this.placeholderText = 'An: #channel, oder @jemanden oder E-Mail Adresse'; // Standardplatzhalter, falls benötigt
+    }
   }
 }

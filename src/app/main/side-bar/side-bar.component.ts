@@ -107,7 +107,7 @@ export class SideBarComponent {
     this.showChat('showNewMessage');
   }
 
-  showChat(view: 'showMainChat' | 'showDms' | 'showNewMessage'): void {
+  showChat(view: 'showMainChat' | 'showNewMessage'): void {
     this.viewManagementService.changeView(view);
   }
 
