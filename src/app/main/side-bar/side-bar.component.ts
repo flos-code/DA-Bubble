@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { DialogAddChannelComponent } from './dialog-add-channel/dialog-add-channel.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -7,9 +7,8 @@ import { DialogAddUserNewChannelComponent } from './dialog-add-user-new-channel/
 import { ViewManagementService } from '../../services/view-management.service';
 import { UserManagementService } from '../../services/user-management.service';
 import { ChatService } from '../../services/chat.service';
-import { initializeApp } from 'firebase/app';
 import {
-  getFirestore,
+  Firestore,
   collection,
   getDocs,
   onSnapshot,
@@ -17,22 +16,9 @@ import {
   doc,
   addDoc,
   getDoc,
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
 import { Channel } from '../../../models/channel.class';
-import { getAuth } from 'firebase/auth';
 import { Observable, Subscription } from 'rxjs';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
 
 @Component({
   selector: 'app-side-bar',
@@ -66,9 +52,10 @@ export class SideBarComponent {
   newChannelId: string;
   private screenSizeSubscription: Subscription;
   private subscription = new Subscription();
+  private firestore: Firestore = inject(Firestore);
 
   authSubscription: any;
-  auth = getAuth(app);
+  // auth = getAuth(app);
 
   constructor(
     public dialog: MatDialog,
@@ -140,7 +127,7 @@ export class SideBarComponent {
   loadChannels(
     activeUserId: string
   ): Observable<{ id: string; data: Channel }[]> {
-    const channelsCol = collection(db, 'channels');
+    const channelsCol = collection(this.firestore, 'channels');
     console.log('Active User ID wegen filter:', activeUserId);
 
     // Erstellen Sie ein neues Observable
@@ -174,7 +161,7 @@ export class SideBarComponent {
     try {
       const channelData = channel.toJSON();
       // Füge den neuen Kanal hinzu
-      const docRef = await addDoc(collection(db, 'channels'), {
+      const docRef = await addDoc(collection(this.firestore, 'channels'), {
         ...channelData,
       });
 
@@ -236,7 +223,9 @@ export class SideBarComponent {
 
     if (all) {
       // Füge alle Benutzer-IDs hinzu, wenn 'all' wahr ist
-      const allUsersSnapshot = await getDocs(collection(db, 'users'));
+      const allUsersSnapshot = await getDocs(
+        collection(this.firestore, 'users')
+      );
       allUsersSnapshot.forEach((doc) => membersToUpdate.push(doc.id));
     } else if (userIds) {
       // Füge nur die spezifisch ausgewählten Benutzer-IDs hinzu
@@ -244,7 +233,7 @@ export class SideBarComponent {
     }
 
     // Aktualisiere das 'members'-Array des aktiven Kanals
-    const channelRef = doc(db, 'channels', selectedChannelId);
+    const channelRef = doc(this.firestore, 'channels', selectedChannelId);
     const channelSnap = await getDoc(channelRef);
     if (channelSnap.exists()) {
       const existingMembers = channelSnap.data()['members'] || [];
