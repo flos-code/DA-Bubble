@@ -2,31 +2,26 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   ElementRef,
-  Input,
-  OnChanges,
   OnDestroy,
   OnInit,
-  SimpleChanges,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
-import { EmojiComponent, EmojiEvent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-import { initializeApp } from 'firebase/app';
+import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import {
-  getFirestore,
+  Firestore,
   collection,
-  onSnapshot,
-  limit,
-  query,
   doc,
   getDoc,
-  updateDoc,
-  addDoc,
   getDocs,
-  deleteDoc,
+  onSnapshot,
   orderBy,
-  Timestamp,
-} from 'firebase/firestore';
+  query,
+  updateDoc,
+} from '@angular/fire/firestore';
+import { environment } from '../../../../environments/environment.development';
+import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
@@ -41,17 +36,7 @@ import { TextBoxComponent } from '../../new-message/text-box/text-box.component'
 import { SecondaryChatMessagesComponent } from './secondary-chat-messages/secondary-chat-messages.component';
 import { ViewManagementService } from '../../../services/view-management.service';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
+const app = initializeApp(environment.firebase);
 @Component({
   selector: 'app-secondary-chat',
   standalone: true,
@@ -72,6 +57,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   @ViewChild('chatContent') private chatContent: ElementRef;
   @ViewChild('emojiPicker') emojiPicker: ElementRef;
   private subscription = new Subscription();
+  private firestore: Firestore = inject(Firestore);
   auth = getAuth(app);
   /*---------- Main Variables -----------*/
   currentUser: string = '';
@@ -136,7 +122,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   async saveMessageChanges() {
     if (!this.editingMessageId) return;
     const messageRef = doc(
-      db,
+      this.firestore,
       `channels/${this.activeChannelId}/threads/${this.selectedThreadId}/messages`,
       this.editingMessageId
     );
@@ -253,7 +239,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     threadId: string
   ): Promise<ThreadMessage[]> {
     const threadMessagesRef = collection(
-      db,
+      this.firestore,
       `channels/${channelId}/threads/${threadId}/messages`
     );
     const snapshot = await getDocs(threadMessagesRef);
@@ -266,7 +252,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   loadThreadMessages(threadId: string) {
     const channelId = this.activeChannelId;
     const threadMessagesRef = query(
-      collection(db, `channels/${channelId}/threads/${threadId}/messages`),
+      collection(this.firestore, `channels/${channelId}/threads/${threadId}/messages`),
       orderBy('creationDate', 'asc')
     );
 
@@ -287,7 +273,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
-    const threadRef = doc(db, `channels/${channelId}/threads/${threadId}`);
+    const threadRef = doc(this.firestore, `channels/${channelId}/threads/${threadId}`);
     const docSnap = await getDoc(threadRef);
 
     if (docSnap.exists()) {
@@ -310,7 +296,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   getCurrentChannelData() {
-    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
+    onSnapshot(doc(collection(this.firestore, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
       setTimeout(() => {
         this.getMembers();
@@ -319,7 +305,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   getMembers() {
-    const q = query(collection(db, 'users'));
+    const q = query(collection(this.firestore, 'users'));
     onSnapshot(q, (snapshot) => {
       this.channelMembers = [];
       snapshot.forEach((doc) => {
