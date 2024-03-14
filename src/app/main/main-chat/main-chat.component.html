@@ -129,7 +129,7 @@
                     </div>
                     @for (thread of channelThreadsDateTime; track $index) {
                         @if(thread.dateString == threadTimeSeparator.dateString) {
-                            <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
+                            <app-thread [dmMessagesPath]="dmMessagesPath" [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
                         }
                     }
                 }           
