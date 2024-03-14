@@ -20,15 +20,8 @@ import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profileca
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
 
-const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
-};
-const app = initializeApp(firebaseConfig);
+import { environment } from '../../../environments/environment.development';
+const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
 /* =============================== */
 
