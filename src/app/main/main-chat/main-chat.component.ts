@@ -19,7 +19,6 @@ import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profileca
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
-
 import { environment } from '../../../environments/environment.development';
 const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
