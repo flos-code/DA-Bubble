@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
@@ -35,7 +35,6 @@ export class ThreadComponent implements OnInit {
   @Input() thread!: any;
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
-  @Input() dmMessagesPath!: string;
 
   messageCount: number;
   threadMessagesTimestamps = [];
