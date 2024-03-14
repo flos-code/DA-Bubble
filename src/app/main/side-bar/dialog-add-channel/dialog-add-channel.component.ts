@@ -7,6 +7,8 @@ import {
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
+import { ViewManagementService } from '../../../services/view-management.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -27,9 +29,25 @@ export class DialogAddChannelComponent {
   }>();
   @ViewChild('form') form!: NgForm;
 
+  screenSize: string;
+  private screenSizeSubscription: Subscription;
+
+  constructor(private viewManagementService: ViewManagementService) {}
+
   inputFocused: boolean = false;
   channelNameModel: string = '';
   channelDescriptionModel: string = '';
+
+  ngOnInit(): void {
+    this.screenSizeSubscription =
+      this.viewManagementService.screenSize$.subscribe((size) => {
+        this.screenSize = size;
+      });
+  }
+
+  ngOnDestroy(): void {
+    this.screenSizeSubscription.unsubscribe();
+  }
 
   toggle(): void {
     this.toggleVisibility.emit();
@@ -53,7 +71,10 @@ export class DialogAddChannelComponent {
         name: this.channelNameModel,
         description: this.channelDescriptionModel,
       });
-      // this.toggle(); // Schließt das Dialogfenster bei mobile nicht
+      if (this.screenSize !== 'extraSmall') {
+        this.toggle(); // Schließt das Dialogfenster bei mobile nicht
+      }
+
       console.log('channe erstellt');
     } else {
       console.log('Form not valid');

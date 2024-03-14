@@ -62,7 +62,8 @@ export class SideBarComponent {
   channels: { id: string; data: Channel }[] = [];
   users$ = this.userManagementService.users$;
   filteredUsers$ = this.userManagementService.filteredUsers$;
-
+  screenSize: string;
+  newChannelId: string;
   private screenSizeSubscription: Subscription;
   private subscription = new Subscription();
 
@@ -87,7 +88,9 @@ export class SideBarComponent {
 
     this.screenSizeSubscription =
       this.viewManagementService.screenSize$.subscribe((size) => {
-        this.preSelect(size);
+        this.screenSize = size;
+
+        this.preSelect(this.screenSize);
       });
 
     this.subscription.add(
@@ -99,6 +102,7 @@ export class SideBarComponent {
 
   ngOnDestroy() {
     this.subscription.unsubscribe();
+    this.screenSizeSubscription.unsubscribe();
   }
 
   toggleSection(section: string): void {
@@ -120,6 +124,11 @@ export class SideBarComponent {
 
   toggleAddUserDialog() {
     this.dialogAddUserVisible = !this.dialogAddUserVisible;
+  }
+
+  hideAddChannelDialog() {
+    this.dialogAddChannelVisible = false;
+    this.setActiveChannel(this.newChannelId);
   }
 
   async openNewMessage() {
@@ -171,8 +180,13 @@ export class SideBarComponent {
 
       await this.loadChannels(activeUserId); // Lade Kanäle neu, um die UI zu aktualisieren
 
-      // Setze den neu erstellten Kanal als aktiv
-      this.setActiveChannel(docRef.id); //bei mobile muss dan anderest geregelt werden wegen view mangement um noch user hinzuzufügen
+      if (this.screenSize === 'medium' || this.screenSize === 'large') {
+        this.setActiveChannel(docRef.id); //bei mobile muss dan anderest geregelt werden wegen view mangement um noch user hinzuzufügen
+        this.newChannelId = docRef.id;
+      } else {
+        this.newChannelId = docRef.id;
+        console.log('new id in sidebar ', this.newChannelId);
+      }
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
     }
@@ -210,7 +224,8 @@ export class SideBarComponent {
     all: boolean;
     userIds?: string[];
   }): Promise<void> {
-    const selectedChannelId = await this.getActiveChannelId();
+    // const selectedChannelId = await this.getActiveChannelId();
+    const selectedChannelId = this.newChannelId;
 
     if (!selectedChannelId) {
       console.error('Kein aktiver Kanal ausgewählt.');

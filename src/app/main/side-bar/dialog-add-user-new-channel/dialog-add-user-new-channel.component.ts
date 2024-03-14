@@ -42,7 +42,9 @@ const db = getFirestore(app);
 })
 export class DialogAddUserNewChannelComponent {
   @Input() isVisibleUser: boolean = false;
+  @Input() newChannelId: string; // ID des Nutzers/Kanals/Threads
   @Output() toggleVisibility = new EventEmitter<void>();
+  @Output() toggleVisibilityChannel = new EventEmitter<void>();
   @Output() usersToAdd = new EventEmitter<{
     all: boolean;
     userIds?: string[];
@@ -63,18 +65,26 @@ export class DialogAddUserNewChannelComponent {
   }
 
   ngOnInit() {
-    this.chatService.activeChannelIdUpdates.subscribe({
-      next: (channelId) => {
-        if (channelId) {
-          this.initializeData(); // Rufen Sie dies nur auf, wenn ein neuer aktiver Kanal gesetzt wurde
-        }
-      },
-    });
+    // this.chatService.activeChannelIdUpdates.subscribe({
+    //   next: (channelId) => {
+    //     if (channelId) {
+    this.initializeData(); // Rufen Sie dies nur auf, wenn ein neuer aktiver Kanal gesetzt wurde
+    //     }
+    //   },
+    // });
   }
 
   toggle(): void {
-    console.log('toggle beim user');
     this.toggleVisibility.emit();
+  }
+
+  toggleChannel(): void {
+    this.toggleVisibilityChannel.emit();
+  }
+
+  closeBoth() {
+    this.toggle();
+    this.toggleChannel();
   }
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
@@ -90,7 +100,7 @@ export class DialogAddUserNewChannelComponent {
         userIds: this.selectedUsers.map((user) => user.id),
       });
     }
-    this.toggle();
+    this.closeBoth();
   }
 
   //user werden gefilter anhand der einagbe im input und der bereits im channel befindlichen user
@@ -140,13 +150,13 @@ export class DialogAddUserNewChannelComponent {
     await this.fetchUsers();
   }
 
-  getActiveChannelId() {
-    return this.chatService.getActiveChannelId();
-  }
+  // getActiveChannelId() {
+  //   return this.chatService.getActiveChannelId();
+  // }
 
   //lädt id vom aktiven chanel um zu sehen welche user schon mitglieder sind
   async fetchActiveChannelMembers(): Promise<string[]> {
-    const activeChannelId = this.chatService.getActiveChannelId();
+    const activeChannelId = this.newChannelId;
     if (activeChannelId) {
       const channelRef = doc(db, 'channels', activeChannelId);
       const channelSnap = await getDoc(channelRef);
