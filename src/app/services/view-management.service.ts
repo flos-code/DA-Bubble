@@ -7,10 +7,7 @@ export type ScreenSize = 'extraSmall' | 'small' | 'medium' | 'large';
   providedIn: 'root',
 })
 export class ViewManagementService {
-  private currentView = new BehaviorSubject<'showMainChat' | 'showNewMessage'>(
-    'showMainChat'
-  );
-  currentView$ = this.currentView.asObservable();
+
 
   private screenSize = new BehaviorSubject<ScreenSize>('large');
   screenSize$ = this.screenSize.asObservable();
@@ -48,9 +45,7 @@ export class ViewManagementService {
   
   }
 
-  changeView(view: 'showMainChat' | 'showNewMessage'): void {
-    this.currentView.next(view);
-  }
+
 
   updateScreenSize(width: number): void {
     if (width <= 500) {

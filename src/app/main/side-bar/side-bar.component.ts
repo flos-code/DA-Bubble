@@ -128,9 +128,6 @@ export class SideBarComponent {
     this.viewManagementService.setView('newMessage');
   }
 
-  showChat(view: 'showMainChat' | 'showNewMessage'): void {
-    this.viewManagementService.changeView(view);
-  }
 
   loadChannels(
     activeUserId: string

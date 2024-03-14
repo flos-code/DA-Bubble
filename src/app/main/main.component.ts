@@ -34,7 +34,7 @@ export class MainComponent {
   // // showSecondaryChat: boolean = false;
   // // showSidebar: boolean = false;
 
-  private viewChangeSubscription: Subscription;
+
 
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -50,18 +50,18 @@ export class MainComponent {
     //     // this.showNewMessage = view === 'showNewMessage';
     //   });
 
-    this.getThreadOpenStatus();
+    // this.getThreadOpenStatus();
   }
 
-  ngOnDestroy(): void {
-    this.viewChangeSubscription.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.viewChangeSubscription.unsubscribe();
+  // }
 
-  getThreadOpenStatus(): void {
-    this.subscription.add(
-      this.chatService.threadOpen$.subscribe((open) => {
-        this.threadOpen = open;
-      })
-    );
-  }
+  // getThreadOpenStatus(): void {
+  //   this.subscription.add(
+  //     this.chatService.threadOpen$.subscribe((open) => {
+  //       this.threadOpen = open;
+  //     })
+  //   );
+  // }
 }
