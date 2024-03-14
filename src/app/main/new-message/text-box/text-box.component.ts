@@ -91,6 +91,12 @@ export class TextBoxComponent {
     this.dbSubscription.unsubscribe();
   }
 
+  focusInput() {
+    if (!this.showEmojiPicker) {
+      this.messageInput.nativeElement.focus();
+    }
+  }
+
   onInputFocus(): void {
     this.inputFocused = true;
   }
@@ -390,7 +396,7 @@ export class TextBoxComponent {
 
           this.userManagementService.loadUsers();
           this.chatService.setSelectedUserId(this.targetId);
-          this.viewManagementService.setView('directMessage');
+              this.viewManagementService.setView('directMessage');
         } catch (error) {
           console.error('Fehler beim Senden der Nachricht: ', error);
         }

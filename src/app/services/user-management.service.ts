@@ -56,7 +56,7 @@ export class UserManagementService {
         this.activeUserId.next(user.uid);
       } else {
         // when no one is logged in guest id
-        this.activeUserId.next('Yic168FhfjbDhxyTsATeQttU3xD2');
+        // this.activeUserId.next('Yic168FhfjbDhxyTsATeQttU3xD2');
       }
     });
   }
