@@ -465,3 +465,18 @@ app-text-box {
       width: 60%;
     }
 }
+
+@media (max-width:500px) {
+    .chat-box {
+        width: 100vw;
+        border-radius: unset;
+    }
+
+    .thread-head {
+        width: 100%;
+    }
+
+    .purple-line {
+      width: 60%;
+    }
+}
