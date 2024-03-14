@@ -147,7 +147,7 @@ export class ThreadComponent implements OnInit {
      onSnapshot(q, (snapshot) => {
      this.messageCount = snapshot.docs.length;
      console.log('Anzahl Antworten', this.messageCount);
-      this.formatMessageCount();
+    this.formatMessageCount();
   
        if (this.messageCount > 0) {
          const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];

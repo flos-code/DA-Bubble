@@ -61,7 +61,7 @@
     <!-- ====================================== -->
 
     <div class="channelEditionButtonContainer">
-        <button class="channelEditionButton" (click)="leaveChannel()">Channel verlassen</button>
+        <button class="channelEditionButton" (click)="openAskLeaveChannel()">Channel verlassen</button>
     </div>
 
 
@@ -71,6 +71,20 @@
             Bearbeitung nicht möglich. Du bist nicht der Administrator dieses Channels.
         </div>
     </div>
+
+    <!-- ========= POPUP LEAVE CHANNEL ========= -->
+    <div class="showPopupLeaveChannel" *ngIf="showPopupLeaveChannel" (click)="closePopupLeaveChannel()">
+        <div (click)="doNotClose($event)">
+            <div>
+                Möchtest du den Channel wirklich verlassen?
+            </div>
+            <div>
+                <button class="channelEditionButton" (click)="closePopupLeaveChannel()">Mitglied bleiben</button>
+                <button class="channelEditionButton leaveButton" (click)="leaveChannel()">Verlassen</button>
+            </div>    
+        </div>
+    </div>
+    
 
 </div>
 

@@ -7,7 +7,7 @@ import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { collection, deleteDoc, doc, getDoc, getDocs, getFirestore, onSnapshot, orderBy, query, updateDoc, where } from 'firebase/firestore';
 import { MainChatComponent } from '../../main-chat.component';
 
 const firebaseConfig = {
@@ -47,7 +47,6 @@ export class EditOwnThreadComponent implements OnInit {
       this.textAreaEditMessage = this.threadMessage;
   }
 
-
   closeEditedMessage() {
     this.ownMessageEdit = false;
     this.ownMessageEditChild.emit(this.ownMessageEdit);
@@ -64,6 +63,7 @@ export class EditOwnThreadComponent implements OnInit {
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     } else {
+      await deleteDoc(doc(db, `channels/${this.activeChannelId}/threads/`, this.threadId));
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     }

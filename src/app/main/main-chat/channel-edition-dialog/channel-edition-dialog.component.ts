@@ -38,6 +38,7 @@ export class ChannelEditionDialogComponent implements OnInit {
   editedChannelName: string;
   editedChannelDescription: string;
   showPopup: boolean = false;
+  showPopupLeaveChannel: boolean = false;
 
   ngOnInit(): void {
     this.setChannelCreatedBy();
@@ -105,10 +106,27 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+  openAskLeaveChannel() {
+    this.showPopupLeaveChannel = true;
+  }
+
   async leaveChannel() {
-    await updateDoc(doc(db, 'channels', this.currentChannelId), {
-      members: arrayRemove(this.channelData.createdBy)
-    });
+    let index = this.channelMembers.indexOf(this.currentUser);
+    this.channelMembers.splice(index, 1);
+    let currentRef = doc(db, `channels/${this.currentChannelId}`);
+    let data = {
+      members: this.channelMembers
+    };
+    await updateDoc(currentRef, data).then(() => {
+    }); 
+
+    this.showPopupLeaveChannel = false;   
+    this.channelEditionDialogOpen = false;
+    this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
+  }
+
+  closePopupLeaveChannel() {
+    this.showPopupLeaveChannel = false;
   }
 
   doNotClose($event: any) {
