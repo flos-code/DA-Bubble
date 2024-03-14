@@ -190,7 +190,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   loadDmData() {
-    console.log('DM Data is Loading');
     this.getDmUser();
   }
 

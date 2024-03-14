@@ -5,12 +5,12 @@ import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
-import { BehaviorSubject } from 'rxjs';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
 import { ViewManagementService } from '../../../services/view-management.service';
+import { Subscription } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -35,6 +35,7 @@ export class ThreadComponent implements OnInit {
   @Input() thread!: any;
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
+
   messageCount: number;
   threadMessagesTimestamps = [];
   answers: string;
@@ -50,13 +51,12 @@ export class ThreadComponent implements OnInit {
   reactionNames =  [];
   reactionCount: number;
 
-  constructor(private chatService: ChatService, private main: MainChatComponent,     public viewManagementService: ViewManagementService,) { }
+  constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { 
+
+  }
 
   ngOnInit(): void {
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
-    this.getCurrentUserName();
-    this.getReactions();
-    this.getMessageCountAndAnswer();
+    this.loadThreadData();
   }
 
 /*   async getThreadMessageCount() {
@@ -67,6 +67,13 @@ export class ThreadComponent implements OnInit {
     console.log('Message count', snapshot.data().count);
     this.formatMessageCount();
   } */
+
+  loadThreadData() {
+    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
+    this.getCurrentUserName();
+    this.getReactions();
+    this.getMessageCountAndAnswer();
+  }
 
   async getReactions() {
     this.getCurrentUserName();
@@ -133,12 +140,13 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-   async getMessageCountAndAnswer() {
+    async getMessageCountAndAnswer() {
      const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
      const q = query(messagesRef, orderBy('creationDate', 'desc'));
   
      onSnapshot(q, (snapshot) => {
      this.messageCount = snapshot.docs.length;
+     console.log('Anzahl Antworten', this.messageCount);
       this.formatMessageCount();
   
        if (this.messageCount > 0) {
@@ -148,22 +156,22 @@ export class ThreadComponent implements OnInit {
      });
    }
 
-  // async getMessageCountAndAnswer() {
-  //   const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
-  //   const count = await getCountFromServer(q);
-  //   this.messageCount = count.data().count;
-  //   this.formatMessageCount();
+/*    async getMessageCountAndAnswer() {
+     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+     const count = await getCountFromServer(q);
+     this.messageCount = count.data().count;
+     this.formatMessageCount();
 
-  //   return onSnapshot(q, (element) => {
-  //     this.threadMessagesTimestamps = [];
-  //     element.forEach(thread => {
-  //       this.threadMessagesTimestamps.push(thread.data()['creationDate']);
-  //     }
-  //   )  
-  //   this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-  //   this.formatMessageCount; 
-  //   });
-  // }
+     return onSnapshot(q, (element) => {
+       this.threadMessagesTimestamps = [];
+       element.forEach(thread => {
+         this.threadMessagesTimestamps.push(thread.data()['creationDate']);
+       }
+     )  
+     this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
+     this.formatMessageCount; 
+     });
+   } */
 
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
