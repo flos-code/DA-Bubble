@@ -29,11 +29,11 @@ import { ChatService } from '../services/chat.service';
   styleUrl: './main.component.scss',
 })
 export class MainComponent {
-  showMainChat: boolean = true;
-  showNewMessage: boolean = false;
-  // showSecondaryChat: boolean = false;
-  // showSidebar: boolean = false;
-  
+  // showMainChat: boolean = true;
+  // showNewMessage: boolean = false;
+  // // showSecondaryChat: boolean = false;
+  // // showSidebar: boolean = false;
+
   private viewChangeSubscription: Subscription;
 
   subscription: Subscription = new Subscription();
@@ -41,14 +41,14 @@ export class MainComponent {
 
   constructor(
     public chatService: ChatService,
-    private viewManagementService: ViewManagementService,
+    public viewManagementService: ViewManagementService,
     public serviceProfilCard: ProfilCardService
   ) {
-    this.viewChangeSubscription =
-      this.viewManagementService.currentView$.subscribe((view) => {
-        this.showMainChat = view === 'showMainChat';
-        this.showNewMessage = view === 'showNewMessage';
-      });
+    // this.viewChangeSubscription =
+    //   this.viewManagementService.currentView$.subscribe((view) => {
+    //     // this.showMainChat = view === 'showMainChat';
+    //     // this.showNewMessage = view === 'showNewMessage';
+    //   });
 
     this.getThreadOpenStatus();
   }

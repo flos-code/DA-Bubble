@@ -10,6 +10,7 @@ import { ProfilCardService } from '../../services/profil-card.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
+import { ViewManagementService } from '../../services/view-management.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -69,6 +70,7 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     public serviceProfilCard: ProfilCardService,
     public searchService: SearchService,
+    public viewManagementService: ViewManagementService,
   ) {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes

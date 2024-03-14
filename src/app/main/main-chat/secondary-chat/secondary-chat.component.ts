@@ -39,6 +39,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 import { UserManagementService } from '../../../services/user-management.service';
 import { TextBoxComponent } from '../../new-message/text-box/text-box.component';
 import { SecondaryChatMessagesComponent } from './secondary-chat-messages/secondary-chat-messages.component';
+import { ViewManagementService } from '../../../services/view-management.service';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -98,6 +99,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   constructor(
     public chatService: ChatService,
     public userManagementService: UserManagementService,
+    public viewManagementService: ViewManagementService,
     public inputService: InputService
   ) {}
 
@@ -199,6 +201,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
 
   closeThread(): void {
     this.chatService.closeThread();
+    this.viewManagementService.setView('channel');
   }
 
   private scrollToBottom(): void {

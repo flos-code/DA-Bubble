@@ -10,6 +10,7 @@ import { BehaviorSubject } from 'rxjs';
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
+import { ViewManagementService } from '../../../services/view-management.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -50,7 +51,7 @@ export class ThreadComponent implements OnInit {
   reactionNames =  [];
   reactionCount: number;
 
-  constructor(private chatService: ChatService, private main: MainChatComponent) { }
+  constructor(private chatService: ChatService, private main: MainChatComponent,     public viewManagementService: ViewManagementService,) { }
 
   ngOnInit(): void {
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
@@ -286,6 +287,7 @@ export class ThreadComponent implements OnInit {
 
   openThread(threadId: string): void {
     this.chatService.openThread(threadId);
+    this.viewManagementService.setView('secondaryChat');
   }
 
   closeEditedMessage(dialogBoolen: boolean) {
