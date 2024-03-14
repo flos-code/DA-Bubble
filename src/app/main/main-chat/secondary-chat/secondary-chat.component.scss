@@ -451,3 +451,17 @@ app-text-box {
     bottom: 130px;
     left: 20px;
 }
+
+@media (max-width:1110px) {
+    .chat-box {
+        width: calc(100vw - 40px);
+    }
+
+    .thread-head {
+        width: 100%;
+    }
+
+    .purple-line {
+      width: 60%;
+    }
+}
