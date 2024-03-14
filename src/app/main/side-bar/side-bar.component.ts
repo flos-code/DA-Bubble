@@ -128,7 +128,6 @@ export class SideBarComponent {
     this.viewManagementService.setView('newMessage');
   }
 
-
   loadChannels(
     activeUserId: string
   ): Observable<{ id: string; data: Channel }[]> {
@@ -169,19 +168,11 @@ export class SideBarComponent {
       const docRef = await addDoc(collection(db, 'channels'), {
         ...channelData,
       });
-      console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
-
-      // Optional: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument
-      const messagesRef = collection(docRef, 'messages');
-      await addDoc(messagesRef, {
-        placeholder: true, // Markiere dieses Dokument als Platzhalter
-        timestamp: Date.now(), // Optional: Firestore Server-Zeitstempel als Erstellungszeit
-      });
 
       await this.loadChannels(activeUserId); // Lade Kanäle neu, um die UI zu aktualisieren
 
       // Setze den neu erstellten Kanal als aktiv
-      this.setActiveChannel(docRef.id);
+      this.setActiveChannel(docRef.id); //bei mobile muss dan anderest geregelt werden wegen view mangement um noch user hinzuzufügen
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
     }

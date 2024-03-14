@@ -13,7 +13,10 @@ import { MatIconModule } from '@angular/material/icon';
   standalone: true,
   imports: [MatIconModule, FormsModule],
   templateUrl: './dialog-add-channel.component.html',
-  styleUrl: './dialog-add-channel.component.scss',
+  styleUrls: [
+    './dialog-add-channel.component.scss',
+    './dialog-add-channel.component-mediaquery.scss',
+  ],
 })
 export class DialogAddChannelComponent {
   @Input() isVisible: boolean = false;
@@ -50,7 +53,8 @@ export class DialogAddChannelComponent {
         name: this.channelNameModel,
         description: this.channelDescriptionModel,
       });
-      this.toggle(); // Schließt das Dialogfenster
+      // this.toggle(); // Schließt das Dialogfenster bei mobile nicht
+      console.log('channe erstellt');
     } else {
       console.log('Form not valid');
     }

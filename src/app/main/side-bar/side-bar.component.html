@@ -5,10 +5,7 @@
         <img src="../../assets/img/workspaceLogo.png" alt="Workspace Logo" />
         <div>Code learning</div>
       </div>
-      <div
-        class="newMessage"
-        (click)="openNewMessage()"
-      >
+      <div class="newMessage" (click)="openNewMessage()">
         <mat-icon
           class="material-symbols-outlined"
           fontIcon="edit_square"
@@ -140,10 +137,7 @@
         <div></div>
       </div>
     </div>
-    <div
-      class="mobileNewMessage"
-      (click)="openNewMessage()"
-    >
+    <div class="mobileNewMessage" (click)="openNewMessage()">
       <mat-icon
         class="material-symbols-outlined"
         fontIcon="edit_square"
@@ -183,7 +177,7 @@
 
 <app-dialog-add-user-new-channel
   *ngIf="dialogAddUserVisible"
-  [isVisible]="dialogAddUserVisible"
+  [isVisibleUser]="dialogAddUserVisible"
   (toggleVisibility)="toggleAddUserDialog()"
   (usersToAdd)="onUsersToAdd($event)"
 >
