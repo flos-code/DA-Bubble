@@ -236,213 +236,332 @@ export class TextBoxComponent {
     });
   }
 
+  // async sendMessage(): Promise<void> {
+  //   if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
+  //     console.error('Nachrichtendetails sind unvollständig');
+  //     return;
+  //   }
+
+  //   const imageUrlToSend = this.imageURL ? this.imageURL : null;
+
+  //   if (this.messageType === 'channel') {
+  //     const newThread = new Thread({
+  //       createdBy: this.userManagementService.activeUserId.value,
+  //       creationDate: Date.now(),
+  //       message: this.messageModel.trim(),
+  //       imageUrl: imageUrlToSend,
+  //     });
+  //     try {
+  //       const docRef = await addDoc(
+  //         collection(this.firestore, `channels/${this.targetId}/threads`),
+  //         newThread.toJSON()
+  //       );
+  //       console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
+  //       this.chatService.setActiveChannelId(this.targetId);
+  //       this.viewManagementService.setView('channel');
+
+  //       await updateDoc(
+  //         doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
+  //         {
+  //           messageId: docRef.id,
+  //         }
+  //       );
+  //     } catch (error) {
+  //       console.error('Fehler beim Senden der Nachricht: ', error);
+  //     }
+  //   } else if (this.messageType === 'direct') {
+  //     if (this.userManagementService.activeUserId.value !== this.targetId) {
+  //       const newDmSender = new DirectMessage({
+  //         yourMessage: true,
+  //         createdBy: this.userManagementService.activeUserId.value,
+  //         creationDate: Date.now(),
+  //         message: this.messageModel.trim(),
+  //         imageUrl: imageUrlToSend,
+  //       });
+  //       const newDmReceiver = new DirectMessage({
+  //         yourMessage: false,
+  //         createdBy: this.userManagementService.activeUserId.value,
+  //         creationDate: Date.now(),
+  //         message: this.messageModel.trim(),
+  //         imageUrl: imageUrlToSend,
+  //       });
+  //       const dmSenderRef = doc(
+  //         this.firestore,
+  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
+  //         this.targetId
+  //       );
+  //       const dmReceiverRef = doc(
+  //         this.firestore,
+  //         `users/${this.targetId}/allDirectMessages`,
+  //         this.userManagementService.activeUserId.value
+  //       );
+
+  //       try {
+  //         await setDoc(dmSenderRef, {}, { merge: true });
+  //         await setDoc(dmReceiverRef, {}, { merge: true });
+
+  //         const directMessagesSenderCollection = collection(
+  //           this.firestore,
+  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+  //         );
+  //         const directMessagesReceiverCollection = collection(
+  //           this.firestore,
+  //           `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
+  //         );
+
+  //         const docRefSender = await addDoc(
+  //           directMessagesSenderCollection,
+  //           newDmSender.toJSON()
+  //         );
+  //         const docRefReceiver = await addDoc(
+  //           directMessagesReceiverCollection,
+  //           newDmReceiver.toJSON()
+  //         );
+
+  //         console.log(
+  //           'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
+  //           docRefSender.id,
+  //           'und Receiver-ID:',
+  //           docRefReceiver.id
+  //         );
+  //         await updateDoc(
+  //           doc(
+  //             this.firestore,
+  //             `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
+  //             docRefSender.id
+  //           ),
+  //           {
+  //             messageId: docRefSender.id,
+  //           }
+  //         );
+
+  //         await updateDoc(
+  //           doc(
+  //             this.firestore,
+  //             `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
+  //             docRefReceiver.id
+  //           ),
+  //           {
+  //             messageId: docRefReceiver.id,
+  //           }
+  //         );
+  //         this.userManagementService.loadUsers();
+  //         this.chatService.setSelectedUserId(this.targetId);
+  //         this.viewManagementService.setView('directMessage');
+  //       } catch (error) {
+  //         console.error('Fehler beim Senden der Nachricht: ', error);
+  //       }
+  //     } else {
+  //       const newDmSender = new DirectMessage({
+  //         yourMessage: true,
+  //         createdBy: this.userManagementService.activeUserId.value,
+  //         creationDate: Date.now(),
+  //         message: this.messageModel.trim(),
+  //         imageUrl: imageUrlToSend,
+  //       });
+
+  //       const dmSenderRef = doc(
+  //         this.firestore,
+  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
+  //         this.targetId
+  //       );
+
+  //       try {
+  //         await setDoc(dmSenderRef, {}, { merge: true });
+
+  //         const directMessagesSenderCollection = collection(
+  //           this.firestore,
+  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
+  //         );
+
+  //         const docRefSender = await addDoc(
+  //           directMessagesSenderCollection,
+  //           newDmSender.toJSON()
+  //         );
+
+  //         console.log(
+  //           'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
+  //           docRefSender.id
+  //         );
+  //         await updateDoc(
+  //           doc(
+  //             this.firestore,
+  //             `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
+  //             docRefSender.id
+  //           ),
+  //           {
+  //             messageId: docRefSender.id,
+  //           }
+  //         );
+
+  //         this.userManagementService.loadUsers();
+  //         this.chatService.setSelectedUserId(this.targetId);
+  //             this.viewManagementService.setView('directMessage');
+  //       } catch (error) {
+  //         console.error('Fehler beim Senden der Nachricht: ', error);
+  //       }
+  //     }
+  //   } else if (this.messageType === 'threadMessage') {
+  //     const newThread = new ThreadMessage({
+  //       createdBy: this.userManagementService.activeUserId.value,
+  //       creationDate: Date.now(),
+  //       message: this.messageModel.trim(),
+  //       imageUrl: imageUrlToSend,
+  //     });
+  //     try {
+  //       const docRefThread = await addDoc(
+  //         collection(
+  //           this.firestore,
+  //           `channels/${this.chatService.getActiveChannelId()}/threads/${
+  //             this.targetId
+  //           }/messages`
+  //         ),
+  //         newThread.toJSON()
+  //       );
+  //       console.log(
+  //         'Nachricht wurde erfolgreich gesendet mit ID: ',
+  //         docRefThread.id
+  //       );
+
+  //       await updateDoc(
+  //         doc(
+  //           this.firestore,
+  //           `channels/${this.chatService.getActiveChannelId()}/threads/${
+  //             this.targetId
+  //           }/messages`,
+  //           docRefThread.id
+  //         ),
+  //         {
+  //           messageId: docRefThread.id,
+  //         }
+  //       );
+  //     } catch (error) {
+  //       console.error('Fehler beim Senden der Nachricht: ', error);
+  //     }
+  //   }
+  //   this.messageModel = '';
+  //   this.imageURL = undefined;
+  //   this.filePath = undefined;
+  // }
+
+  ///////////////////////////////////////////////////////////////
+
   async sendMessage(): Promise<void> {
     if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
       console.error('Nachrichtendetails sind unvollständig');
       return;
     }
-
-    const imageUrlToSend = this.imageURL ? this.imageURL : null;
-
-    if (this.messageType === 'channel') {
-      const newThread = new Thread({
-        createdBy: this.userManagementService.activeUserId.value,
-        creationDate: Date.now(),
-        message: this.messageModel.trim(),
-        imageUrl: imageUrlToSend,
-      });
-      try {
-        const docRef = await addDoc(
-          collection(this.firestore, `channels/${this.targetId}/threads`),
-          newThread.toJSON()
-        );
-        console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
-        this.chatService.setActiveChannelId(this.targetId);
-        this.viewManagementService.setView('channel');
-
-        await updateDoc(
-          doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
-          {
-            messageId: docRef.id,
-          }
-        );
-      } catch (error) {
-        console.error('Fehler beim Senden der Nachricht: ', error);
+  
+    try {
+      switch (this.messageType) {
+        case 'channel':
+          await this.handleChannelMessage();
+          break;
+        case 'direct':
+          await this.handleDirectMessage();
+          break;
+        case 'threadMessage':
+          await this.handleThreadMessage();
+          break;
+        default:
+          console.error('Unbekannter Nachrichtentyp');
       }
-    } else if (this.messageType === 'direct') {
-      if (this.userManagementService.activeUserId.value !== this.targetId) {
-        const newDmSender = new DirectMessage({
-          yourMessage: true,
-          createdBy: this.userManagementService.activeUserId.value,
-          creationDate: Date.now(),
-          message: this.messageModel.trim(),
-          imageUrl: imageUrlToSend,
-        });
-        const newDmReceiver = new DirectMessage({
-          yourMessage: false,
-          createdBy: this.userManagementService.activeUserId.value,
-          creationDate: Date.now(),
-          message: this.messageModel.trim(),
-          imageUrl: imageUrlToSend,
-        });
-        const dmSenderRef = doc(
-          this.firestore,
-          `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-          this.targetId
-        );
-        const dmReceiverRef = doc(
-          this.firestore,
-          `users/${this.targetId}/allDirectMessages`,
-          this.userManagementService.activeUserId.value
-        );
-
-        try {
-          await setDoc(dmSenderRef, {}, { merge: true });
-          await setDoc(dmReceiverRef, {}, { merge: true });
-
-          const directMessagesSenderCollection = collection(
-            this.firestore,
-            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-          );
-          const directMessagesReceiverCollection = collection(
-            this.firestore,
-            `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
-          );
-
-          const docRefSender = await addDoc(
-            directMessagesSenderCollection,
-            newDmSender.toJSON()
-          );
-          const docRefReceiver = await addDoc(
-            directMessagesReceiverCollection,
-            newDmReceiver.toJSON()
-          );
-
-          console.log(
-            'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-            docRefSender.id,
-            'und Receiver-ID:',
-            docRefReceiver.id
-          );
-          await updateDoc(
-            doc(
-              this.firestore,
-              `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-              docRefSender.id
-            ),
-            {
-              messageId: docRefSender.id,
-            }
-          );
-
-          await updateDoc(
-            doc(
-              this.firestore,
-              `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
-              docRefReceiver.id
-            ),
-            {
-              messageId: docRefReceiver.id,
-            }
-          );
-          this.userManagementService.loadUsers();
-          this.chatService.setSelectedUserId(this.targetId);
-          this.viewManagementService.setView('directMessage');
-        } catch (error) {
-          console.error('Fehler beim Senden der Nachricht: ', error);
-        }
-      } else {
-        const newDmSender = new DirectMessage({
-          yourMessage: true,
-          createdBy: this.userManagementService.activeUserId.value,
-          creationDate: Date.now(),
-          message: this.messageModel.trim(),
-          imageUrl: imageUrlToSend,
-        });
-
-        const dmSenderRef = doc(
-          this.firestore,
-          `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-          this.targetId
-        );
-
-        try {
-          await setDoc(dmSenderRef, {}, { merge: true });
-
-          const directMessagesSenderCollection = collection(
-            this.firestore,
-            `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-          );
-
-          const docRefSender = await addDoc(
-            directMessagesSenderCollection,
-            newDmSender.toJSON()
-          );
-
-          console.log(
-            'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-            docRefSender.id
-          );
-          await updateDoc(
-            doc(
-              this.firestore,
-              `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-              docRefSender.id
-            ),
-            {
-              messageId: docRefSender.id,
-            }
-          );
-
-          this.userManagementService.loadUsers();
-          this.chatService.setSelectedUserId(this.targetId);
-              this.viewManagementService.setView('directMessage');
-        } catch (error) {
-          console.error('Fehler beim Senden der Nachricht: ', error);
-        }
-      }
-    } else if (this.messageType === 'threadMessage') {
-      const newThread = new ThreadMessage({
-        createdBy: this.userManagementService.activeUserId.value,
-        creationDate: Date.now(),
-        message: this.messageModel.trim(),
-        imageUrl: imageUrlToSend,
-      });
-      try {
-        const docRefThread = await addDoc(
-          collection(
-            this.firestore,
-            `channels/${this.chatService.getActiveChannelId()}/threads/${
-              this.targetId
-            }/messages`
-          ),
-          newThread.toJSON()
-        );
-        console.log(
-          'Nachricht wurde erfolgreich gesendet mit ID: ',
-          docRefThread.id
-        );
-
-        await updateDoc(
-          doc(
-            this.firestore,
-            `channels/${this.chatService.getActiveChannelId()}/threads/${
-              this.targetId
-            }/messages`,
-            docRefThread.id
-          ),
-          {
-            messageId: docRefThread.id,
-          }
-        );
-      } catch (error) {
-        console.error('Fehler beim Senden der Nachricht: ', error);
-      }
+    } catch (error) {
+      console.error('Fehler beim Senden der Nachricht: ', error);
     }
+  
+    this.cleanupAfterSend();
+  }
+  
+  private async handleChannelMessage() {
+    const newThread = this.createThread();
+    const docRef = await addDoc(
+      collection(this.firestore, `channels/${this.targetId}/threads`),
+      newThread
+    );
+    console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
+    this.chatService.setActiveChannelId(this.targetId);
+    this.viewManagementService.setView('channel');
+    await this.updateDocument(`channels/${this.targetId}/threads`, docRef.id, { messageId: docRef.id });
+  }
+  
+  private async handleDirectMessage() {
+    const messageData = {
+      yourMessage: true,
+      createdBy: this.userManagementService.activeUserId.value,
+      creationDate: Date.now(),
+      message: this.messageModel.trim(),
+      imageUrl: this.imageURL ? this.imageURL : null,
+    };
+  
+    // Für Sender
+    await this.addDirectMessage(messageData, this.targetId);
+  
+    // Unterscheidung, ob es sich um eine Selbstnachricht handelt
+    if (this.userManagementService.activeUserId.value !== this.targetId) {
+      // Für Empfänger
+      const messageDataForReceiver = { ...messageData, yourMessage: false };
+      await this.addDirectMessage(messageDataForReceiver, this.userManagementService.activeUserId.value);
+    }
+  
+    this.chatService.setSelectedUserId(this.targetId);
+    this.viewManagementService.setView('directMessage');
+  }
+  
+  private async addDirectMessage(messageData: any, userId: string) {
+    const directMessagesCollection = collection(
+      this.firestore,
+      `users/${userId}/allDirectMessages/${this.targetId}/directMessages`
+    );
+  
+    await addDoc(directMessagesCollection, messageData);
+  }
+  
+  private async updateDocument(path: string, docId: string, data: object) {
+    await updateDoc(doc(this.firestore, path, docId), data);
+  }
+  
+  private cleanupAfterSend() {
     this.messageModel = '';
     this.imageURL = undefined;
     this.filePath = undefined;
   }
+
+  private async handleThreadMessage() {
+    const newMessage = this.createThreadMessage();
+    const docRef = await addDoc(
+      collection(this.firestore, `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`),
+      newMessage
+    );
+    console.log('Thread-Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
+  
+    await this.updateDocument(
+      `channels/${this.chatService.getActiveChannelId()}/threads/${this.targetId}/messages`, 
+      docRef.id, 
+      { messageId: docRef.id }
+    );
+  }
+
+  private createThread(): any {
+    return {
+      createdBy: this.userManagementService.activeUserId.value,
+      creationDate: Date.now(),
+      message: this.messageModel.trim(),
+      imageUrl: this.imageURL ? this.imageURL : null,
+    };
+  }
+  
+  private createThreadMessage(): any {
+    return {
+      createdBy: this.userManagementService.activeUserId.value,
+      creationDate: Date.now(),
+      message: this.messageModel.trim(),
+      imageUrl: this.imageURL ? this.imageURL : null,
+    };
+  }
+  
+  
+ ///////////////////////////////////////////////////////////  
 
   onKeydown(event) {
     event.preventDefault();
