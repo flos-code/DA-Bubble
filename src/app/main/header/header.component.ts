@@ -10,6 +10,8 @@ import { ProfilCardService } from '../../services/profil-card.service';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
+import { ViewManagementService } from '../../services/view-management.service';
+import { ChatService } from '../../services/chat.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -69,6 +71,8 @@ export class HeaderComponent implements OnInit {
     private router: Router,
     public serviceProfilCard: ProfilCardService,
     public searchService: SearchService,
+    public viewManagementService: ViewManagementService,
+    private chatService: ChatService
   ) {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes
@@ -144,5 +148,11 @@ export class HeaderComponent implements OnInit {
     } else {
       this.loggedInAsGuest = false;
     }
+  }
+
+   showSidebar() {
+    this.chatService.setActiveChannelId(null);
+    this.chatService.setSelectedUserId(null);
+    this.viewManagementService.setView('sidebar')
   }
 }

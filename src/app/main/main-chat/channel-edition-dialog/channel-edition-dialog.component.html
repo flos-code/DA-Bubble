@@ -63,5 +63,14 @@
     <div class="channelEditionButtonContainer">
         <button class="channelEditionButton" (click)="leaveChannel()">Channel verlassen</button>
     </div>
+
+
+    <!-- ========= POPUP EDIT CHANNEL DATA ========= -->
+    <div class="popupEditChannelData" *ngIf="showPopup">
+        <div>
+            Bearbeitung nicht möglich. Du bist nicht der Administrator dieses Channels.
+        </div>
+    </div>
+
 </div>
 

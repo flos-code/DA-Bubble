@@ -29,39 +29,39 @@ import { ChatService } from '../services/chat.service';
   styleUrl: './main.component.scss',
 })
 export class MainComponent {
-  showMainChat: boolean = true;
-  showNewMessage: boolean = false;
-  // showSecondaryChat: boolean = false;
-  // showSidebar: boolean = false;
-  
-  private viewChangeSubscription: Subscription;
+  // showMainChat: boolean = true;
+  // showNewMessage: boolean = false;
+  // // showSecondaryChat: boolean = false;
+  // // showSidebar: boolean = false;
+
+
 
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
 
   constructor(
     public chatService: ChatService,
-    private viewManagementService: ViewManagementService,
+    public viewManagementService: ViewManagementService,
     public serviceProfilCard: ProfilCardService
   ) {
-    this.viewChangeSubscription =
-      this.viewManagementService.currentView$.subscribe((view) => {
-        this.showMainChat = view === 'showMainChat';
-        this.showNewMessage = view === 'showNewMessage';
-      });
+    // this.viewChangeSubscription =
+    //   this.viewManagementService.currentView$.subscribe((view) => {
+    //     // this.showMainChat = view === 'showMainChat';
+    //     // this.showNewMessage = view === 'showNewMessage';
+    //   });
 
-    this.getThreadOpenStatus();
+    // this.getThreadOpenStatus();
   }
 
-  ngOnDestroy(): void {
-    this.viewChangeSubscription.unsubscribe();
-  }
+  // ngOnDestroy(): void {
+  //   this.viewChangeSubscription.unsubscribe();
+  // }
 
-  getThreadOpenStatus(): void {
-    this.subscription.add(
-      this.chatService.threadOpen$.subscribe((open) => {
-        this.threadOpen = open;
-      })
-    );
-  }
+  // getThreadOpenStatus(): void {
+  //   this.subscription.add(
+  //     this.chatService.threadOpen$.subscribe((open) => {
+  //       this.threadOpen = open;
+  //     })
+  //   );
+  // }
 }

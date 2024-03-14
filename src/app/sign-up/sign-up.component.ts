@@ -102,7 +102,7 @@ export class SignUpComponent {
       photoURL: this.imgUrl,
     });
     await this.createUserDetailsDoc();
-    await this.createDirectMessagesCollection();
+    // await this.createDirectMessagesCollection();
     await signOut(this.auth);
     this.animateAndGoBackToLogin();
   }
@@ -117,15 +117,15 @@ export class SignUpComponent {
     });
   }
 
-  async createDirectMessagesCollection() {
-    await setDoc(doc(db, "users", this.auth.currentUser.uid, 'direct_messages', 'dummy_message'), {
-      message: 'Lorem ipsum, bla bla bla',
-      from: this.auth.currentUser.uid,
-      to: 'receive_from_html',
-      reactions: ':rocket',
-      timestamp: this.current.getTime(),
-    });
-  }
+  // async createDirectMessagesCollection() {
+  //   await setDoc(doc(db, "users", this.auth.currentUser.uid, 'direct_messages', 'dummy_message'), {
+  //     message: 'Lorem ipsum, bla bla bla',
+  //     from: this.auth.currentUser.uid,
+  //     to: 'receive_from_html',
+  //     reactions: ':rocket',
+  //     timestamp: this.current.getTime(),
+  //   });
+  // }
 
   animateAndGoBackToLogin() {
     this.userCreationSuccess = true;

@@ -5,7 +5,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getFirestore, onSnapshot, query, updateDoc } from 'firebase/firestore';
+import { addDoc, collection, deleteDoc, doc, getDoc, getFirestore, onSnapshot, query, updateDoc } from 'firebase/firestore';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
 
 const firebaseConfig = {
@@ -35,6 +35,8 @@ export class SecondaryChatMessagesComponent implements OnInit {
   @Input() activeChannelId!: string;
   @Input() channelMembers!: any;
   reactions = [];
+  currentUserName: string;
+  reactionNames =  [];
   reactionCollectionPath: string;
   editingMessageText: string;
   openEditOwnMessage: boolean = false;
@@ -50,7 +52,29 @@ export class SecondaryChatMessagesComponent implements OnInit {
       this.getReactions();
   }
 
-  getReactions() {
+  async getReactions() {
+    this.getCurrentUserName();
+    const q = query(collection(db, this.reactionCollectionPath));
+    await onSnapshot(q, (element) => {
+      this.reactions = [];
+      this.reactionNames = [];
+      element.forEach(reaction => {
+        this.getReactionNames(reaction.data()['reactedBy']);
+        this.reactions.push({
+          'id': reaction.id,
+          'count': reaction.data()['count'],
+          'reaction': reaction.data()['reaction'],
+          'reactedBy': reaction.data()['reactedBy'],
+          'reactedByName': this.reactionNames
+        });
+        this.sortReactionIds();
+        this.sortReactionNames();
+      });
+    });
+  }
+
+
+/*   getReactions() {
     const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.threadId}/messages/${this.messageId}/reactions`));
     return onSnapshot(q, (element) => {
       this.reactions = [];
@@ -65,9 +89,29 @@ export class SecondaryChatMessagesComponent implements OnInit {
       });
       this.getReactionNames();
     });
+  } */
+
+  async getCurrentUserName() {
+    let docRef = doc(db, 'users', this.currentUser);
+    const docSnap = await getDoc(docRef);
+    this.currentUserName = docSnap.data()['name'];
+  }
+
+  getReactionNames(reactedByArray: any) {
+    const q = query(collection(db, 'users'));
+    onSnapshot(q, (list) => {
+      list.forEach(user => {
+        for (let i = 0; i < reactedByArray.length; i++) {
+          const reactedBy = reactedByArray[i];
+          if(user.id == reactedBy && !this.reactionNames.includes(user.data()['name'])) {
+            this.reactionNames.push(user.data()['name']);
+          }
+        }
+      });
+    });
   }
   
-  getReactionNames() {
+/*   getReactionNames() {
     const q = query(collection(db, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(name => {
@@ -80,6 +124,32 @@ export class SecondaryChatMessagesComponent implements OnInit {
       });
     });
   }
+ */
+
+  sortReactionIds() {
+    for (let i = 0; i < this.reactions.length; i++) {
+      const userId = this.reactions[i];
+      if(userId.reactedBy.includes(this.currentUser)) {
+        let index = -1;
+        index = userId.reactedBy.findIndex(obj => obj == this.currentUser);
+        userId.reactedBy.splice(index, 1);
+        userId.reactedBy.unshift(this.currentUser);
+      }
+    }
+  }
+
+  sortReactionNames() {
+    for (let i = 0; i < this.reactions.length; i++) {
+      const userName = this.reactions[i];
+      if(userName.reactedByName.includes(this.currentUserName)) {
+        let index = -1;
+        index = userName.reactedByName.findIndex(obj => obj == this.currentUserName);
+        userName.reactedBy.splice(index, 1);
+        userName.reactedByName.unshift(this.currentUserName);
+      }
+    }
+  }
+
 
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {

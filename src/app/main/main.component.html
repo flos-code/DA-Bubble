@@ -1,10 +1,22 @@
 <app-header></app-header>
 
 <div class="main-content">
-  <app-side-bar></app-side-bar>
-  <app-main-chat *ngIf="showMainChat"></app-main-chat>
-  <app-new-message *ngIf="showNewMessage"></app-new-message>
-  <app-secondary-chat [ngClass]="{ 'secondary-chat-visible': threadOpen, 'secondary-chat-hidden': !threadOpen }" (closeThreadEvent)="threadOpen = false"></app-secondary-chat>
+  <app-side-bar
+    *ngIf="viewManagementService.showSidebar$ | async"
+  ></app-side-bar>
+  <app-main-chat
+    *ngIf="viewManagementService.showMainChat$ | async"
+  ></app-main-chat>
+  <!-- <app-main-chat
+  *ngIf="viewManagementService.showDirectMessage$ | async"
+></app-main-chat> -->
+
+  <app-new-message
+    *ngIf="viewManagementService.showNewMessage$ | async"
+  ></app-new-message>
+  <app-secondary-chat
+    *ngIf="viewManagementService.showSecondaryChat$ | async"
+  ></app-secondary-chat>
 </div>
 
 <app-profil-card></app-profil-card>

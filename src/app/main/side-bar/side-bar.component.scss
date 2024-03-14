@@ -337,4 +337,12 @@
     color: $purple3;
     font-variation-settings: "wght" 600;
   }
+
+  app-dialog-add-channel {
+    z-index: 20;
+  }
+
+  app-dialog-add-user-new-channel {
+    z-index: 21;
+  }
 }

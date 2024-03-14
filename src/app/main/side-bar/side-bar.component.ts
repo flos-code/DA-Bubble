@@ -20,7 +20,7 @@ import {
 } from 'firebase/firestore';
 import { Channel } from '../../../models/channel.class';
 import { getAuth } from 'firebase/auth';
-import { Observable } from 'rxjs';
+import { Observable, Subscription } from 'rxjs';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -63,12 +63,15 @@ export class SideBarComponent {
   users$ = this.userManagementService.users$;
   filteredUsers$ = this.userManagementService.filteredUsers$;
 
+  private screenSizeSubscription: Subscription;
+  private subscription = new Subscription();
+
   authSubscription: any;
   auth = getAuth(app);
 
   constructor(
     public dialog: MatDialog,
-    private viewManagementService: ViewManagementService,
+    public viewManagementService: ViewManagementService,
     public userManagementService: UserManagementService,
     private chatService: ChatService
   ) {}
@@ -80,7 +83,22 @@ export class SideBarComponent {
       }
     });
     this.userManagementService.loadUsers();
-    this.setActiveChannel('allgemein');
+    this.viewManagementService.setView('sidebar');
+
+    this.screenSizeSubscription =
+      this.viewManagementService.screenSize$.subscribe((size) => {
+        this.preSelect(size);
+      });
+
+    this.subscription.add(
+      this.viewManagementService.showSidebarToggle$.subscribe((value) => {
+        this.workspaceVisible = value;
+      })
+    );
+  }
+
+  ngOnDestroy() {
+    this.subscription.unsubscribe();
   }
 
   toggleSection(section: string): void {
@@ -90,6 +108,9 @@ export class SideBarComponent {
       this.usersVisible = !this.usersVisible;
     } else if (section === 'workspace') {
       this.workspaceVisible = !this.workspaceVisible;
+      if (this.workspaceVisible) {
+        this.viewManagementService.setView('sidebar');
+      }
     }
   }
 
@@ -104,11 +125,7 @@ export class SideBarComponent {
   async openNewMessage() {
     this.chatService.setActiveChannelId(null);
     this.chatService.setSelectedUserId(null);
-    this.showChat('showNewMessage');
-  }
-
-  showChat(view: 'showMainChat' | 'showNewMessage'): void {
-    this.viewManagementService.changeView(view);
+    this.viewManagementService.setView('newMessage');
   }
 
   loadChannels(
@@ -151,19 +168,11 @@ export class SideBarComponent {
       const docRef = await addDoc(collection(db, 'channels'), {
         ...channelData,
       });
-      console.log('Dokument erfolgreich hinzugefügt mit ID: ', docRef.id);
-
-      // Optional: Initialisiere die 'messages' Unter-Kollektion mit einem leeren Dokument
-      const messagesRef = collection(docRef, 'messages');
-      await addDoc(messagesRef, {
-        placeholder: true, // Markiere dieses Dokument als Platzhalter
-        timestamp: Date.now(), // Optional: Firestore Server-Zeitstempel als Erstellungszeit
-      });
 
       await this.loadChannels(activeUserId); // Lade Kanäle neu, um die UI zu aktualisieren
 
       // Setze den neu erstellten Kanal als aktiv
-      this.setActiveChannel(docRef.id);
+      this.setActiveChannel(docRef.id); //bei mobile muss dan anderest geregelt werden wegen view mangement um noch user hinzuzufügen
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
     }
@@ -238,7 +247,7 @@ export class SideBarComponent {
       // Now set the clicked channel as the active channel
       this.chatService.setActiveChannelId(channelId);
       // Show the main chat view for the newly selected channel
-      this.showChat('showMainChat');
+      this.viewManagementService.setView('channel');
     } else {
       console.log('Clicked channel is already active.');
     }
@@ -250,10 +259,16 @@ export class SideBarComponent {
 
   setSelectedUser(userId: string) {
     this.chatService.setSelectedUserId(userId);
-    this.showChat('showMainChat');
+    this.viewManagementService.setView('directMessage');
   }
 
   getSelectedUserId() {
     return this.chatService.getSelectedUserId();
+  }
+
+  preSelect(screenSize: string) {
+    if (screenSize === 'medium' || screenSize === 'large') {
+      this.setActiveChannel('allgemein');
+    }
   }
 }

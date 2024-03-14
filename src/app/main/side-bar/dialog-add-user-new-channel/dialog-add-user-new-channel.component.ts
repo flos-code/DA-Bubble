@@ -35,10 +35,13 @@ const db = getFirestore(app);
   standalone: true,
   imports: [CommonModule, MatIconModule, FormsModule],
   templateUrl: './dialog-add-user-new-channel.component.html',
-  styleUrl: './dialog-add-user-new-channel.component.scss',
+  styleUrls: [
+    './dialog-add-user-new-channel.component.scss',
+    './dialog-add-user-new-channel.component-mediaquery.scss',
+  ],
 })
 export class DialogAddUserNewChannelComponent {
-  @Input() isVisible: boolean = false;
+  @Input() isVisibleUser: boolean = false;
   @Output() toggleVisibility = new EventEmitter<void>();
   @Output() usersToAdd = new EventEmitter<{
     all: boolean;
@@ -70,6 +73,7 @@ export class DialogAddUserNewChannelComponent {
   }
 
   toggle(): void {
+    console.log('toggle beim user');
     this.toggleVisibility.emit();
   }
   stopPropagation(event: MouseEvent) {
