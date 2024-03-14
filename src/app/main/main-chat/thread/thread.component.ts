@@ -33,9 +33,7 @@ const db = getFirestore(app);
 })
 export class ThreadComponent implements OnInit {
   @Input() thread!: any;
-  //Input() currentUser!: BehaviorSubject<string | null>;
   @Input() currentUser!: string;
-  currentUserName: string;
   @Input() activeChannelId!: string;
   messageCount: number;
   threadMessagesTimestamps = [];
@@ -48,6 +46,7 @@ export class ThreadComponent implements OnInit {
   ownMessageEdit: boolean = false;
   //@Input() textAreaEditMessage: string;
   reactions = [];
+  currentUserName: string;
   reactionNames =  [];
   reactionCount: number;
 
@@ -134,20 +133,20 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-  // async getMessageCountAndAnswer() { //TODO: Tobias, bitte prüfen und falls alles gut, alten code löschen
-  //   const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
-  //   const q = query(messagesRef, orderBy('creationDate', 'desc'));
+   async getMessageCountAndAnswer() {
+     const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
+     const q = query(messagesRef, orderBy('creationDate', 'desc'));
   
-  //   onSnapshot(q, (snapshot) => {
-  //     this.messageCount = snapshot.docs.length;
-  //     this.formatMessageCount();
+     onSnapshot(q, (snapshot) => {
+     this.messageCount = snapshot.docs.length;
+      this.formatMessageCount();
   
-  //     if (this.messageCount > 0) {
-  //       const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
-  //       this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
-  //     }
-  //   });
-  // }
+       if (this.messageCount > 0) {
+         const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
+         this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
+       }
+     });
+   }
 
   // async getMessageCountAndAnswer() {
   //   const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
@@ -165,23 +164,6 @@ export class ThreadComponent implements OnInit {
   //   this.formatMessageCount; 
   //   });
   // }
-
-  async getMessageCountAndAnswer() {
-    const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
-    const count = await getCountFromServer(q);
-    this.messageCount = count.data().count;
-    this.formatMessageCount();
-
-    return onSnapshot(q, (element) => {
-      this.threadMessagesTimestamps = [];
-      element.forEach(thread => {
-        this.threadMessagesTimestamps.push(thread.data()['creationDate']);
-      }
-    )  
-    this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-    this.formatMessageCount; 
-    });
-  }
 
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
@@ -237,18 +219,6 @@ export class ThreadComponent implements OnInit {
       }
     }
   }
-  /* const myArray = [1, 2, 3, 4, 5];
-
-  const index = myArray.indexOf(2);
-
-  const x = myArray.splice(index, 1);
-
-  console.log(`myArray values: ${myArray}`);
-  console.log(`variable x value: ${x}`); */
-
-
-
-
 
   async addReaction(emoji: string, currentUser: string) {
     let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {

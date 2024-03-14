@@ -29,15 +29,15 @@ export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData!: any;
   @Input() currentChannelId!: any;
   @Input() channelMembers!: any;
+  @Input() currentUser: string;
   channelCreatedByName: string = "";
-
-  @Output() channelEditionDialogOpenChild = new EventEmitter();
   channelEditionDialogOpen: boolean;
+  @Output() channelEditionDialogOpenChild = new EventEmitter();
   showchannelEditionName: boolean = true;
   showchannelEditionDescription: boolean = true;
-
   editedChannelName: string;
   editedChannelDescription: string;
+  showPopup: boolean = false;
 
   ngOnInit(): void {
     this.setChannelCreatedBy();
@@ -58,7 +58,14 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   editChannelName() {
-    this.showchannelEditionName = false;
+    if(this.currentUser == this.channelData.createdBy) {
+      this.showchannelEditionName = false;
+    } else {
+      this.showPopup = true;
+      setTimeout(() => {
+        this.showPopup = false;
+      }, 5000);
+    }
   }
 
   async saveChannelName() {
@@ -75,7 +82,14 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   editChannelDescription() {
-    this.showchannelEditionDescription = false;
+    if(this.currentUser == this.channelData.createdBy) {
+      this.showchannelEditionDescription = false;
+    } else {
+      this.showPopup = true;
+      setTimeout(() => {
+        this.showPopup = false;
+      }, 5000);
+    }
   }
 
   async saveChannelDescription() {
