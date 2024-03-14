@@ -3,9 +3,11 @@ import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import {
   collection,
+  doc,
   getDocs,
   getFirestore,
   onSnapshot,
+  updateDoc,
 } from 'firebase/firestore';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { User } from '../../models/user.class';
@@ -54,9 +56,12 @@ export class UserManagementService {
     this.auth.onAuthStateChanged((user) => {
       if (user) {
         this.activeUserId.next(user.uid);
+        this.setUserOnlineStatus(user.uid, true);
       } else {
-        // when no one is logged in guest id
-        // this.activeUserId.next('Yic168FhfjbDhxyTsATeQttU3xD2');
+        if (this.activeUserId.value) {
+          this.setUserOnlineStatus(this.activeUserId.value, false); // Benutzer als offline markieren
+          this.activeUserId.next(null);
+        }
       }
     });
   }
@@ -89,7 +94,6 @@ export class UserManagementService {
 
   async getDirectMessageUserIds(): Promise<string[]> {
     if (!this.activeUserId.value) {
-      // Kein aktiver Benutzer, leer zurückgeben
       return [];
     }
 
@@ -122,12 +126,21 @@ export class UserManagementService {
     try {
       const dmUserIds = await this.getDirectMessageUserIds();
       const updatedUserIds = this.ensureActiveUserIdIncluded(dmUserIds);
-      this.updatedUserIds.next(updatedUserIds); // Aktualisiere das BehaviorSubject
+      this.updatedUserIds.next(updatedUserIds);
     } catch (error) {
       console.error(
         'Fehler beim Abrufen oder Aktualisieren der Benutzer-IDs:',
         error
       );
+    }
+  }
+
+  async setUserOnlineStatus(userId: string, isOnline: boolean) {
+    const userDocRef = doc(db, 'users', userId);
+    try {
+      await updateDoc(userDocRef, { isOnline: isOnline });
+    } catch (error) {
+      console.error('Fehler beim Aktualisieren des Benutzerstatus', error);
     }
   }
 }
