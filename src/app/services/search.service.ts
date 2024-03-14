@@ -55,10 +55,11 @@ export class SearchService {
       list.forEach(element => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
+        let docId = element.id;
         let members = element.data()['members'];
         if (members.includes(this.auth.currentUser.uid)) {
           if (compare.includes(input.toLowerCase())) {
-            this.searchChannelsResult.push(result);
+            this.searchChannelsResult.push({ id: docId, ...result });
           }
         }
       })
@@ -87,7 +88,7 @@ export class SearchService {
       threadSnapshot.forEach((threadDoc) => {
         let compare = threadDoc.data()['message'].toLowerCase();
         if (compare.includes(input.toLowerCase())) {
-          this.threads.push({channelName: channelName, ...threadDoc.data()});
+          this.threads.push({ id: docId, channelName: channelName, ...threadDoc.data() });
         }
       });
     });

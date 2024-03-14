@@ -171,6 +171,8 @@
     border-radius: 0 0 42px 42px;
     box-shadow: 0 18px 16px rgba(0, 0, 0, 0.4);
     border-top: 0;
+    max-height: 500px;
+    overflow-y: auto;
 
     p {
         margin-left: 45px;
@@ -216,5 +218,15 @@
 
     h4 {
         margin-left: 45px;
+        cursor: pointer;
+        border-radius: 30px;
+        padding-left: 16px;
+        padding-right: 16px;
+
+        &:hover {
+            background-color: #ECEEFE;
+            color: #535AF1;
+            transform: scale(1.05);
+        }
     }
 }

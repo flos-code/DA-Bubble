@@ -72,7 +72,7 @@ export class HeaderComponent implements OnInit {
     public serviceProfilCard: ProfilCardService,
     public searchService: SearchService,
     public viewManagementService: ViewManagementService,
-    private chatService: ChatService
+    public chatService: ChatService,
   ) {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes
@@ -83,7 +83,7 @@ export class HeaderComponent implements OnInit {
     this.searchService.searchUsers(this.inputValue);
     this.searchService.searchChannels(this.inputValue);
     this.searchService.searchThreads(this.inputValue);
-    // console.log(this.searchService.threads);
+    console.log(this.searchService.threads);
   }
 
   searchUsers() {
@@ -132,6 +132,12 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  onResultClick() {
+    if (this.inputValue) {
+      this.inputValue = '';
+    }
+  }
+
   private isDescendant(element: HTMLElement, className: string): boolean {
     if (!element) return false;
 
@@ -150,7 +156,7 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-   showSidebar() {
+  showSidebar() {
     this.chatService.setActiveChannelId(null);
     this.chatService.setSelectedUserId(null);
     this.viewManagementService.setView('sidebar')
