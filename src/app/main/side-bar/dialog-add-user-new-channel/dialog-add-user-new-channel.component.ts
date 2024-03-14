@@ -5,31 +5,18 @@ import {
   Input,
   Output,
   ViewChild,
+  inject,
 } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
-import { initializeApp } from 'firebase/app';
 import {
+  Firestore,
   collection,
   doc,
   getDoc,
   getDocs,
-  getFirestore,
-} from 'firebase/firestore';
+} from '@angular/fire/firestore';
 import { ChatService } from '../../../services/chat.service';
-
-const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
-};
-
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-
 @Component({
   selector: 'app-dialog-add-user-new-channel',
   standalone: true,
@@ -60,18 +47,14 @@ export class DialogAddUserNewChannelComponent {
   inputFocused: boolean = false;
   userInputModel: string = '';
 
+  private firestore: Firestore = inject(Firestore);
+
   constructor(private chatService: ChatService) {
     this.filterUsers();
   }
 
   ngOnInit() {
-    // this.chatService.activeChannelIdUpdates.subscribe({
-    //   next: (channelId) => {
-    //     if (channelId) {
-    this.initializeData(); // Rufen Sie dies nur auf, wenn ein neuer aktiver Kanal gesetzt wurde
-    //     }
-    //   },
-    // });
+    this.initializeData();
   }
 
   toggle(): void {
@@ -158,7 +141,7 @@ export class DialogAddUserNewChannelComponent {
   async fetchActiveChannelMembers(): Promise<string[]> {
     const activeChannelId = this.newChannelId;
     if (activeChannelId) {
-      const channelRef = doc(db, 'channels', activeChannelId);
+      const channelRef = doc(this.firestore, 'channels', activeChannelId);
       const channelSnap = await getDoc(channelRef);
       if (channelSnap.exists()) {
         const members = channelSnap.data()['members'];
@@ -173,7 +156,7 @@ export class DialogAddUserNewChannelComponent {
 
   //lädt alle user bis auf die welche bereits im cahnnel sind
   async fetchUsers() {
-    const usersCol = collection(db, 'users');
+    const usersCol = collection(this.firestore, 'users');
     const userSnapshot = await getDocs(usersCol);
     // Filtere Benutzer basierend darauf, ob ihre ID bereits im `activeChannelMembers` Array vorhanden ist
     const userList = userSnapshot.docs
