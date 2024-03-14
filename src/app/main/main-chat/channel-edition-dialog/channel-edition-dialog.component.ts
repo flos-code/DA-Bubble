@@ -42,6 +42,7 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.setChannelCreatedBy();
+    console.log(this.channelData.members);
   }
 
   setChannelCreatedBy() {
@@ -111,11 +112,11 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async leaveChannel() {
-    let index = this.channelMembers.indexOf(this.currentUser);
-    this.channelMembers.splice(index, 1);
+    let index = this.channelData.members.indexOf(this.currentUser);
+    this.channelData.members.splice(index, 1);
     let currentRef = doc(db, `channels/${this.currentChannelId}`);
     let data = {
-      members: this.channelMembers
+      members: this.channelData.members
     };
     await updateDoc(currentRef, data).then(() => {
     }); 
