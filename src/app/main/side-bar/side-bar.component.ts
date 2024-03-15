@@ -16,6 +16,8 @@ import {
   doc,
   addDoc,
   getDoc,
+  QuerySnapshot,
+  DocumentData,
 } from '@angular/fire/firestore';
 import { Channel } from '../../../models/channel.class';
 import { Observable, Subscription } from 'rxjs';
@@ -54,9 +56,6 @@ export class SideBarComponent {
   private subscription = new Subscription();
   private firestore: Firestore = inject(Firestore);
 
-  authSubscription: any;
-  // auth = getAuth(app);
-
   constructor(
     public dialog: MatDialog,
     public viewManagementService: ViewManagementService,
@@ -72,14 +71,11 @@ export class SideBarComponent {
     });
     this.userManagementService.loadUsers();
     this.viewManagementService.setView('sidebar');
-
     this.screenSizeSubscription =
       this.viewManagementService.screenSize$.subscribe((size) => {
         this.screenSize = size;
-
         this.preSelect(this.screenSize);
       });
-
     this.subscription.add(
       this.viewManagementService.showSidebarToggle$.subscribe((value) => {
         this.workspaceVisible = value;
@@ -128,28 +124,41 @@ export class SideBarComponent {
     activeUserId: string
   ): Observable<{ id: string; data: Channel }[]> {
     const channelsCol = collection(this.firestore, 'channels');
-
     return new Observable<{ id: string; data: Channel }[]>((subscriber) => {
       const unsubscribe = onSnapshot(
         channelsCol,
         (snapshot) => {
-          const channels = snapshot.docs
-            .map((doc) => ({
-              id: doc.id,
-              data: new Channel(doc.data()),
-            }))
-            .filter((channel) => channel.data.members.includes(activeUserId))
-            .sort((a, b) => a.data.creationDate - b.data.creationDate);
-          subscriber.next(channels);
+          const transformedChannels = this.transformChannelDocs(snapshot);
+          const filteredAndSortedChannels = this.filterAndSortChannels(
+            transformedChannels,
+            activeUserId
+          );
+          subscriber.next(filteredAndSortedChannels);
         },
         (error) => {
           subscriber.error(error);
         }
       );
-
-      // Rückgabe einer Cleanup-Funktion, die beim Unsubscribe aufgerufen wird
       return () => unsubscribe();
     });
+  }
+
+  private transformChannelDocs(
+    snapshot: QuerySnapshot<DocumentData>
+  ): { id: string; data: Channel }[] {
+    return snapshot.docs.map((doc) => ({
+      id: doc.id,
+      data: new Channel(doc.data() as Channel), // Stelle sicher, dass das Typ-Casting zu Channel hier sinnvoll ist.
+    }));
+  }
+
+  private filterAndSortChannels(
+    channels: { id: string; data: Channel }[],
+    activeUserId: string
+  ): { id: string; data: Channel }[] {
+    return channels
+      .filter((channel) => channel.data.members.includes(activeUserId))
+      .sort((a, b) => a.data.creationDate - b.data.creationDate);
   }
 
   async addChannelToFirestore(
@@ -158,19 +167,15 @@ export class SideBarComponent {
   ): Promise<void> {
     try {
       const channelData = channel.toJSON();
-      // Füge den neuen Kanal hinzu
-      const docRef = await addDoc(collection(this.firestore, 'channels'), {
-        ...channelData,
-      });
-
-      await this.loadChannels(activeUserId); // Lade Kanäle neu, um die UI zu aktualisieren
-
+      const docRef = await addDoc(
+        collection(this.firestore, 'channels'),
+        channelData
+      );
+      await this.loadChannels(activeUserId);
+      this.newChannelId = docRef.id;
+      console.log(this.newChannelId);
       if (this.screenSize === 'medium' || this.screenSize === 'large') {
-        this.setActiveChannel(docRef.id); //bei mobile muss dan anderest geregelt werden wegen view mangement um noch user hinzuzufügen
-        this.newChannelId = docRef.id;
-      } else {
-        this.newChannelId = docRef.id;
-        console.log('new id in sidebar ', this.newChannelId);
+        this.setActiveChannel(docRef.id);
       }
     } catch (error) {
       console.error('Fehler beim Hinzufügen des Kanals: ', error);
@@ -193,12 +198,11 @@ export class SideBarComponent {
     let newChannel = new Channel({
       name: channelData.name,
       description: channelData.description,
-      createdBy: activeUserId, // Setze den aktuellen Benutzer als Ersteller
+      createdBy: activeUserId,
       creationDate: Date.now(),
       type: 'channel',
       members: [activeUserId],
     });
-
     this.addChannelToFirestore(newChannel, activeUserId);
   }
 
@@ -209,60 +213,50 @@ export class SideBarComponent {
     all: boolean;
     userIds?: string[];
   }): Promise<void> {
-    // const selectedChannelId = await this.getActiveChannelId();
     const selectedChannelId = this.newChannelId;
-
     if (!selectedChannelId) {
       console.error('Kein aktiver Kanal ausgewählt.');
-      return; // Frühzeitige Rückkehr, wenn kein aktiver Kanal gefunden wurde
+      return;
     }
-
     let membersToUpdate: string[] = [];
-
     if (all) {
-      // Füge alle Benutzer-IDs hinzu, wenn 'all' wahr ist
-      const allUsersSnapshot = await getDocs(
-        collection(this.firestore, 'users')
-      );
-      allUsersSnapshot.forEach((doc) => membersToUpdate.push(doc.id));
+      membersToUpdate = await this.fetchAllUserIds();
     } else if (userIds) {
-      // Füge nur die spezifisch ausgewählten Benutzer-IDs hinzu
       membersToUpdate = userIds;
     }
+    if (membersToUpdate.length > 0) {
+      await this.updateChannelMembers(selectedChannelId, membersToUpdate);
+    }
+  }
 
-    // Aktualisiere das 'members'-Array des aktiven Kanals
-    const channelRef = doc(this.firestore, 'channels', selectedChannelId);
+  private async fetchAllUserIds(): Promise<string[]> {
+    const snapshot = await getDocs(collection(this.firestore, 'users'));
+    return snapshot.docs.map((doc) => doc.id);
+  }
+
+  private async updateChannelMembers(
+    channelId: string,
+    newMembers: string[]
+  ): Promise<void> {
+    const channelRef = doc(this.firestore, 'channels', channelId);
     const channelSnap = await getDoc(channelRef);
+
     if (channelSnap.exists()) {
       const existingMembers = channelSnap.data()['members'] || [];
       const updatedMembers = Array.from(
-        new Set([...existingMembers, ...membersToUpdate])
-      ); // Kombiniert und entfernt Duplikate
+        new Set([...existingMembers, ...newMembers])
+      );
       await updateDoc(channelRef, { members: updatedMembers });
+    } else {
+      console.error('Der Kanal existiert nicht.');
     }
   }
 
   setActiveChannel(channelId: string) {
-    //TODO: Bitte prüfen ob diese Variante auch in Ordnung geht, die untere Funktion lässt nicht zu den Allgemein channel zu öffnen, da bereits aktiv.
     this.chatService.closeThread();
-    // Now set the clicked channel as the active channel
     this.chatService.setActiveChannelId(channelId);
-    // Show the main chat view for the newly selected channel
     this.viewManagementService.setView('channel');
   }
-
-  // setActiveChannel(channelId: string) {
-  //   if (this.getActiveChannelId() !== channelId) {
-  //     // Close the thread if the clicked channel is not the currently active channel
-  //     this.chatService.closeThread();
-  //     // Now set the clicked channel as the active channel
-  //     this.chatService.setActiveChannelId(channelId);
-  //     // Show the main chat view for the newly selected channel
-  //     this.viewManagementService.setView('channel');
-  //   } else {
-  //     console.log('Clicked channel is already active.');
-  //   }
-  // }
 
   getActiveChannelId() {
     return this.chatService.getActiveChannelId();

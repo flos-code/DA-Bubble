@@ -126,18 +126,27 @@ export class DialogAddUserNewChannelComponent {
     );
   }
 
+  // async initializeData() {
+  //   this.activeChannelMembers = await this.fetchActiveChannelMembers();
+  //   await this.fetchUsers();
+  // }
+
   async initializeData() {
+    // Zuerst die aktuellen Kanalmitglieder abrufen und speichern
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
+    // Dann die Benutzerliste abrufen und filtern, basierend auf den zuvor abgerufenen Kanalmitgliedern
     await this.fetchUsers();
   }
 
   async fetchActiveChannelMembers(): Promise<string[]> {
     const activeChannelId = this.newChannelId;
+    console.log(this.newChannelId);
     if (activeChannelId) {
       const channelRef = doc(this.firestore, 'channels', activeChannelId);
       const channelSnap = await getDoc(channelRef);
       if (channelSnap.exists()) {
         const members = channelSnap.data()['members'];
+        console.log('Aktive Kanalmitglieder:', members); // Debugging-Ausgabe
         if (members) {
           return members;
         }
@@ -147,16 +156,15 @@ export class DialogAddUserNewChannelComponent {
     return [];
   }
 
-  //lädt alle user bis auf die welche bereits im cahnnel sind
   async fetchUsers() {
     const usersCol = collection(this.firestore, 'users');
     const userSnapshot = await getDocs(usersCol);
-    // Filtere Benutzer basierend darauf, ob ihre ID bereits im `activeChannelMembers` Array vorhanden ist
     const userList = userSnapshot.docs
-      .filter((doc) => !this.activeChannelMembers.includes(doc.id))
-      .map((doc) => ({ id: doc.id, ...doc.data() }));
+      .map((doc) => ({ id: doc.id, ...doc.data() }))
+      .filter((user) => !this.activeChannelMembers.includes(user.id));
 
-    this.allUsers = userList; // Aktualisiere `allUsers` mit der gefilterten Liste
+    console.log('Gefilterte Benutzerliste:', userList); // Debugging-Ausgabe
+    this.allUsers = userList;
   }
 
   onInputFocus(): void {

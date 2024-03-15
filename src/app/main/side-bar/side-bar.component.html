@@ -176,9 +176,9 @@
 </app-dialog-add-channel>
 
 <app-dialog-add-user-new-channel
-  *ngIf="dialogAddUserVisible"
+  *ngIf="dialogAddUserVisible && newChannelId"
   [isVisibleUser]="dialogAddUserVisible"
-  [newChannelId]="this.newChannelId"
+  [newChannelId]="newChannelId"
   (toggleVisibility)="toggleAddUserDialog()"
   (toggleVisibilityChannel)="hideAddChannelDialog()"
   (usersToAdd)="onUsersToAdd($event)"
