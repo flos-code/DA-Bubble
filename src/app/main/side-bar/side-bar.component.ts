@@ -244,18 +244,26 @@ export class SideBarComponent {
     }
   }
 
-  setActiveChannel(channelId: string) {
-    if (this.getActiveChannelId() !== channelId) {
-      // Close the thread if the clicked channel is not the currently active channel
+  setActiveChannel(channelId: string) { //TODO: Bitte prüfen ob diese Variante auch in Ordnung geht, die untere Funktion lässt nicht zu den Allgemein channel zu öffnen, da bereits aktiv.
       this.chatService.closeThread();
       // Now set the clicked channel as the active channel
       this.chatService.setActiveChannelId(channelId);
       // Show the main chat view for the newly selected channel
       this.viewManagementService.setView('channel');
-    } else {
-      console.log('Clicked channel is already active.');
-    }
   }
+
+  // setActiveChannel(channelId: string) {
+  //   if (this.getActiveChannelId() !== channelId) {
+  //     // Close the thread if the clicked channel is not the currently active channel
+  //     this.chatService.closeThread();
+  //     // Now set the clicked channel as the active channel
+  //     this.chatService.setActiveChannelId(channelId);
+  //     // Show the main chat view for the newly selected channel
+  //     this.viewManagementService.setView('channel');
+  //   } else {
+  //     console.log('Clicked channel is already active.');
+  //   }
+  // }
 
   getActiveChannelId() {
     return this.chatService.getActiveChannelId();
