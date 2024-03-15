@@ -86,7 +86,6 @@ export class DialogAddUserNewChannelComponent {
     this.closeBoth();
   }
 
-  //user werden gefilter anhand der einagbe im input und der bereits im channel befindlichen user
   filterUsers(): void {
     if (!this.userInputModel) {
       this.filteredUsers = [];
@@ -126,33 +125,23 @@ export class DialogAddUserNewChannelComponent {
     );
   }
 
-  // async initializeData() {
-  //   this.activeChannelMembers = await this.fetchActiveChannelMembers();
-  //   await this.fetchUsers();
-  // }
-
   async initializeData() {
-    // Zuerst die aktuellen Kanalmitglieder abrufen und speichern
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
-    // Dann die Benutzerliste abrufen und filtern, basierend auf den zuvor abgerufenen Kanalmitgliedern
     await this.fetchUsers();
   }
 
   async fetchActiveChannelMembers(): Promise<string[]> {
     const activeChannelId = this.newChannelId;
-    console.log(this.newChannelId);
     if (activeChannelId) {
       const channelRef = doc(this.firestore, 'channels', activeChannelId);
       const channelSnap = await getDoc(channelRef);
       if (channelSnap.exists()) {
         const members = channelSnap.data()['members'];
-        console.log('Aktive Kanalmitglieder:', members); // Debugging-Ausgabe
         if (members) {
           return members;
         }
       }
     }
-    console.log('Keine Mitglieder gefunden oder Channel ID ist null.');
     return [];
   }
 
@@ -162,8 +151,6 @@ export class DialogAddUserNewChannelComponent {
     const userList = userSnapshot.docs
       .map((doc) => ({ id: doc.id, ...doc.data() }))
       .filter((user) => !this.activeChannelMembers.includes(user.id));
-
-    console.log('Gefilterte Benutzerliste:', userList); // Debugging-Ausgabe
     this.allUsers = userList;
   }
 

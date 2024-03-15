@@ -60,6 +60,7 @@ export class DialogAddChannelComponent {
   toggle(): void {
     this.toggleVisibility.emit();
   }
+
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
@@ -72,34 +73,8 @@ export class DialogAddChannelComponent {
     this.inputFocused = false;
   }
 
-  // createChannel(): void {
-  //   if (this.form?.valid) {
-  //     this.chatService
-  //       .channelNameExists(this.channelNameModel)
-  //       .then((exists) => {
-  //         this.channelNameExists = exists; // Setze den Wert basierend auf der Existenz des Kanalnamens
-  //         if (exists) {
-  //           // Hinweis anzeigen, dass der Kanalname bereits existiert
-  //         } else {
-  //           // Kanal erstellen, da der Name nicht existiert
-  //           this.onChannelCreation.emit({
-  //             name: this.channelNameModel,
-  //             description: this.channelDescriptionModel,
-  //           });
-  //           if (this.screenSize !== 'extraSmall') {
-  //             this.toggle(); // Schließt das Dialogfenster bei Mobile nicht
-  //           }
-  //           console.log('Kanal erstellt');
-  //         }
-  //       });
-  //   } else {
-  //     console.log('Formular ist nicht gültig.');
-  //   }
-  // }
-
   onChannelNameChange(): void {
     if (this.channelNameModel.trim()) {
-      // Prüft, ob der Kanalname bereits existiert
       this.chatService
         .channelNameExists(this.channelNameModel)
         .then((exists) => {
@@ -108,19 +83,18 @@ export class DialogAddChannelComponent {
         });
     } else {
       this.channelNameExists = false;
-      this.isChannelNameValid = false; // Deaktiviere den Button, wenn das Feld leer ist
+      this.isChannelNameValid = false;
     }
   }
 
   createChannel(): void {
     if (this.form?.valid && !this.channelNameExists) {
-      // Kanal erstellen, da der Name nicht existiert und das Formular gültig ist
       this.onChannelCreation.emit({
         name: this.channelNameModel,
         description: this.channelDescriptionModel,
       });
       if (this.screenSize !== 'extraSmall') {
-        this.toggle(); // Schließt das Dialogfenster bei Mobile nicht
+        this.toggle();
       }
     }
   }
