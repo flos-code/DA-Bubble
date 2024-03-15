@@ -83,11 +83,7 @@ export class HeaderComponent implements OnInit {
     this.searchService.searchUsers(this.inputValue);
     this.searchService.searchChannels(this.inputValue);
     this.searchService.searchThreads(this.inputValue);
-    console.log(this.searchService.threads);
-  }
-
-  searchUsers() {
-
+    // console.log(this.searchService.threads);
   }
 
   isInputValueGreaterThanOne(): boolean {
@@ -118,18 +114,18 @@ export class HeaderComponent implements OnInit {
   async signOut() {
     if (this.auth.currentUser.uid) {
       let userRef = doc(db, "users", this.auth.currentUser.uid);
-    updateDoc(userRef, {
-      isOnline: false,
-    });
-    await this.auth.signOut();
-    this.router.navigateByUrl('login');
-    this.serviceProfilCard.isOverlayActive = false;
+      updateDoc(userRef, {
+        isOnline: false,
+      });
+      await this.auth.signOut();
+      this.router.navigateByUrl('login');
+      this.serviceProfilCard.isOverlayActive = false;
     } else {
       await this.auth.signOut();
-    this.router.navigateByUrl('login');
-    this.serviceProfilCard.isOverlayActive = false;
+      this.router.navigateByUrl('login');
+      this.serviceProfilCard.isOverlayActive = false;
     }
-    
+
   }
 
 
