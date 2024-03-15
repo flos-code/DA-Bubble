@@ -128,9 +128,7 @@ export class SideBarComponent {
     activeUserId: string
   ): Observable<{ id: string; data: Channel }[]> {
     const channelsCol = collection(this.firestore, 'channels');
-    console.log('Active User ID wegen filter:', activeUserId);
 
-    // Erstellen Sie ein neues Observable
     return new Observable<{ id: string; data: Channel }[]>((subscriber) => {
       const unsubscribe = onSnapshot(
         channelsCol,
@@ -244,12 +242,13 @@ export class SideBarComponent {
     }
   }
 
-  setActiveChannel(channelId: string) { //TODO: Bitte prüfen ob diese Variante auch in Ordnung geht, die untere Funktion lässt nicht zu den Allgemein channel zu öffnen, da bereits aktiv.
-      this.chatService.closeThread();
-      // Now set the clicked channel as the active channel
-      this.chatService.setActiveChannelId(channelId);
-      // Show the main chat view for the newly selected channel
-      this.viewManagementService.setView('channel');
+  setActiveChannel(channelId: string) {
+    //TODO: Bitte prüfen ob diese Variante auch in Ordnung geht, die untere Funktion lässt nicht zu den Allgemein channel zu öffnen, da bereits aktiv.
+    this.chatService.closeThread();
+    // Now set the clicked channel as the active channel
+    this.chatService.setActiveChannelId(channelId);
+    // Show the main chat view for the newly selected channel
+    this.viewManagementService.setView('channel');
   }
 
   // setActiveChannel(channelId: string) {

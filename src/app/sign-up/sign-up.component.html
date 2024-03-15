@@ -1,76 +1,144 @@
 <div class="sign-up-main">
+  <div class="logo-container">
+    <img src="./assets/img/Logo.png" />
+    <p>DA Bubble</p>
+  </div>
 
-    <div class="logo-container">
-        <img src="./assets/img/Logo.png">
-        <p>DA Bubble</p>
+  <div *ngIf="first" class="sign-up-form-container">
+    <h1>Konto erstellen</h1>
+    <button class="go-back-to-login-btn" (click)="goBackToLogin()"></button>
+    <p class="sign-up-hint">
+      Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues
+      DABubble-Konto.
+    </p>
+    <form class="sign-up-form" [formGroup]="registerForm">
+      <input
+        required
+        type="text"
+        class="sign-up-name-input"
+        name="name"
+        id="sign_up_name"
+        placeholder="Name und Nachname"
+        formControlName="nameAndSurname"
+      />
+      <input
+        required
+        type="email"
+        class="sign-up-email-input"
+        name="email"
+        id="email"
+        placeholder="beispielname@email.com"
+        formControlName="email"
+      />
+      <input
+        required
+        type="password"
+        class="sign-up-password-input"
+        name="password"
+        id="sign_up_password"
+        placeholder="Passwort"
+        formControlName="password"
+      />
+      <div class="privacy-policy-container">
+        <label>
+          <input
+            type="checkbox"
+            name="checkbox"
+            id="checkbox1"
+            formControlName="checkbox"
+          />
+        </label>
+        <p>Ich stimme der<a>Datenschutzerklärung</a>zu</p>
+      </div>
+    </form>
+    <div class="sign-up-btns-container">
+      <button
+        [disabled]="!registerForm.valid"
+        class="next-btn"
+        [class.btn-disabled]="!registerForm.valid"
+        (click)="goToAvatarChoice()"
+      >
+        Weiter
+      </button>
+    </div>
+  </div>
+
+  <div *ngIf="second" class="picture-choice-container">
+    <h1>Wähle deinen Avatar</h1>
+    <button class="go-back-to-login-btn" (click)="goBackToFirst()"></button>
+
+    <img class="chosen-profile-pic" [src]="imgUrl" />
+
+    <div class="picture-choice-info">
+      <div>
+        <p class="p1">{{ registerForm.value.nameAndSurname }}</p>
+        <p class="p2">Aus der Liste wählen</p>
+      </div>
+      <div class="generic-profile-pic-list">
+        <img
+          (click)="chooseAvatar(1)"
+          src="/assets/img/userImages/userImage1.svg"
+        />
+        <img
+          (click)="chooseAvatar(2)"
+          src="/assets/img/userImages/userImage2.svg"
+        />
+        <img
+          (click)="chooseAvatar(3)"
+          src="/assets/img/userImages/userImage3.svg"
+        />
+        <img
+          (click)="chooseAvatar(4)"
+          src="/assets/img/userImages/userImage4.svg"
+        />
+        <img
+          (click)="chooseAvatar(5)"
+          src="/assets/img/userImages/userImage5.svg"
+        />
+        <img
+          (click)="chooseAvatar(6)"
+          src="/assets/img/userImages/userImage6.svg"
+        />
+      </div>
     </div>
 
-    <div *ngIf="first" class="sign-up-form-container">
-        <h1>Konto erstellen</h1>
-        <button class="go-back-to-login-btn" (click)="goBackToLogin()"></button>
-        <p class="sign-up-hint">Mit deinem Namen und deiner E-Mail-Adresse hast du dein neues DABubble-Konto.</p>
-        <form class="sign-up-form" [formGroup]="registerForm">
-            <input required type="text" class="sign-up-name-input" name="name" id="sign_up_name"
-                placeholder="Name und Nachname" formControlName="nameAndSurname">
-            <input required type="email" class="sign-up-email-input" name="email" id="email"
-                placeholder="beispielname@email.com" formControlName="email">
-            <input required type="password" class="sign-up-password-input" name="password" id="sign_up_password"
-                placeholder="Passwort" formControlName="password">
-            <div class="privacy-policy-container">
-                <label>
-                    <input type="checkbox" name="checkbox" id="checkbox1" formControlName="checkbox">
-                </label>
-                <p>Ich stimme der<a>Datenschutzerklärung</a>zu</p>
-            </div>
-        </form>
-        <div class="sign-up-btns-container">
-            <button [disabled]="!registerForm.valid" class="next-btn" [class.btn-disabled]="!registerForm.valid"
-                (click)="goToAvatarChoice()">Weiter</button>
-        </div>
+    <div class="personal-pic-upload-container">
+      <p>eigenes Bild verwenden</p>
+      <input
+        type="file"
+        class="file-input"
+        (change)="onFileSelected($event)"
+        #fileUpload
+        style="display: none"
+      />
+      <button *ngIf="!isCustomImage" (click)="fileUpload.click()">
+        Datei hochladen
+      </button>
+      <button *ngIf="isCustomImage" (click)="removeFileUpload()">
+        Bild entfernen
+      </button>
     </div>
 
-    <div *ngIf="second" class="picture-choice-container">
-        <h1>Wähle deinen Avatar</h1>
-        <button class="go-back-to-login-btn" (click)="goBackToFirst()"></button>
-
-
-        <img class="chosen-profile-pic" [src]="imgUrl">
-
-        <div class="picture-choice-info">
-            <div>
-                <p class="p1">{{registerForm.value.nameAndSurname}}</p>
-                <p class="p2">Aus der Liste wählen</p>
-            </div>
-            <div class="generic-profile-pic-list">
-                <img (click)="chooseAvatar(1)" src="/assets/img/userImages/userImage1.svg">
-                <img (click)="chooseAvatar(2)" src="/assets/img/userImages/userImage2.svg">
-                <img (click)="chooseAvatar(3)" src="/assets/img/userImages/userImage3.svg">
-                <img (click)="chooseAvatar(4)" src="/assets/img/userImages/userImage4.svg">
-                <img (click)="chooseAvatar(5)" src="/assets/img/userImages/userImage5.svg">
-                <img (click)="chooseAvatar(6)" src="/assets/img/userImages/userImage6.svg">
-            </div>
-        </div>
-
-        <div class="personal-pic-upload-container">
-            <p>eigenes Bild verwenden</p>
-            <button>
-                <p>Datei hochladen</p>
-            </button>
-        </div>
-
-        <div class="sign-up-btns-container">
-            <button class="next-btn" [disabled]="person == 'zero'" [class.btn-disabled]="person == 'zero'" (click)="signUp()">Weiter</button>
-        </div>
+    <div class="sign-up-btns-container">
+      <button
+        class="next-btn"
+        [disabled]="person == 'zero' && !isCustomImage"
+        [class.btn-disabled]="person == 'zero' && !isCustomImage"
+        (click)="signUp()"
+      >
+        Weiter
+      </button>
     </div>
+  </div>
 
-    <div class="lower-links-container">
-        <a href="">Impressum</a>
-        <a href="">Datenschutz</a>
-    </div>
+  <div class="lower-links-container">
+    <a href="">Impressum</a>
+    <a href="">Datenschutz</a>
+  </div>
 </div>
 
 <div *ngIf="userCreationSuccess" class="successfull-sign-up-overlay">
-    <div class="successfull-sign-up-main">
-        <p>Konto erfolgreich erstellt!</p>
-    </div>
+  <div class="successfull-sign-up-main">
+    <p>Konto erfolgreich erstellt!</p>
+  </div>
 </div>

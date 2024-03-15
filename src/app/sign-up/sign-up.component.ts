@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import {
@@ -19,6 +19,13 @@ import {
   updateProfile,
 } from 'firebase/auth';
 import { DirectMessage } from '../../models/directMessage.class';
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from 'firebase/storage';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
@@ -31,6 +38,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const storage = getStorage();
 
 @Component({
   selector: 'app-sign-up',
@@ -57,6 +65,11 @@ export class SignUpComponent {
   person5Img: string = '/assets/img/userImages/userImage5.svg';
   person6Img: string = '/assets/img/userImages/userImage6.svg';
   imgUrl: string = this.genericImg;
+
+  @ViewChild('fileUpload') fileUpload: ElementRef;
+  storage = getStorage();
+  filePath: string;
+  isCustomImage: boolean = false;
 
   registerForm = this.fb.group({
     nameAndSurname: ['', Validators.required],
@@ -86,6 +99,11 @@ export class SignUpComponent {
   }
 
   chooseAvatar(person: number) {
+    if (this.isCustomImage) {
+      this.deleteImageFromStorage(); // Löscht das aktuelle Bild aus dem Storage
+      this.isCustomImage = false; // Setze isCustomImage zurück, da wir jetzt einen Standardavatar verwenden
+    }
+
     if (person == 1) {
       this.imgUrl = this.person1Img;
       this.person = this.person1Img;
@@ -191,5 +209,75 @@ export class SignUpComponent {
       this.userCreationSuccess = false;
       this.goBackToLogin();
     }, 1500);
+  }
+
+  async onFileSelected(event) {
+    const file: File = event.target.files[0];
+    if (!file) return;
+    const validTypes = ['image/png', 'image/jpeg', 'image/svg+xml'];
+    if (!validTypes.includes(file.type)) {
+      alert('Nur PNG, JPG und SVG Dateien sind zulässig.');
+      return;
+    }
+    const maxSizeInBytes = 1.5 * 1024 * 1024; // 1,5 MB in Bytes
+    if (file.size > maxSizeInBytes) {
+      alert('Die Datei ist zu groß. Maximale Dateigröße ist 1,5 MB.');
+      return;
+    }
+    await this.uploadImage(file);
+  }
+
+  generateUniqueId() {
+    return (
+      Math.random().toString(36).substring(2, 15) +
+      Math.random().toString(36).substring(2, 15)
+    );
+  }
+
+  async uploadImage(file: File) {
+    try {
+      const uniqueId = this.generateUniqueId();
+      const uniqueFileName = `${uniqueId}-${file.name}`;
+      const filePath = `profileImages/${uniqueFileName}`;
+      this.filePath = filePath;
+      const storageRef = ref(this.storage, filePath);
+      const uploadTask = await uploadBytes(storageRef, file);
+      const downloadUrl = await getDownloadURL(uploadTask.ref);
+      this.isCustomImage = true;
+      this.imgUrl = downloadUrl; // Setze die neue Bild-URL
+    } catch (error) {
+      console.error('Error uploading file: ', error);
+    }
+  }
+
+  async removeFileUpload() {
+    if (!this.filePath) return;
+    try {
+      const storageRef = ref(this.storage, this.filePath);
+      await deleteObject(storageRef);
+      this.imgUrl = this.genericImg; // Setze das Bild zurück auf das Standardbild
+      this.resetFileInput();
+      this.isCustomImage = false;
+    } catch (error) {
+      console.error('Error deleting file: ', error);
+    }
+  }
+
+  private resetFileInput() {
+    if (this.fileUpload && this.fileUpload.nativeElement) {
+      this.fileUpload.nativeElement.value = '';
+    }
+  }
+
+  async deleteImageFromStorage() {
+    if (!this.filePath || !this.isCustomImage) return;
+    try {
+      const storageRef = ref(this.storage, this.filePath);
+      await deleteObject(storageRef);
+      this.resetFileInput(); // Optional: Setze das file input zurück
+      // Beachte, dass wir imgUrl hier nicht ändern
+    } catch (error) {
+      console.error('Fehler beim Löschen des Bildes aus dem Storage: ', error);
+    }
   }
 }
