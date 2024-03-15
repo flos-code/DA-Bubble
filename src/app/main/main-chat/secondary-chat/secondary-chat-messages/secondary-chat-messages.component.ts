@@ -195,8 +195,8 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     const messageRef = doc(this.firestore, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
   
     if (this.editingMessageText === '') {
-      this.editingMessageText = '';
       this.openEditOwnInput = false;
+      this.editingMessageText = '';
       this.messageDeleted = true;
       setTimeout(() => {
         this.messageDeleted = false;
