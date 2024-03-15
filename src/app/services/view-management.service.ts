@@ -50,9 +50,9 @@ export class ViewManagementService {
   updateScreenSize(width: number): void {
     if (width <= 500) {
       this.screenSize.next('extraSmall');
-    } else if (width > 500 && width <= 1100) {
+    } else if (width > 500 && width <= 1110) {
       this.screenSize.next('small');
-    } else if (width > 1100 && width <= 1500) {
+    } else if (width > 1110 && width <= 1500) {
       this.screenSize.next('medium');
     } else {
       this.screenSize.next('large');
