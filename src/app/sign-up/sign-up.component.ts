@@ -9,6 +9,7 @@ import {
   setDoc,
   addDoc,
   updateDoc,
+  arrayUnion,
 } from 'firebase/firestore';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import {
@@ -117,6 +118,7 @@ export class SignUpComponent {
       photoURL: this.imgUrl,
     });
     await this.createUserDetailsDoc();
+    await this.addUserToGeneralChannel();
     await this.createWelcomeMessage();
     await signOut(this.auth);
     this.animateAndGoBackToLogin();
@@ -174,6 +176,13 @@ export class SignUpComponent {
     } catch (error) {
       console.error('Fehler beim Senden der Nachricht: ', error);
     }
+  }
+
+  async addUserToGeneralChannel() {
+    const channelRef = doc(db, 'channels', 'allgemein');
+    await updateDoc(channelRef, {
+      members: arrayUnion(this.auth.currentUser.uid),
+    });
   }
 
   animateAndGoBackToLogin() {
