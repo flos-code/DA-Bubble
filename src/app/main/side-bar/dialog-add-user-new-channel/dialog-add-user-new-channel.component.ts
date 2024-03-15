@@ -16,7 +16,7 @@ import {
   getDoc,
   getDocs,
 } from '@angular/fire/firestore';
-import { ChatService } from '../../../services/chat.service';
+
 @Component({
   selector: 'app-dialog-add-user-new-channel',
   standalone: true,
@@ -29,7 +29,7 @@ import { ChatService } from '../../../services/chat.service';
 })
 export class DialogAddUserNewChannelComponent {
   @Input() isVisibleUser: boolean = false;
-  @Input() newChannelId: string; // ID des Nutzers/Kanals/Threads
+  @Input() newChannelId: string;
   @Output() toggleVisibility = new EventEmitter<void>();
   @Output() toggleVisibilityChannel = new EventEmitter<void>();
   @Output() usersToAdd = new EventEmitter<{
@@ -49,7 +49,7 @@ export class DialogAddUserNewChannelComponent {
 
   private firestore: Firestore = inject(Firestore);
 
-  constructor(private chatService: ChatService) {
+  constructor() {
     this.filterUsers();
   }
 
@@ -69,6 +69,7 @@ export class DialogAddUserNewChannelComponent {
     this.toggle();
     this.toggleChannel();
   }
+
   stopPropagation(event: MouseEvent) {
     event.stopPropagation();
   }
@@ -77,7 +78,6 @@ export class DialogAddUserNewChannelComponent {
     if (this.userSelection === 'allMembers') {
       this.usersToAdd.emit({ all: true });
     } else if (this.userSelection === 'specificPeople') {
-      // Änderung: Emit der IDs ausgewählter Benutzer statt nur 'addedUser'
       this.usersToAdd.emit({
         all: false,
         userIds: this.selectedUsers.map((user) => user.id),
@@ -100,7 +100,7 @@ export class DialogAddUserNewChannelComponent {
             !this.selectedUsers.some(
               (selectedUser) => selectedUser.id === user.id
             )
-        ); // Filtere Benutzer, die nicht bereits ausgewählt wurden
+        );
     }
   }
 
@@ -111,7 +111,6 @@ export class DialogAddUserNewChannelComponent {
       this.selectedUsers.push(user);
       this.filteredUsers = [];
       this.userInputModel = '';
-      // this.adjustTextboxHeight();
     }
   }
 
@@ -119,7 +118,6 @@ export class DialogAddUserNewChannelComponent {
     this.selectedUsers = this.selectedUsers.filter(
       (user) => user.id !== userToRemove.id
     );
-    // this.adjustTextboxHeight();
   }
 
   shouldDisableSubmit(): boolean {
@@ -133,11 +131,6 @@ export class DialogAddUserNewChannelComponent {
     await this.fetchUsers();
   }
 
-  // getActiveChannelId() {
-  //   return this.chatService.getActiveChannelId();
-  // }
-
-  //lädt id vom aktiven chanel um zu sehen welche user schon mitglieder sind
   async fetchActiveChannelMembers(): Promise<string[]> {
     const activeChannelId = this.newChannelId;
     if (activeChannelId) {

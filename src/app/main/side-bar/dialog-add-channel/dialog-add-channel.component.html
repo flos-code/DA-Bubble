@@ -38,7 +38,11 @@
           placeholder="z.B. Kooperationsprojekt"
           (focus)="onInputFocus()"
           (blur)="onInputBlur()"
+          (ngModelChange)="onChannelNameChange()"
         />
+      </div>
+      <div *ngIf="channelNameExists" class="nameValidation">
+        Ein Kanal mit diesem Namen existiert bereits.
       </div>
     </div>
 
@@ -55,6 +59,8 @@
       />
     </div>
 
-    <button class="btnPrimary">Erstellen</button>
+    <button class="btnPrimary" [disabled]="!isChannelNameValid || !form.valid">
+      Erstellen
+    </button>
   </form>
 </div>

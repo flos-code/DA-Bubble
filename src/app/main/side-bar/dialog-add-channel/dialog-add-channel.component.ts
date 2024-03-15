@@ -9,11 +9,13 @@ import { FormsModule, NgForm } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { Subscription } from 'rxjs';
+import { ChatService } from '../../../services/chat.service';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-dialog-add-channel',
   standalone: true,
-  imports: [MatIconModule, FormsModule],
+  imports: [MatIconModule, FormsModule, CommonModule],
   templateUrl: './dialog-add-channel.component.html',
   styleUrls: [
     './dialog-add-channel.component.scss',
@@ -30,13 +32,19 @@ export class DialogAddChannelComponent {
   @ViewChild('form') form!: NgForm;
 
   screenSize: string;
+
   private screenSizeSubscription: Subscription;
 
-  constructor(private viewManagementService: ViewManagementService) {}
+  constructor(
+    private viewManagementService: ViewManagementService,
+    private chatService: ChatService
+  ) {}
 
   inputFocused: boolean = false;
   channelNameModel: string = '';
   channelDescriptionModel: string = '';
+  channelNameExists: boolean = false;
+  isChannelNameValid: boolean = true;
 
   ngOnInit(): void {
     this.screenSizeSubscription =
@@ -64,20 +72,56 @@ export class DialogAddChannelComponent {
     this.inputFocused = false;
   }
 
+  // createChannel(): void {
+  //   if (this.form?.valid) {
+  //     this.chatService
+  //       .channelNameExists(this.channelNameModel)
+  //       .then((exists) => {
+  //         this.channelNameExists = exists; // Setze den Wert basierend auf der Existenz des Kanalnamens
+  //         if (exists) {
+  //           // Hinweis anzeigen, dass der Kanalname bereits existiert
+  //         } else {
+  //           // Kanal erstellen, da der Name nicht existiert
+  //           this.onChannelCreation.emit({
+  //             name: this.channelNameModel,
+  //             description: this.channelDescriptionModel,
+  //           });
+  //           if (this.screenSize !== 'extraSmall') {
+  //             this.toggle(); // Schließt das Dialogfenster bei Mobile nicht
+  //           }
+  //           console.log('Kanal erstellt');
+  //         }
+  //       });
+  //   } else {
+  //     console.log('Formular ist nicht gültig.');
+  //   }
+  // }
+
+  onChannelNameChange(): void {
+    if (this.channelNameModel.trim()) {
+      // Prüft, ob der Kanalname bereits existiert
+      this.chatService
+        .channelNameExists(this.channelNameModel)
+        .then((exists) => {
+          this.channelNameExists = exists;
+          this.isChannelNameValid = !exists;
+        });
+    } else {
+      this.channelNameExists = false;
+      this.isChannelNameValid = false; // Deaktiviere den Button, wenn das Feld leer ist
+    }
+  }
+
   createChannel(): void {
-    if (this.form?.valid) {
-      // Sendet die Kanaldaten an die übergeordnete Komponente
+    if (this.form?.valid && !this.channelNameExists) {
+      // Kanal erstellen, da der Name nicht existiert und das Formular gültig ist
       this.onChannelCreation.emit({
         name: this.channelNameModel,
         description: this.channelDescriptionModel,
       });
       if (this.screenSize !== 'extraSmall') {
-        this.toggle(); // Schließt das Dialogfenster bei mobile nicht
+        this.toggle(); // Schließt das Dialogfenster bei Mobile nicht
       }
-
-      console.log('channe erstellt');
-    } else {
-      console.log('Form not valid');
     }
   }
 }

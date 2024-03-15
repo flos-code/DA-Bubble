@@ -1,17 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { initializeApp } from 'firebase/app';
-import {
-  getFirestore,
-  collection,
-  onSnapshot,
-  addDoc,
-  doc,
-  updateDoc,
-  deleteDoc,
-  getDocs,
-  getDoc,
-} from 'firebase/firestore';
+import { getFirestore, collection, getDocs } from 'firebase/firestore';
 import { ThreadMessage } from '../../models/threadMessage.class';
 import { Thread } from '../../models/thread.class';
 
@@ -30,8 +20,6 @@ const db = getFirestore(app);
   providedIn: 'root',
 })
 export class ChatService {
-  private messages = [];
-  private db;
   private activeChannelId: string;
   private selectedUserId: string;
 
@@ -52,7 +40,7 @@ export class ChatService {
     return this.activeUserIdUpdated.asObservable();
   }
 
-  constructor() { }
+  constructor() {}
 
   // ------------------- Channel Logic --------------------
 
@@ -104,11 +92,22 @@ export class ChatService {
     this.selectedThreadIdSource.next(threadId);
     setTimeout(() => {
       this.threadOpenSource.next(true);
-    },30);
+    }, 30);
   }
 
   closeThread(): void {
     this.selectedThreadIdSource.next(null);
     this.threadOpenSource.next(false);
+  }
+
+  // ------------------- Channel creation Logic --------------------
+
+  async channelNameExists(channelName: string): Promise<boolean> {
+    const channelsRef = collection(db, 'channels');
+    const snapshot = await getDocs(channelsRef);
+    const channelExists = snapshot.docs.some(
+      (doc) => doc.data()['name'] === channelName
+    );
+    return channelExists;
   }
 }
