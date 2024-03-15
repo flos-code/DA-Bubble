@@ -89,41 +89,41 @@ export class MainChatComponent implements OnInit, OnDestroy {
   /* ============================================== */
 
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
-      this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
-        if(value) {
-          this.currentUser = value;
-          console.log('CURRENT USER', this.currentUser);
-  
-          this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((valueChannel) => {
-            if(valueChannel !== null) {
-              this.activeChannelId = valueChannel;
-              this.activeDmUser = null;
-              console.log('ACITVE CHANNEL ID', this.activeChannelId);
-              this.getChannelAndDmPath();
-              this.channelPath = this.channelThreadsPath;
-              this.loadChannelData();
-              setTimeout(() => {
-                this.scrollToBottom();
-              }, 500);
-            }
-          });
+    this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
+      if(value) {
+        this.currentUser = value;
+        console.log('CURRENT USER', this.currentUser);
+      }
+    });
+
+    this.activeChannelSub = chatService.activeChannelIdUpdates.subscribe((valueChannel) => {
+      if(valueChannel !== null) {
+        this.activeChannelId = valueChannel;
+        this.activeDmUser = null;
+        console.log('ACITVE CHANNEL ID', this.activeChannelId);
+        this.getChannelAndDmPath();
+        this.channelPath = this.channelThreadsPath;
+        this.loadChannelData();
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 500);
+      }
+    });
       
-          this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((valueDm) => {
-            if(valueDm !== null) {
-              this.activeDmUser = valueDm;
-              this.activeChannelId = null;
-              console.log('ACITVE DM USER', this.activeDmUser);
-              this.getChannelAndDmPath();
-              this.channelPath = this.dmMessagesPath;
-              this.loadDmData();
-              setTimeout(() => {
-                this.scrollToBottom();
-              }, 800);  
-            }
-          });
-        }
-        }
-      );
+    this.activeDmUserSub = chatService.activeUserIdUpdates.subscribe((valueDm) => {
+      if(valueDm !== null) {
+        this.activeDmUser = valueDm;
+        this.activeChannelId = null;
+        console.log('ACITVE DM USER', this.activeDmUser);
+        this.getChannelAndDmPath();
+        this.channelPath = this.dmMessagesPath;
+        this.loadDmData();
+        setTimeout(() => {
+          this.scrollToBottom();
+        }, 800);  
+      }
+    });
+
   }
 
   ngOnInit(): void {
@@ -166,6 +166,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
+    this.activeChannelSub.unsubscribe();
+    this.currentUserSub.unsubscribe();
+    this.activeDmUserSub.unsubscribe();
   }
 
   /* ================== ID's FOM SERVICE ================== */
@@ -314,7 +317,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'message': threadsOrDms[i]['message'],
         'userId': userId,
         'createdBy': createdBy,
-        'imageUrl': imageUrl
+        'imgUrl': this.getImgUrl(userId)
       });
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
@@ -375,6 +378,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
       }
     }
     return user;
+  }
+
+  getImgUrl(userId) {
+    for (let i = 0; i < this.channelMembers.length; i++) {
+      const user = this.channelMembers[i];
+      if(userId == user.id) {
+        return user.imgUrl;
+      }
+    }
   }
 
   scrollToBottom() {

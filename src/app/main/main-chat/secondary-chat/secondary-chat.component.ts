@@ -87,7 +87,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     public userManagementService: UserManagementService,
     public viewManagementService: ViewManagementService,
     public inputService: InputService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.setCurrentUser();

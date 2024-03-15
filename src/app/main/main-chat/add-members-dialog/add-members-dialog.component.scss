@@ -120,6 +120,13 @@
     background-color: $bgColor;
     cursor: pointer;
 
+    
+    > img {
+        height: 50px;
+        width: 50px;
+        border-radius: 50%;
+    }
+    
     > div {
         white-space: nowrap;
     }
@@ -185,6 +192,7 @@
             position: relative;
             height: 50px;
             width: 50px;
+            border-radius: 50%;
 
             > img {
                 position: absolute;
@@ -192,7 +200,8 @@
                 left: 0;
                 height: 50px;
                 width: 50px;
-                }
+                border-radius: 50%;
+            }
     
             > div {
                 position: absolute;

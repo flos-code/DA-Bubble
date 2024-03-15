@@ -27,10 +27,12 @@ const db = getFirestore(app);
 })
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData!: any;
-  @Input() currentChannelId!: any;
-  @Input() channelMembers!: any;
-  @Input() currentUser: string;
-  channelCreatedByName: string = "";
+  @Input() currentChannelId!: string;
+  //@Input() channelMembers!: any;
+  @Input() channelCreatorName!: string;
+  //channelCreatedByName: string = "";
+
+  @Input() currentUser!: string;
   channelEditionDialogOpen: boolean;
   @Output() channelEditionDialogOpenChild = new EventEmitter();
   showchannelEditionName: boolean = true;
@@ -41,18 +43,18 @@ export class ChannelEditionDialogComponent implements OnInit {
   showPopupLeaveChannel: boolean = false;
 
   ngOnInit(): void {
-    this.setChannelCreatedBy();
+    //this.setChannelCreatedBy();
     console.log(this.channelData.members);
   }
 
-  setChannelCreatedBy() {
+/*   setChannelCreatedBy() {
     for (let i = 0; i < this.channelMembers.length; i++) {
       const member = this.channelMembers[i];
         if(member['id'] == this.channelData['createdBy']) {
           this.channelCreatedByName = member['name'];
         }
     }
-  };
+  }; */
 
   closeDialog() {
     this.channelEditionDialogOpen = false;
@@ -133,5 +135,4 @@ export class ChannelEditionDialogComponent implements OnInit {
   doNotClose($event: any) {
     $event.stopPropagation(); 
   }
-
 }

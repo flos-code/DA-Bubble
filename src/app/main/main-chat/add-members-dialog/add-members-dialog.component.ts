@@ -31,10 +31,8 @@ const db = getFirestore(app);
 })
 
 export class AddMembersDialogComponent implements OnInit {
-  @Input() channelData;
-  channelMembers = []; 
-
-  //channelMembers;
+  @Input() channelData!: any;
+  @Input() channelMembers!: any; 
   @Input() currentChannelId: string;
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;
@@ -46,8 +44,8 @@ export class AddMembersDialogComponent implements OnInit {
   filteredUserList;
 
   ngOnInit(): void {
-    this.channelMembers = [...this.channelData['members']]
     this.getUsersToAdd();
+    console.log('Filtered user list', this.filteredUserList)
   }
 
   constructor() { }
@@ -60,7 +58,8 @@ export class AddMembersDialogComponent implements OnInit {
             this.userList.push({
               'userName': element.data()['name'],
               'userId': element.id,
-              'isOnline': element.data()['isOnline']
+              'isOnline': element.data()['isOnline'],
+              'imgUrl': element.data()['imgUrl']
             });
         }
       });
@@ -107,6 +106,7 @@ export class AddMembersDialogComponent implements OnInit {
     this.userList.splice(indexOfAddedUser, 1);    // Splice userList array and remove user
     this.filteredUserList = this.userList;
     this.inputFocus = false; 
+    console.log('New users to add', this.newUsersToAdd)
   }
 
   removeAddedUser(userToAdd: any, i: number) {

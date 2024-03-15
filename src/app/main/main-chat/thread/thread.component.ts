@@ -29,7 +29,7 @@ export class ThreadComponent implements OnInit {
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
 
-  messageCount: number;
+  messageCount!: number;
   threadMessagesTimestamps = [];
   answers: string;
   lastAnswer: any;
@@ -49,6 +49,7 @@ export class ThreadComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    console.log('Thread data', this.thread);
     this.loadThreadData();
   }
 
@@ -66,6 +67,12 @@ export class ThreadComponent implements OnInit {
     this.getCurrentUserName();
     this.getReactions();
     this.getMessageCountAndAnswer();
+  }
+
+  async getCurrentUserName() {
+    let docRef = doc(db, 'users', this.currentUser);
+    const docSnap = await getDoc(docRef);
+    this.currentUserName = docSnap.data()['name'];
   }
 
   async getReactions() {
@@ -89,12 +96,6 @@ export class ThreadComponent implements OnInit {
     });
   }
   
-  async getCurrentUserName() {
-    let docRef = doc(db, 'users', this.currentUser);
-    const docSnap = await getDoc(docRef);
-    this.currentUserName = docSnap.data()['name'];
-  }
-
   getReactionNames(reactedByArray: any) {
     const q = query(collection(db, 'users'));
     onSnapshot(q, (list) => {
@@ -133,24 +134,24 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-    async getMessageCountAndAnswer() {
+  getMessageCountAndAnswer() {
      const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
      const q = query(messagesRef, orderBy('creationDate', 'desc'));
   
      onSnapshot(q, (snapshot) => {
      this.messageCount = snapshot.docs.length;
      console.log('Anzahl Antworten', this.messageCount);
-    this.formatMessageCount();
+     this.formatMessageCount();
   
        if (this.messageCount > 0) {
          const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
          this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
        }
      });
-   }
+  }
 
-/*    async getMessageCountAndAnswer() {
-     const q = query(collection(db, `channels/allgemein/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
+/*   async getMessageCountAndAnswer() {
+     const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
      const count = await getCountFromServer(q);
      this.messageCount = count.data().count;
      this.formatMessageCount();
@@ -164,7 +165,7 @@ export class ThreadComponent implements OnInit {
      this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
      this.formatMessageCount; 
      });
-   } */
+  } */
 
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
@@ -174,9 +175,9 @@ export class ThreadComponent implements OnInit {
     }
   }
 
-  getLastAnswer() {
+/*   getLastAnswer() {
     this.lastAnswer
-  }
+  } */
 
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {

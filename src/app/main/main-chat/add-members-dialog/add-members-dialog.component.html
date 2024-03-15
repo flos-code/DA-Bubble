@@ -10,7 +10,7 @@
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
             <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd; let i = index">
-              <img src="/assets/img/main-chat/member3.svg">
+              <img [src]="userToAdd.imgUrl">
               <div>{{userToAdd.userName}}</div>
               <span (click)="removeAddedUser(userToAdd, i)" class="material-symbols-outlined">close</span>
             </div>
@@ -22,7 +22,7 @@
           @for (filteredUser of filteredUserList; track $index) {
             <div (click)="addUser(filteredUser)">
               <div>
-                <img src="/assets/img/main-chat/member2.svg">
+                <img [src]="filteredUser.imgUrl">
                 <div [ngStyle]="{'background-color': filteredUser.isOnline ? '#92c83e' : '#686868' }"></div>
               </div>
               <div>{{filteredUser.userName}}</div>

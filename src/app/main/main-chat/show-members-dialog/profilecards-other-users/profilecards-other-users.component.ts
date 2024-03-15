@@ -27,15 +27,22 @@ const db = getFirestore(app);
   templateUrl: './profilecards-other-users.component.html',
   styleUrl: './profilecards-other-users.component.scss'
 })
-export class ProfilecardsOtherUsersComponent {
+export class ProfilecardsOtherUsersComponent implements OnInit {
   @Input() currentUser!: string;
   @Input() memberData!: any;
+  //@Input() channelMembers!: any;
   @Input() showProfileCard!: boolean;
   @Output() showProfileCardChild = new EventEmitter();
   @Input() showMembersDialogOpen!: boolean;
   @Output() showMembersDialogOpenChild = new EventEmitter();
 
   constructor(private chatService: ChatService) { }
+
+   ngOnInit(): void {
+    console.log('Member data', this.memberData)
+
+   }
+
 
   writeDirectMessage() {
     const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));

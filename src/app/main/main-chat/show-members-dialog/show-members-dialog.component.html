@@ -14,7 +14,7 @@
                         <!--(click)="serviceProfilCard.toggleProfilCard(true, false, 'OS9ntlBZdogfRKDdbni6eZ9yop93')" -->
                         <div class="userSubContainer">
                             <div>
-                                <img src="/assets/img/main-chat/member2.svg">
+                                <img [src]="member.imgUrl">
                                 <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
                             </div>
                             <div>{{member?.name}} <span *ngIf="member?.id == currentUser">(Du)</span></div>    
@@ -25,7 +25,7 @@
                         <!--(click)="serviceProfilCard.toggleProfilCard(true, false, 'OS9ntlBZdogfRKDdbni6eZ9yop93')" -->
                         <div class="userSubContainer">
                             <div>
-                                <img src="/assets/img/main-chat/member2.svg">
+                                <img [src]="member.imgUrl">
                                 <div class="userStatus" [ngStyle]="{'background-color': member.isOnline ? '#92c83e' : '#686868' }"></div>
                             </div>
                             <div>{{member?.name}} <span *ngIf="member?.id == currentUser">(Du)</span></div>    
