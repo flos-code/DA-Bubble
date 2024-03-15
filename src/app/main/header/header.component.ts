@@ -3,7 +3,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { ProfilCardComponent } from '../profil-card/profil-card.component';
 import { CommonModule } from '@angular/common';
 import { initializeApp } from "firebase/app";
-import { collection, getFirestore } from "firebase/firestore";
+import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { ProfilCardService } from '../../services/profil-card.service';
@@ -115,10 +115,21 @@ export class HeaderComponent implements OnInit {
     this.showProfil = active;
   }
 
-  signOut() {
-    this.auth.signOut();
+  async signOut() {
+    if (this.auth.currentUser.uid) {
+      let userRef = doc(db, "users", this.auth.currentUser.uid);
+    updateDoc(userRef, {
+      isOnline: false,
+    });
+    await this.auth.signOut();
     this.router.navigateByUrl('login');
     this.serviceProfilCard.isOverlayActive = false;
+    } else {
+      await this.auth.signOut();
+    this.router.navigateByUrl('login');
+    this.serviceProfilCard.isOverlayActive = false;
+    }
+    
   }
 
 

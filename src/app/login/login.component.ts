@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { getFirestore, doc, updateDoc } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -16,6 +17,7 @@ const firebaseConfig = {
 
 const provider = new GoogleAuthProvider();
 const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 @Component({
   selector: 'app-login',
@@ -27,6 +29,7 @@ const app = initializeApp(firebaseConfig);
 
 export class LoginComponent implements OnInit {
   auth = getAuth(app);
+
   startTextAnimation: boolean = false;
   removeDNone: boolean = false;
   removeAnimatedContainer: boolean = false;
@@ -43,7 +46,7 @@ export class LoginComponent implements OnInit {
     this.startTheAnimation();
   }
 
-  startTheAnimation(){
+  startTheAnimation() {
     setTimeout(() => {
       this.startLogoAnimation = true;
     }, 1375);
@@ -60,38 +63,42 @@ export class LoginComponent implements OnInit {
 
   async signInWithGoogle() {
     await signInWithPopup(this.auth, provider)
-  .then((result) => {
-    // This gives you a Google Access Token. You can use it to access the Google API.
-    const credential = GoogleAuthProvider.credentialFromResult(result);
-    // const token = credential.accessToken;
-    // The signed-in user info.
-    const user = result.user;
-    console.log(user);
-    // IdP data available using getAdditionalUserInfo(result)
-    // ...
-  }).catch((error) => {
-    // Handle Errors here.
-    const errorCode = error.code;
-    const errorMessage = error.message;
-    // The email of the user's account used.
-    const email = error.customData.email;
-    // The AuthCredential type that was used.
-    const credential = GoogleAuthProvider.credentialFromError(error);
-    // ...
-  });
-   }
+      .then((result) => {
+        // This gives you a Google Access Token. You can use it to access the Google API.
+        const credential = GoogleAuthProvider.credentialFromResult(result);
+        // const token = credential.accessToken;
+        // The signed-in user info.
+        const user = result.user;
+        console.log(user);
+        // IdP data available using getAdditionalUserInfo(result)
+        // ...
+      }).catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  }
 
   async signIn() {
     await signInWithEmailAndPassword(this.auth, this.signInForm.value.email, this.signInForm.value.password);
+    let userRef = doc(db, "users", this.auth.currentUser.uid)
+    await updateDoc(userRef, {
+      isOnline: true,
+    });
     this.router.navigateByUrl('');
   }
 
-  async signInAsGuest(){
+  async signInAsGuest() {
     await signInWithEmailAndPassword(this.auth, 'guest@dabubble77.com', '123456');
     this.router.navigateByUrl('');
   }
 
-  goToPasswordReset(){
+  goToPasswordReset() {
     this.router.navigateByUrl('/reset_password')
   }
 
