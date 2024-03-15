@@ -13,7 +13,7 @@
         </div>
     </div>
     <div class="messageProfileIcon">
-        <img src="/assets/img/main-chat/member1.svg">
+        <img [src]="userImg">
     </div>
     <emoji-mart #emojiMart *ngIf="showEmojiPicker" [darkMode]="false" (emojiSelect)="handleClick($event)" title="Pick your emoji…" emoji="point_up" (click)="doNotClose($event)">
     </emoji-mart>

@@ -222,7 +222,7 @@
         </div>
 
         <!-- ========================= Template Own Message - EDIT ========================= -->
-        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" 
+        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" [userImg]="thread?.imgUrl"
         [activeChannelId]="activeChannelId" [threadMessage]="thread?.message"
         (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
         

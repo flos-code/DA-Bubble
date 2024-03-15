@@ -35,6 +35,7 @@ export class EditOwnThreadComponent implements OnInit {
   @Input() threadId!: string;
   @Input() activeChannelId!: string;
   @Input() threadMessage!: any;
+  @Input() userImg!: string;
   ownMessageEdit: boolean;
   @Output() ownMessageEditChild = new EventEmitter(); 
   inputFocused: boolean = false;
