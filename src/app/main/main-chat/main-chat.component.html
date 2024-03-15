@@ -97,8 +97,8 @@
                     <!-- =========== Template main chat beginning - DM ============= -->
                     <div class="beginningOfChannel">
                         <div>
-                            <div>
-                                <img src="assets/img/main-chat/member2.svg">
+                            <div class="userImg-dm">
+                                <img [src]="activeDmUserData?.imgUrl || '/assets/img/main-chat/default-profile-image.jpg'">
                             </div>
                             <div>{{activeDmUserName}}</div>
                         </div>
