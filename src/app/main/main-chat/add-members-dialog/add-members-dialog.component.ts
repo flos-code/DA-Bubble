@@ -121,12 +121,12 @@ export class AddMembersDialogComponent implements OnInit {
   async addUsers() {
     for (let i = 0; i < this.newUsersToAdd.length; i++) {
       const user = this.newUsersToAdd[i]['userId'];
-      if(!this.channelMembers.includes(user)) {
-        this.channelMembers.push(user);
+      if(!this.channelData.members.includes(user)) {
+        this.channelData.members.push(user);
       }
     }
     let currentChannelRef = doc(db, 'channels', this.currentChannelId);
-    let data = {members: this.channelMembers };
+    let data = {members: this.channelData.members };
     await updateDoc(currentChannelRef, data).then(() => {
     });
     this.newUsersToAdd = [];

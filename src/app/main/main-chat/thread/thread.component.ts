@@ -135,6 +135,7 @@ export class ThreadComponent implements OnInit {
   }
 
   getMessageCountAndAnswer() {
+    this.messageCount = 0;
      const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
      const q = query(messagesRef, orderBy('creationDate', 'desc'));
   
