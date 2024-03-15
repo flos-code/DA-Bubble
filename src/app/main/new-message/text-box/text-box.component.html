@@ -64,11 +64,11 @@
 
     <div class="send">
       <mat-icon
-      class="material-symbols-rounded-filled"
-      [class.disabled]="!isMessageNotEmpty()"
-      fontIcon="send"
-      (click)="isMessageNotEmpty() ? sendMessage() : null"
-    ></mat-icon>    
+        class="material-symbols-rounded-filled"
+        [class.disabled]="!isMessageNotEmpty()"
+        fontIcon="send"
+        (click)="isMessageNotEmpty() ? sendMessage() : null"
+      ></mat-icon>
     </div>
   </div>
   <div
@@ -90,7 +90,7 @@
       <div
         *ngFor="let user of allUsers"
         class="singleUser"
-        (click)="insertMentionUserAtCursor('@' + user.name)"
+        (click)="insertTextAtCursor('@' + user.name)"
       >
         <img [src]="user.imgUrl" [alt]="'Image of ' + user.name" />
         <div class="name">

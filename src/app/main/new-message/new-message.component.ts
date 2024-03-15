@@ -41,38 +41,45 @@ export class NewMessageComponent {
   ) {}
 
   ngOnInit(): void {
+    this.subscribeToUsers();
+    this.subscribeToChannels();
+    this.userManagementService.loadUsers();
+    this.subscribeToScreenSizeChanges();
+  }
+
+  subscribeToUsers(): void {
     const usersCollection = collection(this.firestore, 'users');
     this.userSubscription = collectionData(usersCollection, {
       idField: 'id',
     }).subscribe(
       (changes) => {
-        console.log('Received Changes from DB', changes);
         this.allUsers = changes;
         this.sortUsers(this.allUsers);
         this.filteredUsers = this.allUsers;
       },
       (error) => {
-        console.error('Error fetching changes:', error);
+        console.error('Error fetching users:', error);
       }
     );
+  }
 
+  subscribeToChannels(): void {
     const channelCollection = collection(this.firestore, 'channels');
     this.channelSubscription = collectionData(channelCollection, {
       idField: 'id',
     }).subscribe(
       (changes) => {
-        console.log('Received Changes from DB', changes);
         this.allChannel = changes;
         this.sortChannel(this.allChannel);
         this.filteredChannel = this.allChannel;
       },
       (error) => {
-        console.error('Error fetching changes:', error);
+        console.error('Error fetching channels:', error);
       }
     );
+  }
 
-    this.userManagementService.loadUsers();
-
+  subscribeToScreenSizeChanges(): void {
     this.screenSizeSubscription =
       this.viewManagementService.screenSize$.subscribe((size) => {
         this.adjustPlaceholderText(size);
@@ -108,40 +115,50 @@ export class NewMessageComponent {
     this.selectedUser = null;
     this.messageType = null;
     this.targetId = null;
+
+    const searchTerm = inputValue.slice(1).toLowerCase();
+
     if (this.displayUser) {
-      const searchTerm = inputValue.slice(1).toLowerCase();
-      this.filteredUsers = this.allUsers.filter((user) =>
-        user.name.toLowerCase().startsWith(searchTerm)
-      );
+      this.handleUserSearch(searchTerm);
     } else if (this.displayChannels) {
-      const searchTerm = inputValue.slice(1).toLowerCase();
-      this.filteredChannel = this.allChannel.filter((channel) =>
-        channel.name.toLowerCase().startsWith(searchTerm)
-      );
+      this.handleChannelSearch(searchTerm);
     } else if (inputValue.includes('@') && inputValue.includes('.')) {
-      const foundUser = this.allUsers.find(
-        (user) => user.email.toLowerCase() === inputValue.toLowerCase()
-      );
-      if (foundUser) {
-        this.sendUserMessage(foundUser.id, foundUser.name);
-      } else {
-        this.filteredUsers = [];
-      }
+      this.handleEmailSearch(inputValue);
+    } else {
+      this.resetFilters();
+    }
+  }
+
+  handleUserSearch(searchTerm: string): void {
+    this.filteredUsers = this.allUsers.filter((user) =>
+      user.name.toLowerCase().startsWith(searchTerm)
+    );
+  }
+
+  handleChannelSearch(searchTerm: string): void {
+    this.filteredChannel = this.allChannel.filter((channel) =>
+      channel.name.toLowerCase().startsWith(searchTerm)
+    );
+  }
+
+  handleEmailSearch(email: string): void {
+    const foundUser = this.allUsers.find(
+      (user) => user.email.toLowerCase() === email.toLowerCase()
+    );
+    if (foundUser) {
+      this.sendUserMessage(foundUser.id, foundUser.name);
     } else {
       this.filteredUsers = [];
-      this.filteredChannel = [];
     }
-    console.log(
-      'ausgewähleter nutzer:',
-      this.selectedUser,
-      'ausgewähleter channel:',
-      this.selectedChannel
-    );
+  }
+
+  resetFilters(): void {
+    this.filteredUsers = [];
+    this.filteredChannel = [];
   }
 
   sendChannelMessage(channelId, channelName) {
     this.selectedChannel = channelId;
-    console.log(this.selectedChannel);
     this.userInput.nativeElement.value = '#' + channelName;
     this.displayChannels = false;
     this.messageType = 'channel';
@@ -150,7 +167,6 @@ export class NewMessageComponent {
 
   sendUserMessage(userId, userName) {
     this.selectedUser = userId;
-    console.log(this.selectedUser);
     this.userInput.nativeElement.value = '@' + userName;
     this.displayUser = false;
     this.messageType = 'direct';

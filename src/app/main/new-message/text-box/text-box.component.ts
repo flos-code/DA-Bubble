@@ -24,11 +24,9 @@ import {
 } from '@angular/fire/firestore';
 import { Subscription } from 'rxjs';
 import { UserManagementService } from '../../../services/user-management.service';
-import { Thread } from '../../../../models/thread.class';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { ChatService } from '../../../services/chat.service';
 import { DirectMessage } from '../../../../models/directMessage.class';
-import { ThreadMessage } from '../../../../models/threadMessage.class';
 
 @Component({
   selector: 'app-text-box',
@@ -59,9 +57,11 @@ export class TextBoxComponent {
   showMentionUser: boolean = false;
   user = new User();
   allUsers: any = [];
-
+  storage = inject(Storage);
   private firestore: Firestore = inject(Firestore);
   private dbSubscription!: Subscription;
+  public imageURL: string | undefined;
+  public filePath: string | undefined;
 
   constructor(
     public userManagementService: UserManagementService,
@@ -69,16 +69,12 @@ export class TextBoxComponent {
     private chatService: ChatService
   ) {}
 
-  public imageURL: string | undefined;
-  public filePath: string | undefined;
-
   ngOnInit(): void {
     const usersCollection = collection(this.firestore, 'users');
     this.dbSubscription = collectionData(usersCollection, {
       idField: 'id',
     }).subscribe(
       (changes) => {
-        console.log('Received Changes from DB', changes);
         this.allUsers = changes;
         this.sortUsers(this.allUsers);
       },
@@ -108,21 +104,21 @@ export class TextBoxComponent {
 
   handleClick(event: any) {
     const emoji = event.emoji.native;
-    this.insertEmojiAtCursor(emoji);
+    this.insertTextAtCursor(emoji);
   }
 
-  insertEmojiAtCursor(emoji: string) {
+  insertTextAtCursor(text: string, postInsertionAction?: () => void): void {
     const inputEl = this.messageInput.nativeElement;
     const start = inputEl.selectionStart;
     const end = inputEl.selectionEnd;
-    const text = inputEl.value;
-    const before = text.substring(0, start);
-    const after = text.substring(end, text.length);
-    this.messageModel = before + emoji + after;
-
-    const newPos = start + emoji.length;
+    const before = inputEl.value.substring(0, start);
+    const after = inputEl.value.substring(end, inputEl.value.length);
+    this.messageModel = before + text + after;
+    const newPos = start + text.length;
     setTimeout(() => {
-      inputEl.selectionStart = inputEl.selectionEnd = newPos;
+      inputEl.selectionStart = newPos;
+      inputEl.selectionEnd = newPos;
+      postInsertionAction?.();
     });
   }
 
@@ -131,12 +127,8 @@ export class TextBoxComponent {
   }
 
   closeEmojiPickerOrMentionUser() {
-    if (this.showEmojiPicker) {
-      this.showEmojiPicker = false;
-    }
-    if (this.showMentionUser) {
-      this.showMentionUser = false;
-    }
+    this.showEmojiPicker = false;
+    this.showMentionUser = false;
   }
 
   toggleMentionUser() {
@@ -145,11 +137,9 @@ export class TextBoxComponent {
 
   adjustTextareaHeight(event: any) {
     const textarea: HTMLTextAreaElement = event.target;
-    textarea.style.height = 'auto'; // Temporarily shrink to auto to get the correct scrollHeight
-    textarea.style.height = `${textarea.scrollHeight}px`; // Set the height to match content
+    textarea.style.height = 'auto';
+    textarea.style.height = `${textarea.scrollHeight}px`;
   }
-
-  storage = inject(Storage);
 
   async onFileSelected(event) {
     const file: File = event.target.files[0];
@@ -196,7 +186,6 @@ export class TextBoxComponent {
 
   async removeFileUpload() {
     if (!this.filePath) return;
-
     try {
       const storageRef = ref(this.storage, this.filePath);
       await deleteObject(storageRef);
@@ -221,231 +210,6 @@ export class TextBoxComponent {
       return a.name.localeCompare(b.name);
     });
   }
-
-  insertMentionUserAtCursor(user: string) {
-    const inputEl = this.messageInput.nativeElement;
-    const start = inputEl.selectionStart;
-    const end = inputEl.selectionEnd;
-    const text = inputEl.value;
-    const before = text.substring(0, start);
-    const after = text.substring(end, text.length);
-    this.messageModel = before + user + after;
-
-    const newPos = start + user.length;
-    setTimeout(() => {
-      inputEl.selectionStart = inputEl.selectionEnd = newPos;
-    });
-  }
-
-  // async sendMessage(): Promise<void> {
-  //   if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
-  //     console.error('Nachrichtendetails sind unvollständig');
-  //     return;
-  //   }
-
-  //   const imageUrlToSend = this.imageURL ? this.imageURL : null;
-
-  //   if (this.messageType === 'channel') {
-  //     const newThread = new Thread({
-  //       createdBy: this.userManagementService.activeUserId.value,
-  //       creationDate: Date.now(),
-  //       message: this.messageModel.trim(),
-  //       imageUrl: imageUrlToSend,
-  //     });
-  //     try {
-  //       const docRef = await addDoc(
-  //         collection(this.firestore, `channels/${this.targetId}/threads`),
-  //         newThread.toJSON()
-  //       );
-  //       console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
-  //       this.chatService.setActiveChannelId(this.targetId);
-  //       this.viewManagementService.setView('channel');
-
-  //       await updateDoc(
-  //         doc(this.firestore, `channels/${this.targetId}/threads`, docRef.id),
-  //         {
-  //           messageId: docRef.id,
-  //         }
-  //       );
-  //     } catch (error) {
-  //       console.error('Fehler beim Senden der Nachricht: ', error);
-  //     }
-  //   } else if (this.messageType === 'direct') {
-  //     if (this.userManagementService.activeUserId.value !== this.targetId) {
-  //       const newDmSender = new DirectMessage({
-  //         yourMessage: true,
-  //         createdBy: this.userManagementService.activeUserId.value,
-  //         creationDate: Date.now(),
-  //         message: this.messageModel.trim(),
-  //         imageUrl: imageUrlToSend,
-  //       });
-  //       const newDmReceiver = new DirectMessage({
-  //         yourMessage: false,
-  //         createdBy: this.userManagementService.activeUserId.value,
-  //         creationDate: Date.now(),
-  //         message: this.messageModel.trim(),
-  //         imageUrl: imageUrlToSend,
-  //       });
-  //       const dmSenderRef = doc(
-  //         this.firestore,
-  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-  //         this.targetId
-  //       );
-  //       const dmReceiverRef = doc(
-  //         this.firestore,
-  //         `users/${this.targetId}/allDirectMessages`,
-  //         this.userManagementService.activeUserId.value
-  //       );
-
-  //       try {
-  //         await setDoc(dmSenderRef, {}, { merge: true });
-  //         await setDoc(dmReceiverRef, {}, { merge: true });
-
-  //         const directMessagesSenderCollection = collection(
-  //           this.firestore,
-  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-  //         );
-  //         const directMessagesReceiverCollection = collection(
-  //           this.firestore,
-  //           `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
-  //         );
-
-  //         const docRefSender = await addDoc(
-  //           directMessagesSenderCollection,
-  //           newDmSender.toJSON()
-  //         );
-  //         const docRefReceiver = await addDoc(
-  //           directMessagesReceiverCollection,
-  //           newDmReceiver.toJSON()
-  //         );
-
-  //         console.log(
-  //           'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-  //           docRefSender.id,
-  //           'und Receiver-ID:',
-  //           docRefReceiver.id
-  //         );
-  //         await updateDoc(
-  //           doc(
-  //             this.firestore,
-  //             `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-  //             docRefSender.id
-  //           ),
-  //           {
-  //             messageId: docRefSender.id,
-  //           }
-  //         );
-
-  //         await updateDoc(
-  //           doc(
-  //             this.firestore,
-  //             `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
-  //             docRefReceiver.id
-  //           ),
-  //           {
-  //             messageId: docRefReceiver.id,
-  //           }
-  //         );
-  //         this.userManagementService.loadUsers();
-  //         this.chatService.setSelectedUserId(this.targetId);
-  //         this.viewManagementService.setView('directMessage');
-  //       } catch (error) {
-  //         console.error('Fehler beim Senden der Nachricht: ', error);
-  //       }
-  //     } else {
-  //       const newDmSender = new DirectMessage({
-  //         yourMessage: true,
-  //         createdBy: this.userManagementService.activeUserId.value,
-  //         creationDate: Date.now(),
-  //         message: this.messageModel.trim(),
-  //         imageUrl: imageUrlToSend,
-  //       });
-
-  //       const dmSenderRef = doc(
-  //         this.firestore,
-  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-  //         this.targetId
-  //       );
-
-  //       try {
-  //         await setDoc(dmSenderRef, {}, { merge: true });
-
-  //         const directMessagesSenderCollection = collection(
-  //           this.firestore,
-  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-  //         );
-
-  //         const docRefSender = await addDoc(
-  //           directMessagesSenderCollection,
-  //           newDmSender.toJSON()
-  //         );
-
-  //         console.log(
-  //           'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-  //           docRefSender.id
-  //         );
-  //         await updateDoc(
-  //           doc(
-  //             this.firestore,
-  //             `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-  //             docRefSender.id
-  //           ),
-  //           {
-  //             messageId: docRefSender.id,
-  //           }
-  //         );
-
-  //         this.userManagementService.loadUsers();
-  //         this.chatService.setSelectedUserId(this.targetId);
-  //             this.viewManagementService.setView('directMessage');
-  //       } catch (error) {
-  //         console.error('Fehler beim Senden der Nachricht: ', error);
-  //       }
-  //     }
-  //   } else if (this.messageType === 'threadMessage') {
-  //     const newThread = new ThreadMessage({
-  //       createdBy: this.userManagementService.activeUserId.value,
-  //       creationDate: Date.now(),
-  //       message: this.messageModel.trim(),
-  //       imageUrl: imageUrlToSend,
-  //     });
-  //     try {
-  //       const docRefThread = await addDoc(
-  //         collection(
-  //           this.firestore,
-  //           `channels/${this.chatService.getActiveChannelId()}/threads/${
-  //             this.targetId
-  //           }/messages`
-  //         ),
-  //         newThread.toJSON()
-  //       );
-  //       console.log(
-  //         'Nachricht wurde erfolgreich gesendet mit ID: ',
-  //         docRefThread.id
-  //       );
-
-  //       await updateDoc(
-  //         doc(
-  //           this.firestore,
-  //           `channels/${this.chatService.getActiveChannelId()}/threads/${
-  //             this.targetId
-  //           }/messages`,
-  //           docRefThread.id
-  //         ),
-  //         {
-  //           messageId: docRefThread.id,
-  //         }
-  //       );
-  //     } catch (error) {
-  //       console.error('Fehler beim Senden der Nachricht: ', error);
-  //     }
-  //   }
-  //   this.messageModel = '';
-  //   this.imageURL = undefined;
-  //   this.filePath = undefined;
-  // }
-
-  ///////////////////////////////////////////////////////////////
 
   async sendMessage(): Promise<void> {
     if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
@@ -480,7 +244,6 @@ export class TextBoxComponent {
       collection(this.firestore, `channels/${this.targetId}/threads`),
       newThread
     );
-    console.log('Nachricht wurde erfolgreich gesendet mit ID: ', docRef.id);
     this.chatService.setActiveChannelId(this.targetId);
     this.viewManagementService.setView('channel');
     await this.updateDocument(`channels/${this.targetId}/threads`, docRef.id, {
@@ -572,170 +335,6 @@ export class TextBoxComponent {
     this.viewManagementService.setView('directMessage');
   }
 
-  // private async handleDirectMessage() {
-  //   if (this.userManagementService.activeUserId.value !== this.targetId) {
-  //     const newDmSender = new DirectMessage({
-  //       yourMessage: true,
-  //       createdBy: this.userManagementService.activeUserId.value,
-  //       creationDate: Date.now(),
-  //       message: this.messageModel.trim(),
-  //       imageUrl: this.imageURL ? this.imageURL : null,
-  //     });
-  //     const newDmReceiver = new DirectMessage({
-  //       yourMessage: false,
-  //       createdBy: this.userManagementService.activeUserId.value,
-  //       creationDate: Date.now(),
-  //       message: this.messageModel.trim(),
-  //       imageUrl: this.imageURL ? this.imageURL : null,
-  //     });
-  //     const dmSenderRef = doc(
-  //       this.firestore,
-  //       `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-  //       this.targetId
-  //     );
-  //     const dmReceiverRef = doc(
-  //       this.firestore,
-  //       `users/${this.targetId}/allDirectMessages`,
-  //       this.userManagementService.activeUserId.value
-  //     );
-
-  //     try {
-  //       await setDoc(dmSenderRef, {}, { merge: true });
-  //       await setDoc(dmReceiverRef, {}, { merge: true });
-
-  //       const directMessagesSenderCollection = collection(
-  //         this.firestore,
-  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-  //       );
-  //       const directMessagesReceiverCollection = collection(
-  //         this.firestore,
-  //         `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`
-  //       );
-
-  //       const docRefSender = await addDoc(
-  //         directMessagesSenderCollection,
-  //         newDmSender.toJSON()
-  //       );
-  //       const docRefReceiver = await addDoc(
-  //         directMessagesReceiverCollection,
-  //         newDmReceiver.toJSON()
-  //       );
-
-  //       console.log(
-  //         'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-  //         docRefSender.id,
-  //         'und Receiver-ID:',
-  //         docRefReceiver.id
-  //       );
-  //       await updateDoc(
-  //         doc(
-  //           this.firestore,
-  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-  //           docRefSender.id
-  //         ),
-  //         {
-  //           messageId: docRefSender.id,
-  //         }
-  //       );
-
-  //       await updateDoc(
-  //         doc(
-  //           this.firestore,
-  //           `users/${this.targetId}/allDirectMessages/${this.userManagementService.activeUserId.value}/directMessages`,
-  //           docRefReceiver.id
-  //         ),
-  //         {
-  //           messageId: docRefReceiver.id,
-  //         }
-  //       );
-  //       this.userManagementService.loadUsers();
-  //       this.chatService.setSelectedUserId(this.targetId);
-  //       this.viewManagementService.setView('directMessage');
-  //     } catch (error) {
-  //       console.error('Fehler beim Senden der Nachricht: ', error);
-  //     }
-  //   } else {
-  //     const newDmSender = new DirectMessage({
-  //       yourMessage: true,
-  //       createdBy: this.userManagementService.activeUserId.value,
-  //       creationDate: Date.now(),
-  //       message: this.messageModel.trim(),
-  //       imageUrl: this.imageURL ? this.imageURL : null,
-  //     });
-
-  //     const dmSenderRef = doc(
-  //       this.firestore,
-  //       `users/${this.userManagementService.activeUserId.value}/allDirectMessages`,
-  //       this.targetId
-  //     );
-
-  //     try {
-  //       await setDoc(dmSenderRef, {}, { merge: true });
-
-  //       const directMessagesSenderCollection = collection(
-  //         this.firestore,
-  //         `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`
-  //       );
-
-  //       const docRefSender = await addDoc(
-  //         directMessagesSenderCollection,
-  //         newDmSender.toJSON()
-  //       );
-
-  //       console.log(
-  //         'Nachricht wurde erfolgreich gesendet mit Sender-ID:',
-  //         docRefSender.id
-  //       );
-  //       await updateDoc(
-  //         doc(
-  //           this.firestore,
-  //           `users/${this.userManagementService.activeUserId.value}/allDirectMessages/${this.targetId}/directMessages`,
-  //           docRefSender.id
-  //         ),
-  //         {
-  //           messageId: docRefSender.id,
-  //         }
-  //       );
-
-  //       this.userManagementService.loadUsers();
-  //       this.chatService.setSelectedUserId(this.targetId);
-  //       this.viewManagementService.setView('directMessage');
-  //     } catch (error) {
-  //       console.error('Fehler beim Senden der Nachricht: ', error);
-  //     }
-  //   }
-
-  //   // const messageData = {
-  //   //   yourMessage: true,
-  //   //   createdBy: this.userManagementService.activeUserId.value,
-  //   //   creationDate: Date.now(),
-  //   //   message: this.messageModel.trim(),
-  //   //   imageUrl: this.imageURL ? this.imageURL : null,
-  //   // };
-
-  //   // // Für Sender
-  //   // await this.addDirectMessage(messageData, this.targetId);
-
-  //   // // Unterscheidung, ob es sich um eine Selbstnachricht handelt
-  //   // if (this.userManagementService.activeUserId.value !== this.targetId) {
-  //   //   // Für Empfänger
-  //   //   const messageDataForReceiver = { ...messageData, yourMessage: false };
-  //   //   await this.addDirectMessage(messageDataForReceiver, this.userManagementService.activeUserId.value);
-  //   // }
-
-  //   // this.chatService.setSelectedUserId(this.targetId);
-  //   // this.viewManagementService.setView('directMessage');
-  // }
-
-  // private async addDirectMessage(messageData: any, userId: string) {
-  //   const directMessagesCollection = collection(
-  //     this.firestore,
-  //     `users/${userId}/allDirectMessages/${this.targetId}/directMessages`
-  //   );
-
-  //   await addDoc(directMessagesCollection, messageData);
-  // }
-
   private async updateDocument(path: string, docId: string, data: object) {
     await updateDoc(doc(this.firestore, path, docId), data);
   }
@@ -757,11 +356,6 @@ export class TextBoxComponent {
       ),
       newMessage
     );
-    console.log(
-      'Thread-Nachricht wurde erfolgreich gesendet mit ID: ',
-      docRef.id
-    );
-
     await this.updateDocument(
       `channels/${this.chatService.getActiveChannelId()}/threads/${
         this.targetId
@@ -788,8 +382,6 @@ export class TextBoxComponent {
       imageUrl: this.imageURL ? this.imageURL : null,
     };
   }
-
-  ///////////////////////////////////////////////////////////
 
   onKeydown(event) {
     event.preventDefault();
