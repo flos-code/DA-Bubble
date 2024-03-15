@@ -83,10 +83,10 @@
                         </div>
                         <div *ngIf="channel?.createdBy && channel?.creationDate">
                             <div *ngIf="currentUser === channel?.createdBy">
-                              Du hast den Channel am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels #{{channel?.name}}.
+                              Du hast den Channel am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
                             </div>
                             <div *ngIf="currentUser !== channel?.createdBy">
-                              Der Channel wurde von {{ channel?.createdBy }} am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt.
+                              Der Channel wurde von {{ channelCreatorName }} am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt.<br> Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
                             </div>
                           </div>
                     </div>

@@ -74,7 +74,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   ownMessageEdit: boolean = false;
   showProfileCard: boolean = false
   /* ============================================= */
-
+  channelCreatorName: string;
   /* ========== SECONDARY CHAT VARIABLES========== */
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -174,11 +174,28 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
   }
 
+  async fetchChannelCreatorName(userId: string): Promise<string> {
+    const userRef = doc(db, "users", userId);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      // Zugriff auf die 'name'-Eigenschaft des Benutzerdokuments
+      return docSnap.data()['name'] || 'Unbekannt'; // Rückgabe des Namens oder eines Platzhalters
+    }
+    return 'Unbekannt'; // Falls das Dokument nicht existiert, Rückgabe eines Platzhalters
+  }
+
   /* ================== MAIN CHAT CHANNEL DATA ================== */
   loadChannelData() {
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
+
+    if (this.channel?.createdBy) {
+      this.fetchChannelCreatorName(this.channel.createdBy).then(name => {
+        this.channelCreatorName = name;
+        console.log('Kanal wurde erstellt von:', name);
+      });
+    }
   }
 
   loadDmData() {
@@ -233,6 +250,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
     });
   }
+
+  getUserName(userId: string): string {
+    const user = this.channelMembers.find(member => member.userId === userId);
+    return user ? user.name : 'Unbekannter Benutzer';
+  }
+  
 
   getCurrentDmUserMessages() {
       const q = query(collection(db, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
