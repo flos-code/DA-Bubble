@@ -104,7 +104,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
               this.loadChannelData();
               setTimeout(() => {
                 this.scrollToBottom();
-              }, 800);
+              }, 500);
             }
           });
       
@@ -178,10 +178,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     const userRef = doc(db, "users", userId);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
-      // Zugriff auf die 'name'-Eigenschaft des Benutzerdokuments
-      return docSnap.data()['name'] || 'Unbekannt'; // Rückgabe des Namens oder eines Platzhalters
+      return docSnap.data()['name'] || 'Unbekannt';
     }
-    return 'Unbekannt'; // Falls das Dokument nicht existiert, Rückgabe eines Platzhalters
+    return 'Unbekannt';
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
@@ -189,13 +188,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
-
-    if (this.channel?.createdBy) {
-      this.fetchChannelCreatorName(this.channel.createdBy).then(name => {
-        this.channelCreatorName = name;
-        console.log('Kanal wurde erstellt von:', name);
-      });
-    }
   }
 
   loadDmData() {
@@ -211,6 +203,12 @@ export class MainChatComponent implements OnInit, OnDestroy {
       setTimeout(() => {
         this.getThreads();
       }, 400);
+      if (this.channel?.createdBy) {
+        this.fetchChannelCreatorName(this.channel.createdBy).then(name => {
+          this.channelCreatorName = name;
+          console.log('Kanal wurde erstellt von:', name);
+        });
+      }
     });
   }
 
