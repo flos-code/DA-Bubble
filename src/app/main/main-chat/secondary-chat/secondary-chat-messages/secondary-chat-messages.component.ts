@@ -393,7 +393,7 @@ getUserProfileImageUrl(userId: string): string {
 /**
  * Closes the emoji picker and emoji toolbar by resetting their visibility flags.
  */
-closeMoreEmojis() {
+closeMoreEmojis(showMoreEmojis: boolean) {
   this.showMoreEmojis = false;
   this.showMoreEmojisToolbar = false;
 }
