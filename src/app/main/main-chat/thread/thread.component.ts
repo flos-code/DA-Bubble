@@ -1,20 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { ViewManagementService } from '../../../services/view-management.service';
-
-/* ========== FIREBASE ============ */
-import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
-
-import { environment } from '../../../../environments/environment.development';
-const app = initializeApp(environment.firebase);
-const db = getFirestore(app);
-/* =============================== */
+import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-thread',
@@ -24,10 +16,10 @@ const db = getFirestore(app);
   styleUrl: './thread.component.scss'
 })
 export class ThreadComponent implements OnInit, OnChanges {
+  private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
-
   messageCount!: number;
   threadMessagesTimestamps = [];
   answers: string;
@@ -43,8 +35,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   reactionNames =  [];
   reactionCount: number;
 
-  constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { 
-  }
+  constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { }
 
   ngOnChanges(changes: SimpleChanges): void {
       if(changes['thread']) {
@@ -53,7 +44,6 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   ngOnInit(): void {
-    console.log('Thread data', this.thread);
     this.loadThreadData();
   }
 
@@ -74,14 +64,14 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   async getCurrentUserName() {
-    let docRef = doc(db, 'users', this.currentUser);
+    let docRef = doc(this.firestore, 'users', this.currentUser);
     const docSnap = await getDoc(docRef);
     this.currentUserName = docSnap.data()['name'];
   }
 
   async getReactions() {
     this.getCurrentUserName();
-    const q = query(collection(db, this.reactionCollectionPath));
+    const q = query(collection(this.firestore, this.reactionCollectionPath));
     await onSnapshot(q, (element) => {
       this.reactions = [];
       this.reactionNames = [];
@@ -101,7 +91,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
   
   getReactionNames(reactedByArray: any) {
-    const q = query(collection(db, 'users'));
+    const q = query(collection(this.firestore, 'users'));
     onSnapshot(q, (list) => {
       list.forEach(user => {
         for (let i = 0; i < reactedByArray.length; i++) {
@@ -140,12 +130,11 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   getMessageCountAndAnswer() {
     this.messageCount = 0;
-     const messagesRef = collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
+     const messagesRef = collection(this.firestore, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
      const q = query(messagesRef, orderBy('creationDate', 'desc'));
   
      onSnapshot(q, (snapshot) => {
      this.messageCount = snapshot.docs.length;
-     console.log('Anzahl Antworten', this.messageCount);
      this.formatMessageCount();
   
        if (this.messageCount > 0) {
@@ -155,23 +144,6 @@ export class ThreadComponent implements OnInit, OnChanges {
      });
   }
 
-/*   async getMessageCountAndAnswer() {
-     const q = query(collection(db, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`), orderBy('creationDate', 'desc'))
-     const count = await getCountFromServer(q);
-     this.messageCount = count.data().count;
-     this.formatMessageCount();
-
-     return onSnapshot(q, (element) => {
-       this.threadMessagesTimestamps = [];
-       element.forEach(thread => {
-         this.threadMessagesTimestamps.push(thread.data()['creationDate']);
-       }
-     )  
-     this.lastAnswer = this.main.getFormattedTime(this.threadMessagesTimestamps[0])
-     this.formatMessageCount; 
-     });
-  } */
-
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
       this.answers = 'Antworten';
@@ -180,13 +152,8 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
-/*   getLastAnswer() {
-    this.lastAnswer
-  } */
-
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {
-      console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
     } else {
       if(this.reactions.some(reaction => reaction.reaction == emoji)) {
@@ -197,7 +164,7 @@ export class ThreadComponent implements OnInit, OnChanges {
               reaction.count = reaction.count - 1;
               let index = reaction.reactedBy.indexOf(currentUser);
               reaction.reactedBy.splice(index, 1);
-              let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
+              let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' +  reaction.id);
               let data = {
                 count: reaction.count,
                 reaction: emoji,
@@ -206,12 +173,12 @@ export class ThreadComponent implements OnInit, OnChanges {
               await updateDoc(currentRef, data).then(() => {
               });  
             } else {
-              await deleteDoc(doc(db, this.reactionCollectionPath, reaction.id));
+              await deleteDoc(doc(this.firestore, this.reactionCollectionPath, reaction.id));
             }
           } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
             reaction.count = reaction.count + 1;
             reaction.reactedBy.push(currentUser);
-            let currentRef = doc(db, this.reactionCollectionPath + '/' + reaction.id);
+            let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' + reaction.id);
             let data = {
               count: reaction.count,
               reaction: emoji,
@@ -228,12 +195,11 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   async addReaction(emoji: string, currentUser: string) {
-    let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
+    let newReaction = await addDoc(collection(this.firestore, this.reactionCollectionPath), {
         count: 1,
         reaction: emoji,
         reactedBy: [currentUser],
       });
-      console.log('New reaction added', newReaction);
   }
   
   openMoreEmojis() {

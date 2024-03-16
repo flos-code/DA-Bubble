@@ -1,26 +1,11 @@
-import { Component, EventEmitter, Output, OnInit, Input } from '@angular/core';
+import { Component, EventEmitter, Output, OnInit, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
-
-/* ========== FIREBASE ========== */
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, doc, updateDoc, arrayUnion } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-/* =============================== */
+import {Firestore, collection, onSnapshot,  query, doc, updateDoc} from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-add-members-dialog',
@@ -31,6 +16,7 @@ const db = getFirestore(app);
 })
 
 export class AddMembersDialogComponent implements OnInit {
+  private firestore: Firestore = inject(Firestore);
   @Input() channelData!: any;
   @Input() channelMembers!: any; 
   @Input() currentChannelId: string;
@@ -40,8 +26,8 @@ export class AddMembersDialogComponent implements OnInit {
   searchText: string = '';
   newUsersToAdd = [];
   userList = [];
-  originalUserList;
-  filteredUserList;
+  originalUserList: any;
+  filteredUserList: any;
 
   ngOnInit(): void {
     this.getUsersToAdd();
@@ -51,7 +37,7 @@ export class AddMembersDialogComponent implements OnInit {
   constructor() { }
 
   getUsersToAdd() {
-    const q = query(collection(db, 'users'));
+    const q = query(collection(this.firestore, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
         if(!this.channelMembers.includes(element.id)) {
@@ -125,25 +111,16 @@ export class AddMembersDialogComponent implements OnInit {
         this.channelData.members.push(user);
       }
     }
-    let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+    let currentChannelRef = doc(this.firestore, 'channels', this.currentChannelId);
     let data = {members: this.channelData.members };
     await updateDoc(currentChannelRef, data).then(() => {
     });
     this.newUsersToAdd = [];
     this.closeDialog();
-
-  /*for (let i = 0; i < this.newUsersToAdd.length; i++) {
-      const user = this.newUsersToAdd[i]['userId'];
-      await updateDoc(doc(db, 'channels', this.currentChannelId), {
-        members: arrayUnion(user)
-      });      
-  }*/
-
   }
 
   closeUserList() {
     this.inputFocus = false;
   }
-
 }
 

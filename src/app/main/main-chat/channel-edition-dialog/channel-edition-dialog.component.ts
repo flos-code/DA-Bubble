@@ -1,24 +1,9 @@
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { ViewManagementService } from '../../../services/view-management.service';
-
-/* ========== FIREBASE ========== */
-import { initializeApp } from "firebase/app";
-import { getFirestore, doc, updateDoc } from "firebase/firestore";
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-/* =============================== */
+import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-channel-edition-dialog',
@@ -28,6 +13,7 @@ const db = getFirestore(app);
   styleUrl: './channel-edition-dialog.component.scss'
 })
 export class ChannelEditionDialogComponent implements OnInit {
+  private firestore: Firestore = inject(Firestore);
   @Input() channelData!: any;
   @Input() currentChannelId!: string;
   @Input() channelCreatorName!: string;
@@ -49,20 +35,6 @@ export class ChannelEditionDialogComponent implements OnInit {
     console.log(this.channelData.members);
   }
 
-/*   setChannelCreatedBy() {
-    for (let i = 0; i < this.channelMembers.length; i++) {
-      const member = this.channelMembers[i];
-        if(member['id'] == this.channelData['createdBy']) {
-          this.channelCreatedByName = member['name'];
-        }
-    }
-  }; */
-
-  closeDialog() {
-    this.channelEditionDialogOpen = false;
-    this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen)
-  }
-
   editChannelName() {
     if(this.currentUser == this.channelData.createdBy) {
       this.showchannelEditionName = false;
@@ -76,7 +48,7 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   async saveChannelName() {
     if(this.editedChannelName) {
-      let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+      let currentChannelRef = doc(this.firestore, 'channels', this.currentChannelId);
       let data = {name: this.editedChannelName };
       await updateDoc(currentChannelRef, data).then(() => {
       });
@@ -100,7 +72,7 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   async saveChannelDescription() {
     if(this.editedChannelDescription) {
-      let currentChannelRef = doc(db, 'channels', this.currentChannelId);
+      let currentChannelRef = doc(this.firestore, 'channels', this.currentChannelId);
       let data = {description: this.editedChannelDescription };
       await updateDoc(currentChannelRef, data).then(() => {
       });
@@ -109,10 +81,6 @@ export class ChannelEditionDialogComponent implements OnInit {
     } else {
       this.showchannelEditionDescription = true;  
     }
-  }
-
-  openAskLeaveChannel() {
-    this.showPopupLeaveChannel = true;
   }
 
   async leaveChannel() {
@@ -124,7 +92,7 @@ export class ChannelEditionDialogComponent implements OnInit {
     } else {
       let index = this.channelData.members.indexOf(this.currentUser);
       this.channelData.members.splice(index, 1);
-      let currentRef = doc(db, `channels/${this.currentChannelId}`);
+      let currentRef = doc(this.firestore, `channels/${this.currentChannelId}`);
       let data = {
         members: this.channelData.members
       };
@@ -138,6 +106,16 @@ export class ChannelEditionDialogComponent implements OnInit {
       this.viewManagementService.setView('newMessage');  
     }
   }
+  
+  closeDialog() {
+    this.channelEditionDialogOpen = false;
+    this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen)
+  }
+
+  openAskLeaveChannel() {
+    this.showPopupLeaveChannel = true;
+  }
+
 
   closePopupLeaveChannel() {
     this.showPopupLeaveChannel = false;

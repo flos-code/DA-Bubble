@@ -1,25 +1,10 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
-
-/* ========== FIREBASE ============ */
-import { initializeApp } from 'firebase/app';
-import { addDoc, collection, deleteDoc, doc, getFirestore, updateDoc } from 'firebase/firestore';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-/* =============================== */
+import {Firestore, addDoc, collection, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-reaction-emoji-input',
@@ -28,7 +13,9 @@ const db = getFirestore(app);
   templateUrl: './reaction-emoji-input.component.html',
   styleUrl: './reaction-emoji-input.component.scss'
 })
-export class ReactionEmojiInputComponent implements OnInit {
+
+export class ReactionEmojiInputComponent {
+  private firestore: Firestore = inject(Firestore);
   @Input() showMoreEmojis!: boolean;
   @Output() showMoreEmojisChild = new EventEmitter();
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
@@ -42,8 +29,6 @@ export class ReactionEmojiInputComponent implements OnInit {
   @Input() reactions!: any;
 
   constructor() { }
-
-  ngOnInit(): void { }
 
   onInputFocus(): void {
     this.inputFocused = true;
@@ -115,7 +100,7 @@ export class ReactionEmojiInputComponent implements OnInit {
               reaction.count = reaction.count - 1;
               let index = reaction.reactedBy.indexOf(currentUser);
               reaction.reactedBy.splice(index, 1);
-              let currentRef = doc(db, this.reactionCollectionPath + '/' +  reaction.id);
+              let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' +  reaction.id);
               let data = {
                 count: reaction.count,
                 reaction: emoji,
@@ -124,12 +109,12 @@ export class ReactionEmojiInputComponent implements OnInit {
               await updateDoc(currentRef, data).then(() => {
               });  
             } else {
-              await deleteDoc(doc(db, this.reactionCollectionPath, reaction.id));
+              await deleteDoc(doc(this.firestore, this.reactionCollectionPath, reaction.id));
             }
           } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
             reaction.count = reaction.count + 1;
             reaction.reactedBy.push(currentUser);
-            let currentRef = doc(db, this.reactionCollectionPath + '/' + reaction.id);
+            let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' + reaction.id);
             let data = {
               count: reaction.count,
               reaction: emoji,
@@ -146,7 +131,7 @@ export class ReactionEmojiInputComponent implements OnInit {
   }
 
   async addReaction(emoji: string, currentUser: string) {
-    let newReaction = await addDoc(collection(db, this.reactionCollectionPath), {
+    let newReaction = await addDoc(collection(this.firestore, this.reactionCollectionPath), {
         count: 1,
         reaction: emoji,
         reactedBy: [currentUser],

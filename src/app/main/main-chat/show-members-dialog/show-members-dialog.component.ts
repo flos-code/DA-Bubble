@@ -9,6 +9,7 @@ import { ProfilecardsOtherUsersComponent } from './profilecards-other-users/prof
   templateUrl: './show-members-dialog.component.html',
   styleUrl: './show-members-dialog.component.scss'
 })
+
 export class ShowMembersDialogComponent implements OnInit {
   @Input() currentUser!: string;
   @Input() channelData!: any;
@@ -23,9 +24,7 @@ export class ShowMembersDialogComponent implements OnInit {
 
   ngOnInit(): void {
     console.log('channelMembers', this.channelMembers);
-   }
-
-  constructor() { }
+  }
 
   openProfileCard(member: any) {
     this.memberData = member; 

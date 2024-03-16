@@ -1,24 +1,8 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-
-/* ========== FIREBASE ========== */
-import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot,  query, addDoc, updateDoc, doc, setDoc } from "firebase/firestore";
 import { ChatService } from '../../../../services/chat.service';
-
-const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
-};
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-/* =============================== */
-
+import { Firestore, collection, onSnapshot, query, doc, setDoc } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-profilecards-other-users',
@@ -28,6 +12,7 @@ const db = getFirestore(app);
   styleUrl: './profilecards-other-users.component.scss'
 })
 export class ProfilecardsOtherUsersComponent implements OnInit {
+  private firestore: Firestore = inject(Firestore);
   @Input() currentUser!: string;
   @Input() memberData!: any;
   //@Input() channelMembers!: any;
@@ -38,14 +23,12 @@ export class ProfilecardsOtherUsersComponent implements OnInit {
 
   constructor(private chatService: ChatService) { }
 
-   ngOnInit(): void {
-    console.log('Member data', this.memberData)
-
-   }
-
+  ngOnInit(): void {
+  console.log('Member data', this.memberData)
+  }
 
   writeDirectMessage() {
-    const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));
+    const q = query(collection(this.firestore, `users/${this.currentUser}/allDirectMessages`));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
         if(element.id === this.memberData.id) {
@@ -63,8 +46,8 @@ export class ProfilecardsOtherUsersComponent implements OnInit {
   }
 
   async addDirectMessage (): Promise<void> {
-    const dmSenderRef = doc(collection(db, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
-    const dmReceiverRef = doc(collection(db, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
+    const dmSenderRef = doc(collection(this.firestore, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
+    const dmReceiverRef = doc(collection(this.firestore, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
     let data = { }
     await setDoc(dmSenderRef, data);
     await setDoc(dmReceiverRef, data);

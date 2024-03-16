@@ -1,4 +1,4 @@
-import { Component, ElementRef, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit, ViewChild, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
@@ -15,14 +15,7 @@ import { ThreadComponent } from './thread/thread.component';
 import { UserManagementService } from '../../services/user-management.service';
 import { TextBoxComponent } from '../new-message/text-box/text-box.component';
 import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profilecards-other-users/profilecards-other-users.component';
-
-/* ========== FIREBASE ============ */
-import { initializeApp } from 'firebase/app';
-import { collection, doc, getDoc, getFirestore, limit, onSnapshot, orderBy, query } from 'firebase/firestore';
-import { environment } from '../../../environments/environment.development';
-const app = initializeApp(environment.firebase);
-const db = getFirestore(app);
-/* =============================== */
+import { Firestore, collection, doc, getDoc, limit, onSnapshot, orderBy, query } from '@angular/fire/firestore';
 
 @Component({
   selector: 'app-main-chat',
@@ -34,6 +27,8 @@ const db = getFirestore(app);
 })
 
 export class MainChatComponent implements OnInit, OnDestroy {
+  private firestore: Firestore = inject(Firestore);
+
   /* ========== MAIN VARIABLES ========== */
   @ViewChild('mainChat') private mainChat: ElementRef;
 
@@ -45,7 +40,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   activeChannelId: string;
   activeChannelSub: Subscription = new Subscription();
 
-  currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
+  currentUser: string;
   currentUserSub: Subscription = new Subscription();
 
   dmMessages = [];
@@ -88,7 +83,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       if(value) {
         this.currentUser = value;
-        console.log('CURRENT USER', this.currentUser);
       }
     });
 
@@ -96,7 +90,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       if(valueChannel !== null) {
         this.activeChannelId = valueChannel;
         this.activeDmUser = null;
-        console.log('ACITVE CHANNEL ID', this.activeChannelId);
         this.getChannelAndDmPath();
         this.channelPath = this.channelThreadsPath;
         this.loadChannelData();
@@ -110,7 +103,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
       if(valueDm !== null) {
         this.activeDmUser = valueDm;
         this.activeChannelId = null;
-        console.log('ACITVE DM USER', this.activeDmUser);
         this.getChannelAndDmPath();
         this.channelPath = this.dmMessagesPath;
         this.loadDmData();
@@ -140,7 +132,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   async fetchChannelCreatorName(userId: string): Promise<string> {
-    const userRef = doc(db, "users", userId);
+    const userRef = doc(this.firestore, "users", userId);
     const docSnap = await getDoc(userRef);
     if (docSnap.exists()) {
       return docSnap.data()['name'] || 'Unbekannt';
@@ -160,7 +152,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getCurrentChannel() {
-    onSnapshot(doc(collection(db, 'channels'), this.activeChannelId), (doc) => {
+    onSnapshot(doc(collection(this.firestore, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
       setTimeout(() => {
         this.getMembers();
@@ -171,14 +163,13 @@ export class MainChatComponent implements OnInit, OnDestroy {
       if (this.channel?.createdBy) {
         this.fetchChannelCreatorName(this.channel.createdBy).then(name => {
           this.channelCreatorName = name;
-          console.log('Kanal wurde erstellt von:', name);
         });
       }
     });
   }
 
   getMembers() {
-      const q = query(collection(db, 'users'));
+      const q = query(collection(this.firestore, 'users'));
       return onSnapshot(q, (list) => {
         this.channelMembers = [];
         list.forEach(element => {
@@ -190,7 +181,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getThreads() {
-    const q = query(collection(db, this.channelPath), orderBy("creationDate", "asc"), limit(20));
+    const q = query(collection(this.firestore, this.channelPath), orderBy("creationDate", "asc"), limit(20));
     // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];
@@ -204,7 +195,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getDmUser() {
-    onSnapshot(doc(collection(db, 'users'), this.activeDmUser), (dmUser) => {
+    onSnapshot(doc(collection(this.firestore, 'users'), this.activeDmUser), (dmUser) => {
       this.activeDmUserData = dmUser.data();
       this.getDmUserName(dmUser.id);
       setTimeout(() => {
@@ -221,7 +212,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   
 
   getCurrentDmUserMessages() {
-      const q = query(collection(db, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
+      const q = query(collection(this.firestore, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
       // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
       return onSnapshot(q, (list) => {
         this.dmMessages = [];
@@ -237,7 +228,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   async getDmUserName(userId: string) {
     this.activeDmUserName = ""; 
-    const docRef = doc(db, "users", userId);
+    const docRef = doc(this.firestore, "users", userId);
     const docSnap = await getDoc(docRef);   
     this.activeDmUserName = docSnap.data()['name']; 
     //this.activeDmUserStatus = docSnap.data()['isOnline'];
