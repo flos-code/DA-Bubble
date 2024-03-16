@@ -4,8 +4,9 @@ import { Router } from '@angular/router';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
-import { getFirestore, doc, updateDoc } from 'firebase/firestore';
+import { getFirestore, doc, updateDoc, getDoc, setDoc, arrayUnion, collection, addDoc } from 'firebase/firestore';
 import { RouterModule } from '@angular/router';
+import { DirectMessage } from '../../models/directMessage.class';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -64,25 +65,82 @@ export class LoginComponent implements OnInit {
 
   async signInWithGoogle() {
     await signInWithPopup(this.auth, provider)
-      .then((result) => {
-        // This gives you a Google Access Token. You can use it to access the Google API.
-        const credential = GoogleAuthProvider.credentialFromResult(result);
-        // const token = credential.accessToken;
-        // The signed-in user info.
-        const user = result.user;
-        console.log(user);
-        // IdP data available using getAdditionalUserInfo(result)
-        // ...
-      }).catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
+      .then(async (result) => {
+        const userDocRef = doc(db, 'users', result.user.uid);
+        const userDocSnap = await getDoc(userDocRef);
+        if (userDocSnap.exists()) {
+          await updateDoc(userDocRef, {
+            isOnline: true,
+          });
+          this.router.navigateByUrl('');
+        } else {
+          this.createUserDetailsDoc(result);
+          await this.addUserToGeneralChannel();
+          await this.createWelcomeMessage();
+          this.router.navigateByUrl('');
+        };
+      })
+  }
+
+  async createWelcomeMessage() {
+    const welcomeMessage = new DirectMessage({
+      yourMessage: false,
+      createdBy: 'gZrReha096XBbzYewrjt1cP8AZB2a',
+      creationDate: Date.now(),
+      message:
+        'Herzlich willkommen auf dem Code Learning Server 👋 ich hoffe, du hast hergefunden',
+      imageUrl:
+        'https://firebasestorage.googleapis.com/v0/b/da-bubble-87fea.appspot.com/o/userImages%2FwelcomeGif.gif?alt=media&token=91f0cf99-d5d8-47ad-be89-15ca36856c35',
+    });
+    const newUserRef = doc(
+      db,
+      `users/${this.auth.currentUser.uid}/allDirectMessages`,
+      'gZrReha096XBbzYewrjt1cP8AZB2'
+    );
+
+    try {
+      await setDoc(newUserRef, {}, { merge: true });
+
+      const directMessagesCollection = collection(
+        db,
+        `users/${this.auth.currentUser.uid}/allDirectMessages/gZrReha096XBbzYewrjt1cP8AZB2/directMessages`
+      );
+
+      const docRefNewUser = await addDoc(
+        directMessagesCollection,
+        welcomeMessage.toJSON()
+      );
+
+      await updateDoc(
+        doc(
+          db,
+          `users/${this.auth.currentUser.uid}/allDirectMessages/gZrReha096XBbzYewrjt1cP8AZB2/directMessages`,
+          docRefNewUser.id
+        ),
+        {
+          messageId: docRefNewUser.id,
+        }
+      );
+    } catch (error) {
+      console.error('Fehler beim Senden der Nachricht: ', error);
+    }
+  }
+
+  async createUserDetailsDoc(result) {
+    await setDoc(doc(db, 'users', result.user.uid), {
+      name: result.user.displayName,
+      email: result.user.email,
+      imgUrl: result.user.photoURL,
+      isOnline: false,
+      id: result.user.uid,
+    });
+  }
+
+  async addUserToGeneralChannel() {
+    const channelRef = doc(db, 'channels', 'allgemein');
+    await updateDoc(channelRef, {
+      members: arrayUnion(this.auth.currentUser.uid),
+    });
   }
 
   async signIn() {
