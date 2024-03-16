@@ -7,6 +7,7 @@ import { confirmPasswordReset, getAuth, sendPasswordResetEmail, verifyPasswordRe
 import { CustomValidators } from '../models/custom-validators';
 import { PassForm } from '../models/pass-form.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { RouterModule } from '@angular/router';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -21,7 +22,7 @@ const app = initializeApp(firebaseConfig);
 @Component({
   selector: 'app-password-reset',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, RouterModule],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss'
 })
