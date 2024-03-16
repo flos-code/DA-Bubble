@@ -57,6 +57,8 @@ export class SignUpComponent {
   current: Date = new Date();
   uID: string = '';
   userCreationSuccess: boolean = false;
+  isText: boolean = false;
+  type: string = 'password';
 
   genericImg: string = '/assets/img/login/profile_generic_big.png';
   person1Img: string = '/assets/img/userImages/userImage1.svg';
@@ -280,5 +282,10 @@ export class SignUpComponent {
     } catch (error) {
       console.error('Fehler beim Löschen des Bildes aus dem Storage: ', error);
     }
+  }
+
+  togglePasswordVisibility() {
+    this.isText = !this.isText
+    this.type = this.isText ? "text" : "password";
   }
 }
