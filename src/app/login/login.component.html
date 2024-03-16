@@ -1,7 +1,7 @@
 <div class="start-animation-container" [class.d-none]="removeAnimatedContainer">
     <div class="start-animation-background"></div>
     <div class="start-animation-logo-and-text-container">
-            <div class="start-animation-logo">
+        <div class="start-animation-logo">
             <img [class.animate-the-logo]="startLogoAnimation" src="/assets/img/Logo.png">
         </div>
         <div class="start-animation-text-container">
@@ -30,10 +30,16 @@
         <h1>Anmeldung</h1>
         <p class="login-hint">Wir empfehlen dir, die E-Mail-Adresse zu nutzen, die du bei der Arbeit verwendest.</p>
         <form [formGroup]="signInForm">
-            <input type="text" class="login-email-input" name="email" id="login_email"
-                placeholder="beispielname@email.com" formControlName="email">
-            <input type="password" class="login-password-input" name="password" id="login_password"
-                placeholder="Passwort" formControlName="password">
+            <div class="login-input-main">
+                <input type="text" class="login-email-input" name="email" id="login_email"
+                    placeholder="beispielname@email.com" formControlName="email">   
+            </div>
+            <div class="login-input-main">
+                <input [type]="type" class="login-password-input" name="password" id="login_password" placeholder="Passwort"
+                formControlName="password">
+                <span (click)="togglePasswordVisibility()" class="the-eye" [ngClass]="{'visibility_on': isText, 'visibility_off': !isText }"></span>
+            </div>
+            
         </form>
         <button class="forgot-password-btn" (click)="goToPasswordReset()">Passwort vergessen?</button>
 

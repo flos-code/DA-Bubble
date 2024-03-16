@@ -37,6 +37,9 @@ export class LoginComponent implements OnInit {
   removeAnimatedContainer: boolean = false;
   startLogoAnimation: boolean = false;
   removeMainDiv: boolean = false;
+  isText: boolean = false;
+  type: string = 'password';
+  eyeIcon: string = 'src/assets/img/visibility_off.svg';
 
   signInForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
@@ -159,6 +162,12 @@ export class LoginComponent implements OnInit {
 
   goToPasswordReset() {
     this.router.navigateByUrl('/reset_password')
+  }
+
+  togglePasswordVisibility() {
+    this.isText = !this.isText
+    this.isText ? this.eyeIcon = 'src/assets/img/visibility_on.svg' : this.eyeIcon = 'src/assets/img/visibility_off.svg';
+    this.type = this.isText ? "text" : "password";
   }
 
 }
