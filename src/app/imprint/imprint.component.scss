@@ -46,3 +46,12 @@ p {
         }
     }
 }
+
+.email-link {
+    text-decoration: none;
+
+    &:hover {
+        text-decoration: underline;
+        text-underline-offset: 4px;
+    }
+}
