@@ -190,7 +190,7 @@
     }
 }
 
-/* ================= REACTIONS ================= */
+/* ================================== REACTIONS ================================== */
 .mainThreadReactions,
 .mainThreadReactionsOwn {
     width: 100%;
@@ -320,7 +320,7 @@
     flex-direction: row-reverse;
 }
 
-/* ================= TOOLBAR ================= */
+/* ================================== TOOLBAR ================================== */
 .toolBar, .toolBarOwn {
     position: absolute;
     right: -80px;
@@ -365,8 +365,6 @@
     left: 45px;
     opacity: 1;
 }
-
-/* ============================================= */
 
 /* =============== EDIT MESSAGE =============== */
 .editMessagePopupBackground {

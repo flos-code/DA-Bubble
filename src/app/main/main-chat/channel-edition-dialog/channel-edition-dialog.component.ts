@@ -30,10 +30,7 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   constructor(private chatService: ChatService, private viewManagementService: ViewManagementService) { }
 
-  ngOnInit(): void {
-    //this.setChannelCreatedBy();
-    console.log(this.channelData.members);
-  }
+  ngOnInit(): void { }
 
   editChannelName() {
     if(this.currentUser == this.channelData.createdBy) {

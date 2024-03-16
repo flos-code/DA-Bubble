@@ -15,6 +15,7 @@ import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orde
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
+
 export class ThreadComponent implements OnInit, OnChanges {
   private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
@@ -46,15 +47,6 @@ export class ThreadComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.loadThreadData();
   }
-
-/*   async getThreadMessageCount() {
-    const messages = collection(db, 'channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/messages');
-    const snapshot = await getCountFromServer(messages);
-    this.messageCount = snapshot.data().count;
-    console.log('Message count', this.messageCount);
-    console.log('Message count', snapshot.data().count);
-    this.formatMessageCount();
-  } */
 
   loadThreadData() {
     this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;

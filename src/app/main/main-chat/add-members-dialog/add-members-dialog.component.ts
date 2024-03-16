@@ -1,11 +1,12 @@
 import { Component, EventEmitter, Output, OnInit, Input, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
-import { FormsModule, FormControl, ReactiveFormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatChipsModule } from '@angular/material/chips';
 import { MatAutocompleteModule } from '@angular/material/autocomplete';
 import { CommonModule } from '@angular/common';
 import {Firestore, collection, onSnapshot,  query, doc, updateDoc} from '@angular/fire/firestore';
+
 
 @Component({
   selector: 'app-add-members-dialog',
@@ -31,7 +32,6 @@ export class AddMembersDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.getUsersToAdd();
-    console.log('Filtered user list', this.filteredUserList)
   }
 
   constructor() { }
@@ -71,10 +71,6 @@ export class AddMembersDialogComponent implements OnInit {
     }
   }
 
-  doNotClose($event: any) {
-    $event.stopPropagation(); 
-  }
-
   closeDialog() {
     this.addMemberDialogOpen = false;
     this.addMemberDialogOpenChild.emit(this.addMemberDialogOpen);
@@ -92,7 +88,6 @@ export class AddMembersDialogComponent implements OnInit {
     this.userList.splice(indexOfAddedUser, 1);    // Splice userList array and remove user
     this.filteredUserList = this.userList;
     this.inputFocus = false; 
-    console.log('New users to add', this.newUsersToAdd)
   }
 
   removeAddedUser(userToAdd: any, i: number) {
@@ -121,6 +116,10 @@ export class AddMembersDialogComponent implements OnInit {
 
   closeUserList() {
     this.inputFocus = false;
+  }
+
+  doNotClose($event: any) {
+    $event.stopPropagation(); 
   }
 }
 

@@ -23,9 +23,7 @@ export class ProfilecardsOtherUsersComponent implements OnInit {
 
   constructor(private chatService: ChatService) { }
 
-  ngOnInit(): void {
-  console.log('Member data', this.memberData)
-  }
+  ngOnInit(): void { }
 
   writeDirectMessage() {
     const q = query(collection(this.firestore, `users/${this.currentUser}/allDirectMessages`));

@@ -5,13 +5,13 @@
             <span class="material-symbols-outlined">close</span>
         </div>
     </div>
-    <div># {{channelData.name}}</div>
+    <div># {{channelData?.name}}</div>
     <div class="addUserInputContainer" [class.focusedBorder]="inputFocus" (click)="doNotClose($event)">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
             <div class="newUserToAdd" *ngFor="let userToAdd of newUsersToAdd; let i = index">
               <img [src]="userToAdd.imgUrl">
-              <div>{{userToAdd.userName}}</div>
+              <div>{{userToAdd?.userName}}</div>
               <span (click)="removeAddedUser(userToAdd, i)" class="material-symbols-outlined">close</span>
             </div>
         </div>
@@ -22,10 +22,10 @@
           @for (filteredUser of filteredUserList; track $index) {
             <div (click)="addUser(filteredUser)">
               <div>
-                <img [src]="filteredUser.imgUrl">
+                <img [src]="filteredUser?.imgUrl">
                 <div [ngStyle]="{'background-color': filteredUser.isOnline ? '#92c83e' : '#686868' }"></div>
               </div>
-              <div>{{filteredUser.userName}}</div>
+              <div>{{filteredUser?.userName}}</div>
             </div>
           }
        </div>

@@ -22,9 +22,7 @@ export class ShowMembersDialogComponent implements OnInit {
   showProfileCard: boolean = false;
   memberData: any
 
-  ngOnInit(): void {
-    console.log('channelMembers', this.channelMembers);
-  }
+  ngOnInit(): void { }
 
   openProfileCard(member: any) {
     this.memberData = member; 

@@ -79,9 +79,6 @@
                 }
                 <!-- ================================================ -->
 
-<!--            <app-reactions [userId]="thread.userId" [thread]="thread" [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                </app-reactions> -->
-
             </div>
     
             <!-- ========== Toolbar ========== -->
@@ -182,10 +179,6 @@
                 }
                 <!-- ================================================ -->
 
-<!--                 <app-reactions [userId]="thread.userId" [thread]="thread"  [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser">
-                </app-reactions>
- -->
-
             </div>
             <div class="messageProfileIcon">
                 <img [src]="thread?.imgUrl">
@@ -224,6 +217,5 @@
         <!-- ========================= Template Own Message - EDIT ========================= -->
         <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" [userImg]="thread?.imgUrl"
         [activeChannelId]="activeChannelId" [threadMessage]="thread?.message"
-        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>            
-        
+        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>             
 }

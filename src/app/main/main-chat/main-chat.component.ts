@@ -28,10 +28,7 @@ import { Firestore, collection, doc, getDoc, limit, onSnapshot, orderBy, query }
 
 export class MainChatComponent implements OnInit, OnDestroy {
   private firestore: Firestore = inject(Firestore);
-
-  /* ========== MAIN VARIABLES ========== */
   @ViewChild('mainChat') private mainChat: ElementRef;
-
   dmMessagesPath = '';
   channelThreadsPath = '';
   channelPath = '';
@@ -39,23 +36,19 @@ export class MainChatComponent implements OnInit, OnDestroy {
   channel: Channel; // Daten des aktuellen Channels
   activeChannelId: string;
   activeChannelSub: Subscription = new Subscription();
-
   currentUser: string;
   currentUserSub: Subscription = new Subscription();
-
   dmMessages = [];
   activeDmUser: string;
   activeDmUserData: any;
   activeDmUserName: string;
   activeDmUserSub: Subscription = new Subscription();
-
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
   //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
   channelThreads = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
-
   textArea: string = "";
   typeChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
@@ -64,21 +57,19 @@ export class MainChatComponent implements OnInit, OnDestroy {
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
   showProfileCard: boolean = false
-  /* ============================================= */
   channelCreatorName: string;
-  /* ========== SECONDARY CHAT VARIABLES========== */
+
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
   threads: Thread[] = [];
-  newMember: string = "";
+/*   newMember: string = "";
   newMemberObject = {
     'userId': 'ikeikeoie',
     'name': this.newMember,
     'surname': 'M.',
     'photo': '../../../assets/img/main-chat/member2.svg'
   };
-  /* ============================================== */
-
+ */
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       if(value) {
@@ -114,9 +105,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void {
-
-  }
+  ngOnInit(): void { }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -223,7 +212,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   getCurrentDmUserMessages() {
       const q = query(collection(this.firestore, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
-      // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
       return onSnapshot(q, (list) => {
         this.dmMessages = [];
         list.forEach(dmMessage => {
@@ -241,7 +229,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     const docRef = doc(this.firestore, "users", userId);
     const docSnap = await getDoc(docRef);   
     this.activeDmUserName = docSnap.data()['name']; 
-    //this.activeDmUserStatus = docSnap.data()['isOnline'];
   }
 
   sortChannelThreadsArray(threadsOrDms: any) {

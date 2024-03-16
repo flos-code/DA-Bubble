@@ -56,7 +56,7 @@
         } 
         
         @if(activeDmUser) {
-            <!-- =========== TEMPLATE MAIN CHAT HEADER - DM ============= -->
+        <!-- =========== TEMPLATE MAIN CHAT HEADER - DM =========== -->
             <div class="mainChatHeader">
                 <div class="mainChatHeaderLeftDm" (click)="openProfileCard()">
                     <div class="userImg">
@@ -73,71 +73,70 @@
 
         <!-- ======================================== MAIN CHAT MESSAGES ========================================== -->
         <div class="mainChatMessages" #mainChat>
-<!--        <div class="mainChatMessagesSubContainer"> -->            
-                @if(activeChannelId) {
-                    <!-- =========== Template main chat beginning - Channel ============= -->
-                    <div class="beginningOfChannel">
-                        <div>
-                            <div>&#35;</div>
-                            <div>{{channel?.name}}</div>
-                        </div>
-                        <div *ngIf="channel?.createdBy && channel?.creationDate">
-                            <div *ngIf="currentUser === channel?.createdBy">
-                              Du hast den Channel am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
-                            </div>
-                            <div *ngIf="currentUser !== channel?.createdBy">
-                              Der Channel wurde von {{ channelCreatorName }} am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt.<br> Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
-                            </div>
-                          </div>
+            @if(activeChannelId) {
+                <!-- =========== Template main chat beginning - Channel ============= -->
+                <div class="beginningOfChannel">
+                    <div>
+                        <div>&#35;</div>
+                        <div>{{channel?.name}}</div>
                     </div>
-                    <!-- ================================================================ -->
-                }
+                    <div *ngIf="channel?.createdBy && channel?.creationDate">
+                        <div *ngIf="currentUser === channel?.createdBy">
+                            Du hast den Channel am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
+                        </div>
+                        <div *ngIf="currentUser !== channel?.createdBy">
+                            Der Channel wurde von {{ channelCreatorName }} am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt.<br> Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
+                        </div>
+                        </div>
+                </div>
+                <!-- ================================================================ -->
+            }
 
-                @if(activeDmUser && currentUser !== activeDmUser) {
-                    <!-- =========== Template main chat beginning - DM ============= -->
-                    <div class="beginningOfChannel">
-                        <div>
-                            <div class="userImg-dm">
-                                <img [src]="activeDmUserData?.imgUrl || '/assets/img/main-chat/default-profile-image.jpg'">
-                            </div>
-                            <div>{{activeDmUserName}}</div>
+            @if(activeDmUser && currentUser !== activeDmUser) {
+                <!-- =========== Template main chat beginning - DM ============= -->
+                <div class="beginningOfChannel">
+                    <div>
+                        <div class="userImg-dm">
+                            <img [src]="activeDmUserData?.imgUrl || '/assets/img/main-chat/default-profile-image.jpg'">
                         </div>
-                        <div>
-                            Diese Unterhaltung findet nur zwischen <span style="color: rgba(83, 90, 241, 1)">&#64;{{activeDmUserName}}</span> und dir statt.
-                        </div>
+                        <div>{{activeDmUserName}}</div>
                     </div>
-                    <!-- ================================================================ -->
-                }
+                    <div>
+                        Diese Unterhaltung findet nur zwischen <span style="color: rgba(83, 90, 241, 1)">&#64;{{activeDmUserName}}</span> und dir statt.
+                    </div>
+                </div>
+                <!-- ================================================================ -->
+            }
 
-                @if(activeDmUser && currentUser == activeDmUser) {
-                    <!-- =========== Template main chat beginning - DM ============= -->
-                    <div class="beginningOfChannel">
-                        <div>
-                            <div class="userImg-dm">
-                                <img [src]="activeDmUserData?.imgUrl || '/assets/img/main-chat/default-profile-image.jpg'">
-                            </div>
-                            <div>{{activeDmUserName}} (Du)</div>
+            @if(activeDmUser && currentUser == activeDmUser) {
+                <!-- =========== Template main chat beginning - DM ============= -->
+                <div class="beginningOfChannel">
+                    <div>
+                        <div class="userImg-dm">
+                            <img [src]="activeDmUserData?.imgUrl || '/assets/img/main-chat/default-profile-image.jpg'">
                         </div>
-                        <div>
-                            Diese Raum ist nur für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
-                        </div>
+                        <div>{{activeDmUserName}} (Du)</div>
                     </div>
-                    <!-- ================================================================ -->
-                }
+                    <div>
+                        Diese Raum ist nur für dich da. Mache dir Notizen, liste deine To-dos auf oder bewahre Links und Dateien griffbereit auf. Du kannst hier auch gerne Dinge mit dir selbst besprechen.
+                    </div>
+                </div>
+                <!-- ================================================================ -->
+            }
 
-                <!-- =================== Time separator / Threads ===================== -->
-                @for (threadTimeSeparator of threadCreationDates; track $index) {
-                    <div class="timeSeparator">
-                        <div>
-                            <div>{{threadTimeSeparator?.timeSeparatorDate}}</div>
-                        </div>
+            <!-- =================== Time separator / Threads ===================== -->
+            @for (threadTimeSeparator of threadCreationDates; track $index) {
+                <div class="timeSeparator">
+                    <div>
+                        <div>{{threadTimeSeparator?.timeSeparatorDate}}</div>
                     </div>
-                    @for (thread of channelThreadsDateTime; track $index) {
-                        @if(thread?.dateString == threadTimeSeparator?.dateString) {
-                            <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
-                        }
+                </div>
+                @for (thread of channelThreadsDateTime; track $index) {
+                    @if(thread?.dateString == threadTimeSeparator?.dateString) {
+                        <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
                     }
-                }           
+                }
+            }           
         </div>
         <!-- =================================================================================================== -->
 

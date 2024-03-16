@@ -23,7 +23,6 @@ export class ReactionEmojiInputComponent {
   messageModel: string = '';
   @Input() reactionCollectionPath!: string;
   @Input() secondaryReactionPath!: string;
-  //@Input() reactionCollectionPath: string = `channels/allgemein/threads/bx9TJQdWXkJCZry2AQpm/reactions`;
   @Input() currentUser!: string;
   @Input() threadOrMessageId: string
   @Input() reactions!: any;
@@ -56,9 +55,7 @@ export class ReactionEmojiInputComponent {
     setTimeout(() => {
       inputEl.selectionStart = inputEl.selectionEnd = newPos;
     });
-    console.log('Alle Reaktionen', this.reactions);
     await this.saveReaction(this.messageModel, this.currentUser);
-    // OS9ntlBZdogfRKDdbni6eZ9yop93
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }
@@ -72,24 +69,8 @@ export class ReactionEmojiInputComponent {
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }
 
-  // Check if subcollection exists
-/*   this.db.collection('users').doc('uid')
-  .get().limit(1).then(
-  doc => {
-    if (doc.exists) {
-      this.db.collection('users').doc('uid').collection('friendsSubcollection').get().
-        then(sub => {
-          if (sub.docs.length > 0) {
-            console.log('subcollection exists');
-          }
-        });
-    }
-  });
- */
-
   async saveReaction(emoji: string, currentUser: string) {   
     if(this.reactions.length == 0) {
-      console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
     } else {
       if(this.reactions.some(reaction => reaction.reaction == emoji)) {
@@ -136,7 +117,5 @@ export class ReactionEmojiInputComponent {
         reaction: emoji,
         reactedBy: [currentUser],
       });
-      console.log('New reaction added', newReaction);
-      console.log('PIERCE ADDED REACTION', this.reactionCollectionPath);
   }
 }
