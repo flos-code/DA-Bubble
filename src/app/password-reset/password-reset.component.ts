@@ -1,9 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { Router } from '@angular/router';
-import { getAuth, sendPasswordResetEmail } from 'firebase/auth';
+import { confirmPasswordReset, getAuth, sendPasswordResetEmail, verifyPasswordResetCode } from 'firebase/auth';
+import { CustomValidators } from '../models/custom-validators';
+import { PassForm } from '../models/pass-form.model';
+import { MatFormFieldModule } from '@angular/material/form-field';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -15,27 +18,71 @@ const firebaseConfig = {
 };
 
 const app = initializeApp(firebaseConfig);
-
-
 @Component({
   selector: 'app-password-reset',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule],
   templateUrl: './password-reset.component.html',
   styleUrl: './password-reset.component.scss'
 })
-export class PasswordResetComponent {
 
-  constructor(private router: Router, private fb: FormBuilder) { }
+export class PasswordResetComponent implements OnInit {
+
+  constructor(private router: Router,
+    private fb: FormBuilder,
+    private pwfb: NonNullableFormBuilder) { }
+
+  ngOnInit(): void {
+    document.addEventListener('DOMContentLoaded', () => {
+      this.mode = this.getParameterByName('mode');
+      this.authCode = this.getParameterByName('oobCode');
+      this.switchView();
+    });
+    this.passwordResetForm = this.pwfb.group(
+      {
+        password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+        confirmPassword: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]]
+      },
+      {
+        validators: CustomValidators.passwordsMatching,
+      }
+    )
+  }
+  passwordResetForm!: FormGroup<PassForm>;
   auth = getAuth(app);
-
+  mode: string = '';
+  authCode: string = '';
   first: boolean = true;
+  second: boolean = false;
   emailSent: boolean = false;
+  passwordChanged: boolean = false;
   sendEmailBtnDisabled: boolean = false;
-
+  resetPWBtnDisabled: boolean = false;
   emailForPasswordResetForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
-  })
+  });
+
+  getParameterByName(name) {
+    name = name.replace(/[\[]/, "\\\[").replace(/[\]]/, "\\\]");
+    var regexS = "[\\?&]" + name + "=([^&#]*)";
+    var regex = new RegExp(regexS);
+    var results = regex.exec(window.location.href);
+    if (results == null)
+      return "";
+    else
+      return decodeURIComponent(results[1].replace(/\+/g, " "));
+  }
+
+  switchView() {
+    if (this.mode === "resetPassword") {
+      this.second = true;
+      this.first = false;
+    } else {
+      this.second = false;
+      this.first = true;
+    }
+  }
+
   goBackToLogin() {
     this.router.navigateByUrl('login');
   }
@@ -43,21 +90,52 @@ export class PasswordResetComponent {
   async sendEmail() {
 
     sendPasswordResetEmail(this.auth, this.emailForPasswordResetForm.value.email)
-      .then(() => {
-        // Password reset email sent!
-        // ..
-      })
-      .catch((error) => {
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // ..
-      });
     this.sendEmailBtnDisabled = true;
     this.emailSent = true;
     setTimeout(() => {
       this.emailSent = false;
       this.sendEmailBtnDisabled = false;
-    }, 800);
+      this.goBackToLogin();
+    }, 1500);
 
   }
+
+  checkErrors(control: string) {
+    const errors = (this.passwordResetForm.controls as any)[control].errors;
+    return this.getErrorMessage(errors);
+  }
+
+  getErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Password is required!';
+    } else if (errors['minlength']) {
+      return 'Password should be longer than 8 characters!';
+    } else if (errors['maxlength']) {
+      return "Password can't be longer than 100 characters!";
+    } else {
+      return
+    }
+  }
+
+  resetPassword() {
+    this.handleResetPassword(this.auth, this.authCode);
+  }
+
+  handleResetPassword(auth, actionCode) {
+    verifyPasswordResetCode(auth, actionCode).then(() => {
+      const newPassword = this.passwordResetForm.value.confirmPassword;
+      confirmPasswordReset(auth, actionCode, newPassword).then(() => {
+        console.log("password changed successfully")
+        this.passwordChanged = true;
+        setTimeout(() => {
+          this.passwordChanged = false;
+          this.goBackToLogin();
+        }, 2000);
+      }).catch((error) => {
+        console.log(error.message)
+      })
+    })
+  }
+
 }
+
