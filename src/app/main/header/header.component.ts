@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   authSubscription: any;
 
   ngOnInit(): void {
-    this.checkIfGuest();
+    
   }
 
   auth = getAuth(app);
@@ -52,7 +52,6 @@ export class HeaderComponent implements OnInit {
   showProfil: boolean = false;
   showDropdownMenu: boolean = false;
   inputValue: string = ''; // Initialisierung der Variable
-  loggedInAsGuest: boolean = true;
 
   firebaseConfig = {
     apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -160,13 +159,6 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-  checkIfGuest() {
-    if (this.serviceProfilCard.currentUserId === 'qAspx2yXBnc0WtnBRJgVJsDniPC3') {
-      this.loggedInAsGuest = true;
-    } else {
-      this.loggedInAsGuest = false;
-    }
-  }
 
   showSidebar() {
     this.chatService.setActiveChannelId(null);

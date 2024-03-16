@@ -57,7 +57,7 @@
         <mat-icon class="material-symbols-outlined" fontIcon="expand_more"></mat-icon>
 
         <div [class.active]="showDropdownMenu" class="custom-dropdown-menu">
-            <div *ngIf="!loggedInAsGuest" (click)="serviceProfilCard.toggleProfilCard(true, true, '')">Profil</div>
+            <div (click)="serviceProfilCard.toggleProfilCard(true, true, '')">Profil</div>
             <div (click)="signOut()">Log out</div>
         </div>
     </div>
