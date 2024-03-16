@@ -81,7 +81,14 @@
             <div>
                 <button class="channelEditionButton" (click)="closePopupLeaveChannel()">Mitglied bleiben</button>
                 <button class="channelEditionButton leaveButton" (click)="leaveChannel()">Verlassen</button>
-            </div>    
+            </div> 
+
+            <!-- ========= POPUP AMIN CAN'T LEAVE CHANNEL ========= -->
+            <div class="popupAdmin" *ngIf="showPopupAdmin">
+                <div>
+                    Du bist der Administrator dieses Channels. Du kannst den Channel nicht verlassen.
+                </div>
+            </div>   
         </div>
     </div>
     

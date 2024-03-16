@@ -22,14 +22,14 @@
                         <div class="memberPhotos">
                             @for (member of channelMembers | slice:0:3; track $index) {
                             <div>
-                                <img [src]="member.imgUrl">
+                                <img [src]="member?.imgUrl">
                             </div>
                             }
-                            <div *ngIf="channelMembers.length > 3">
-                                <div>+{{channelMembers.length - 3}}</div>
+                            <div *ngIf="channelMembers?.length > 3">
+                                <div>+{{channelMembers?.length - 3}}</div>
                             </div>
                         </div>
-                        <div>{{channelMembers.length}}</div>
+                        <div>{{channelMembers?.length}}</div>
                     </div>
                     <div (click)="toggleDialog('addMember'); scrollToBottom()" >
                         <span class="material-symbols-outlined">person_add</span>
@@ -83,10 +83,10 @@
                         </div>
                         <div *ngIf="channel?.createdBy && channel?.creationDate">
                             <div *ngIf="currentUser === channel?.createdBy">
-                              Du hast den Channel am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
+                              Du hast den Channel am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt. Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
                             </div>
                             <div *ngIf="currentUser !== channel?.createdBy">
-                              Der Channel wurde von {{ channelCreatorName }} am {{ channel.creationDate | date: 'dd.MM.yyyy' }} erstellt.<br> Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
+                              Der Channel wurde von {{ channelCreatorName }} am {{ channel?.creationDate | date: 'dd.MM.yyyy' }} erstellt.<br> Das ist der Anfang des Channels <span style="color: rgba(83, 90, 241, 1)">#{{channel?.name}}</span>.
                             </div>
                           </div>
                     </div>
@@ -129,11 +129,11 @@
                 @for (threadTimeSeparator of threadCreationDates; track $index) {
                     <div class="timeSeparator">
                         <div>
-                            <div>{{threadTimeSeparator.timeSeparatorDate}}</div>
+                            <div>{{threadTimeSeparator?.timeSeparatorDate}}</div>
                         </div>
                     </div>
                     @for (thread of channelThreadsDateTime; track $index) {
-                        @if(thread.dateString == threadTimeSeparator.dateString) {
+                        @if(thread?.dateString == threadTimeSeparator?.dateString) {
                             <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
                         }
                     }

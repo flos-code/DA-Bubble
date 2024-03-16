@@ -1,16 +1,15 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnChanges, OnInit, SimpleChanges } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
+import { ViewManagementService } from '../../../services/view-management.service';
 
 /* ========== FIREBASE ============ */
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, deleteDoc, doc, getCountFromServer, getDoc, getFirestore, onSnapshot, orderBy, query, updateDoc } from 'firebase/firestore';
-import { ViewManagementService } from '../../../services/view-management.service';
-import { Subscription } from 'rxjs';
 
 import { environment } from '../../../../environments/environment.development';
 const app = initializeApp(environment.firebase);
@@ -24,7 +23,7 @@ const db = getFirestore(app);
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
-export class ThreadComponent implements OnInit {
+export class ThreadComponent implements OnInit, OnChanges {
   @Input() thread!: any;
   @Input() currentUser!: string;
   @Input() activeChannelId!: string;
@@ -45,7 +44,12 @@ export class ThreadComponent implements OnInit {
   reactionCount: number;
 
   constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { 
+  }
 
+  ngOnChanges(changes: SimpleChanges): void {
+      if(changes['thread']) {
+        this.loadThreadData();
+      }
   }
 
   ngOnInit(): void {
