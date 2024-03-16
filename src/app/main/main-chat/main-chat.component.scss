@@ -309,3 +309,27 @@ app-thread {
     min-height: 200px;
     padding: 10px 45px 40px 45px;
 }
+
+/* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 600px) {
+    app-show-members-dialog {
+        display: none;
+    }
+}
+
+
+@media(max-width: 500px) {
+    .dialogBackground {
+        display: none;
+    }
+
+    app-channel-edition-dialog,
+    app-add-members-dialog  {
+        position: fixed;
+        top: 0px;
+        left: 0px;
+        right: 0px;
+        height: 100%;
+        width: 100%;
+    }
+}

@@ -19,10 +19,22 @@ export class ShowMembersDialogComponent implements OnInit {
   @Output() addMembersDialogOpenOpenChildShow = new EventEmitter();
   showMembersDialogOpen: boolean;
   addMemberDialogOpen: boolean;
+  @Output() addMemberDialogOpenChild = new EventEmitter();
   showProfileCard: boolean = false;
-  memberData: any
+  addMembersMobile: boolean = false;
+  memberData: any;
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.setMobileComponents();
+  }
+
+  setMobileComponents() {
+    if(window.innerWidth <= 500){
+      this.addMembersMobile = true;
+    } else {
+      this.addMembersMobile = false;
+    }
+  }
 
   openProfileCard(member: any) {
     this.memberData = member; 
@@ -52,5 +64,10 @@ export class ShowMembersDialogComponent implements OnInit {
     this.showMembersDialogOpen = false;
     this.showMembersDialogOpenChild.emit(this.showMembersDialogOpen)
     this.addMembersDialogOpenOpenChildShow.emit(this.addMemberDialogOpen)
+  }
+
+  openAddMemberMobile() {
+    this.addMemberDialogOpen = false;
+    this.addMemberDialogOpenChild.emit(this.addMemberDialogOpen);
   }
 }

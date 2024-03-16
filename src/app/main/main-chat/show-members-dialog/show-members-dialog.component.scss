@@ -160,3 +160,16 @@
         font-weight: 400;
     }
 }
+
+/* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 500px) {
+    .showMembersDialog {
+        padding: 0px;
+        box-shadow: none;
+        border-radius: none;
+    }
+
+    .showMembersDialog > div:first-of-type > div:last-of-type > span {
+        display: none;
+    }
+}
