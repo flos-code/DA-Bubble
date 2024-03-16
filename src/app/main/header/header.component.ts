@@ -86,6 +86,11 @@ export class HeaderComponent implements OnInit {
     // console.log(this.searchService.threads);
   }
 
+  openThreadfromSearchbar(threadId: string) {
+    this.chatService.openThread(threadId);
+    this.viewManagementService.setView('secondaryChat');
+  }
+
   isInputValueGreaterThanOne(): boolean {
     return this.inputValue.length > 0;
   }
