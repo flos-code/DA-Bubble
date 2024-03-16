@@ -43,19 +43,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   channel: Channel; // Daten des aktuellen Channels
   activeChannelId: string;
-  //activeChannelId: string = null;
   activeChannelSub: Subscription = new Subscription();
 
   currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
-  //currentUser: string = 'OS9ntlBZdogfRKDdbni6eZ9yop93';
   currentUserSub: Subscription = new Subscription();
 
   dmMessages = [];
   activeDmUser: string;
-  //activeDmUser: string = 'n2gxPYqotIhMceOiDdUSv6Chkiu1';
   activeDmUserData: any;
-  activeDmUserName: string = 'Tobias Odermatt';
-  //activeDmUserStatus: string = '';
+  activeDmUserName: string;
   activeDmUserSub: Subscription = new Subscription();
 
   channelMembers = []; // Alle Userdaten der Mitglieder des Channels
@@ -127,41 +123,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-/*     this.currentUserSub = this.userManagementService.activeUserId$.subscribe((value) => {
-      if(value) {
-        this.currentUser = value;
-        console.log('CURRENT USER', this.currentUser);
 
-        this.activeChannelSub = this.chatService.activeChannelIdUpdates.subscribe((valueChannel) => {
-          if(valueChannel !== null) {
-            this.activeChannelId = valueChannel;
-            this.activeDmUser = null;
-            console.log('ACITVE CHANNEL ID', this.activeChannelId);
-            this.getChannelAndDmPath();
-            this.channelPath = this.channelThreadsPath;
-            this.loadChannelData();
-            setTimeout(() => {
-              this.scrollToBottom();
-            }, 800);
-          }
-        });
-    
-        this.activeDmUserSub = this.chatService.activeUserIdUpdates.subscribe((valueDm) => {
-          if(valueDm !== null) {
-            this.activeDmUser = valueDm;
-            this.activeChannelId = null;
-            console.log('ACITVE DM USER', this.activeDmUser);
-            this.getChannelAndDmPath();
-            this.channelPath = this.dmMessagesPath;
-            this.loadDmData();
-            setTimeout(() => {
-              this.scrollToBottom();
-            }, 800);  
-          }
-        });
-      }
-      }
-    ); */
   }
 
   ngOnDestroy(): void {

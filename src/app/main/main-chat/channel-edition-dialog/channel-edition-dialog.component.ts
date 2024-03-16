@@ -1,10 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { ChatService } from '../../../services/chat.service';
+import { ViewManagementService } from '../../../services/view-management.service';
 
 /* ========== FIREBASE ========== */
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, onSnapshot, query, doc, updateDoc, where, arrayRemove } from "firebase/firestore";
+import { getFirestore, doc, updateDoc } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -28,10 +30,7 @@ const db = getFirestore(app);
 export class ChannelEditionDialogComponent implements OnInit {
   @Input() channelData!: any;
   @Input() currentChannelId!: string;
-  //@Input() channelMembers!: any;
   @Input() channelCreatorName!: string;
-  //channelCreatedByName: string = "";
-
   @Input() currentUser!: string;
   channelEditionDialogOpen: boolean;
   @Output() channelEditionDialogOpenChild = new EventEmitter();
@@ -41,6 +40,9 @@ export class ChannelEditionDialogComponent implements OnInit {
   editedChannelDescription: string;
   showPopup: boolean = false;
   showPopupLeaveChannel: boolean = false;
+  showPopupAdmin: boolean = false;
+
+  constructor(private chatService: ChatService, private viewManagementService: ViewManagementService) { }
 
   ngOnInit(): void {
     //this.setChannelCreatedBy();
@@ -68,7 +70,7 @@ export class ChannelEditionDialogComponent implements OnInit {
       this.showPopup = true;
       setTimeout(() => {
         this.showPopup = false;
-      }, 5000);
+      }, 4000);
     }
   }
 
@@ -92,7 +94,7 @@ export class ChannelEditionDialogComponent implements OnInit {
       this.showPopup = true;
       setTimeout(() => {
         this.showPopup = false;
-      }, 5000);
+      }, 4000);
     }
   }
 
@@ -114,18 +116,27 @@ export class ChannelEditionDialogComponent implements OnInit {
   }
 
   async leaveChannel() {
-    let index = this.channelData.members.indexOf(this.currentUser);
-    this.channelData.members.splice(index, 1);
-    let currentRef = doc(db, `channels/${this.currentChannelId}`);
-    let data = {
-      members: this.channelData.members
-    };
-    await updateDoc(currentRef, data).then(() => {
-    }); 
-
-    this.showPopupLeaveChannel = false;   
-    this.channelEditionDialogOpen = false;
-    this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
+    if(this.currentUser == this.channelData.createdBy) {
+      this.showPopupAdmin = true;
+      setTimeout(() => {
+        this.showPopupAdmin = false;
+      }, 4000);
+    } else {
+      let index = this.channelData.members.indexOf(this.currentUser);
+      this.channelData.members.splice(index, 1);
+      let currentRef = doc(db, `channels/${this.currentChannelId}`);
+      let data = {
+        members: this.channelData.members
+      };
+      await updateDoc(currentRef, data).then(() => {
+      }); 
+      this.showPopupLeaveChannel = false;   
+      this.channelEditionDialogOpen = false;
+      this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
+      this.chatService.setActiveChannelId(null);
+      this.chatService.setSelectedUserId(null);
+      this.viewManagementService.setView('newMessage');  
+    }
   }
 
   closePopupLeaveChannel() {
