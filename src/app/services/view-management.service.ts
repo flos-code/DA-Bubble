@@ -7,8 +7,6 @@ export type ScreenSize = 'extraSmall' | 'small' | 'medium' | 'large';
   providedIn: 'root',
 })
 export class ViewManagementService {
-
-
   private screenSize = new BehaviorSubject<ScreenSize>('large');
   screenSize$ = this.screenSize.asObservable();
 
@@ -38,14 +36,13 @@ export class ViewManagementService {
 
     this.showMainChat$ = combineLatest([
       this.showChannel.asObservable(),
-      this.showDirectMessage.asObservable()
+      this.showDirectMessage.asObservable(),
     ]).pipe(
-      map(([showChannel, showDirectMessage]) => showChannel || showDirectMessage)
+      map(
+        ([showChannel, showDirectMessage]) => showChannel || showDirectMessage
+      )
     );
-  
   }
-
-
 
   updateScreenSize(width: number): void {
     if (width <= 500) {
@@ -65,6 +62,154 @@ export class ViewManagementService {
     });
   }
 
+  private viewSettings = {
+    extraSmall: {
+      sidebar: {
+        showSidebar: true,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      channel: {
+        showSidebar: false,
+        showChannel: true,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      directMessage: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: true,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      newMessage: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: true,
+        showSecondaryChat: false,
+      },
+      secondaryChat: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: true,
+      },
+    },
+    small: {
+      sidebar: {
+        showSidebar: true,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      channel: {
+        showSidebar: false,
+        showChannel: true,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      directMessage: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: true,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      newMessage: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: true,
+        showSecondaryChat: false,
+      },
+      secondaryChat: {
+        showSidebar: false,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: true,
+      },
+    },
+    medium: {
+      sidebar: {
+        showSidebar: true,
+        showSidebarToggle: true,
+        showSecondaryChat: false,
+      },
+      channel: {
+        showSidebar: true,
+        showSidebarToggle: true,
+        showChannel: true,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      directMessage: {
+        showSidebar: true,
+        showSidebarToggle: true,
+        showChannel: false,
+        showDirectMessage: true,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      newMessage: {
+        showSidebar: true,
+        showSidebarToggle: true,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: true,
+        showSecondaryChat: false,
+      },
+      secondaryChat: {
+        showSidebar: true,
+        showSidebarToggle: false,
+        showChannel: true,
+        showSecondaryChat: true,
+      },
+    },
+    large: {
+      sidebar: {
+        showChannel: true,
+        showSecondaryChat: false,
+      },
+      channel: {
+        showChannel: true,
+        showDirectMessage: false,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      directMessage: {
+        showSidebar: true,
+        showChannel: false,
+        showDirectMessage: true,
+        showNewMessage: false,
+        showSecondaryChat: false,
+      },
+      newMessage: {
+        showSidebar: true,
+        showChannel: false,
+        showDirectMessage: false,
+        showNewMessage: true,
+        showSecondaryChat: false,
+      },
+      secondaryChat: {
+        showSecondaryChat: true,
+      },
+    },
+  };
+
+  private updateViewProperties(properties: object): void {
+    for (const key of Object.keys(properties)) {
+      this[key].next(properties[key]);
+    }
+  }
 
   setView(
     view:
@@ -74,103 +219,12 @@ export class ViewManagementService {
       | 'newMessage'
       | 'secondaryChat'
   ): void {
-    const currentScreenSize = this.screenSize.value;
-    if (currentScreenSize === 'small' || currentScreenSize === 'extraSmall') {
-      if (view === 'sidebar') {
-        this.showSidebar.next(true);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(false);
-        this.showNewMessage.next(false);
-        this.showSecondaryChat.next(false);
-      } else if (view === 'channel') {
-        this.showSidebar.next(false);
-        this.showChannel.next(true);
-        this.showDirectMessage.next(false);
-        this.showNewMessage.next(false);
-        this.showSecondaryChat.next(false);
-      } else if (view === 'directMessage') {
-        this.showSidebar.next(false);
-        this.showChannel.next(false);
-        this.showNewMessage.next(false);
-        this.showDirectMessage.next(true);
-        this.showSecondaryChat.next(false);
-      } else if (view === 'newMessage') {
-        this.showSidebar.next(false);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(false);
-        this.showNewMessage.next(true);
-        this.showSecondaryChat.next(false);
-      } else if (view === 'secondaryChat') {
-        this.showSidebar.next(false);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(false);
-        this.showNewMessage.next(false);
-        this.showSecondaryChat.next(true);
-      }
-    } else if (currentScreenSize === 'medium') {
-      if (view === 'sidebar') {
-        this.showSidebar.next(true);
-        this.showSidebarToggle.next(true);
-
-        this.showSecondaryChat.next(false);
-
-      } else if (view === 'channel') {
-        this.showSidebar.next(true);
-        this.showSidebarToggle.next(true);
-        this.showChannel.next(true);
-        this.showSecondaryChat.next(false);
-        this.showDirectMessage.next(false);
-        this.showNewMessage.next(false);
-      } else if (view === 'directMessage') {
-        this.showSidebar.next(true);
-        this.showSidebarToggle.next(true);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(true);
-        this.showSecondaryChat.next(false);
-        this.showNewMessage.next(false);
-      } else if (view === 'newMessage') {
-        this.showSidebar.next(true);
-        this.showSidebarToggle.next(true);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(false);
-        this.showSecondaryChat.next(false);
-        this.showNewMessage.next(true);
-      } else if (view === 'secondaryChat') {
-        this.showSidebar.next(true);
-        this.showSidebarToggle.next(false);
-        this.showChannel.next(true);
-        this.showSecondaryChat.next(true);
-      }
-    } else if (currentScreenSize === 'large') {
-      if (view === 'sidebar') {
-        this.showChannel.next(true);
-        this.showSecondaryChat.next(false);
-      } else if (view === 'channel') {
-        this.showChannel.next(true);
-        this.showSecondaryChat.next(false);
-        this.showNewMessage.next(false);
-        this.showDirectMessage.next(false);
-      } else if (view === 'directMessage') {
-        this.showSidebar.next(true);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(true);
-        this.showNewMessage.next(false);
-        this.showSecondaryChat.next(false);
-
-      } else if (view === 'newMessage') {
-        this.showSidebar.next(true);
-        this.showChannel.next(false);
-        this.showDirectMessage.next(false);
-        this.showSecondaryChat.next(false);
-        this.showNewMessage.next(true);
-      } else if (view === 'secondaryChat') {
-        this.showSecondaryChat.next(true);
-      }
+    let screenSize = this.screenSize.value;
+    const settingsForSize = this.viewSettings[screenSize];
+    if (!settingsForSize || !settingsForSize[view]) {
+      return;
     }
 
-    console.log(
-      this.showSidebar.value,
-      currentScreenSize
-    )
+    this.updateViewProperties(settingsForSize[view]);
   }
 }

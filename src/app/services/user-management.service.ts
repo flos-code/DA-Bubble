@@ -11,16 +11,9 @@ import {
 } from 'firebase/firestore';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { User } from '../../models/user.class';
+import { environment } from '../../environments/environment.development';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
-};
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
 
 @Injectable({
@@ -59,7 +52,7 @@ export class UserManagementService {
         this.setUserOnlineStatus(user.uid, true);
       } else {
         if (this.activeUserId.value) {
-          this.setUserOnlineStatus(this.activeUserId.value, false); // Benutzer als offline markieren
+          this.setUserOnlineStatus(this.activeUserId.value, false);
           this.activeUserId.next(null);
         }
       }
@@ -73,9 +66,8 @@ export class UserManagementService {
         id: doc.id,
         data: new User(doc.data()),
       }));
-      this.sortUsers(users); // Sortieren der Benutzer bevor sie im BehaviorSubject aktualisiert werden
-      this.users.next(users); // Aktualisieren des BehaviorSubject
-
+      this.sortUsers(users);
+      this.users.next(users);
       await this.addActiveUserIdAndFetchUserIds();
     });
   }
@@ -96,7 +88,6 @@ export class UserManagementService {
     if (!this.activeUserId.value) {
       return [];
     }
-
     try {
       const dmCollectionRef = collection(
         getFirestore(),
@@ -104,14 +95,13 @@ export class UserManagementService {
       );
       const snapshot = await getDocs(dmCollectionRef);
       const userIds = snapshot.docs.map((doc) => doc.id);
-      console.log('Direktnachrichten-Partner-IDs:', userIds);
       return userIds;
     } catch (error) {
       console.error(
         'Fehler beim Abrufen der Direktnachrichten-Partner-IDs:',
         error
       );
-      return []; // Im Fehlerfall ein leeres Array zurückgeben
+      return [];
     }
   }
 
