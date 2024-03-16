@@ -321,8 +321,12 @@ private async deleteMessageWithDelay(messageRef) {
  * 
  * @param {any} messageRef - The Firestore document reference to the message being updated.
  */
-private async updateMessageText(messageRef: any) {
-  await updateDoc(messageRef, { message: this.editingMessageText });
+ private async updateMessageText(messageRef: any) {
+  if (this.editingMessageText === undefined) {
+      console.error("Attempting to update message with undefined text.");
+      return;
+  }
+  await updateDoc(messageRef, { message: this.editingMessageText ?? "Default message" });
 }
 
 /**
