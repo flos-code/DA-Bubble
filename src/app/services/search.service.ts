@@ -29,7 +29,6 @@ export class SearchService {
 
   searchUserResult = [];
   searchChannelsResult = [];
-  searchChannelsThreadsResult = [];
   threads = [];
 
   constructor() { }
@@ -92,5 +91,13 @@ export class SearchService {
         }
       });
     });
+  }
+
+  noResultFound() {
+    if (this.searchChannelsResult.length === 0 && this.searchUserResult.length === 0 && this.threads.length === 0) {
+      return true;
+    } else {
+      return false;
+    }
   }
 }
