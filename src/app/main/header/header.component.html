@@ -32,7 +32,7 @@
                     <ng-container *ngFor="let result of searchService.threads">
                         <div class="threadsContainer">
                             <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{ result['channelName'] }}]</h4>
-                            <p (click)="chatService.openThread( result['messageId'] ); onResultClick()">*{{ result['message'] }}*</p>
+                            <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{ result['message'] }}*</p>
                         </div>
                     </ng-container>
                 </div>
