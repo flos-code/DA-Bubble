@@ -30,11 +30,11 @@ export class AddMembersDialogComponent implements OnInit {
   originalUserList: any;
   filteredUserList: any;
 
+  constructor() { }
+
   ngOnInit(): void {
     this.getUsersToAdd();
   }
-
-  constructor() { }
 
   getUsersToAdd() {
     const q = query(collection(this.firestore, 'users'));

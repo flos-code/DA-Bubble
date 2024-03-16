@@ -4,11 +4,13 @@ import { FormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
+import { ShowMembersDialogComponent } from '../show-members-dialog/show-members-dialog.component';
+import { AddMembersDialogComponent } from '../add-members-dialog/add-members-dialog.component';
 
 @Component({
   selector: 'app-channel-edition-dialog',
   standalone: true,
-  imports: [ CommonModule, FormsModule ],
+  imports: [ CommonModule, FormsModule, ShowMembersDialogComponent, AddMembersDialogComponent ],
   templateUrl: './channel-edition-dialog.component.html',
   styleUrl: './channel-edition-dialog.component.scss'
 })
@@ -18,6 +20,7 @@ export class ChannelEditionDialogComponent implements OnInit {
   @Input() currentChannelId!: string;
   @Input() channelCreatorName!: string;
   @Input() currentUser!: string;
+  @Input() channelMembers!: any;
   channelEditionDialogOpen: boolean;
   @Output() channelEditionDialogOpenChild = new EventEmitter();
   showchannelEditionName: boolean = true;
@@ -27,10 +30,26 @@ export class ChannelEditionDialogComponent implements OnInit {
   showPopup: boolean = false;
   showPopupLeaveChannel: boolean = false;
   showPopupAdmin: boolean = false;
+  showMembersInEditionDialog: boolean = false;
+  editMobile: boolean = false;
+  saveMobile: boolean = false;
+  addMemberDialogOpen: boolean = false;
 
   constructor(private chatService: ChatService, private viewManagementService: ViewManagementService) { }
 
-  ngOnInit(): void { }
+  ngOnInit(): void {
+    this.setMobileComponents();
+  }
+
+  setMobileComponents() {
+    if(window.innerWidth <= 500){
+      this.showMembersInEditionDialog = true;
+      this.editMobile = true;
+    } else {
+      this.showMembersInEditionDialog = false;
+      this.editMobile = false;
+    }
+  }
 
   editChannelName() {
     if(this.currentUser == this.channelData.createdBy) {
@@ -116,6 +135,14 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   closePopupLeaveChannel() {
     this.showPopupLeaveChannel = false;
+  }
+
+  openAddMemberMobile(showAddMemberMobile: boolean) {
+    this.addMemberDialogOpen = true;
+  }
+
+  closeAddMemberMobile(addMemberDialogOpen: boolean) {
+    this.addMemberDialogOpen = false;
   }
 
   doNotClose($event: any) {

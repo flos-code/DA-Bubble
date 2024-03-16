@@ -39,7 +39,8 @@
         <div>
             <span class="material-symbols-outlined">person_add</span>
         </div>
-        <div (click)="goToAddMemberDialog()">Mitglieder hinzufügen</div>
+        <div *ngIf="!addMembersMobile" (click)="goToAddMemberDialog()">Mitglieder hinzufügen</div>
+        <div *ngIf="addMembersMobile" (click)="openAddMemberMobile()">Mitglieder hinzufügen</div>
     </div>
 </div>
 

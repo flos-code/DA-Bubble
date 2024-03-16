@@ -258,3 +258,10 @@
 .mt-17 {
     margin-top: -17px;
 }
+
+/* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 500px) {
+    .cardContainer {
+        width: 90%;
+    }
+}
