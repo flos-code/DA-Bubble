@@ -15,7 +15,8 @@
                 <div *ngIf="searchService.searchUserResult.length > 0" class="userResult">
                     <h4>Users:</h4>
                     <ng-container *ngFor="let result of searchService.searchUserResult">
-                        <p (click)="serviceProfilCard.toggleProfilCard(true, false, result['id']); onResultClick()">{{ result['name'] }}
+                        <p (click)="serviceProfilCard.toggleProfilCard(true, false, result['id']); onResultClick()">{{
+                            result['name'] }}
                         </p>
                     </ng-container>
                 </div>
@@ -23,7 +24,8 @@
                 <div *ngIf="searchService.searchChannelsResult.length > 0" class="channelsResult">
                     <h4>Channels:</h4>
                     <ng-container *ngFor="let result of searchService.searchChannelsResult">
-                        <p (click)="chatService.setActiveChannelId(result['id']); onResultClick()">{{ result['name'] }}</p>
+                        <p (click)="chatService.setActiveChannelId(result['id']); onResultClick()">{{ result['name'] }}
+                        </p>
                     </ng-container>
                 </div>
 
@@ -31,11 +33,17 @@
                     <h4>Threads:</h4>
                     <ng-container *ngFor="let result of searchService.threads">
                         <div class="threadsContainer">
-                            <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{ result['channelName'] }}]</h4>
-                            <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{ result['message'] }}*</p>
+                            <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{
+                                result['channelName'] }}]</h4>
+                            <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{
+                                result['message'] }}*</p>
                         </div>
                     </ng-container>
                 </div>
+
+                <ng-container *ngIf="searchService.noResultFound()">
+                    <h5>No results found</h5>
+                </ng-container>
 
             </div>
         </div>
