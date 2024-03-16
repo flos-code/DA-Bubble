@@ -177,7 +177,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
             this.channelMembers.push(element.data());
           }    
         });
+        this.sortChannelMembers();
     });
+  }
+
+  sortChannelMembers() {
+    if(this.channelMembers.some(member => member.id == this.currentUser)) {
+      let memberTofind = this.channelMembers.find(memObj => memObj.id == this.currentUser);
+      let index = this.channelMembers.findIndex(memb => memb.id == this.currentUser);
+      this.channelMembers.splice(index, 1);
+      this.channelMembers.unshift(memberTofind);  
+    }
   }
 
   getThreads() {
