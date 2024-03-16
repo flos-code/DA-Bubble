@@ -63,7 +63,13 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
       this.openEditOwnInput = false;
       this.saveMessageChanges();
     }
+  
+    const openEditOwnMessageElement = document.querySelector('.edit-message');
+    if (openEditOwnMessageElement && !openEditOwnMessageElement.contains(event.target as Node)) {
+      this.openEditOwnMessage = false;
+    }
   }
+  
 
   async getReactions() {
     this.getCurrentUserName();

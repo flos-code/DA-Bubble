@@ -54,24 +54,8 @@
                                     <div>haben reagiert</div>
                                 }
                             </div>
-                        </div>    
-
-<!--                <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
-                            <div class="ractionEmoji">
-                                <span>{{reaction?.reaction}}</span>
-                            </div>
-                            <div class="ractionCount">
-                                <div>{{reaction.count}}</div>
-                            </div>
-                            <div class="reactionHoverBubble">
-                                <div class="ractionEmoji">
-                                    <span>{{reaction?.reaction}}</span>
-                                </div>                        
-                                <div>{{reaction?.reactedByName}}</div>
-                                <div>hat reagiert</div>
-                            </div>
-                        </div>   
- -->                }
+                        </div>
+                    }
         
                     <div *ngIf="reactions?.length > 3" class="reactionContainer">
                         <div class="ractionEmoji">
@@ -163,24 +147,8 @@
                                     <div>haben reagiert</div>
                                 }
                             </div>
-                        </div>    
-
-<!--                    <div class="reactionContainer" (click)="saveReaction(reaction?.reaction, currentUser)">
-                            <div class="ractionEmoji">
-                                <span>{{reaction?.reaction}}</span>
-                            </div>
-                            <div class="ractionCount">
-                                <div>{{reaction.count}}</div>
-                            </div>
-                            <div class="reactionHoverBubble">
-                                <div class="ractionEmoji">
-                                    <span>{{reaction?.reaction}}</span>
-                                </div>                        
-                                <div>{{reaction?.reactedByName}}</div>
-                                <div>hat reagiert</div>
-                            </div>
-                        </div>    
- -->                }
+                        </div>
+                    }
         
                     <div *ngIf="reactions?.length > 3" class="reactionContainer">
                         <div class="ractionEmoji">
@@ -209,8 +177,7 @@
         </app-reaction-emoji-input>
 
 
-        <div *ngIf="openEditOwnMessage"
-            (click)="startEditMessage()" class="edit-message">
+        <div *ngIf="openEditOwnMessage" (click)="startEditMessage()" class="edit-message">
             <span>Nachricht bearbeiten</span>
         </div>
     </div>
