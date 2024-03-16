@@ -40,7 +40,7 @@ export class AddMembersDialogComponent implements OnInit {
     const q = query(collection(this.firestore, 'users'));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
-        if(!this.channelMembers.includes(element.id)) {
+        if(!this.channelData.members.includes(element.id)) {
             this.userList.push({
               'userName': element.data()['name'],
               'userId': element.id,
