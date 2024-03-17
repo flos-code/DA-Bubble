@@ -153,6 +153,7 @@
         font-weight: 400;
         color: $purple3;
         cursor: pointer;
+        white-space: nowrap;
     }
 
     > div:last-of-type {
@@ -201,7 +202,8 @@
     display: flex;
     justify-content: flex-start;
     align-items: center;
-    gap: 1rem;
+    flex-wrap: wrap;
+    gap: 6px;
     cursor: pointer;
     &:hover {
       color: $purple3;
@@ -224,10 +226,9 @@
 
     > .reactionContainer {
         box-sizing: border-box;
-        height: 40px;
         position: relative;
         display: flex;
-        gap: 10px;
+        gap: 6px;
         border-radius: 20px;
         border: 1px solid $lightPurple;
         padding: 5px 10px 5px 10px;
@@ -358,6 +359,7 @@
 .toolBarOwn{
     right: unset;
     left: -80px;
+    border-radius: 25px 25px 25px 0px;
 }
 
 .messageContainer:hover > .toolBar {
@@ -514,7 +516,35 @@
     .mainMessageOwn > div:nth-of-type(2) {
             font-size: 17px;
     }
+
+    .messageContainer, 
+    .messageContainerOwn {
+        gap: 10px;
+        padding: 1rem;
+    }
+
+    .mainThreadReactions,
+    .mainThreadReactionsOwn {
+        > .reactionContainer {
+            &:hover .reactionHoverBubble {
+                display: none;
+            }
+        }
+    }
+
+    .mainMessageThreads {
+        gap: 10px;
+    }
+
+    .messageContainer:hover > .toolBar {
+        opacity: 1;
+        right: 16px;
+    }
     
+    .messageContainerOwn:hover > .toolBarOwn {
+        left: 16px;
+        opacity: 1;
+    }
 }
 
 

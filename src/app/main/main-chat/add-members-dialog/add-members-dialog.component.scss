@@ -247,6 +247,11 @@
 
 /* =========================== RESPONSIVENESS =========================== */
 @media(max-width: 500px) {
+    .userList {
+        width: 268px;
+    }   
 
-    
+    .addMembersDialog {
+        padding: 15px;
+    }
 }
