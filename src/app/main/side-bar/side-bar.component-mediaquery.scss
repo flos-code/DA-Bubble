@@ -11,9 +11,11 @@
       position: relative;
 
       .sideBardHeader {
-        .newMessage {
-          display: none;
-        }
+        display: none;
+      }
+
+      .sideBarBody {
+        max-height: none;
       }
 
       .mobileNewMessage {

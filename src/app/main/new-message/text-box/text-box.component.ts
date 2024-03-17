@@ -212,7 +212,7 @@ export class TextBoxComponent {
   }
 
   async sendMessage(): Promise<void> {
-    if (!this.messageType || !this.targetId || !this.messageModel.trim()) {
+    if (!this.messageType || !this.targetId || !this.isMessageNotEmpty()) {
       console.error('Nachrichtendetails sind unvollständig');
       return;
     }
