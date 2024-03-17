@@ -1,8 +1,17 @@
 <div class="header">
 
     <div class="left-middle-header">
-        <img src="assets/img/logo2.png" alt="">
-        <button (click)="showSidebar()">show sidebar</button>
+
+        <div class="left-header">
+            <img src="assets/img/logo2.png" alt="">
+
+            <svg class="svg-hide-worspace">
+                <use xlink:href="./assets/img/toggleWorkspaceSymbols.svg#svg-hide-worspace"
+                    xmlns:xlink="http://www.w3.org/1999/xlink"></use>
+            </svg>
+        </div>
+
+        <!-- <button (click)="showSidebar()">show sidebar</button> -->
 
         <div class="searchField" (document:click)="onDocumentClick($event)">
             <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">

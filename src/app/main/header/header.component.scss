@@ -150,7 +150,7 @@
 
 .searchField {
     width: 100%;
-    margin-left: 160px;
+    margin-left: 113px;
     max-width: 989px;
     position: relative;
 }
@@ -158,6 +158,18 @@
 .left-middle-header {
     display: flex;
     width: 100%;
+}
+
+.left-header {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+
+    svg {
+        height: 16px;
+        width: 16px;
+        cursor: pointer;
+    }
 }
 
 .resultFeld {
@@ -235,4 +247,8 @@
             transform: scale(1.05);
         }
     }
+}
+
+.svg-hide-worspace {
+
 }
