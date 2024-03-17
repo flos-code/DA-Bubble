@@ -11,9 +11,7 @@
             </svg>
         </div>
 
-        <!-- <button (click)="showSidebar()">show sidebar</button> -->
-
-        <div class="searchField" (document:click)="onDocumentClick($event)">
+        <div class="headerSearchField" (document:click)="onDocumentClick($event)">
             <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
                 <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"
                     (ngModelChange)="onInputChange()">
@@ -72,6 +70,49 @@
     </div>
 </div>
 
-<!-- <div class="overlay" [class.active]="isOverlayActive" (click)="toggleOverlay(false)"></div> -->
 
-<!-- <app-profil-card class="userProfilRight" *ngIf="showProfil"></app-profil-card> -->
+<div >
+    <div class="sidebarSearchField" (document:click)="onDocumentClick($event)">
+        <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
+            <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"
+                (ngModelChange)="onInputChange()">
+            <img src="assets/img/search.png" alt="">
+        </div>
+        <div *ngIf="isInputValueGreaterThanOne()" class="resultFeld">
+
+            <div *ngIf="searchService.searchUserResult.length > 0" class="userResult">
+                <h4>Users:</h4>
+                <ng-container *ngFor="let result of searchService.searchUserResult">
+                    <p (click)="serviceProfilCard.toggleProfilCard(true, false, result['id']); onResultClick()">{{
+                        result['name'] }}
+                    </p>
+                </ng-container>
+            </div>
+
+            <div *ngIf="searchService.searchChannelsResult.length > 0" class="channelsResult">
+                <h4>Channels:</h4>
+                <ng-container *ngFor="let result of searchService.searchChannelsResult">
+                    <p (click)="chatService.setActiveChannelId(result['id']); onResultClick()">{{ result['name'] }}
+                    </p>
+                </ng-container>
+            </div>
+
+            <div *ngIf="searchService.threads.length > 0" class="channelsResult">
+                <h4>Threads:</h4>
+                <ng-container *ngFor="let result of searchService.threads">
+                    <div class="threadsContainer">
+                        <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{
+                            result['channelName'] }}]</h4>
+                        <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{
+                            result['message'] }}*</p>
+                    </div>
+                </ng-container>
+            </div>
+
+            <ng-container *ngIf="searchService.noResultFound()">
+                <h5>No results found</h5>
+            </ng-container>
+
+        </div>
+    </div>
+</div>

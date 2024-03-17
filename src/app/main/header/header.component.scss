@@ -148,9 +148,9 @@
     display: none;
 }
 
-.searchField {
+.headerSearchField {
     width: 100%;
-    margin-left: 113px;
+    margin-left: 140px;
     max-width: 989px;
     position: relative;
 }
@@ -249,9 +249,17 @@
     }
 }
 
-@media(max-width: 1111px) {
-    .searchField {
+.svg-hide-worspace {
+    display: none;
+}
+
+@media(max-width: 1110px) {
+    .headerSearchField {
         margin-left: 16px;
+    }
+
+    .svg-hide-worspace {
+        display: unset;
     }
 }
 
@@ -285,5 +293,53 @@
         img {
             height: 16px;
         }
+    }
+}
+
+@media(max-width: 500px) {
+    .headerSearchField {
+        display: none;
+    }
+
+    .left-header {
+        h1 {
+            display: block;
+        }
+    }
+}
+
+@media(min-width: 501px) {
+    .sidebarSearchField {
+        display: none;
+    }
+}
+
+.sidebarSearchField {
+    background-color: white;
+    padding: 30px;
+    position: relative;
+
+    input {
+        border: none;
+        font-size: 17px;
+        width: 100%;
+        outline: none;
+    }
+
+    .input-container {
+        border: solid 1px;
+        height: 48px;
+    }
+
+    .input-over-one {
+        border-bottom: none;
+    }
+
+    .resultFeld {
+        // left: unset;
+        // position: unset;
+        border: solid 1px;
+        width: calc(100% - 2px);
+        border-top: none;
     }
 }
