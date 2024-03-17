@@ -210,15 +210,15 @@
 app-channel-edition-dialog {
     position: absolute;
     top: 75px;
-    left: 52px;
+    margin-left: auto;
+    margin-right: auto;
     z-index: 10;
 }
 
-app-show-members-dialog{
+app-show-members-dialog {
     position: absolute;
     right: 140px;
     top: 80px;
-    width: 415px;
     z-index: 10;
 }
 
@@ -226,9 +226,6 @@ app-add-members-dialog {
     position: absolute;
     top: 80px;
     right: 45px;
-    height: 294px;
-    max-width: 600px;
-    min-width: 500px;
     z-index: 10;
 }
 
@@ -294,7 +291,9 @@ app-add-members-dialog {
             box-shadow: 0 0 5px 5px white;
             padding: 5px 15px 5px 15px;
             margin: 5px;
-            background-color: white;       
+            background-color: white;     
+            font-size: 18px;
+            font-weight: 400;  
         }
     }
 }
@@ -311,25 +310,39 @@ app-thread {
 }
 
 /* =========================== RESPONSIVENESS =========================== */
-@media(max-width: 600px) {
-    app-show-members-dialog {
-        display: none;
+@media(max-width: 720px) {
+    app-show-members-dialog,
+    app-add-members-dialog {
+        right: unset;
+        margin-left: auto;
+        margin-right: auto;
     }
 }
 
-
 @media(max-width: 500px) {
-    .dialogBackground {
-        display: none;
+    * ::-webkit-scrollbar {
+        display: none!important;
     }
 
-    app-channel-edition-dialog,
-    app-add-members-dialog  {
+    .timeSeparator,
+    .beginningOfChannel,
+    .mainChatInput {
+        padding-left: 1rem;
+        padding-right: 1rem;
+    }
+    app-channel-edition-dialog {
         position: fixed;
         top: 0px;
         left: 0px;
         right: 0px;
         height: 100%;
         width: 100%;
+    }
+
+    .mainChatHeaderLeft  {
+        > div,
+        > div > mat-icon {
+            font-size: 27px;
+        }
     }
 }

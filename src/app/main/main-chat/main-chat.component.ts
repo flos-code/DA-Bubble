@@ -58,7 +58,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   ownMessageEdit: boolean = false;
   showProfileCard: boolean = false
   channelCreatorName: string;
-  desktopView: boolean = false;
+  desktopView: boolean = true;
 
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -106,7 +106,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
 
   }
 
-  ngOnInit(): void { }
+  ngOnInit(): void { 
+    this.setMobileViewComponents();
+  }
 
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
@@ -116,6 +118,14 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== ID's FOM SERVICE ================== */
+  setMobileViewComponents() {
+    if(window.innerWidth <= 500) {
+      this.desktopView = false;
+    } else {
+      this.desktopView = true;
+    }
+  }
+
   getChannelAndDmPath() {
     this.dmMessagesPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages`;
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
@@ -355,7 +365,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (dialog == 'addMember') {
       if (this.addMemberDialogOpen == false) {
         this.addMemberDialogOpen = true;
-        this.desktopView = true;
       } else {
         this.addMemberDialogOpen = false;
       }

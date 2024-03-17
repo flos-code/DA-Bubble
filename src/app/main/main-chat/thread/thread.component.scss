@@ -99,6 +99,7 @@
         padding: 15px;
         background-color: $bgColor;
         font-size: 18px;
+        font-weight: 400;
     }
 }
 
@@ -136,6 +137,7 @@
         background-color: $purple2;
         font-size: 18px;
         color: white;
+        font-weight: 400;
     }
 }
 
@@ -148,12 +150,14 @@
 
     > div:first-of-type {
         font-size: 18px;
+        font-weight: 400;
         color: $purple3;
         cursor: pointer;
     }
 
     > div:last-of-type {
         font-size: 14px;
+        font-weight: 400;
         color: $textGray;    
     }
 }
@@ -498,3 +502,29 @@
         }
     }
 }
+
+/* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 500px) {
+    .messageProfileIcon > img {
+            height: 50px;
+            width: 50px;
+    }  
+
+    .mainMessage > div:nth-of-type(2),
+    .mainMessageOwn > div:nth-of-type(2) {
+            font-size: 17px;
+    }
+    
+}
+
+
+
+
+
+
+
+
+
+
+
+

@@ -73,18 +73,22 @@
     }
 
     > .addButton {
-        width: auto;
-        background-color: rgba(104, 104, 104, 1);
-        padding: 12px 25px 12px 25px;
-        border: none;
-        border-radius: 25px;
-        font-size: 18px;
-        color: white;
+        width: 100%;
         display: flex;
-        justify-content: center;
+        justify-content: flex-end;
         align-items: center;
-        &:hover {
-            cursor: pointer;
+
+        > div {
+            width: auto;
+            background-color: rgba(104, 104, 104, 1);
+            padding: 12px 25px 12px 25px;
+            border: none;
+            border-radius: 25px;
+            font-size: 18px;
+            color: white;
+            &:hover {
+                cursor: pointer;
+            }
         }
     }
 }

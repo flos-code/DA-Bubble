@@ -1,5 +1,5 @@
 <div (click)="closeDialog()" class="dialogBackground"
-    *ngIf="addMemberDialogOpen && desktopView || channelEditionDialogOpen || showMembersDialogOpen">
+    *ngIf="(addMemberDialogOpen && desktopView) || channelEditionDialogOpen || showMembersDialogOpen">
 </div>
 
 <div class="mainChatWrapper">
@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="mainChatHeaderRight">
-                    <div (click)="toggleDialog('showMembers')">
+                    <div (click)="toggleDialog('showMembers')" *ngIf()="desktopView">
                         <div class="memberPhotos">
                             @for (member of channelMembers | slice:0:3; track $index) {
                             <div>
