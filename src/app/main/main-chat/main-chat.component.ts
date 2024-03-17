@@ -278,7 +278,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'message': threadsOrDms[i]['message'],
         'userId': userId,
         'createdBy': createdBy,
-        'imgUrl': this.getImgUrl(userId)
+        'imgUrl': this.getImgUrl(userId),
+        'imageUrl': message['imageUrl']
       });
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
