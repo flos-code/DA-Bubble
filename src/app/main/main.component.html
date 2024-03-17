@@ -1,20 +1,20 @@
 <app-header></app-header>
 
-<div class="main-content">
-  <app-side-bar
+<div class="main-content vh-100">
+  <app-side-bar class="vh-100"
     *ngIf="viewManagementService.showSidebar$ | async"
   ></app-side-bar>
-  <app-main-chat
+  <app-main-chat class="vh-100"
     *ngIf="viewManagementService.showMainChat$ | async"
   ></app-main-chat>
   <!-- <app-main-chat
   *ngIf="viewManagementService.showDirectMessage$ | async"
 ></app-main-chat> -->
 
-  <app-new-message
+  <app-new-message class="vh-100"
     *ngIf="viewManagementService.showNewMessage$ | async"
   ></app-new-message>
-  <app-secondary-chat
+  <app-secondary-chat class="vh-100"
     *ngIf="viewManagementService.showSecondaryChat$ | async"
   ></app-secondary-chat>
 </div>
