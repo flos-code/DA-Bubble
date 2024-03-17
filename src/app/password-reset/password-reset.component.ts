@@ -61,6 +61,9 @@ export class PasswordResetComponent implements OnInit {
   passwordChanged: boolean = false;
   sendEmailBtnDisabled: boolean = false;
   resetPWBtnDisabled: boolean = false;
+  showPasswordErrorDiv: boolean = false;
+  showConfirmPasswordErrorDiv:boolean = false;
+
   emailForPasswordResetForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
   });
@@ -110,11 +113,11 @@ export class PasswordResetComponent implements OnInit {
 
   getErrorMessage(errors: ValidationErrors) {
     if (errors['required']) {
-      return 'Password is required!';
+      return 'Bitte geben Sie einen Passwort ein';;
     } else if (errors['minlength']) {
-      return 'Password should be longer than 8 characters!';
+      return 'Das Passwort muss länger als 8 Zeichen sein';
     } else if (errors['maxlength']) {
-      return "Password can't be longer than 100 characters!";
+      return "Das Passwort darf nicht länger als 100 Zeichen sein";
     } else {
       return
     }
