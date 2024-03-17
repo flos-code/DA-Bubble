@@ -35,7 +35,7 @@
           <div *ngIf="firstThreadMessage?.message" class="thread-message">
             <span>{{ firstThreadMessage?.message }}</span>
           </div>
-          <img *ngIf="firstThreadMessage?.imageUrl" [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px;">
+          <img *ngIf="firstThreadMessage?.imageUrl" [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
         </div>
       </div>
       } @else {
@@ -55,7 +55,7 @@
           <div *ngIf="firstThreadMessage?.message" class="thread-message own-bubble">
             <span>{{ firstThreadMessage.message }}</span>
           </div>
-          <img *ngIf="firstThreadMessage?.imageUrl" [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px;">
+          <img *ngIf="firstThreadMessage?.imageUrl" [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
         </div>
       </div>
       }
