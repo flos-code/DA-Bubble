@@ -249,6 +249,45 @@
     }
 }
 
-.svg-hide-worspace {
+@media(max-width: 1111px) {
+    .searchField {
+        margin-left: 16px;
+    }
+}
 
+
+@media(max-width: 1000px) {
+    .header-profil {
+        h2 {
+            display: none;
+        }
+
+        mat-icon {
+            display: none;
+        }
+    }
+}
+
+@media (max-width: 860px) {
+    .left-header {
+
+        // img {
+        //     height: 56px;
+        // }
+        h1 {
+            display: none;
+        }
+    }
+
+    .header {
+        input {
+            font-size: 20px;
+        }
+    }
+
+    .input-container {
+        img {
+            height: 16px;
+        }
+    }
 }
