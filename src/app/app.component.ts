@@ -31,11 +31,11 @@ auth = getAuth(app);
   }
 
   ngOnInit(): void {
-    if (!this.auth.currentUser){
-      this.router.navigateByUrl('/login')
-    } else {
+    // if (!this.auth.currentUser){
+    //   this.router.navigateByUrl('/login')
+    // } else {
       
-    }
+    // }
   }
 
 }

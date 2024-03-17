@@ -126,6 +126,8 @@ emoji-mart {
 
     .profile-picture {
         height: 70px;
+        width: 70px;
+        aspect-ratio: 1 / 1;
         border-radius: 100%;
         margin: 0 10px;
     }
