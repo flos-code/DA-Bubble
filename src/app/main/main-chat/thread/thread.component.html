@@ -10,6 +10,7 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
+<<<<<<< HEAD
                 <div>
                     <div class="mainMessageMessage">
                         {{thread?.message}}
@@ -18,6 +19,12 @@
                         <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
                     </div>
                 </div>
+=======
+                <div *ngIf="thread?.message">
+                    {{thread?.message}}
+                </div>
+                <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
+>>>>>>> 91fcaac8b41451eb9ec8949ee533a3c0234fa0fe
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
                     <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
@@ -114,6 +121,7 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
+<<<<<<< HEAD
                 <div>
                     <div class="mainMessageMessage">
                         {{thread?.message}}
@@ -122,6 +130,13 @@
                         <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
                     </div>
                 </div>
+=======
+                <div *ngIf="thread?.message">
+                    {{thread?.message}}
+                </div>
+                <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
+
+>>>>>>> 91fcaac8b41451eb9ec8949ee533a3c0234fa0fe
                 <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
                     <div>Letzte Antwort {{lastAnswer}}</div>
                     <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>

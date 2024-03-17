@@ -58,6 +58,7 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loadThreadData();
+    console.log(this.thread.imageUrl)
   }
 
   loadThreadData() {
