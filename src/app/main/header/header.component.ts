@@ -104,6 +104,7 @@ export class HeaderComponent implements OnInit {
   }
 
   toggleDropdownMenu(active: boolean) {
+    this.serviceProfilCard.getTheLoggedInUser();
     this.showDropdownMenu = active;
     // this.isOverlayActive = active;
     if (!this.serviceProfilCard.isProfilCardActive) {
