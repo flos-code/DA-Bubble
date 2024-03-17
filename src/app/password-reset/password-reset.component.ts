@@ -29,9 +29,11 @@ const app = initializeApp(firebaseConfig);
 
 export class PasswordResetComponent implements OnInit {
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private fb: FormBuilder,
-    private pwfb: NonNullableFormBuilder) { }
+    private pwfb: NonNullableFormBuilder
+    ) { }
 
   ngOnInit(): void {
     document.addEventListener('DOMContentLoaded', () => {

@@ -98,7 +98,6 @@
     background: url('/assets/img/login/person_gray.png') no-repeat scroll 7px 7px;
     padding-left: 60px !important;
     background-position: 20px 50%;
-    margin-bottom: 40px;
     margin-top: 20px;
 
     &:focus {
@@ -112,7 +111,6 @@
     background: url('/assets/img/login/mail_gray.png') no-repeat scroll 7px 7px;
     padding-left: 60px !important;
     background-position: 20px 50%;
-    margin-bottom: 40px;
 
     &:focus {
         background: url('/assets/img/login/mail_black.png') no-repeat scroll 7px 7px;
@@ -125,7 +123,6 @@
     background: url('/assets/img/login/lock_gray.png') no-repeat scroll 7px 7px;
     padding-left: 60px !important;
     background-position: 20px 50%;
-    margin-bottom: 25px;
 
     &:focus {
         background: url('/assets/img/login/lock_black.png') no-repeat scroll 7px 7px;
@@ -166,6 +163,7 @@
     letter-spacing: 0em;
     text-align: left;
     border: none;
+    margin-top: 20px;
 
     &:hover {
         cursor: pointer;
@@ -179,7 +177,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    margin-bottom: 70px;
+    
 
     label {
         width: 30px;
@@ -447,6 +445,15 @@
         background-image: url('/assets/img/login/visibility_off_black.png');
     }
 }
+
+.error-message-container{
+    width: 500px;
+    height: 25px;
+    margin-bottom: 20px;
+    color: rgb(253, 91, 91);
+}
+
+
 
 @keyframes slideSignUpFromRight {
     0% {

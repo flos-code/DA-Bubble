@@ -3,6 +3,7 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { initializeApp } from 'firebase/app';
+import { MatFormFieldModule } from '@angular/material/form-field';
 import {
   getFirestore,
   collection,
@@ -12,7 +13,7 @@ import {
   updateDoc,
   arrayUnion,
 } from 'firebase/firestore';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -44,7 +45,7 @@ const storage = getStorage();
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, RouterModule],
   templateUrl: './sign-up.component.html',
   styleUrl: './sign-up.component.scss',
 })
@@ -77,7 +78,7 @@ export class SignUpComponent {
   registerForm = this.fb.group({
     nameAndSurname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
     checkbox: [false, Validators.requiredTrue],
   });
 
@@ -287,5 +288,58 @@ export class SignUpComponent {
   togglePasswordVisibility() {
     this.isText = !this.isText
     this.type = this.isText ? "text" : "password";
+  }
+
+  getPWErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie einen Passwort ein';
+    } else if (errors['minlength']) {
+      return 'Das Passwort muss länger als 8 Zeichen sein';
+    } else if (errors['maxlength']) {
+      return "Das Passwort darf nicht länger als 100 Zeichen sein";
+    } else {
+      return
+    }
+  }
+
+  getNameAndSurnameErrorMessage(errors: ValidationErrors){
+    if(errors['required']){
+      return 'Bitte geben Sie Ihr Vor und Nachnahme ein'
+    } else {
+      return
+    }
+  }
+
+  getEmailErrorMessage(errors: ValidationErrors){
+    if(errors['required']){
+      return 'Bitte geben Sie Ihre E-Mail-Adresse ein'
+    } else if(errors['pattern']) {
+      return 'Keine gültige E-Mail-Adresse'
+    } else {
+      return
+    }
+  }
+
+  getCheckBoxErrorMessage(errors: ValidationErrors){
+    if(errors['required']){
+      return 'Sie müssen das Kontrollkästchen aktivieren, um fortzufahren'
+    } else {
+      return
+    }
+  }
+
+
+  checkErrors(control: string) {
+    const errors = (this.registerForm.controls as any)[control].errors;
+    if (control === 'password'){
+      return this.getPWErrorMessage(errors);
+    } else if (control === 'email'){
+      return this.getEmailErrorMessage(errors);
+    } else if (control === 'nameAndSurname') {
+      return this.getNameAndSurnameErrorMessage(errors);
+    } else if (control === 'checkbox'){
+      return this.getCheckBoxErrorMessage(errors)
+    }
+    
   }
 }
