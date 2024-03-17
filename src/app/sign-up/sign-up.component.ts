@@ -60,6 +60,10 @@ export class SignUpComponent {
   userCreationSuccess: boolean = false;
   isText: boolean = false;
   type: string = 'password';
+  showNameAndUsernameErrorDiv: boolean = false;
+  showEmailErrorDiv: boolean = false;
+  showPasswordErrorDiv: boolean = false;
+  showCheckboxErrorDiv: boolean = false;
 
   genericImg: string = '/assets/img/login/profile_generic_big.png';
   person1Img: string = '/assets/img/userImages/userImage1.svg';
@@ -327,7 +331,6 @@ export class SignUpComponent {
       return
     }
   }
-
 
   checkErrors(control: string) {
     const errors = (this.registerForm.controls as any)[control].errors;

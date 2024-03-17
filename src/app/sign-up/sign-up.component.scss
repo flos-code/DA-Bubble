@@ -451,9 +451,12 @@
     height: 25px;
     margin-bottom: 20px;
     color: rgb(253, 91, 91);
+    visibility: hidden;
 }
 
-
+.visible{
+    visibility: visible;
+}
 
 @keyframes slideSignUpFromRight {
     0% {
