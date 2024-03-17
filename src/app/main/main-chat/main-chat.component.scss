@@ -324,6 +324,10 @@ app-thread {
         display: none!important;
     }
 
+    .mainChatContainer {
+        border-radius: 0;
+    }
+
     .timeSeparator,
     .beginningOfChannel,
     .mainChatInput {
