@@ -67,6 +67,7 @@ export class SideBarComponent {
     this.userManagementService.activeUserId$.subscribe((activeUserId) => {
       if (activeUserId) {
         this.channels$ = this.loadChannels(activeUserId);
+        this.preSelect(activeUserId);
       }
     });
     this.userManagementService.loadUsers();
@@ -74,7 +75,6 @@ export class SideBarComponent {
     this.screenSizeSubscription =
       this.viewManagementService.screenSize$.subscribe((size) => {
         this.screenSize = size;
-        this.preSelect(this.screenSize);
       });
     this.subscription.add(
       this.viewManagementService.showSidebarToggle$.subscribe((value) => {
@@ -271,9 +271,23 @@ export class SideBarComponent {
     return this.chatService.getSelectedUserId();
   }
 
-  preSelect(screenSize: string) {
-    if (screenSize === 'medium' || screenSize === 'large') {
-      this.setActiveChannel('allgemein');
+  async preSelect(activeUserId: string) {
+    if (this.screenSize === 'medium' || this.screenSize === 'large') {
+      const isMember = await this.isUserMemberOfAllg(activeUserId);
+      if (isMember) {
+        this.setActiveChannel('allgemein');
+      } else {
+        this.openNewMessage();
+      }
     }
+  }
+
+  async isUserMemberOfAllg(userId: string) {
+    const generalChannelRef = doc(this.firestore, 'channels', 'allgemein');
+    const generalChannelSnap = await getDoc(generalChannelRef);
+    if (generalChannelSnap.exists() && generalChannelSnap.data()['members']) {
+      return generalChannelSnap.data()['members'].includes(userId);
+    }
+    return false;
   }
 }
