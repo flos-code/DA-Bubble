@@ -10,7 +10,7 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
-                <div>
+                <div *ngIf="thread?.message">
                     {{thread?.message}}
                 </div>
                 <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px;">
@@ -110,7 +110,7 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
-                <div>
+                <div *ngIf="thread?.message">
                     {{thread?.message}}
                 </div>
                 <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px;">
