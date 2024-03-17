@@ -20,7 +20,9 @@ export class ThreadComponent implements OnInit, OnChanges {
   private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
   @Input() currentUser!: string;
+  @Input() activeDmUser!: string;
   @Input() activeChannelId!: string;
+  @Input() path!: string;
   messageCount!: number;
   threadMessagesTimestamps = [];
   answers: string;
@@ -35,13 +37,23 @@ export class ThreadComponent implements OnInit, OnChanges {
   currentUserName: string;
   reactionNames =  [];
   reactionCount: number;
+  messageCountPath: string;
 
   constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if(changes['thread']) {
-        this.loadThreadData();
-      }
+    console.log("PATH", this.path);
+    //this.reactionCollectionPath = this.path + `/${this.thread.threadId}/reactions`;
+    if(this.activeChannelId == null) {
+      this.reactionCollectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}/reactions`;
+    } else {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
+      this.messageCountPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`;
+    }
+
+    if(changes['thread']) {
+      this.loadThreadData();
+    }
   }
 
   ngOnInit(): void {
@@ -49,10 +61,11 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   loadThreadData() {
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
     this.getCurrentUserName();
     this.getReactions();
-    this.getMessageCountAndAnswer();
+    if(this.activeChannelId !== null) {
+      this.getMessageCountAndAnswer();
+    }
   }
 
   async getCurrentUserName() {

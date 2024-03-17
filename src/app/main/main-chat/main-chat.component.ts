@@ -31,7 +31,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   @ViewChild('mainChat') private mainChat: ElementRef;
   dmMessagesPath = '';
   channelThreadsPath = '';
-  channelPath = '';
+  path = '';
 
   channel: Channel; // Daten des aktuellen Channels
   activeChannelId: string;
@@ -83,7 +83,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.activeChannelId = valueChannel;
         this.activeDmUser = null;
         this.getChannelAndDmPath();
-        this.channelPath = this.channelThreadsPath;
+        this.path = this.channelThreadsPath;
         this.loadChannelData();
         setTimeout(() => {
           this.scrollToBottom();
@@ -96,7 +96,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         this.activeDmUser = valueDm;
         this.activeChannelId = null;
         this.getChannelAndDmPath();
-        this.channelPath = this.dmMessagesPath;
+        this.path = this.dmMessagesPath;
         this.loadDmData();
         setTimeout(() => {
           this.scrollToBottom();
@@ -191,7 +191,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getThreads() {
-    const q = query(collection(this.firestore, this.channelPath), orderBy("creationDate", "asc"), limit(20));
+    const q = query(collection(this.firestore, this.path), orderBy("creationDate", "asc"), limit(20));
     // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
     return onSnapshot(q, (list) => {
       this.channelThreads = [];

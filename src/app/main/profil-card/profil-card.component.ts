@@ -5,7 +5,8 @@ import { MatIcon } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
 import { getAuth, updateEmail, updateProfile } from "firebase/auth";
 import { FormsModule } from '@angular/forms';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, getFirestore, onSnapshot, query, setDoc } from 'firebase/firestore';
+import { ChatService } from '../../services/chat.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,6 +27,7 @@ const db = getFirestore(app);
   templateUrl: './profil-card.component.html',
   styleUrl: './profil-card.component.scss'
 })
+
 export class ProfilCardComponent implements OnInit {
   authSubscription: any;
   auth = getAuth(app);
@@ -37,7 +39,7 @@ export class ProfilCardComponent implements OnInit {
   newEmail: string;
   newName: string;
 
-  constructor(public serviceProfilCard: ProfilCardService) {
+  constructor(public serviceProfilCard: ProfilCardService, private chatService: ChatService) {
   }
 
   ngOnInit(): void {
@@ -87,4 +89,31 @@ export class ProfilCardComponent implements OnInit {
       id: this.auth.currentUser.uid,
     });
   }
+
+/*   writeDirectMessage() {
+    const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        if(element.id === this.memberData.id) {
+          this.chatService.setSelectedUserId(this.memberData.id);
+          //this.closeProfileCard();
+          //this.closeShowMembers();
+        } else {
+          // Create new DM Chat
+          this.addDirectMessage();
+          //this.closeProfileCard();
+          //this.closeShowMembers();
+        }  
+      });
+    });
+  }
+
+  async addDirectMessage (): Promise<void> {
+    const dmSenderRef = doc(collection(db, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
+    const dmReceiverRef = doc(collection(db, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
+    let data = { }
+    await setDoc(dmSenderRef, data);
+    await setDoc(dmReceiverRef, data);
+    this.chatService.setSelectedUserId(this.memberData.id);
+  } */
 }

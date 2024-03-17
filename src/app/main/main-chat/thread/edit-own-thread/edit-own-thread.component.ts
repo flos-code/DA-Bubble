@@ -15,6 +15,8 @@ import { Firestore, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
 export class EditOwnThreadComponent implements OnInit {
   private firestore: Firestore = inject(Firestore);
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
+  @Input() currentUser!: string;
+  @Input() activeDmUser!: string;
   @Input() textAreaEditMessage!: string;
   @Input() threadId!: string;
   @Input() activeChannelId!: string;
@@ -25,11 +27,25 @@ export class EditOwnThreadComponent implements OnInit {
   inputFocused: boolean = false;
   showEmojiPicker: boolean = false;
   showMentionUser: boolean = false;
+  channelDmPath: string;
+  messagePath: string;
+  collectionPath: string;
 
   constructor() { }
 
   ngOnInit(): void {
-      this.textAreaEditMessage = this.threadMessage;
+    if(this.activeChannelId !== null) {
+      this.messagePath = `channels/${this.activeChannelId}/threads/${this.threadId}`;
+      this.collectionPath = `channels/${this.activeChannelId}/threads/`;
+    } else {
+      this.messagePath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.threadId}`;
+      this.collectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/`;
+    }
+
+    //this.firestore, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
+    //this.firestore, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
+
+    this.textAreaEditMessage = this.threadMessage;
   }
 
   closeEditedMessage() {
@@ -39,7 +55,7 @@ export class EditOwnThreadComponent implements OnInit {
 
   async saveEditedMessage() {
     if(this.textAreaEditMessage) {
-      let currentThreadRef = doc(this.firestore, `channels/${this.activeChannelId}/threads/${this.threadId}`);
+      let currentThreadRef = doc(this.firestore, this.messagePath);
       let data = {message: this.textAreaEditMessage };
 
       await updateDoc(currentThreadRef, data).then(() => {
@@ -47,7 +63,7 @@ export class EditOwnThreadComponent implements OnInit {
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     } else {
-      await deleteDoc(doc(this.firestore, `channels/${this.activeChannelId}/threads/`, this.threadId));
+      await deleteDoc(doc(this.firestore, this.collectionPath, this.threadId));
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     }
