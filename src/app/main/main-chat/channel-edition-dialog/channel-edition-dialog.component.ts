@@ -34,6 +34,7 @@ export class ChannelEditionDialogComponent implements OnInit {
   editMobile: boolean = false;
   saveMobile: boolean = false;
   addMemberDialogOpen: boolean = false;
+  addMembersMobileView: boolean = false;
 
   constructor(private chatService: ChatService, private viewManagementService: ViewManagementService) { }
 
@@ -139,6 +140,7 @@ export class ChannelEditionDialogComponent implements OnInit {
 
   openAddMemberMobile(showAddMemberMobile: boolean) {
     this.addMemberDialogOpen = true;
+    this.addMembersMobileView = true;
   }
 
   closeAddMemberMobile(addMemberDialogOpen: boolean) {

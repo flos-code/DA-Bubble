@@ -1,5 +1,5 @@
 <div (click)="closeDialog()" class="dialogBackground"
-    *ngIf="addMemberDialogOpen || channelEditionDialogOpen || showMembersDialogOpen">
+    *ngIf="addMemberDialogOpen && desktopView || channelEditionDialogOpen || showMembersDialogOpen">
 </div>
 
 <div class="mainChatWrapper">

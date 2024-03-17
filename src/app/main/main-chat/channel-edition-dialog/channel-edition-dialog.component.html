@@ -111,7 +111,7 @@
 
     <!-- ========= Add members  ========= -->
     <div *ngIf="addMemberDialogOpen" (click)="closeDialog()" class="dialogBackground">
-        <app-add-members-dialog *ngIf="addMemberDialogOpen" [channelData]="channelData" [currentChannelId]="currentChannelId" [channelMembers]="channelMembers"
+        <app-add-members-dialog *ngIf="addMemberDialogOpen" [channelData]="channelData" [currentChannelId]="currentChannelId" [channelMembers]="channelMembers" [addMembersMobileView]="addMembersMobileView"
         (addMemberDialogOpenChild)="closeAddMemberMobile(addMemberDialogOpen)">
         </app-add-members-dialog>    
     </div>

@@ -1,14 +1,17 @@
-<div class="addMembersDialog" (click)="doNotClose($event); closeUserList()">
-    <div>
+<div class="addMembersDialog" [class.addMembersDialogMobile]="addMembersMobileView" (click)="doNotClose($event); closeUserList()">
+    <div class="mobileViewLine" *ngIf="addMembersMobileView">
       <div></div>
     </div>
-    <div>
+
+    <div class="header">
         <div>Leute hinzufügen</div>
         <div (click)="closeDialog()">
             <span class="material-symbols-outlined">close</span>
         </div>
     </div>
-    <div># {{channelData?.name}}</div>
+
+    <div class="channelName"># {{channelData?.name}}</div>
+
     <div class="addUserInputContainer" [class.focusedBorder]="inputFocus" (click)="doNotClose($event)">
       <div class="addUserInputSubContainer">
         <div class="chipContainer">
@@ -34,7 +37,7 @@
        </div>
       </div>
     </div>
-    <div>
-        <button (click)="addUsers()" >Hinzufügen</button>
+    <div class="addButton" (click)="addUsers()">
+        <div>Hinzufügen</div>
     </div>
 </div>

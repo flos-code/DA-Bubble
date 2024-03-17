@@ -58,6 +58,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   ownMessageEdit: boolean = false;
   showProfileCard: boolean = false
   channelCreatorName: string;
+  desktopView: boolean = false;
 
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
@@ -354,6 +355,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     if (dialog == 'addMember') {
       if (this.addMemberDialogOpen == false) {
         this.addMemberDialogOpen = true;
+        this.desktopView = true;
       } else {
         this.addMemberDialogOpen = false;
       }
@@ -373,9 +375,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   closeDialog() {
-    this.addMemberDialogOpen = false;
     this.channelEditionDialogOpen = false;
     this.showMembersDialogOpen = false;
+    this.addMemberDialogOpen = false;
+    this.desktopView = false;
   }
 
   doNotClose($event: any) {
@@ -386,6 +389,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.channelEditionDialogOpen = false;
     this.showMembersDialogOpen = false;
     this.addMemberDialogOpen = false;
+    this.desktopView = false;
   }
 
   switchToAddMembers(addMemberDialogOpen: boolean) {

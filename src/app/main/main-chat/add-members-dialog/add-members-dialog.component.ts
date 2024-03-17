@@ -29,6 +29,7 @@ export class AddMembersDialogComponent implements OnInit {
   userList = [];
   originalUserList: any;
   filteredUserList: any;
+  @Input() addMembersMobileView!: boolean;
 
   constructor() { }
 
