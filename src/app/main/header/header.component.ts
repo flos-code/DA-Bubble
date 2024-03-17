@@ -163,6 +163,6 @@ export class HeaderComponent implements OnInit {
   showSidebar() {
     this.chatService.setActiveChannelId(null);
     this.chatService.setSelectedUserId(null);
-    this.viewManagementService.setView('sidebar')
+    this.viewManagementService.setView('sidebar');
   }
 }
