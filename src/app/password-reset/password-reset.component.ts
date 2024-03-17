@@ -33,7 +33,7 @@ export class PasswordResetComponent implements OnInit {
     private router: Router,
     private fb: FormBuilder,
     private pwfb: NonNullableFormBuilder
-    ) { }
+  ) { }
 
   ngOnInit(): void {
     document.addEventListener('DOMContentLoaded', () => {
@@ -61,8 +61,9 @@ export class PasswordResetComponent implements OnInit {
   passwordChanged: boolean = false;
   sendEmailBtnDisabled: boolean = false;
   resetPWBtnDisabled: boolean = false;
+  showEmailErrorDiv: boolean = false;
   showPasswordErrorDiv: boolean = false;
-  showConfirmPasswordErrorDiv:boolean = false;
+  showConfirmPasswordErrorDiv: boolean = false;
 
   emailForPasswordResetForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
@@ -106,18 +107,33 @@ export class PasswordResetComponent implements OnInit {
 
   }
 
-  checkErrors(control: string) {
+  checkPasswordErrors(control: string) {
     const errors = (this.passwordResetForm.controls as any)[control].errors;
-    return this.getErrorMessage(errors);
+    return this.getPWErrorMessage(errors);
   }
 
-  getErrorMessage(errors: ValidationErrors) {
+  checkEmailErrors(control: string) {
+    const errors = (this.emailForPasswordResetForm.controls as any)[control].errors;
+    return this.getEmailErrorMessage(errors);
+  }
+
+  getPWErrorMessage(errors: ValidationErrors) {
     if (errors['required']) {
       return 'Bitte geben Sie einen Passwort ein';;
     } else if (errors['minlength']) {
       return 'Das Passwort muss länger als 8 Zeichen sein';
     } else if (errors['maxlength']) {
       return "Das Passwort darf nicht länger als 100 Zeichen sein";
+    } else {
+      return
+    }
+  }
+
+  getEmailErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie Ihre E-Mail-Adresse ein'
+    } else if (errors['pattern']) {
+      return 'Keine gültige E-Mail-Adresse'
     } else {
       return
     }
