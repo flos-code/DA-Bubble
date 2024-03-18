@@ -33,14 +33,12 @@
           </div>
           <div *ngIf="firstThreadMessage?.message" class="thread-message">
             <span>{{ firstThreadMessage?.message }}</span>
+            <a *ngIf="firstThreadMessage?.imageUrl" href="{{ firstThreadMessage?.imageUrl }}" 
+            download="image.jpg" title="Download image" target="_blank">
+            <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"
+                style="height: 100px; width: 100px; border-radius: 4px;">
+            </a>
           </div>
-
-          <a *ngIf="firstThreadMessage?.imageUrl" href="{{ firstThreadMessage?.imageUrl }}" 
-          download="image.jpg" title="Download image" target="_blank">
-          <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"
-              style="height: 100px; width: 100px; border-radius: 4px;">
-          </a>
-
         </div>
       </div>
       } @else {
