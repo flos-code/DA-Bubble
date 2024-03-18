@@ -5,8 +5,7 @@
 }
 
 .channelEdition {
-    width: 85%;  
-    max-width: 872px;
+    width: 600px;
     padding: 2rem;
     border-radius: 0px 30px 30px 30px;
     background-color: white;
@@ -282,26 +281,6 @@
             align-items: center;
             gap: 1rem;
             font-size: 20px;
-        }
-
-        .popupAdmin {
-            width: auto;
-            height: 49px;
-            padding: 10px;
-            border: 1px solid red;
-            border-radius: 20px;
-            display: flex;
-            justify-content: flex-start;
-            align-items: center;
-            background-color: red;
-
-            > div {
-                width: 100%;
-                text-align: center;
-                font-weight: bold;
-                color: white;
-                font-size: 18px;
-            }
         }
     }
 }

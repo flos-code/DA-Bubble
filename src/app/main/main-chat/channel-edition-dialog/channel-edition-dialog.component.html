@@ -99,19 +99,13 @@
                     Möchtest du den Channel wirklich verlassen?
                 </div>
                 <div *ngIf="this.currentUser == this.channelData.createdBy">
-                    Möchtest du den Channel wirklich löschen?
+                    Möchtest du als Administrator den Channel wirklich löschen?
                 </div>
                 <div>
-                    <button class="channelEditionButton" (click)="closePopupLeaveChannel()">Mitglied bleiben</button>
+                    <button *ngIf="this.currentUser !== this.channelData.createdBy" class="channelEditionButton" (click)="closePopupLeaveChannel()">Mitglied bleiben</button>
+                    <button *ngIf="this.currentUser == this.channelData.createdBy" class="channelEditionButton" (click)="closePopupLeaveChannel()">Channel beibehalten</button>
                     <button *ngIf="this.currentUser !== this.channelData.createdBy" class="channelEditionButton leaveButton" (click)="leaveChannel()">Verlassen</button>
                     <button *ngIf="this.currentUser == this.channelData.createdBy" class="channelEditionButton leaveButton" (click)="leaveChannel()">Channel löschen</button>
-                </div> 
-    
-                <!-- ========= POPUP AMIN CAN'T LEAVE CHANNEL ========= -->
-                <div class="popupAdmin" *ngIf="showPopupAdmin">
-                    <div>
-                        Du bist der Administrator dieses Channels. Du kannst den Channel nicht verlassen.
-                    </div>
                 </div>   
             </div>
         </div>
