@@ -14,17 +14,16 @@
         href="{{ message?.imageUrl }}" 
         download="downloadedImage.gif" 
         title="Download image"
+        (click)="downloadImage(message?.imageUrl)"
         target="_blank">
         <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;">
         </a>
-        </div>
-
-
-        <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
+            <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
             <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
-                style="height: 100px; width: 100px; border-radius: 4px;">
-        </button> -->
+            style="height: 100px; width: 100px; border-radius: 4px;">
+            </button> -->
+        </div>
 
         <!-- ================ REACTION CONTAINER ================ -->
         @if(reactions.length !== 0) {
