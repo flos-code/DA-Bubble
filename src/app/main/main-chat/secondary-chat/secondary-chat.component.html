@@ -10,7 +10,7 @@
       <div class="left-side-head">
         <h3>Thread</h3>
         <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag" />
-        <p>Entwicklerteam</p>
+        <p>{{channel?.name}}</p>
       </div>
       <button (click)="closeThread()" class="close-button"></button>
     </div>
@@ -29,18 +29,14 @@
           <div class="user-time">
             <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
             <span
-              >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
-            >
+              >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span>
           </div>
           <div *ngIf="firstThreadMessage?.message" class="thread-message">
             <span>{{ firstThreadMessage?.message }}</span>
           </div>
 
-          <a *ngIf="firstThreadMessage?.imageUrl" 
-          href="{{ firstThreadMessage?.imageUrl }}" 
-          download="image.jpg" 
-          title="Download image"
-          target="_blank">
+          <a *ngIf="firstThreadMessage?.imageUrl" href="{{ firstThreadMessage?.imageUrl }}" 
+          download="image.jpg" title="Download image" target="_blank">
           <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"
               style="height: 100px; width: 100px; border-radius: 4px;">
           </a>
