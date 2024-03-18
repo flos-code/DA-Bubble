@@ -1,7 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, FirebaseStorage } from "firebase/storage";
 import {
   Firestore,
   addDoc,
@@ -43,8 +43,11 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   messageDeleted: boolean = false;
 
   private firestore: Firestore = inject(Firestore);
+  private storage: FirebaseStorage;
 
-  constructor() { }
+  constructor() {
+    this.storage = getStorage();
+   }
 
   ngOnInit(): void {
     this.setupReactionPath();
@@ -56,20 +59,30 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     this.teardownOutsideClickHandler();
   }
 
-  
-
   downloadImage(imageUrl: string) {
+    // Prüfe, ob imageUrl nicht leer oder undefiniert ist
     if (!imageUrl) {
       console.error('No image URL provided');
       return;
     }
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'downloadedImage.jpg';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
+  
+    // Verwende getDownloadURL, um die direkte Download-URL zu erhalten
+    getDownloadURL(ref(this.storage, imageUrl))
+      .then((url) => {
+        // Erstelle einen temporären Download-Link und klicke darauf
+        const link = document.createElement('a');
+        link.href = url;
+        link.download = 'downloadedImage'; // Optional: Gib der Datei einen Namen
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      })
+      .catch((error) => {
+        console.error('There was an error downloading the image:', error);
+      });
   }
+  
+  
   
 
   /**

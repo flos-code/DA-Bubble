@@ -27,7 +27,7 @@ const db = getFirestore(app);
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, RouterModule],
   templateUrl: './login.component.html',
-  styleUrls: ['./login.component.scss', 'login.component.animations.scss']
+  styleUrls: ['./login.component.scss', './login.component.animations.scss', './login.component.responsive.scss']
 })
 
 export class LoginComponent implements OnInit, OnDestroy {
@@ -52,7 +52,6 @@ export class LoginComponent implements OnInit, OnDestroy {
     const animationHasRunBefore = sessionStorage.getItem('animationHasRun');
 
     if (animationHasRunBefore) {
-      // Animation has been run before, don't run it again
       this.runAnimation = false;
     }
 
@@ -195,11 +194,8 @@ export class LoginComponent implements OnInit, OnDestroy {
       if (error.message == 'Firebase: Error (auth/user-not-found).') {
         this.showFalseLoginAlert();
       } else {
-
       }
-
     });
-
   }
 
   async signInAsGuest() {
