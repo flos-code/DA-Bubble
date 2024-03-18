@@ -59,20 +59,32 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     this.teardownOutsideClickHandler();
   }
 
-  downloadImage(imageURL) {
+  async downloadImage(imageURL) {
     const storage = getStorage();
     getDownloadURL(ref(storage, imageURL))
       .then((url) => {
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-          const blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
+        this.downloadData(url)
       })
       .catch((error) => {
       });
+  }
+
+  async downloadData(url: string) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) console.log('Error Loading Images');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = url;
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Fehler beim Herunterladen des Dokuments:', error);
+    }
   }
 
 
