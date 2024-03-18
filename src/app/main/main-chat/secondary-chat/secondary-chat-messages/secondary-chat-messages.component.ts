@@ -16,10 +16,11 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-secondary-chat-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent, MatIconModule],
   templateUrl: './secondary-chat-messages.component.html',
   styleUrl: './secondary-chat-messages.component.scss'
 })
@@ -85,6 +86,10 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     } catch (error) {
       console.error('Fehler beim Herunterladen des Dokuments:', error);
     }
+  }
+
+  openImage(url: string) {
+    window.open(url, '_blank');
   }
 
 

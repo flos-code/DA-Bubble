@@ -19,10 +19,34 @@
         <!-- <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;"> -->
         <!-- </a> -->
-            <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image" style="border: none; cursor: pointer;">
+
+      <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image" style="border: none; cursor: pointer;">
             <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;">
-            </button>
+            </button> -->
+            
+            <div *ngIf="message?.imageUrl" class="imgMessage">
+                <img
+                  [src]="message?.imageUrl"
+                  alt="Image uploaded by {{ message?.createdBy }}"
+                  style="height: 100px; width: 100px; border-radius: 4px"
+                />
+                <div class="imgInteraction">
+                  <div (click)="downloadImage(message?.imageUrl)">
+                    <mat-icon
+                      class="material-symbols-rounded"
+                      fontIcon="download"
+                    ></mat-icon>
+                  </div>
+                  <div (click)="openImage(message?.imageUrl)">
+                    <mat-icon
+                      class="material-symbols-rounded"
+                      fontIcon="open_in_new"
+                    ></mat-icon>
+                  </div>
+                </div>
+              </div>
+
         </div>
 
         <!-- ================ REACTION CONTAINER ================ -->
