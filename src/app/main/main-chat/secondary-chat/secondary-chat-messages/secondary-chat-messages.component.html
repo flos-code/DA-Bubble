@@ -19,7 +19,7 @@
         <!-- <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;"> -->
         <!-- </a> -->
-            <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
+            <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image" style="border: none; cursor: pointer;">
             <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;">
             </button>
