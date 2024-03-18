@@ -1,0 +1,68 @@
+@media screen and (max-width: 650px) {
+    .login-form {
+        width: 398px !important;
+
+        form {
+            width: 398px !important;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        h1 {
+            font-size: 32px;
+        }
+    }
+
+    .login-hint {
+        width: 358px;
+        font-size: 17px;
+    }
+
+    .login-email-input {
+        width: 358px !important;
+    }
+
+    .login-password-input {
+        width: 358px !important;
+    }
+
+    .login-input-main {
+        width: 358px;
+    }
+
+    .login-with-google-btn {
+        width: 358px;
+    }
+
+    .or-container {
+        width: 358px !important;
+
+        img {
+            width: 139px;
+        }
+
+        p {
+            text-align: center;
+            width: 80px;
+            font-size: 17px;
+        }
+    }
+
+    .lower-links-container {
+        display: none;
+    }
+
+    .create-account-container {
+        align-items: center;
+        top: unset;
+        bottom: 70px !important;
+        right: calc(50% - 97px);
+
+    }
+
+    .logo-container {
+        top: 70px;
+        left: calc(50% - 100px);
+    }
+}
