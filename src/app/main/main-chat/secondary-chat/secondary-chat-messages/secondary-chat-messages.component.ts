@@ -63,9 +63,6 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     const storage = getStorage();
     getDownloadURL(ref(storage, imageURL))
       .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
         const xhr = new XMLHttpRequest();
         xhr.responseType = 'blob';
         xhr.onload = (event) => {
