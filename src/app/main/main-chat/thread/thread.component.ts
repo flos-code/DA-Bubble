@@ -20,7 +20,9 @@ export class ThreadComponent implements OnInit, OnChanges {
   private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
   @Input() currentUser!: string;
+  @Input() activeDmUser!: string;
   @Input() activeChannelId!: string;
+  @Input() path!: string;
   messageCount!: number;
   threadMessagesTimestamps = [];
   answers: string;
@@ -35,13 +37,22 @@ export class ThreadComponent implements OnInit, OnChanges {
   currentUserName: string;
   reactionNames =  [];
   reactionCount: number;
+  messageCountPath: string;
 
   constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-      if(changes['thread']) {
-        this.loadThreadData();
-      }
+    console.log("PATH", this.path);
+    //this.reactionCollectionPath = this.path + `/${this.thread.threadId}/reactions`;
+    if(this.activeChannelId == null) {
+      this.reactionCollectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}/reactions`;
+    } else {
+      this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
+      this.messageCountPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`;
+    }
+    if(changes['thread']) {
+      this.loadThreadData();
+    }
   }
 
   ngOnInit(): void {
@@ -49,19 +60,29 @@ export class ThreadComponent implements OnInit, OnChanges {
     console.log(this.thread.imageUrl)
   }
 
+  /**
+   * Runs all the necessary function to display the thread data.
+   */
   loadThreadData() {
-    this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
     this.getCurrentUserName();
     this.getReactions();
-    this.getMessageCountAndAnswer();
+    if(this.activeChannelId !== null) {
+      this.getMessageCountAndAnswer();
+    }
   }
 
+  /**
+   * Gets the user name of the current logged in user form firebase.
+   */
   async getCurrentUserName() {
     let docRef = doc(this.firestore, 'users', this.currentUser);
     const docSnap = await getDoc(docRef);
     this.currentUserName = docSnap.data()['name'];
   }
 
+  /**
+   * 
+   */
   async getReactions() {
     this.getCurrentUserName();
     const q = query(collection(this.firestore, this.reactionCollectionPath));
@@ -83,6 +104,11 @@ export class ThreadComponent implements OnInit, OnChanges {
     });
   }
   
+  /**
+   * Gets all the reactions form the reactions collection form firebase for the current thread.
+   * Pushes the data into the reactionNAmes array.
+   * @param reactedByArray 
+   */
   getReactionNames(reactedByArray: any) {
     const q = query(collection(this.firestore, 'users'));
     onSnapshot(q, (list) => {
@@ -97,6 +123,10 @@ export class ThreadComponent implements OnInit, OnChanges {
     });
   }
 
+  /**
+   * Sorts the reactions reactedBy array within the reactions JSON so that the current logged in user is at the first 
+   * position. The array is only sorted if it includes the current logged in user.
+   */
   sortReactionIds() {
     for (let i = 0; i < this.reactions.length; i++) {
       const userId = this.reactions[i];
@@ -109,6 +139,10 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Sorts the reactions reactedByName array within the reactions JSON so that the current logged in user is at the first 
+   * position. The array is only sorted if it includes the current logged in user
+   */
   sortReactionNames() {
     for (let i = 0; i < this.reactions.length; i++) {
       const userName = this.reactions[i];
@@ -121,6 +155,10 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Sets the messageCount variable to how many messages the thread has. It also sets the lastAnswer variable
+   * and return the timestamp.
+   */
   getMessageCountAndAnswer() {
     this.messageCount = 0;
      const messagesRef = collection(this.firestore, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
@@ -137,6 +175,10 @@ export class ThreadComponent implements OnInit, OnChanges {
      });
   }
 
+  /**
+   * Formats the word "Antwort" depending on the message count. If the count is higher then 1 it returns "Antworten" else
+   * it returns "Antwort".
+   */
   formatMessageCount() {
     if(this.messageCount > 1 || this.messageCount == 0) {
       this.answers = 'Antworten';
@@ -145,6 +187,17 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+  * Saves an emoji/reaction in in the reactions collection in firebase of the current thread. Checks if a document already
+  * exists. If not the reaction is added. If an document already exists it checks if the emoji already exists.
+  * If the emoji doesn't exist, then a a new one is added. But if the emoji exists, it checks if the current logged in user
+  * already reacted (reactedBy array contains current user). If not, the count goes op by 1, otherwiese the count goes down
+  * by one and the user id is removed form the reactedBy array.
+  * If only the current user has already reacted with the emoji, the emoji is removed from the reactions collection. 
+  * 
+  * @param emoji - selected emoji from the picker > value form the input
+  * @param currentUser - currently logged in user
+  */
   async saveReaction(emoji: string, currentUser: string) {
     if(this.reactions.length == 0) {
       await this.addReaction(emoji, currentUser);
@@ -187,6 +240,12 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+  * Adds the emoji/reaction to the reactions array in firebase. The reaction contians the count, the emoji iself and the
+  * user id of the user who reacted.
+  * @param emoji - selected emoji from the picker > value form the input
+  * @param currentUser - currently logged in user
+  */
   async addReaction(emoji: string, currentUser: string) {
     let newReaction = await addDoc(collection(this.firestore, this.reactionCollectionPath), {
         count: 1,
@@ -195,41 +254,72 @@ export class ThreadComponent implements OnInit, OnChanges {
       });
   }
   
+  /**
+   * Opens the emoji picker if the user clicks on the emoji icon next to the reaction.
+   */
   openMoreEmojis() {
     this.showMoreEmojis = true;
   }
 
+  /**
+   * Opens the emoji picker in the toolabr if the user clicks on the emoji icon.
+   */
   openMoreEmojisToolbar() {
     this.showMoreEmojisToolbar = true;
   }
 
+  /**
+   * Closes the emoji picker.
+   * @param showMoreEmojis 
+   */
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
     this.showMoreEmojisToolbar = false;
   }
 
+  /**
+   * If the user click the three dots in the toolbar, the "Nachricht bearbeiten" popup opens.
+   */
   moreOptions() {
     this.editMessagePopupOpen = true;
   }
 
+  /**
+   * If the user clicks on "Nachricht bearbieten", the edit-own component opens und the user can start editing the 
+   * own message.
+   */
   editMessage() {
     this.editMessagePopupOpen = false;
     this.ownMessageEdit = true;
   }
 
+  /**
+   * Closes the "Nachricht bearbieten" popup.
+   */
   closeEditMessagePopUp() {
     this.editMessagePopupOpen = false;
   }
 
+  /**
+   * If the user click on the chat symbol in the toolbar, it opens the messages of that thread. The secondary chat opens.
+   * @param threadId - id of the selected thread
+   */
   openThread(threadId: string): void {
     this.chatService.openThread(threadId);
     this.viewManagementService.setView('secondaryChat');
   }
 
+  /**
+   * Closes the edit-own component and returns to the thread.
+   */
   closeEditedMessage(dialogBoolen: boolean) {
     this.ownMessageEdit = false;
   }
 
+  /**
+  * Prevens an unwanted triggering of a function by clicking on an element.
+  * @param $event 
+  */
   doNotClose($event: any) {
     $event.stopPropagation();
   }

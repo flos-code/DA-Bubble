@@ -36,7 +36,7 @@ export class HeaderComponent implements OnInit {
   authSubscription: any;
 
   ngOnInit(): void {
-    
+
   }
 
   auth = getAuth(app);
@@ -85,7 +85,8 @@ export class HeaderComponent implements OnInit {
     // console.log(this.searchService.threads);
   }
 
-  openThreadfromSearchbar(threadId: string) {
+  openThreadfromSearchbar(threadId: string, channelId: string) {
+    this.chatService.setActiveChannelId(channelId);
     this.chatService.openThread(threadId);
     this.viewManagementService.setView('secondaryChat');
   }

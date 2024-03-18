@@ -42,6 +42,9 @@ export class ChannelEditionDialogComponent implements OnInit {
     this.setMobileComponents();
   }
 
+  /**
+   * Sets the boolean values of variables to ture, if the screensize is smaller or equal to 500px.
+   */
   setMobileComponents() {
     if(window.innerWidth <= 500){
       this.showMembersInEditionDialog = true;
@@ -52,6 +55,11 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * The edit template of the channel name is beeing shown, but only if the current logged in user is the one that created
+   * the channel. Otherwise a popup is shown that only the admi can change this data.
+   * The function is called when the user clicks on the edit button or sign (moible).
+   */
   editChannelName() {
     if(this.currentUser == this.channelData.createdBy) {
       this.showchannelEditionName = false;
@@ -63,6 +71,10 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Saves the new channel name (value from the input) in firebase. If the input has no value, the edit template just closes.
+   * The function is called when the user clikcs on the save button/icon(mobile).
+   */
   async saveChannelName() {
     if(this.editedChannelName) {
       let currentChannelRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -76,6 +88,11 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+   /**
+   * The edit template of the channel description is beeing shown, but only if the current logged in user is the one that created
+   * the channel. Otherwise a popup is shown that only the admi can change this data.
+   * The function is beeing called when the user clicks on the edit button or sign (moible).
+   */
   editChannelDescription() {
     if(this.currentUser == this.channelData.createdBy) {
       this.showchannelEditionDescription = false;
@@ -87,6 +104,10 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+    /**
+   * Saves the new channel description (value from the input) in firebase. If the input has no value, the edit template 
+   * just closes. The function is called when the user clikcs on the save button/icon(mobile).
+   */
   async saveChannelDescription() {
     if(this.editedChannelDescription) {
       let currentChannelRef = doc(this.firestore, 'channels', this.currentChannelId);
@@ -100,6 +121,12 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
 
+  /**
+   * Checks if the user that whants to leave the channel ist the one who created it. If that is the case, as message shows
+   * that the admin cannot leave the channel. Otherwise the logged in user is removed from the members array of the current
+   * channel. All the popups and dialog components are closed und the channels/direct messages are unset und the user is
+   * forwarded to the new message component.
+   */
   async leaveChannel() {
     if(this.currentUser == this.channelData.createdBy) {
       this.showPopupAdmin = true;
@@ -124,29 +151,49 @@ export class ChannelEditionDialogComponent implements OnInit {
     }
   }
   
+  /**
+   * Hides/closes the channel edition dialog component.  
+   */
   closeDialog() {
     this.channelEditionDialogOpen = false;
     this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen)
   }
 
+  /**
+   * Opens the popup where the user is aksed if he really wants to leave the channel.
+   */
   openAskLeaveChannel() {
     this.showPopupLeaveChannel = true;
   }
 
-
+   /**
+   * Closes the popup where the user is aksed if he really wants to leave the channel.
+   */
   closePopupLeaveChannel() {
     this.showPopupLeaveChannel = false;
   }
 
+  /**
+   * Opens the add member component in the mobile version.
+   * @param showAddMemberMobile
+   */
   openAddMemberMobile(showAddMemberMobile: boolean) {
     this.addMemberDialogOpen = true;
     this.addMembersMobileView = true;
   }
 
+   /**
+   * Closes the add member component in the mobile version.
+   * @param addMemberDialogOpen
+   */
   closeAddMemberMobile(addMemberDialogOpen: boolean) {
     this.addMemberDialogOpen = false;
   }
 
+  /**
+   * Prevens an unwanted triggering of a function by clicking on an element.
+   * @param $event 
+   */
   doNotClose($event: any) {
     $event.stopPropagation(); 
   }

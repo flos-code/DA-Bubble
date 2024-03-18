@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="mainChatHeaderRight">
-                    <div (click)="toggleDialog('showMembers')" *ngIf()="desktopView">
+                    <div (click)="toggleDialog('showMembers')" *ngIf="desktopView">
                         <div class="memberPhotos">
                             @for (member of channelMembers | slice:0:3; track $index) {
                             <div>
@@ -133,7 +133,7 @@
                 </div>
                 @for (thread of channelThreadsDateTime; track $index) {
                     @if(thread?.dateString == threadTimeSeparator?.dateString) {
-                        <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser"></app-thread>
+                        <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser" [activeDmUser]="activeDmUser" [path]="path"></app-thread>
                     }
                 }
             }           

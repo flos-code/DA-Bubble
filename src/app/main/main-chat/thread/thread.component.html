@@ -10,10 +10,14 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
-                <div *ngIf="thread?.message">
-                    {{thread?.message}}
+                <div>
+                    <div class="mainMessageMessage">
+                        {{thread?.message}}
+                    </div>
+                    <div *ngIf="thread?.imageUrl" class="messageDocImg">
+                        <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
+                    </div>
                 </div>
-                <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
                     <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>
                     <div>Letzte Antwort {{lastAnswer}}</div>
@@ -110,11 +114,14 @@
                     <div>{{thread?.createdBy}}</div>
                     <div>{{thread?.time}} Uhr</div>
                 </div>
-                <div *ngIf="thread?.message">
-                    {{thread?.message}}
+                <div>
+                    <div class="mainMessageMessage">
+                        {{thread?.message}}
+                    </div>
+                    <div *ngIf="thread?.imageUrl" class="messageDocImg">
+                        <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
+                    </div>
                 </div>
-                <img *ngIf="thread?.imageUrl" [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
-
                 <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">
                     <div>Letzte Antwort {{lastAnswer}}</div>
                     <div (click)="openThread(thread?.threadId)">{{messageCount}} {{answers}}</div>
@@ -216,6 +223,6 @@
 
         <!-- ========================= Template Own Message - EDIT ========================= -->
         <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" [userImg]="thread?.imgUrl"
-        [activeChannelId]="activeChannelId" [threadMessage]="thread?.message"
+        [activeChannelId]="activeChannelId" [threadMessage]="thread?.message" [activeDmUser]="activeDmUser" [currentUser]="currentUser"
         (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>             
 }

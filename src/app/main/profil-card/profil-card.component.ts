@@ -5,7 +5,8 @@ import { MatIcon } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
 import { getAuth, updateEmail, updateProfile } from "firebase/auth";
 import { FormsModule } from '@angular/forms';
-import { doc, getFirestore, setDoc } from 'firebase/firestore';
+import { collection, doc, getFirestore, onSnapshot, query, setDoc } from 'firebase/firestore';
+import { ChatService } from '../../services/chat.service';
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -26,6 +27,7 @@ const db = getFirestore(app);
   templateUrl: './profil-card.component.html',
   styleUrl: './profil-card.component.scss'
 })
+
 export class ProfilCardComponent implements OnInit {
   authSubscription: any;
   auth = getAuth(app);
@@ -37,7 +39,7 @@ export class ProfilCardComponent implements OnInit {
   newEmail: string;
   newName: string;
 
-  constructor(public serviceProfilCard: ProfilCardService) {
+  constructor(public serviceProfilCard: ProfilCardService, private chatService: ChatService) {
   }
 
   ngOnInit(): void {

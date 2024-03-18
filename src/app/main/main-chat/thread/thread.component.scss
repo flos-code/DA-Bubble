@@ -43,8 +43,13 @@
 
 
 .messageContainer:hover > .mainMessage > div:nth-of-type(2),
-.messageContainerOwn:hover > .mainMessage > div:nth-of-type(2) {
+.messageContainerOwn:hover > .mainMessageOwn > div:nth-of-type(2) {
     background-color: white;
+}
+
+.messageContainer:hover > .mainMessage > div:nth-of-type(2) > .messageDocImg,
+.messageContainerOwn:hover > .mainMessageOwn > div:nth-of-type(2) > .messageDocImg {
+    border: 4px solid $bgColor;
 }
 
 .messageContainer:hover > .mainMessage > div:nth-of-type(3) > div:last-of-type,
@@ -93,25 +98,50 @@
 
     > div:nth-of-type(2) {
         display: flex;
+        flex-direction: column;
+        align-items: flex-start;
         justify-content: center;
-        align-items: center;
+        gap: 1rem;
         border-radius: 0px 30px 30px 30px;
         padding: 15px;
         background-color: $bgColor;
-        font-size: 18px;
-        font-weight: 400;
+
+        > .mainMessageMessage {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        > .messageDocImg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid white;
+            border-radius: 10px;
+            > img {
+                min-height: 100px;
+                min-width: 100px;
+                max-height: 250px;
+                max-width: 250px;
+                border-radius: 10px;
+            }
+        }
     }
 }
 
 .mainMessageOwn {
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: center;
     gap: 10px;
+    width: 100%;
 
     > div:first-of-type {
         display: flex;
+        flex-direction: row-reverse;
         justify-content: center;
         align-items: center;
         gap: 20px;
@@ -124,23 +154,43 @@
         > div:last-of-type{
             font-size: 14px;
             color: $textGray;
-
         }
     }
 
     > div:nth-of-type(2) {
         display: flex;
+        flex-direction: column;
+        align-items: flex-end;
         justify-content: center;
-        align-items: center;
-        border-radius: 0px 30px 30px 30px;
+        gap: 1rem;
+        border-radius: 30px 0 30px 30px;
         padding: 15px;
-        background-color: $purple2;
-        font-size: 18px;
-        color: white;
-        font-weight: 400;
+        background-color: $bgColor;
+
+        > .mainMessageMessage {
+            display: flex;
+            justify-content: flex-start;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 400;
+        }
+
+        > .messageDocImg {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 4px solid white;
+            border-radius: 10px;
+            > img {
+                min-height: 100px;
+                min-width: 100px;
+                max-height: 250px;
+                max-width: 250px;
+                border-radius: 10px;
+            }
+        }
     }
 }
-
 
 .mainMessageThreads {
     display: flex;
@@ -165,6 +215,7 @@
 
 .mainMessageThreadsOwn {
     display: flex;
+    flex-direction: row-reverse;
     justify-content: flex-end;
     align-items: center;
     gap: 20px;
@@ -178,20 +229,6 @@
         font-size: 18px;
         color: $purple3;
         cursor: pointer;
-    }
-}
-
-.mainMessageOwn {
-    width: 100%;
-    align-items: flex-end;
-
-    > div:first-of-type,
-    > div:last-of-type {
-        flex-direction: row-reverse;
-    }
-
-    > div:nth-of-type(2) {
-        border-radius: 30px 0 30px 30px;
     }
 }
 
@@ -512,8 +549,8 @@
             width: 50px;
     }  
 
-    .mainMessage > div:nth-of-type(2),
-    .mainMessageOwn > div:nth-of-type(2) {
+    .mainMessage > div:nth-of-type(2) > div:first-of-type,
+    .mainMessageOwn > div:nth-of-type(2) > div:first-of-type {
             font-size: 17px;
     }
 

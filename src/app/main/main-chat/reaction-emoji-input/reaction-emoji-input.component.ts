@@ -29,19 +29,33 @@ export class ReactionEmojiInputComponent {
 
   constructor() { }
 
+  /**
+   * The input focus is automatically set to true.
+   */
   onInputFocus(): void {
     this.inputFocused = true;
   }
 
+  /**
+   * The input focus is set to false.
+   */
   onInputBlur(): void {
     this.inputFocused = false;
   }
-
+  
+  /**
+   * Click event is triggered when user selects an emoji. The emoji variable is set to the selected emoji.
+   * @param event 
+   */
   handleClick(event: any) {
     const emoji = event.emoji.native;
     this.insertEmojiAtCursor(emoji);
   }
 
+  /**
+   * Detects where the cursor is and inserts the emoji at that location.
+   * @param emoji - selected emoji form the picker
+   */
   async insertEmojiAtCursor(emoji: string) {
     const inputEl = this.messageInput.nativeElement;
     const start = inputEl.selectionStart;
@@ -60,15 +74,33 @@ export class ReactionEmojiInputComponent {
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }
 
+  /**
+   * Prevens an unwanted triggering of a function by clicking on an element.
+   * @param $event 
+   */
   doNotClose($event: any) {
     $event.stopPropagation();
   }
 
+  /**
+   * Closes the emoji picker (reaction emoji imput component).
+   */
   closeEmojiInput() {
     this.showMoreEmojis = false;
     this.showMoreEmojisChild.emit(this.showMoreEmojis);
   }
 
+  /**
+   * Saves an emoji/reaction in in the reactions collection in firebase of the current thread. Checks if a document already
+   * exists. If not the reaction is added. If an document already exists it checks if the emoji already exists.
+   * If the emoji doesn't exist, then a a new one is added. But if the emoji exists, it checks if the current logged in user
+   * already reacted (reactedBy array contains current user). If not, the count goes op by 1, otherwiese the count goes down
+   * by one and the user id is removed form the reactedBy array.
+   * If only the current user has already reacted with the emoji, the emoji is removed from the reactions collection. 
+   * 
+   * @param emoji - selected emoji from the picker > value form the input
+   * @param currentUser - currently logged in user
+   */
   async saveReaction(emoji: string, currentUser: string) {   
     if(this.reactions.length == 0) {
       await this.addReaction(emoji, currentUser);
@@ -111,6 +143,12 @@ export class ReactionEmojiInputComponent {
     }
   }
 
+  /**
+   * Adds the emoji/reaction to the reactions array in firebase. The reaction contians the count, the emoji iself and the
+   * user id of the user who reacted.
+   * @param emoji - selected emoji from the picker > value form the input
+   * @param currentUser - currently logged in user
+   */
   async addReaction(emoji: string, currentUser: string) {
     let newReaction = await addDoc(collection(this.firestore, this.reactionCollectionPath), {
         count: 1,
