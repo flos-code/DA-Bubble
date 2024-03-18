@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-chat.component';
@@ -11,6 +11,20 @@ import { Subscription } from 'rxjs';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfilCardService } from '../services/profil-card.service';
 import { ChatService } from '../services/chat.service';
+import { RouterOutlet, Router } from '@angular/router';
+import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
+  authDomain: "da-bubble-87fea.firebaseapp.com",
+  projectId: "da-bubble-87fea",
+  storageBucket: "da-bubble-87fea.appspot.com",
+  messagingSenderId: "970901942782",
+  appId: "1:970901942782:web:56b67253649b6206f290af"
+};
+
+const app = initializeApp(firebaseConfig);
 
 @Component({
   selector: 'app-main',
@@ -28,21 +42,22 @@ import { ChatService } from '../services/chat.service';
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
-export class MainComponent {
+export class MainComponent implements OnInit{
   // showMainChat: boolean = true;
   // showNewMessage: boolean = false;
   // // showSecondaryChat: boolean = false;
   // // showSidebar: boolean = false;
 
 
-
+  auth = getAuth(app);
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
 
   constructor(
     public chatService: ChatService,
     public viewManagementService: ViewManagementService,
-    public serviceProfilCard: ProfilCardService
+    public serviceProfilCard: ProfilCardService,
+    private router: Router
   ) {
     // this.viewChangeSubscription =
     //   this.viewManagementService.currentView$.subscribe((view) => {
@@ -51,6 +66,14 @@ export class MainComponent {
     //   });
 
     // this.getThreadOpenStatus();
+  }
+
+  ngOnInit(){
+    if (!this.auth.currentUser){
+      this.router.navigateByUrl('/login')
+    } else {
+      
+    }
   }
 
   // ngOnDestroy(): void {
