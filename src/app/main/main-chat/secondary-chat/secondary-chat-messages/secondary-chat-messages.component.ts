@@ -77,7 +77,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = url;
+      link.download = 'Download_from_DABubble';
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
