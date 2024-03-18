@@ -6,6 +6,7 @@ import { ViewManagementService } from '../../../services/view-management.service
 import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { ShowMembersDialogComponent } from '../show-members-dialog/show-members-dialog.component';
 import { AddMembersDialogComponent } from '../add-members-dialog/add-members-dialog.component';
+import { deleteDoc } from 'firebase/firestore';
 
 @Component({
   selector: 'app-channel-edition-dialog',
@@ -129,10 +130,13 @@ export class ChannelEditionDialogComponent implements OnInit {
    */
   async leaveChannel() {
     if(this.currentUser == this.channelData.createdBy) {
-      this.showPopupAdmin = true;
-      setTimeout(() => {
-        this.showPopupAdmin = false;
-      }, 4000);
+      await deleteDoc(doc(this.firestore, `channels`, this.currentChannelId));
+      this.showPopupLeaveChannel = false;   
+      this.channelEditionDialogOpen = false;
+      this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
+      this.chatService.setActiveChannelId(null);
+      this.chatService.setSelectedUserId(null);
+      this.viewManagementService.setView('newMessage');  
     } else {
       let index = this.channelData.members.indexOf(this.currentUser);
       this.channelData.members.splice(index, 1);

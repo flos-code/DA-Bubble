@@ -78,8 +78,11 @@
         </app-show-members-dialog>
     
         <!--============== Leave Channel button ================-->
-        <div class="channelEditionButtonContainer">
+        <div *ngIf="this.currentUser !== this.channelData.createdBy" class="channelEditionButtonContainer">
             <button class="channelEditionButton" (click)="openAskLeaveChannel()">Channel verlassen</button>
+        </div>
+        <div *ngIf="this.currentUser == this.channelData.createdBy" class="channelEditionButtonContainer">
+            <button class="channelEditionButton" (click)="openAskLeaveChannel()">Channel löschen</button>
         </div>
     
         <!-- ========= POPUP EDIT CHANNEL DATA ========= -->
@@ -92,12 +95,16 @@
         <!-- ========= POPUP LEAVE CHANNEL ========= -->
         <div class="showPopupLeaveChannel" *ngIf="showPopupLeaveChannel" (click)="closePopupLeaveChannel()">
             <div (click)="doNotClose($event)">
-                <div>
+                <div *ngIf="this.currentUser !== this.channelData.createdBy">
                     Möchtest du den Channel wirklich verlassen?
+                </div>
+                <div *ngIf="this.currentUser == this.channelData.createdBy">
+                    Möchtest du den Channel wirklich löschen?
                 </div>
                 <div>
                     <button class="channelEditionButton" (click)="closePopupLeaveChannel()">Mitglied bleiben</button>
-                    <button class="channelEditionButton leaveButton" (click)="leaveChannel()">Verlassen</button>
+                    <button *ngIf="this.currentUser !== this.channelData.createdBy" class="channelEditionButton leaveButton" (click)="leaveChannel()">Verlassen</button>
+                    <button *ngIf="this.currentUser == this.channelData.createdBy" class="channelEditionButton leaveButton" (click)="leaveChannel()">Channel löschen</button>
                 </div> 
     
                 <!-- ========= POPUP AMIN CAN'T LEAVE CHANNEL ========= -->

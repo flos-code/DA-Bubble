@@ -103,7 +103,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
         }, 800);  
       }
     });
-
   }
 
   ngOnInit(): void { 
@@ -116,8 +115,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.currentUserSub.unsubscribe();
     this.activeDmUserSub.unsubscribe();
   }
-
-  /* ================== ID's FOM SERVICE ================== */
+  
+  /**
+  *
+  * Sets the boolean values of variables to ture, if the screensize is smaller or equal to 500px.
+  */
   setMobileViewComponents() {
     if(window.innerWidth <= 500) {
       this.desktopView = false;
@@ -125,12 +127,21 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.desktopView = true;
     }
   }
-
+  
+  /* ================== ID's FOM SERVICE ================== */
+  /**
+  * Sets the path to the correct subcollection within the channels and users collection.
+  */
   getChannelAndDmPath() {
     this.dmMessagesPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages`;
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
   }
 
+  /**
+   * Retruns the name of the user that has created the acitve channel.
+   * @param userId - id of the user that created the channel
+   * @returns 
+   */
   async fetchChannelCreatorName(userId: string): Promise<string> {
     const userRef = doc(this.firestore, "users", userId);
     const docSnap = await getDoc(userRef);
@@ -141,16 +152,25 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /* ================== MAIN CHAT CHANNEL DATA ================== */
+  /**
+   * Runs all the function to fetch the data for the active channel.
+   */
   loadChannelData() {
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
   }
 
+  /**
+   * Runs all the function to fetch the data for the active direct message.
+   */
   loadDmData() {
     this.getDmUser();
   }
 
+  /**
+   * Fetches the active Channel object and runs the getMembers and getThreads function.
+   */
   getCurrentChannel() {
     onSnapshot(doc(collection(this.firestore, 'channels'), this.activeChannelId), (doc) => {
       this.channel = new Channel(doc.data());
@@ -168,6 +188,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Fetches the data for every channel member an stores them in the channelMembers array.
+   * @returns 
+   */
   getMembers() {
       const q = query(collection(this.firestore, 'users'));
       return onSnapshot(q, (list) => {
@@ -181,6 +205,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Sorts the channelMembers array so that the current user is at the first position.
+   */
   sortChannelMembers() {
     if(this.channelMembers.some(member => member.id == this.currentUser)) {
       let memberTofind = this.channelMembers.find(memObj => memObj.id == this.currentUser);
@@ -190,6 +217,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Fetches the data for every thread an stores them in the channelThreads array.
+   * @returns 
+   */
   getThreads() {
     const q = query(collection(this.firestore, this.path), orderBy("creationDate", "asc"), limit(20));
     // const q = query(collection(db, `channels/${this.activeChannelId}/threads`), orderBy("creationDate", "asc"), limit(20));
@@ -204,6 +235,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Fetches the data of the user that is select in direct messages and sotres them in the activeDmUserData array.
+   * @returns 
+   */
   getDmUser() {
     onSnapshot(doc(collection(this.firestore, 'users'), this.activeDmUser), (dmUser) => {
       this.activeDmUserData = dmUser.data();
@@ -215,12 +250,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
-  getUserName(userId: string): string {
+/*   getUserName(userId: string): string {
     const user = this.channelMembers.find(member => member.userId === userId);
     return user ? user.name : 'Unbekannter Benutzer';
-  }
+  } */
   
-
+  /**
+   * Fetches the data for every direct message an stores them in the dmMessages array.
+   * @returns 
+   */
   getCurrentDmUserMessages() {
       const q = query(collection(this.firestore, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
       return onSnapshot(q, (list) => {
@@ -235,7 +273,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
       });
     }
 
-
+  /**
+   * Returns the name of the selected dm user.
+   * @param userId - id of the user of the selecte direct message
+   */
   async getDmUserName(userId: string) {
     this.activeDmUserName = ""; 
     const docRef = doc(this.firestore, "users", userId);
@@ -243,10 +284,20 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.activeDmUserName = docSnap.data()['name']; 
   }
 
+  /**
+   * Sorts the channelThreads or the dmMessages array.
+   * @param threadsOrDms - array (channelThreads or dmMessages)
+   */
   sortChannelThreadsArray(threadsOrDms: any) {
     threadsOrDms.sort(this.compareByCreationDate);
   }
 
+  /**
+   * Sorts the JSON array according to the creation date, ascending.
+   * @param b - creationDate of the message
+   * @param a - creationDate of the message
+   * @returns 
+   */
   compareByCreationDate(b: any, a: any) {
     if(b.creationDate < a.creationDate){
       return -1;
@@ -257,6 +308,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return 0;
   }
 
+  /**
+   * 
+   * @param threadsOrDms - array (channelThreads or dmMessages)
+   */
   getThreadCreationDates(threadsOrDms: any) {
     this.channelThreadsDateTime = [];
     this.threadCreationDates = [];
@@ -294,6 +349,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.channelThreadsDateTime.sort(this.compareByCreationDate);
   } 
 
+  /**
+   * Formats the creation date of the thread to the defined format.
+   * @param creationDate - thread creation date 
+   * @returns 
+   */
   formattedDate(creationDate: any) {
     const day = new Date(creationDate).toLocaleDateString('fr-CH', { day: 'numeric'});
     const month = new Date(creationDate).toLocaleDateString('fr-CH', { month: 'numeric'});
@@ -301,12 +361,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return `${day}.${month}.${year}`;
   }
 
+  /**
+   * Returns the formatted date of the tiem separator in the main chat an checks if the creation date is today.
+   * If the creation date ist today, it returns "Heute".
+   * @param creationDate - thred creation date
+   * @returns 
+   */
   getTimeSeparatorDate(creationDate: any) {
     let dateToday = new Date();
     const dateTodayUnix = dateToday.getTime();
     let convertedDate = this.formattedDateTimeSeparator(dateTodayUnix);
     creationDate = this.formattedDateTimeSeparator(creationDate);
-
     if(convertedDate == creationDate){
       return 'Heute';
     } else {
@@ -314,6 +379,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Formats the date of the time separator in the main chat to the defined format.
+   * @param date - thred creation date
+   * @returns 
+   */
   formattedDateTimeSeparator(date: any) {
     const weekday = new Date(date).toLocaleDateString('de-DE', { weekday: 'long' });
     const day = new Date(date).toLocaleDateString('fr-CH', { day: 'numeric'});
@@ -321,6 +391,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return `${weekday}, ${day} ${month}`;
   }
 
+  /**
+   * Returns the time in "hh:mm" when the thread as been created.
+   * @param creationDate - thread creation date
+   * @returns 
+   */
   getFormattedTime(creationDate: number) {
     const getString = (number) => number < 10 ? '0' + number : String(number);
     const getTime = (creationDate: number) => {
@@ -332,6 +407,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     return getTime(creationDate);
   }
 
+  /**
+   * 
+   * @param userId 
+   * @returns 
+   */
   getUserCreated(userId: string) {
     let user = ""; 
     for (let i = 0; i < this.channelMembers.length; i++) {
