@@ -64,18 +64,18 @@ export class SideBarComponent {
   ) {}
 
   async ngOnInit() {
-    this.userManagementService.activeUserId$.subscribe((activeUserId) => {
-      if (activeUserId) {
-        this.channels$ = this.loadChannels(activeUserId);
-        this.preSelect(activeUserId);
-      }
-    });
     this.userManagementService.loadUsers();
     this.viewManagementService.setView('sidebar');
     this.screenSizeSubscription =
       this.viewManagementService.screenSize$.subscribe((size) => {
         this.screenSize = size;
       });
+    this.userManagementService.activeUserId$.subscribe((activeUserId) => {
+      if (activeUserId) {
+        this.channels$ = this.loadChannels(activeUserId);
+        this.preSelect(activeUserId);
+      }
+    });
     this.subscription.add(
       this.viewManagementService.showSidebarToggle$.subscribe((value) => {
         this.workspaceVisible = value;
@@ -120,6 +120,15 @@ export class SideBarComponent {
     this.viewManagementService.setView('newMessage');
   }
 
+  /**
+   * Loads channel data for active user and returns an Observable of channels.
+   * queries the 'channels' collection from Firestore, transforms the document snapshots
+   * into channel objects, and then filters and sorts them based on the active user. The resulting
+   * array of channels is emitted to subscribers of the returned Observable.
+   *
+   * @param {string} activeUserId - The ID of the currently active user, used to filter channels.
+   * @returns {Observable<{id: string; data: Channel}[]>} An Observable stream of filtered and sorted channels.
+   */
   loadChannels(
     activeUserId: string
   ): Observable<{ id: string; data: Channel }[]> {
@@ -143,15 +152,27 @@ export class SideBarComponent {
     });
   }
 
+  /**
+   * Transforms Firestore document snapshots into channel objects.
+   * @param {QuerySnapshot<DocumentData>} snapshot - A Firestore query snapshot containing channel documents.
+   * @returns {{id: string; data: Channel}[]} An array of channel objects with ID and data properties.
+   */
   private transformChannelDocs(
     snapshot: QuerySnapshot<DocumentData>
   ): { id: string; data: Channel }[] {
     return snapshot.docs.map((doc) => ({
       id: doc.id,
-      data: new Channel(doc.data() as Channel), // Stelle sicher, dass das Typ-Casting zu Channel hier sinnvoll ist.
+      data: new Channel(doc.data() as Channel),
     }));
   }
 
+  /**
+   * Channels are first filtered to include only those where the active user is a member.
+   * Then, the filtered channels are sorted by their creation date in ascending order.   *
+   * @param {{id: string; data: Channel}[]} channels - An array of channel objects to be filtered and sorted.
+   * @param {string} activeUserId - The ID of the currently active user, used to filter channels.
+   * @returns {{id: string; data: Channel}[]} The filtered and sorted array of channel objects.
+   */
   private filterAndSortChannels(
     channels: { id: string; data: Channel }[],
     activeUserId: string

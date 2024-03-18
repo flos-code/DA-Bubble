@@ -44,6 +44,11 @@ export class ViewManagementService {
     );
   }
 
+  /**
+   * Updates the internal screen size state based on the provided window width.
+   *
+   * @param {number} width - The current width of the window, used to determine the screen size category.
+   */
   updateScreenSize(width: number): void {
     if (width <= 500) {
       this.screenSize.next('extraSmall');
@@ -56,6 +61,11 @@ export class ViewManagementService {
     }
   }
 
+  /**
+   * Sets up an event listener on the window object to handle resize events.
+   * Calls `updateScreenSize` with the new window width whenever the window is resized,
+   * allowing for dynamic adjustment of the UI based on screen size.
+   */
   handleWindowResize(): void {
     window.addEventListener('resize', () => {
       this.updateScreenSize(window.innerWidth);
@@ -205,12 +215,24 @@ export class ViewManagementService {
     },
   };
 
+  /**
+   * Updates the visibility states of various UI components based on the provided properties object.
+   *
+   * @param {object} properties - An object containing key-value pairs where each key corresponds to a BehaviorSubject managing the visibility of a UI component, and each value is the new state (true or false) to be applied.
+   */
   private updateViewProperties(properties: object): void {
     for (const key of Object.keys(properties)) {
       this[key].next(properties[key]);
     }
   }
 
+  /**
+   * Sets the current view configuration based on the specified view type.
+   * updates various BehaviorSubjects related to UI component visibility to match predefined settings for the current screen size.
+   * uses current `screenSize` value to determine which set of view settings to apply, allowing for responsive adjustments to the UI.
+   *
+   * @param {'sidebar' | 'channel' | 'directMessage' | 'newMessage' | 'secondaryChat'} view - The view type to set, determining which components are visible.
+   */
   setView(
     view:
       | 'sidebar'

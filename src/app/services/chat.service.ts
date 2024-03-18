@@ -35,6 +35,12 @@ export class ChatService {
 
   // ------------------- Channel Logic --------------------
 
+  /**
+   * Sets the active channel ID, resets the selected user ID to null, and triggers the loading of threads for the newly active channel.
+   * It also updates observers about the change in the active channel ID.
+   *
+   * @param {string} channelId - The ID of the channel to be set as active.
+   */
   setActiveChannelId(channelId: string) {
     this.activeChannelId = channelId;
     this.selectedUserId = null;
@@ -46,6 +52,11 @@ export class ChatService {
     return this.activeChannelId;
   }
 
+  /**
+   * Sets the selected user ID for direct messages, resets the active channel ID to null, and notifies observers about the change in the active user ID.
+   *
+   * @param {string} userId - The ID of the user to set as selected for direct messaging.
+   */
   setSelectedUserId(userId: string) {
     this.selectedUserId = userId;
     this.activeChannelId = null;
@@ -58,6 +69,13 @@ export class ChatService {
 
   // ------------------- MainChat Logic --------------------
 
+  /**
+   * Fetches and returns a list of threads for a given channel ID from Firestore.
+   * Each thread is transformed into a `Thread` class instance before being returned.
+   *
+   * @param {string} channelId - The ID of the channel for which to fetch threads.
+   * @returns {Promise<Thread[]>} A promise that resolves to an array of `Thread` instances.
+   */
   async getThreads(channelId): Promise<Thread[]> {
     const threadsRef = collection(
       this.firestore,
@@ -70,6 +88,11 @@ export class ChatService {
     return threads;
   }
 
+  /**
+   * Loads threads for a specified channel ID and updates the BehaviorSubject holding the current threads.
+   *
+   * @param {string} channelId - The ID of the channel for which to load threads.
+   */
   async loadThreads(channelId: string): Promise<void> {
     const threads = await this.getThreads(channelId);
     this.threadsSource.next(threads);
@@ -77,6 +100,12 @@ export class ChatService {
 
   // ------------------- SecondaryChat Logic --------------------
 
+  /**
+   * Opens a thread by setting the thread open state to false initially, updating the selected thread ID, and then setting the thread open state to true shortly after.
+   * This approach allows for any necessary animations or UI updates when opening a thread.
+   *
+   * @param {string} threadId - The ID of the thread to open.
+   */
   openThread(threadId: string) {
     this.threadOpenSource.next(false);
     this.selectedThreadIdSource.next(threadId);
@@ -85,6 +114,9 @@ export class ChatService {
     }, 30);
   }
 
+  /**
+   * Closes the currently open thread by resetting the selected thread ID and setting the thread open state to false.
+   */
   closeThread(): void {
     this.selectedThreadIdSource.next(null);
     this.threadOpenSource.next(false);
@@ -92,6 +124,12 @@ export class ChatService {
 
   // ------------------- Channel creation Logic --------------------
 
+  /**
+   * Checks if a channel name already exists in the Firestore database.
+   *
+   * @param {string} channelName - The name of the channel to check for existence.
+   * @returns {Promise<boolean>} A promise that resolves to `true` if the channel name exists, otherwise `false`.
+   */
   async channelNameExists(channelName: string): Promise<boolean> {
     const channelsRef = collection(this.firestore, 'channels');
     const snapshot = await getDocs(channelsRef);

@@ -59,6 +59,11 @@ export class UserManagementService {
     });
   }
 
+  /**
+   * Loads all users from Firestore and updates the BehaviorSubject `users`
+   * with the new data. It also ensures the active user ID is added to the list of user IDs
+   * for direct message partners and fetches these IDs.
+   */
   async loadUsers() {
     const usersCol = collection(db, 'users');
     onSnapshot(usersCol, async (snapshot) => {
@@ -72,6 +77,11 @@ export class UserManagementService {
     });
   }
 
+  /**
+   * Sorts an array of users putting the active user at the top.
+   *
+   * @param {{ id: string; data: User }[]} users - An array of user objects to be sorted.
+   */
   sortUsers(users: { id: string; data: User }[]): void {
     users.sort((a, b) => {
       if (a.id === this.activeUserId.value) return -1;
@@ -84,6 +94,12 @@ export class UserManagementService {
     return this.activeUserId;
   }
 
+  /**
+   * Fetches the user IDs of all direct message partners for the active user from Firestore.
+   * If there is no active user, it returns an empty array.
+   *
+   * @returns {Promise<string[]>} A promise that resolves to an array of user IDs.
+   */
   async getDirectMessageUserIds(): Promise<string[]> {
     if (!this.activeUserId.value) {
       return [];
@@ -105,6 +121,13 @@ export class UserManagementService {
     }
   }
 
+  /**
+   * Ensures the active user ID is included in the provided array of user IDs.
+   * If the active user ID is not present, it adds it to the array.
+   *
+   * @param {string[]} userIds - An array of user IDs to be checked and potentially modified.
+   * @returns {string[]} The modified array of user IDs, guaranteed to include the active user ID.
+   */
   ensureActiveUserIdIncluded(userIds: string[]): string[] {
     if (!userIds.includes(this.activeUserId.value)) {
       userIds.push(this.activeUserId.value);
@@ -112,6 +135,10 @@ export class UserManagementService {
     return userIds;
   }
 
+  /**
+   * A wrapper function that fetches direct message user IDs, ensures the active user ID is included,
+   * and updates the `updatedUserIds` BehaviorSubject with the result.
+   */
   async addActiveUserIdAndFetchUserIds() {
     try {
       const dmUserIds = await this.getDirectMessageUserIds();
@@ -125,6 +152,13 @@ export class UserManagementService {
     }
   }
 
+  /**
+   * Updates the online status of a specific user in the Firestore database.
+   * This is called when a user logs in or out.
+   *
+   * @param {string} userId - The ID of the user whose online status is to be updated.
+   * @param {boolean} isOnline - The new online status of the user.
+   */
   async setUserOnlineStatus(userId: string, isOnline: boolean) {
     const userDocRef = doc(db, 'users', userId);
     try {
