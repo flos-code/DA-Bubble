@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfilCardService } from '../services/profil-card.service';
 import { ChatService } from '../services/chat.service';
-import { RouterOutlet, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
