@@ -1,8 +1,9 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getFirestore, onSnapshot } from 'firebase/firestore';
+import { collection, doc, getFirestore, onSnapshot, query, setDoc } from 'firebase/firestore';
 import { User } from '../../models/user.class';
 import { getAuth } from 'firebase/auth';
+import { ChatService } from './chat.service';
 
 
 
@@ -34,13 +35,14 @@ export class ProfilCardService {
   headerProfilePic: string = '';
   headerUserNameandSurname: string = '';
   currentUserId: string = '';
+  otherUserId: string = '';
 
   isProfilCardActive: boolean = false;
   isOverlayActive: boolean = false;
   isCurrentUserActive: boolean;
   isProfilCardActiveChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-  constructor() { }
+  constructor(private chatService: ChatService) { }
 
   toggleCardOverlay(active: boolean) {
     this.isOverlayActive = active;
@@ -57,6 +59,7 @@ export class ProfilCardService {
     this.isProfilCardActive = active;
     this.isCurrentUserActive = currentUser;
     if (currentUser == false) {
+      this.otherUserId = userId;
       let userDocRef = doc(this.userRef, userId);
       onSnapshot(userDocRef, (element) => {
         let userData = element.data();
@@ -97,5 +100,32 @@ export class ProfilCardService {
         this.userEmailAddress = 'maxmustermann@gmail.com'
       }
     });
+  }
+
+  writeDirectMessage() {
+    const q = query(collection(this.db, `users/${this.auth.currentUser.uid}/allDirectMessages`));
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        if(element.id === this.otherUserId) {
+          this.chatService.setSelectedUserId(this.otherUserId);
+          this.toggleCardOverlay(false);
+          //this.closeShowMembers();
+        } else {
+          // Create new DM Chat
+          this.addDirectMessage();
+          //this.closeProfileCard();
+          //this.closeShowMembers();
+        }  
+      });
+    });
+  }
+
+  async addDirectMessage (): Promise<void> {
+    const dmSenderRef = doc(collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`), this.otherUserId);
+    const dmReceiverRef = doc(collection(this.db, `users/${this.otherUserId}/allDirectMessages`), this.currentUserId);
+    let data = { }
+    await setDoc(dmSenderRef, data);
+    await setDoc(dmReceiverRef, data);
+    this.chatService.setSelectedUserId(this.otherUserId);
   }
 }
