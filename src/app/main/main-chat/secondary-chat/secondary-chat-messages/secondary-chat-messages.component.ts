@@ -55,6 +55,20 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     this.teardownOutsideClickHandler();
   }
 
+  downloadImage(imageUrl: string) {
+    if (!imageUrl) {
+      console.error('No image URL provided');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'downloadedImage.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  
+
   /**
  * Sets up the Firestore path for accessing reactions associated with a specific message.
  * This method constructs the path based on the currently selected channel, thread, and message IDs,

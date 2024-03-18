@@ -21,6 +21,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { environment } from '../../../../environments/environment.development';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
@@ -106,6 +107,22 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   ngAfterViewInit() {
     setTimeout(() => this.scrollToBottom(), 200);
   }
+
+  downloadImage(imageUrl: string) {
+    if (!imageUrl) {
+      console.error('No image URL provided');
+      return;
+    }
+    const link = document.createElement('a');
+    link.href = imageUrl;
+    link.download = 'downloadedImage.jpg';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+  }
+  
+  
+  
 
  /**
  * Toggles the edit message field for a given message, allowing the user to start or stop editing a message.
