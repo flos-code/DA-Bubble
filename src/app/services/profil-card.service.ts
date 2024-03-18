@@ -109,12 +109,10 @@ export class ProfilCardService {
         if(element.id === this.otherUserId) {
           this.chatService.setSelectedUserId(this.otherUserId);
           this.toggleCardOverlay(false);
-          //this.closeShowMembers();
         } else {
           // Create new DM Chat
           this.addDirectMessage();
-          //this.closeProfileCard();
-          //this.closeShowMembers();
+          this.toggleCardOverlay(false);
         }  
       });
     });

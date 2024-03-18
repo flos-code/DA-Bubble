@@ -89,31 +89,4 @@ export class ProfilCardComponent implements OnInit {
       id: this.auth.currentUser.uid,
     });
   }
-
-/*   writeDirectMessage() {
-    const q = query(collection(db, `users/${this.currentUser}/allDirectMessages`));
-    return onSnapshot(q, (list) => {
-      list.forEach(element => {
-        if(element.id === this.memberData.id) {
-          this.chatService.setSelectedUserId(this.memberData.id);
-          //this.closeProfileCard();
-          //this.closeShowMembers();
-        } else {
-          // Create new DM Chat
-          this.addDirectMessage();
-          //this.closeProfileCard();
-          //this.closeShowMembers();
-        }  
-      });
-    });
-  }
-
-  async addDirectMessage (): Promise<void> {
-    const dmSenderRef = doc(collection(db, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
-    const dmReceiverRef = doc(collection(db, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
-    let data = { }
-    await setDoc(dmSenderRef, data);
-    await setDoc(dmReceiverRef, data);
-    this.chatService.setSelectedUserId(this.memberData.id);
-  } */
 }
