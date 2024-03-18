@@ -45,7 +45,7 @@
                         <div class="threadsContainer">
                             <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{
                                 result['channelName'] }}]</h4>
-                            <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{
+                            <p (click)="openThreadfromSearchbar( result['messageId'], result['id'] ); onResultClick()">*{{
                                 result['message'] }}*</p>
                         </div>
                     </ng-container>
@@ -106,7 +106,7 @@
                     <div class="threadsContainer">
                         <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{
                             result['channelName'] }}]</h4>
-                        <p (click)="openThreadfromSearchbar( result['messageId'] ); onResultClick()">*{{
+                        <p (click)="openThreadfromSearchbar( result['messageId'], result['id']  ); onResultClick()">*{{
                             result['message'] }}*</p>
                     </div>
                 </ng-container>
