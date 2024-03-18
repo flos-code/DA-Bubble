@@ -13,7 +13,12 @@ import {
   updateDoc,
   arrayUnion,
 } from 'firebase/firestore';
-import { FormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
+import {
+  FormBuilder,
+  ReactiveFormsModule,
+  ValidationErrors,
+  Validators,
+} from '@angular/forms';
 import {
   getAuth,
   createUserWithEmailAndPassword,
@@ -45,9 +50,17 @@ const storage = getStorage();
 @Component({
   selector: 'app-sign-up',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, RouterModule],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    MatFormFieldModule,
+    RouterModule,
+  ],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss',
+  styleUrls: [
+    './sign-up.component.scss',
+    './sign-up.component.responsive.scss',
+  ],
 })
 export class SignUpComponent {
   auth = getAuth(app);
@@ -82,7 +95,10 @@ export class SignUpComponent {
   registerForm = this.fb.group({
     nameAndSurname: ['', Validators.required],
     email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(8), Validators.maxLength(100)]],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(8), Validators.maxLength(100)],
+    ],
     checkbox: [false, Validators.requiredTrue],
   });
 
@@ -163,7 +179,7 @@ export class SignUpComponent {
   async createWelcomeMessage() {
     const welcomeMessage = new DirectMessage({
       yourMessage: false,
-      createdBy: 'gZrReha096XBbzYewrjt1cP8AZB2a',
+      createdBy: 'WqUfBH53bPVombxH2XPYN70RULp1',
       creationDate: Date.now(),
       message:
         'Herzlich willkommen auf dem Code Learning Server 👋 ich hoffe, du hast hergefunden',
@@ -173,7 +189,7 @@ export class SignUpComponent {
     const newUserRef = doc(
       db,
       `users/${this.auth.currentUser.uid}/allDirectMessages`,
-      'gZrReha096XBbzYewrjt1cP8AZB2'
+      'WqUfBH53bPVombxH2XPYN70RULp1'
     );
 
     try {
@@ -181,7 +197,7 @@ export class SignUpComponent {
 
       const directMessagesCollection = collection(
         db,
-        `users/${this.auth.currentUser.uid}/allDirectMessages/gZrReha096XBbzYewrjt1cP8AZB2/directMessages`
+        `users/${this.auth.currentUser.uid}/allDirectMessages/WqUfBH53bPVombxH2XPYN70RULp1/directMessages`
       );
 
       const docRefNewUser = await addDoc(
@@ -192,7 +208,7 @@ export class SignUpComponent {
       await updateDoc(
         doc(
           db,
-          `users/${this.auth.currentUser.uid}/allDirectMessages/gZrReha096XBbzYewrjt1cP8AZB2/directMessages`,
+          `users/${this.auth.currentUser.uid}/allDirectMessages/WqUfBH53bPVombxH2XPYN70RULp1/directMessages`,
           docRefNewUser.id
         ),
         {
@@ -290,8 +306,8 @@ export class SignUpComponent {
   }
 
   togglePasswordVisibility() {
-    this.isText = !this.isText
-    this.type = this.isText ? "text" : "password";
+    this.isText = !this.isText;
+    this.type = this.isText ? 'text' : 'password';
   }
 
   getPWErrorMessage(errors: ValidationErrors) {
@@ -300,49 +316,48 @@ export class SignUpComponent {
     } else if (errors['minlength']) {
       return 'Das Passwort muss länger als 8 Zeichen sein';
     } else if (errors['maxlength']) {
-      return "Das Passwort darf nicht länger als 100 Zeichen sein";
+      return 'Das Passwort darf nicht länger als 100 Zeichen sein';
     } else {
-      return
+      return;
     }
   }
 
-  getNameAndSurnameErrorMessage(errors: ValidationErrors){
-    if(errors['required']){
-      return 'Bitte geben Sie Ihr Vor und Nachnahme ein'
+  getNameAndSurnameErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie Ihr Vor und Nachnahme ein';
     } else {
-      return
+      return;
     }
   }
 
-  getEmailErrorMessage(errors: ValidationErrors){
-    if(errors['required']){
-      return 'Bitte geben Sie Ihre E-Mail-Adresse ein'
-    } else if(errors['pattern']) {
-      return 'Keine gültige E-Mail-Adresse'
+  getEmailErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie Ihre E-Mail-Adresse ein';
+    } else if (errors['pattern']) {
+      return 'Keine gültige E-Mail-Adresse';
     } else {
-      return
+      return;
     }
   }
 
-  getCheckBoxErrorMessage(errors: ValidationErrors){
-    if(errors['required']){
-      return 'Sie müssen das Kontrollkästchen aktivieren, um fortzufahren'
+  getCheckBoxErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Sie müssen das Kontrollkästchen aktivieren, um fortzufahren';
     } else {
-      return
+      return;
     }
   }
 
   checkErrors(control: string) {
     const errors = (this.registerForm.controls as any)[control].errors;
-    if (control === 'password'){
+    if (control === 'password') {
       return this.getPWErrorMessage(errors);
-    } else if (control === 'email'){
+    } else if (control === 'email') {
       return this.getEmailErrorMessage(errors);
     } else if (control === 'nameAndSurname') {
       return this.getNameAndSurnameErrorMessage(errors);
-    } else if (control === 'checkbox'){
-      return this.getCheckBoxErrorMessage(errors)
+    } else if (control === 'checkbox') {
+      return this.getCheckBoxErrorMessage(errors);
     }
-    
   }
 }

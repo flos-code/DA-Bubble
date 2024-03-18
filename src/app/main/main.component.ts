@@ -13,7 +13,7 @@ import { ProfilCardService } from '../services/profil-card.service';
 import { ChatService } from '../services/chat.service';
 import { Router } from '@angular/router';
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
+import { getAuth, onAuthStateChanged } from "firebase/auth";
 
 const firebaseConfig = {
   apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -42,7 +42,7 @@ const app = initializeApp(firebaseConfig);
   templateUrl: './main.component.html',
   styleUrl: './main.component.scss',
 })
-export class MainComponent implements OnInit{
+export class MainComponent implements OnInit {
   // showMainChat: boolean = true;
   // showNewMessage: boolean = false;
   // // showSecondaryChat: boolean = false;
@@ -68,13 +68,16 @@ export class MainComponent implements OnInit{
     // this.getThreadOpenStatus();
   }
 
-  ngOnInit(){
-    if (!this.auth.currentUser){
-      this.router.navigateByUrl('/login')
-    } else {
-      
-    }
+  ngOnInit() {
+    onAuthStateChanged(this.auth, (user) => {
+      if (!user) {
+        this.router.navigateByUrl('/login');
+      } else {
+
+      }
+    });
   }
+
 
   // ngOnDestroy(): void {
   //   this.viewChangeSubscription.unsubscribe();
