@@ -10,7 +10,7 @@
       <div class="left-side-head">
         <h3>Thread</h3>
         <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag" />
-        <p>{{channel?.name}}</p>
+        <p>Entwicklerteam</p>
       </div>
       <button (click)="closeThread()" class="close-button"></button>
     </div>
@@ -55,11 +55,10 @@
           <div *ngIf="firstThreadMessage?.message" class="thread-message own-bubble">
             <span>{{ firstThreadMessage.message }}</span>
           </div>
-
-          <a *ngIf="firstThreadMessage?.imageUrl" (click)="downloadImage(firstThreadMessage.imageUrl)" style="cursor: pointer;">
-            <img [src]="firstThreadMessage.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
-          </a>
           
+          <a *ngIf="firstThreadMessage?.imageUrl" (click)="downloadImage(firstThreadMessage?.imageUrl)">
+            <img *ngIf="firstThreadMessage?.imageUrl" [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}" style="height: 100px; width: 100px; border-radius: 4px;">
+          </a>
         </div>
       </div>
       }

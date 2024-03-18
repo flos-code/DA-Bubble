@@ -7,7 +7,7 @@
                 <p>{{ getUserName(message.createdBy) }}</p>
                 <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
             </div>
-            <div class="thread-message">
+            <div *ngIf="message.message" class="thread-message">
                 <span>{{ message.message }}</span>
             </div>
             <a *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl.imageUrl)">
@@ -92,7 +92,7 @@
                 <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
             </div>
             
-            <div class="thread-message own-bubble">
+            <div *ngIf="message.message" class="thread-message own-bubble">
 
                 <div *ngIf="openEditOwnInput; else displayMessage">
                     <input class="edit-message-input" [(ngModel)]="editingMessageText"
