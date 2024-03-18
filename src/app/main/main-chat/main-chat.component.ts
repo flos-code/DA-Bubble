@@ -231,6 +231,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         )
         this.sortChannelThreadsArray(this.dmMessages);
         this.getThreadCreationDates(this.dmMessages);
+        console.log('Dm')
       });
     }
 
@@ -279,7 +280,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'userId': userId,
         'createdBy': createdBy,
         'imgUrl': this.getImgUrl(userId),
-        'imageUrl': message['imageUrl']
+        'imageUrl': imageUrl
       });
      
       if(!this.threadCreationDates.some(date => date.dateString === formattedDate)) {
@@ -343,11 +344,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   getImgUrl(userId) {
-    for (let i = 0; i < this.channelMembers.length; i++) {
-      const user = this.channelMembers[i];
-      if(userId == user.id) {
-        return user.imgUrl;
-      }
+    if(this.activeChannelId !== null) {
+      for (let i = 0; i < this.channelMembers.length; i++) {
+        const user = this.channelMembers[i];
+        if(userId == user.id) {
+          return user.imgUrl;
+        }
+      }  
+    } else {
+      return this.activeDmUserData.imgUrl;
     }
   }
 
