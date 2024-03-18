@@ -52,8 +52,8 @@ const storage = getStorage();
 export class SignUpComponent {
   auth = getAuth(app);
 
-  first: boolean = false;
-  second: boolean = true;
+  first: boolean = true;
+  second: boolean = false;
   person: string = 'zero';
   current: Date = new Date();
   uID: string = '';
