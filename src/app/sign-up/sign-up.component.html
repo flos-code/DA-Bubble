@@ -41,7 +41,7 @@
         <label>
           <input type="checkbox" name="checkbox" id="checkbox1" formControlName="checkbox" (focus)="showCheckboxErrorDiv = true"/>
         </label>
-        <p>Ich stimme der<a>Datenschutzerklärung</a>zu</p>
+        <p>Ich stimme der<a routerLink="/privacy-policy">Datenschutzerklärung</a>zu</p>
       </div>
       <div class="error-message-container" [class.visible]="showCheckboxErrorDiv">
         <mat-error *ngIf="registerForm.controls.checkbox.invalid">
@@ -58,7 +58,7 @@
   </div>
 
   <div *ngIf="second" class="picture-choice-container">
-    <h1>Wähle deinen Avatar</h1>
+    <h1 class="the-title">Wähle deinen Avatar</h1>
     <button class="go-back-to-login-btn" (click)="goBackToFirst()"></button>
 
     <img class="chosen-profile-pic" [src]="imgUrl" />

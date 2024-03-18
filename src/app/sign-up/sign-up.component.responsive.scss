@@ -1,0 +1,97 @@
+@media screen and (max-width: 650px) {
+    .sign-up-form-container {
+        width: 398px;
+
+        h1 {
+            font-size: 30px;
+        }
+
+        form {
+            width: 358px;
+
+            input {
+                width: 358px;
+            }
+        }
+    }
+
+    .the-title {
+        display: inline;
+        width: 290px;
+    }
+
+    .sign-up-hint {
+        font-size: 17px;
+        width: 358px;
+    }
+
+    .go-back-to-login-btn {
+        top: 30px;
+        left: 20px;
+    }
+
+    .sign-up-btns-container {
+        width: 358px;
+    }
+
+    .lower-links-container {
+        display: none;
+    }
+
+
+    .logo-container {
+        top: 70px;
+        left: calc(50% - 100px);
+    }
+
+    .picture-choice-container {
+        width: 398px;
+
+        h1 {
+            font-size: 32px;
+        }
+
+    }
+
+    .picture-choice-info {
+        width: 358px;
+        margin-bottom: 20px;
+    }
+
+    .chosen-profile-pic {
+        margin-bottom: 20px;
+    }
+
+    .generic-profile-pic-list {
+        width: 358px !important;
+        gap: 0px !important;
+
+        img {
+            width: 48px !important;
+            height: 48px !important;
+        }
+    }
+
+    .personal-pic-upload-container {
+        width: 358px;
+
+        p {
+            font-size: 17px;
+        }
+
+        button {
+            padding: 8px 13px 8px 13px !important;
+            font-size: 17px;
+            gap: 0;
+        }
+    }
+
+    .p2 {
+        font-size: 17px !important;
+    }
+
+    .next-btn {
+        font-size: 17px !important;
+        margin-top: 30px;
+    }
+}
