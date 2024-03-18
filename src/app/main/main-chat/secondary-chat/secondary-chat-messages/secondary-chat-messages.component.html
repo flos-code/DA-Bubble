@@ -10,21 +10,19 @@
         <div class="thread-message">
             <span>{{ message.message }}</span>
             
-            <a *ngIf="message?.imageUrl" 
-            href="{{ message?.imageUrl }}" 
-            download="downloadedImage.gif" 
-            title="Download image"
-            target="_blank">
-            <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
-                style="height: 100px; width: 100px; border-radius: 4px;">
-            </a>
-        </div>
-
-
-        <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
+        <!-- <a *ngIf="message?.imageUrl" 
+        href="{{ message?.imageUrl }}" 
+        download="downloadedImage.gif" 
+        title="Download image"
+        (click)="downloadImage(message?.imageUrl)"
+        target="_blank"> -->
+        <!-- <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
+            style="height: 100px; width: 100px; border-radius: 4px;"> -->
+        <!-- </a> -->
+            <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
             <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;">
-            </button> -->
+            </button>
         </div>
 
         <!-- ================ REACTION CONTAINER ================ -->
@@ -98,6 +96,7 @@
         [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions"
         [threadOrMessageId]="messageId">
     </app-reaction-emoji-input>
+</div>
 } @else {
 <!-------------------- Template of own message ------------------------>
 <div class="user-message own-message">
@@ -118,13 +117,14 @@
             <ng-template #displayMessage>
                 <span *ngIf="!messageDeleted">{{ message.message }}</span>
                 <span *ngIf="messageDeleted">Nachricht wird gelöscht ..</span>
-                <a *ngIf="message?.imageUrl" href="{{ message?.imageUrl }}" download="image.gif" title="Download image"
-                target="_blank">
-                    <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
-                        style="height: 100px; width: 100px; border-radius: 4px;">
-                </a>
             </ng-template>
         </div>
+
+        <a *ngIf="message?.imageUrl" href="{{ message?.imageUrl }}" download="image.gif" title="Download image"
+            target="_blank">
+            <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
+                style="height: 100px; width: 100px; border-radius: 4px;">
+        </a>
 
 
 

@@ -75,34 +75,8 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
         xhr.send();
       })
       .catch((error) => {
-        // Handle any errors
       });
   }
-
-  // downloadImage(imageUrl: string) {
-  //   // Prüfe, ob imageUrl nicht leer oder undefiniert ist
-  //   if (!imageUrl) {
-  //     console.error('No image URL provided');
-  //     return;
-  //   }
-
-  //   // Verwende getDownloadURL, um die direkte Download-URL zu erhalten
-  //   getDownloadURL(ref(this.storage, imageUrl))
-  //     .then((url) => {
-  //       // Erstelle einen temporären Download-Link und klicke darauf
-  //       const link = document.createElement('a');
-  //       link.href = url;
-  //       link.download = 'downloadedImage'; // Optional: Gib der Datei einen Namen
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //     })
-  //     .catch((error) => {
-  //       console.error('There was an error downloading the image:', error);
-  //     });
-  // }
-
-
 
 
   /**
@@ -348,7 +322,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * @returns {boolean} True if the message text is empty and the message should be deleted; false otherwise.
    */
   private shouldDeleteMessage() {
-    return this.editingMessageText === '';
+    return this.editingMessageText === '' || undefined;
   }
 
   /**
