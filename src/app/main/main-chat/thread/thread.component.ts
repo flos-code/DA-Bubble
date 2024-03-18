@@ -21,6 +21,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   @Input() thread!: any;
   @Input() currentUser!: string;
   @Input() activeDmUser!: string;
+  @Input() acitveDmUserData!: any;
   @Input() activeChannelId!: string;
   @Input() path!: string;
   messageCount!: number;

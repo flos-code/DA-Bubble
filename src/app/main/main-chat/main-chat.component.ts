@@ -37,6 +37,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   activeChannelId: string;
   activeChannelSub: Subscription = new Subscription();
   currentUser: string;
+  currentUserData: any;
   currentUserSub: Subscription = new Subscription();
   dmMessages = [];
   activeDmUser: string;
@@ -156,6 +157,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Runs all the function to fetch the data for the active channel.
    */
   loadChannelData() {
+    this.getcurrentUserData();
     this.getCurrentChannel();
     this.getThreadOpenStatus();
     this.subscribeToThreads();
@@ -165,6 +167,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * Runs all the function to fetch the data for the active direct message.
    */
   loadDmData() {
+    this.getcurrentUserData();
     this.getDmUser();
   }
 
@@ -234,6 +237,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
       this.getThreadCreationDates(this.channelThreads);
     });
   }
+
+    /**
+   * Returns the name of the selected dm user.
+   * @param userId - id of the user of the selecte direct message
+   */
+    getcurrentUserData() {
+      onSnapshot(doc(collection(this.firestore, 'users'), this.currentUser), (user) => {
+        this.currentUserData = user.data();
+      });
+    }
+  
 
   /**
    * Fetches the data of the user that is select in direct messages and sotres them in the activeDmUserData array.
@@ -322,7 +336,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       let formattedDate = this.formattedDate(creationDate);
       let formattedDateTimeSeparator = this.getTimeSeparatorDate(creationDate);
       let formattedTime = this.getFormattedTime(creationDate);
-      let createdBy = this.getUserCreated(userId);
+      //let createdBy = this.getUserCreated(userId);
       let imageUrl = message['imageUrl'] || null;
 
       this.channelThreadsDateTime.push({
@@ -333,7 +347,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         'time': formattedTime,
         'message': threadsOrDms[i]['message'],
         'userId': userId,
-        'createdBy': createdBy,
+        'createdBy': this.getUserCreated(userId),
         'imgUrl': this.getImgUrl(userId),
         'imageUrl': imageUrl
       });
@@ -413,14 +427,23 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * @returns 
    */
   getUserCreated(userId: string) {
-    let user = ""; 
-    for (let i = 0; i < this.channelMembers.length; i++) {
-      const userCreated = this.channelMembers[i];
-      if(userId == userCreated['id']) {
-        user = userCreated['name'];
+    if(this.activeChannelId !== null){
+      for (let i = 0; i < this.channelMembers.length; i++) {
+        const userCreated = this.channelMembers[i];
+        if(userId == userCreated['id']) {
+          return userCreated['name'];
+        }
       }
+    } else {
+      const q = query(collection(this.firestore, 'users'));
+      onSnapshot(q, (list) => {
+        list.forEach(element => {
+          if(userId == element.id ) {
+            return element.data()['name'];
+          }  
+        });
+    });
     }
-    return user;
   }
 
   getImgUrl(userId) {
@@ -432,7 +455,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
         }
       }  
     } else {
-      return this.activeDmUserData.imgUrl;
+      return this.currentUserData.imgUrl;
     }
   }
 

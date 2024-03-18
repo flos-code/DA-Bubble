@@ -1,9 +1,10 @@
 @if(currentUser !== thread?.userId){
     <!-- ========================= Template Other Messages ========================= -->
-        <!-- ========================= Template Other Messages - CHANNEL ========================= -->
+        <!-- ========================= Template Other Messages - CHANNEL/DM ========================= -->
         <div class="messageContainer">
             <div class="messageProfileIcon">
-                <img [src]="thread?.imgUrl">
+                <img *ngIf="activeChannelId" [src]="thread?.imgUrl">
+                <img *ngIf="activeDmUser" [src]="acitveDmUserData?.imgUrl">
             </div>
             <div class="mainMessage">
                 <div>
@@ -107,7 +108,7 @@
 
 } @else {
     <!-- ========================= Template Own Message ========================= -->
-        <!-- ========================= Template Own Message - CHANNEL ========================= -->
+        <!-- ========================= Template Own Message - CHANNEL/DM ========================= -->
         <div class="messageContainerOwn" *ngIf="!ownMessageEdit">
             <div class="mainMessageOwn">
                 <div>

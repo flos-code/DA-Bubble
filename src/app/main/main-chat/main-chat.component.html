@@ -133,7 +133,7 @@
                 </div>
                 @for (thread of channelThreadsDateTime; track $index) {
                     @if(thread?.dateString == threadTimeSeparator?.dateString) {
-                        <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser" [activeDmUser]="activeDmUser" [path]="path"></app-thread>
+                        <app-thread [activeChannelId]="activeChannelId" [thread]="thread" [currentUser]="currentUser" [activeDmUser]="activeDmUser" [acitveDmUserData]="activeDmUserData" [path]="path"></app-thread>
                     }
                 }
             }           
@@ -143,9 +143,9 @@
         <!-- ======================================== MAIN CHAT INPUT ========================================== -->
 
         <div class="mainChatInput">
-            <app-text-box *ngIf="this.activeChannelId" [messageType]="'channel'" [targetId]="this.activeChannelId" [placeholderText]="'Nachricht an #' + channel?.name">
+            <app-text-box *ngIf="activeChannelId" [messageType]="'channel'" [targetId]="this.activeChannelId" [placeholderText]="'Nachricht an #' + channel?.name">
             </app-text-box>
-            <app-text-box *ngIf="this.activeDmUser" [messageType]="'direct'" [targetId]="this.activeDmUser" [placeholderText]="'Nachricht an @' + activeDmUserName">
+            <app-text-box *ngIf="activeDmUser" [messageType]="'direct'" [targetId]="this.activeDmUser" [placeholderText]="'Nachricht an @' + activeDmUserName">
             </app-text-box>
     </div>        
         <!-- =================================================================================================== -->
