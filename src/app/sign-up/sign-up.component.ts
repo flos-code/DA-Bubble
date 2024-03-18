@@ -47,13 +47,13 @@ const storage = getStorage();
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, RouterModule],
   templateUrl: './sign-up.component.html',
-  styleUrl: './sign-up.component.scss',
+  styleUrls: ['./sign-up.component.scss', './sign-up.component.responsive.scss' ],
 })
 export class SignUpComponent {
   auth = getAuth(app);
 
-  first: boolean = true;
-  second: boolean = false;
+  first: boolean = false;
+  second: boolean = true;
   person: string = 'zero';
   current: Date = new Date();
   uID: string = '';

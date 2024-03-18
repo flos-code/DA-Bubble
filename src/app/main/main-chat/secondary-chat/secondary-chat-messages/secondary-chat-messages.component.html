@@ -10,6 +10,7 @@
         <div class="thread-message">
             <span>{{ message.message }}</span>
             
+<<<<<<< HEAD
         <a *ngIf="message?.imageUrl" 
         href="{{ message?.imageUrl }}" 
         download="downloadedImage.gif" 
@@ -20,6 +21,20 @@
             style="height: 100px; width: 100px; border-radius: 4px;">
         </a>
             <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
+=======
+            <a *ngIf="message?.imageUrl" 
+            href="{{ message?.imageUrl }}" 
+            download="downloadedImage.gif" 
+            title="Download image"
+            target="_blank">
+            <img  [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
+                style="height: 100px; width: 100px; border-radius: 4px;">
+            </a>
+        </div>
+
+
+        <!-- <button *ngIf="message?.imageUrl" (click)="downloadImage(message?.imageUrl)" title="Download image">
+>>>>>>> 980f5c0f9cd064042c8715cc907e53d8f9a6cffa
             <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
             style="height: 100px; width: 100px; border-radius: 4px;">
             </button> -->
@@ -117,14 +132,13 @@
             <ng-template #displayMessage>
                 <span *ngIf="!messageDeleted">{{ message.message }}</span>
                 <span *ngIf="messageDeleted">Nachricht wird gelöscht ..</span>
+                <a *ngIf="message?.imageUrl" href="{{ message?.imageUrl }}" download="image.gif" title="Download image"
+                target="_blank">
+                    <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
+                        style="height: 100px; width: 100px; border-radius: 4px;">
+                </a>
             </ng-template>
         </div>
-
-        <a *ngIf="message?.imageUrl" href="{{ message?.imageUrl }}" download="image.gif" title="Download image"
-            target="_blank">
-            <img [src]="message?.imageUrl" alt="Image uploaded by {{ message?.createdBy }}"
-                style="height: 100px; width: 100px; border-radius: 4px;">
-        </a>
 
 
 
