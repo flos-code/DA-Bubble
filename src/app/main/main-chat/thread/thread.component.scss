@@ -543,6 +543,16 @@
 }
 
 /* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 720px) {
+    .messageContainer > .mainMessage > div:nth-of-type(2) > .messageDocImg,
+    .messageContainerOwn > .mainMessageOwn > div:nth-of-type(2) > .messageDocImg  {
+        > img {
+            max-height: 150px;
+            max-width: 150px;
+        }
+    }
+}
+
 @media(max-width: 500px) {
     .messageProfileIcon > img {
             height: 50px;
@@ -581,6 +591,22 @@
     .messageContainerOwn:hover > .toolBarOwn {
         left: 16px;
         opacity: 1;
+    }
+
+    .messageContainer > .mainMessage > div:nth-of-type(2) > .messageDocImg,
+    .messageContainerOwn > .mainMessageOwn > div:nth-of-type(2) > .messageDocImg  {
+        > img {
+            max-height: 100px;
+            max-width: 100px;
+        }
+    }
+
+    .messageContainer > app-reaction-emoji-input {
+        right: 305px;
+    }
+    
+    .messageContainerOwn > app-reaction-emoji-input {
+        left: 15px;
     }
 }
 

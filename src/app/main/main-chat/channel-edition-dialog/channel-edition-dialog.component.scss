@@ -294,6 +294,13 @@
 }
 
 /* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 720px) {
+    .channelEdition {
+        width: 400px;
+        padding: 1rem;
+    }
+}
+
 @media(max-width: 500px) {
     .channelEdition {
         width: 100%;

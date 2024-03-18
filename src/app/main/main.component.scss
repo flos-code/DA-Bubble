@@ -48,6 +48,6 @@ app-main-chat {
 @media screen and (max-width: 500px) {
   .main-content {
     margin: 0px;
-    // gap: 0;
+    height: calc(100vh - 235px);
   }
 }
