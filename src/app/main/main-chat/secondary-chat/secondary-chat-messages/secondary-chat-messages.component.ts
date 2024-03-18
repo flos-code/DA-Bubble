@@ -1,6 +1,7 @@
 import { Component, Input, OnDestroy, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 import {
   Firestore,
   addDoc,
@@ -54,6 +55,8 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   ngOnDestroy(): void {
     this.teardownOutsideClickHandler();
   }
+
+  
 
   downloadImage(imageUrl: string) {
     if (!imageUrl) {
