@@ -121,8 +121,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     document.body.removeChild(link);
   }
   
-  
-  
+  /* ======= Änderung Tobias ========= */
+  /*   async downloadImgNew() {
+      const storage = getStorage();
+      const pathReference = ref(storage, this.firstThreadMessage.imageUrl);
+
+      return await getDownloadURL(pathReference).then((url) => {
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = 'blob';
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+        };
+        xhr.open('GET', url);
+        xhr.send();
+      });
+    } */
+    /* ============================== */
+
 
  /**
  * Toggles the edit message field for a given message, allowing the user to start or stop editing a message.
