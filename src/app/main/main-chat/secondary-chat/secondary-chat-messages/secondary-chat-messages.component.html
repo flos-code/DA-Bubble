@@ -106,16 +106,11 @@
             <span>{{ message.creationDate | date:'HH:mm' }} Uhr</span>
         </div>
 
-        <div *ngIf="message.message" class="thread-message own-bubble">
-
-
-
-<!--             <div *ngIf="openEditOwnInput; else displayMessage">
+        <div *ngIf="message.message || message?.imageUrl" class="thread-message own-bubble">
+            <div *ngIf="openEditOwnInput; else displayMessage">
                 <input class="edit-message-input" [(ngModel)]="editingMessageText" (keyup.enter)="saveMessageChanges()"
                     type="text">
             </div> -->
-
-
 
 
             <ng-template #displayMessage>
