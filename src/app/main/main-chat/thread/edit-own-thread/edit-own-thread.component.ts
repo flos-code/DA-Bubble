@@ -22,7 +22,11 @@ export class EditOwnThreadComponent implements OnInit {
   @Input() textAreaEditMessage!: string;
   @Input() activeChannelId!: string;
   @Input() thread: any;
+
+  @Input() messageData: any;
   @Input() messageId: any;
+  @Input() messageThreadId: string;
+  @Input() messageProfileImg: string;
   ownMessageEdit: boolean;
   @Output() ownMessageEditChild = new EventEmitter(); 
   inputFocused: boolean = false;
@@ -37,16 +41,20 @@ export class EditOwnThreadComponent implements OnInit {
   ngOnInit(): void {
     if(this.activeChannelId !== null) {
       if(this.messageId) {
-        this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages/${this.messageId}`;
-        this.collectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`;  
+        this.messagePath = `channels/${this.activeChannelId}/threads/${this.messageThreadId}/messages/${this.messageId}`;
+        this.collectionPath = `channels/${this.activeChannelId}/threads/${this.messageThreadId}/messages`;
+        this.textAreaEditMessage = this.messageData.message; 
+      } else {
+        this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}`;
+        this.collectionPath = `channels/${this.activeChannelId}/threads/`;
+        this.textAreaEditMessage = this.thread.message;
+
       }
-      this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}`;
-      this.collectionPath = `channels/${this.activeChannelId}/threads/`;
     } else {
       this.messagePath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}`;
       this.collectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/`;
+      this.textAreaEditMessage = this.thread.message;
     }
-    this.textAreaEditMessage = this.thread.message;
   }
 
   /**
@@ -84,7 +92,7 @@ export class EditOwnThreadComponent implements OnInit {
    * the doc in the threads or directMessages collection is updated.   
    */
   async saveEditedMessage() {
-    if(this.textAreaEditMessage && this.thread.imageUrl) {
+    if((this.textAreaEditMessage || this.thread.imageUrl) || (this.textAreaEditMessage || this.messageData.imageUrl)) {
       let currentThreadRef = doc(this.firestore, this.messagePath);
       let data = {message: this.textAreaEditMessage };
 

@@ -6,7 +6,7 @@
     justify-content: flex-start;
     align-items: flex-start;
     gap: 30px;
-    padding: 1rem 45px 1rem 145px;
+    padding: 1rem 45px 1rem 45px;
     background-color: $bgColor;
 }
 
@@ -94,7 +94,7 @@
             }
         }
 
-        > div:last-of-type {
+        > .mainChatButtons {
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -114,13 +114,26 @@
                 }
             }
             
-            >button:last-of-type {
+            > button:last-of-type {
                 background-color: $purple2;
                 color: white;
                 &:hover {
                     background-color: $bgColor;
                     color: $purple2;
                 }
+            }
+        }
+
+        > .secondaryChatButtons {
+            gap: 1rem;
+
+            > button {
+                padding: 6px 12px 6px 12px;
+                border-radius: 50px;
+                border: 1px solid $purple2;
+                background-color: white;
+                color: $purple2;
+                font-size: 16px;
             }
         }
     }
