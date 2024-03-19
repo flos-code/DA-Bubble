@@ -3,6 +3,9 @@
     <div class="mainMessageOwnEdit">
         <textarea #message name="message" [(ngModel)]="textAreaEditMessage" (focus)="onInputFocus()" (blur)="onInputBlur()"></textarea>
         <div *ngIf="thread?.imageUrl" class="imgMessage">
+        <div class="deleteUpload">
+            <mat-icon (click)="deleteDocument(thread?.imageUrl)" class="material-symbols-rounded" fontIcon="close"></mat-icon>
+          </div>
             <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}"/>
         </div>
 

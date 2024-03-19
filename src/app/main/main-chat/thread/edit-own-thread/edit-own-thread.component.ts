@@ -4,11 +4,13 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
 import { EmojiComponent } from '@ctrl/ngx-emoji-mart/ngx-emoji';
 import { Firestore, deleteDoc, doc, updateDoc } from '@angular/fire/firestore';
+import { deleteObject, getStorage, ref } from '@angular/fire/storage';
+import { MatIconModule } from '@angular/material/icon';
 
 @Component({
   selector: 'app-edit-own-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, PickerComponent, EmojiComponent ],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, PickerComponent, EmojiComponent, MatIconModule ],
   templateUrl: './edit-own-thread.component.html',
   styleUrl: './edit-own-thread.component.scss'
 })
@@ -52,13 +54,29 @@ export class EditOwnThreadComponent implements OnInit {
     this.ownMessageEditChild.emit(this.ownMessageEdit);
   }
 
+  async deleteDocument(url) {
+    const storage = getStorage();
+    const desertRef = ref(storage, url);
+
+    deleteObject(desertRef).then(() => {
+      // File deleted successfully
+    }).catch((error) => {
+      // Uh-oh, an error occurred!
+    });
+    let currentChannelRef = doc(this.firestore, this.messagePath);
+    let data = {imageUrl: "" };
+    await updateDoc(currentChannelRef, data).then(() => {
+    });
+
+  }
+
   /**
    * With clicking on the "Speichern" button, it checks if the input is empty. If this is the case,
    * the message (doc) is deleted form the threads or directMessages collection. If the input filed has a value,
    * the doc in the threads or directMessages collection is updated.   
    */
   async saveEditedMessage() {
-    if(this.textAreaEditMessage) {
+    if(this.textAreaEditMessage && this.thread.imageUrl) {
       let currentThreadRef = doc(this.firestore, this.messagePath);
       let data = {message: this.textAreaEditMessage };
 
