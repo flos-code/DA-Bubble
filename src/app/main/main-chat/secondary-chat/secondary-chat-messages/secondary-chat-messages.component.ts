@@ -17,10 +17,11 @@ import {
 } from '@angular/fire/firestore';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
 import { MatIconModule } from '@angular/material/icon';
+import { EditOwnThreadComponent } from '../../thread/edit-own-thread/edit-own-thread.component';
 @Component({
   selector: 'app-secondary-chat-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent, MatIconModule],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent, MatIconModule, EditOwnThreadComponent],
   templateUrl: './secondary-chat-messages.component.html',
   styleUrl: './secondary-chat-messages.component.scss'
 })
@@ -42,6 +43,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   showMoreEmojis: boolean = false;
   showMoreEmojisToolbar: boolean = false;
   messageDeleted: boolean = false;
+  ownMessageEdit: boolean = false;
 
   private firestore: Firestore = inject(Firestore);
   private storage: FirebaseStorage;
@@ -91,7 +93,6 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   openImage(url: string) {
     window.open(url, '_blank');
   }
-
 
   /**
  * Sets up the Firestore path for accessing reactions associated with a specific message.
@@ -215,7 +216,6 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     await updateDoc(currentRef, data);
   }
 
-
   /**
  * Sorts the `reactedBy` array of each reaction to ensure the current user's ID is at the beginning.
  * This method prioritizes the current user's reaction in the UI by modifying the order of user IDs
@@ -308,7 +308,8 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * This method determines the course of action based on whether the message text is empty
    * and either updates the Firestore document with new text or deletes the message after a delay.
    */
-  async saveMessageChanges() {
+
+/*   async saveMessageChanges() {
     const messageRef = this.getMessageRef();
 
     if (this.shouldDeleteMessage()) {
@@ -318,7 +319,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     }
 
     this.resetEditingState();
-  }
+  } */
 
   /**
    * Constructs and returns a Firestore document reference for the current message.
@@ -326,18 +327,19 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * 
    * @returns A Firestore document reference to the current message.
    */
-  private getMessageRef() {
+
+/*   private getMessageRef() {
     return doc(this.firestore, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
-  }
+  } */
 
   /**
    * Determines whether the current message should be deleted, based on its text content.
    * 
    * @returns {boolean} True if the message text is empty and the message should be deleted; false otherwise.
    */
-  private shouldDeleteMessage() {
+ /*  private shouldDeleteMessage() {
     return this.editingMessageText === '' || undefined;
-  }
+  } */
 
   /**
    * Deletes the current message from Firestore after a specified delay.
@@ -345,13 +347,13 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * 
    * @param {any} messageRef - The Firestore document reference to the message being deleted.
    */
-  private async deleteMessageWithDelay(messageRef) {
+/*   private async deleteMessageWithDelay(messageRef) {
     this.setMessageAsDeleted();
     setTimeout(async () => {
       await deleteDoc(messageRef);
       this.resetMessageDeletedState();
     }, 1000); // Delay in milliseconds before deletion
-  }
+  } */
 
 
   /**
@@ -359,38 +361,38 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   * 
   * @param {any} messageRef - The Firestore document reference to the message being updated.
   */
-  private async updateMessageText(messageRef: any) {
+/*   private async updateMessageText(messageRef: any) {
     if (this.editingMessageText === undefined) {
       console.error("Attempting to update message with undefined text.");
       return;
     }
     await updateDoc(messageRef, { message: this.editingMessageText ?? "Default message" });
-  }
+  } */
 
   /**
    * Sets the state to indicate that a message is being deleted. This involves hiding the message editing input,
    * clearing the editing text, and setting the messageDeleted flag to true.
    */
-  private setMessageAsDeleted() {
+/*   private setMessageAsDeleted() {
     this.openEditOwnInput = false;
     this.editingMessageText = '';
     this.messageDeleted = true;
-  }
+  } */
 
   /**
    * Resets the state to indicate that a message is no longer being deleted by setting the messageDeleted flag to false.
    */
-  private resetMessageDeletedState() {
+/*   private resetMessageDeletedState() {
     this.messageDeleted = false;
-  }
+  } */
 
   /**
    * Resets the editing state by clearing the currently edited message text and hiding the message editing input.
    */
-  private resetEditingState() {
+ /*  private resetEditingState() {
     this.editingMessageText = '';
     this.openEditOwnInput = false;
-  }
+  } */
 
   /**
    * Opens the field to edit the own message by setting the openEditOwnMessage flag to true.
@@ -404,9 +406,10 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * text to the message's original text.
    */
   startEditMessage() {
-    this.openEditOwnInput = true;
+    //this.openEditOwnInput = true;
     this.openEditOwnMessage = false;
-    this.editingMessageText = this.message.message;
+    //this.editingMessageText = this.message.message;
+    this.ownMessageEdit = true;
   }
 
   /**
@@ -451,7 +454,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     const editMessageInput = document.querySelector('.edit-message-input');
     if (editMessageInput && !editMessageInput.contains(event.target as Node)) {
       this.openEditOwnInput = false;
-      this.saveMessageChanges();
+      //this.saveMessageChanges();
     }
 
     const openEditOwnMessageElement = document.querySelector('.edit-message');
@@ -473,6 +476,22 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    */
   teardownOutsideClickHandler(): void {
     document.removeEventListener('mousedown', this.handleClickOutside, true);
+  }
+
+  /**
+   * If the user clicks on "Nachricht bearbieten", the edit-own component opens und the user can start editing the 
+   * own message.
+   */
+  editMessage() {
+    //this.editMessagePopupOpen = false;
+    //this.ownMessageEdit = true;
+  }
+
+  /**
+   * Closes the edit-own component and returns to the thread.
+   */
+  closeEditedMessage(dialogBoolen: boolean) {
+    this.ownMessageEdit = false;
   }
 
 }

@@ -22,6 +22,7 @@ export class EditOwnThreadComponent implements OnInit {
   @Input() textAreaEditMessage!: string;
   @Input() activeChannelId!: string;
   @Input() thread: any;
+  @Input() messageId: any;
   ownMessageEdit: boolean;
   @Output() ownMessageEditChild = new EventEmitter(); 
   inputFocused: boolean = false;
@@ -35,6 +36,10 @@ export class EditOwnThreadComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.activeChannelId !== null) {
+      if(this.messageId) {
+        this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages/${this.messageId}`;
+        this.collectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`;  
+      }
       this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}`;
       this.collectionPath = `channels/${this.activeChannelId}/threads/`;
     } else {
