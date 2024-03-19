@@ -31,7 +31,22 @@
         resize: none;
     }
 
-    > div {
+    .imgMessage {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        border: 4px solid $bgColor;
+        border-radius: 10px;
+        > img {
+         min-height: 100px;
+         min-width: 100px;
+         max-height: 200px;
+         max-width: 200px;
+         border-radius: 10px;
+         } 
+    }
+
+    > .messageOwnEditBottom {
         width: 100%;
         display: flex;
         justify-content: space-between;

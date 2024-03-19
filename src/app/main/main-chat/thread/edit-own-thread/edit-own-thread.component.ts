@@ -18,10 +18,8 @@ export class EditOwnThreadComponent implements OnInit {
   @Input() currentUser!: string;
   @Input() activeDmUser!: string;
   @Input() textAreaEditMessage!: string;
-  @Input() threadId!: string;
   @Input() activeChannelId!: string;
-  @Input() threadMessage!: any;
-  @Input() userImg!: string;
+  @Input() thread: any;
   ownMessageEdit: boolean;
   @Output() ownMessageEditChild = new EventEmitter(); 
   inputFocused: boolean = false;
@@ -35,15 +33,15 @@ export class EditOwnThreadComponent implements OnInit {
 
   ngOnInit(): void {
     if(this.activeChannelId !== null) {
-      this.messagePath = `channels/${this.activeChannelId}/threads/${this.threadId}`;
+      this.messagePath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}`;
       this.collectionPath = `channels/${this.activeChannelId}/threads/`;
     } else {
-      this.messagePath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.threadId}`;
+      this.messagePath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}`;
       this.collectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/`;
     }
     //this.firestore, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
     //this.firestore, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
-    this.textAreaEditMessage = this.threadMessage;
+    this.textAreaEditMessage = this.thread.message;
   }
 
   /**
@@ -69,7 +67,7 @@ export class EditOwnThreadComponent implements OnInit {
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     } else {
-      await deleteDoc(doc(this.firestore, this.collectionPath, this.threadId));
+      await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
       this.ownMessageEdit = false;
       this.ownMessageEditChild.emit(this.ownMessageEdit);
     }

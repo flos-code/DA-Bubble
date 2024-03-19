@@ -2,7 +2,11 @@
 <div class="messageContainerOwnEdit" (click)="message.focus()">
     <div class="mainMessageOwnEdit">
         <textarea #message name="message" [(ngModel)]="textAreaEditMessage" (focus)="onInputFocus()" (blur)="onInputBlur()"></textarea>
-        <div>
+        <div *ngIf="thread?.imageUrl" class="imgMessage">
+            <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}"/>
+        </div>
+
+        <div class="messageOwnEditBottom">
             <div (click)="toggleEmojiPicker()">
                 <span class="material-symbols-outlined">sentiment_satisfied</span>
             </div>
@@ -13,7 +17,7 @@
         </div>
     </div>
     <div class="messageProfileIcon">
-        <img [src]="userImg">
+        <img [src]="thread?.imgUrl">
     </div>
     <emoji-mart #emojiMart *ngIf="showEmojiPicker" [darkMode]="false" (emojiSelect)="handleClick($event)" title="Pick your emoji…" emoji="point_up" (click)="doNotClose($event)">
     </emoji-mart>

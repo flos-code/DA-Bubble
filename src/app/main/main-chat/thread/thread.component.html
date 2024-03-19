@@ -124,9 +124,6 @@
                     <div>{{thread?.time}} Uhr</div>
                 </div>
                 <div>
-                    <div class="mainMessageMessage">
-                        {{thread?.message}}
-                    </div>
                     <div>
                         <div class="mainMessageMessage">
                             {{thread?.message}}
@@ -244,7 +241,7 @@
         </div>
 
         <!-- ========================= Template Own Message - EDIT ========================= -->
-        <app-edit-own-thread *ngIf="ownMessageEdit" [threadId]="thread?.threadId" [userImg]="thread?.imgUrl"
-        [activeChannelId]="activeChannelId" [threadMessage]="thread?.message" [activeDmUser]="activeDmUser" [currentUser]="currentUser"
-        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)"></app-edit-own-thread>             
+        <app-edit-own-thread *ngIf="ownMessageEdit" [thread]="thread" [activeChannelId]="activeChannelId" [activeDmUser]="activeDmUser" [currentUser]="currentUser"
+        (ownMessageEditChild)="closeEditedMessage(ownMessageEdit)">
+        </app-edit-own-thread>             
 }
