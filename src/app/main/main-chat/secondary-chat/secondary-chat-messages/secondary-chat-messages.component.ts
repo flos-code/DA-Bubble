@@ -16,10 +16,11 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { ReactionEmojiInputComponent } from '../../reaction-emoji-input/reaction-emoji-input.component';
+import { MatIconModule } from '@angular/material/icon';
 @Component({
   selector: 'app-secondary-chat-messages',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, ReactionEmojiInputComponent, MatIconModule],
   templateUrl: './secondary-chat-messages.component.html',
   styleUrl: './secondary-chat-messages.component.scss'
 })
@@ -59,50 +60,37 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
     this.teardownOutsideClickHandler();
   }
 
-  downloadImage(imageURL) {
+  async downloadImage(imageURL) {
     const storage = getStorage();
     getDownloadURL(ref(storage, imageURL))
       .then((url) => {
-        // `url` is the download URL for 'images/stars.jpg'
-
-        // This can be downloaded directly:
-        const xhr = new XMLHttpRequest();
-        xhr.responseType = 'blob';
-        xhr.onload = (event) => {
-          const blob = xhr.response;
-        };
-        xhr.open('GET', url);
-        xhr.send();
+        this.downloadData(url)
       })
       .catch((error) => {
-        // Handle any errors
       });
   }
 
-  // downloadImage(imageUrl: string) {
-  //   // Prüfe, ob imageUrl nicht leer oder undefiniert ist
-  //   if (!imageUrl) {
-  //     console.error('No image URL provided');
-  //     return;
-  //   }
+  async downloadData(url: string) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) console.log('Error Loading Images');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'Download_from_DABubble';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Fehler beim Herunterladen des Dokuments:', error);
+    }
+  }
 
-  //   // Verwende getDownloadURL, um die direkte Download-URL zu erhalten
-  //   getDownloadURL(ref(this.storage, imageUrl))
-  //     .then((url) => {
-  //       // Erstelle einen temporären Download-Link und klicke darauf
-  //       const link = document.createElement('a');
-  //       link.href = url;
-  //       link.download = 'downloadedImage'; // Optional: Gib der Datei einen Namen
-  //       document.body.appendChild(link);
-  //       link.click();
-  //       document.body.removeChild(link);
-  //     })
-  //     .catch((error) => {
-  //       console.error('There was an error downloading the image:', error);
-  //     });
-  // }
-
-
+  openImage(url: string) {
+    window.open(url, '_blank');
+  }
 
 
   /**
@@ -348,7 +336,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    * @returns {boolean} True if the message text is empty and the message should be deleted; false otherwise.
    */
   private shouldDeleteMessage() {
-    return this.editingMessageText === '';
+    return this.editingMessageText === '' || undefined;
   }
 
   /**

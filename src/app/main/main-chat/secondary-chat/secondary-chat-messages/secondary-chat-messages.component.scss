@@ -383,14 +383,40 @@ $bg-color: #ECEEFE;
     flex-direction: row-reverse;
 }
 
-/* ===================== RESPONSIVENESS =================== */
-@media(max-width: 500px){
-    .thread-message {
-        .messageDocImg {
-           > img {
-            max-height: 100px;
-            max-width: 100px;
-            }
+// --------------------------------- Image Message ---------------------------------
+
+.imgMessage {
+  width: 100px;
+  height: 100px;
+  border-radius: 4px;
+  position: relative;
+  img {
+    width: 100%;
+    height: 100%;
+  }
+
+  .imgInteraction {
+    position: absolute;
+    display: flex;
+    gap: 12px;
+    bottom: -10px;
+    transform: translateX(-50%);
+    left: 50%;
+    box-sizing: border-box;
+
+    div {
+      mat-icon {
+        padding: 4px;
+        border-radius: 50%;
+        color: $textGray;
+
+        &:hover {
+          background-color: $bgColor;
+          color: $purple3;
+          font-variation-settings: "wght" 600;
+          cursor: pointer;
         }
+      }
     }
+  }
 }
