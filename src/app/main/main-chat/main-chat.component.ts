@@ -507,7 +507,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.channelEditionDialogOpen = false;
     this.showMembersDialogOpen = false;
     this.addMemberDialogOpen = false;
-    this.desktopView = false;
   }
 
   switchToAddMembers(addMemberDialogOpen: boolean) {

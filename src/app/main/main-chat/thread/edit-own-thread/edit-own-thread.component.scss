@@ -157,3 +157,14 @@ emoji-mart {
     z-index: 11;
 }
 
+/* ======================= RESPONSIVENESS ================== */
+@media(max-width: 500px) {
+    .mainMessageOwnEdit {
+        .imgMessage {
+            > img {
+             max-height: 100px;
+             max-width: 100px;
+            } 
+        }
+    }
+}
