@@ -27,30 +27,44 @@ import { Firestore, collection, doc, getDoc, limit, onSnapshot, orderBy, query }
 })
 
 export class MainChatComponent implements OnInit, OnDestroy {
+  /* === Other - variables === */
   private firestore: Firestore = inject(Firestore);
   @ViewChild('mainChat') private mainChat: ElementRef;
   dmMessagesPath = '';
   channelThreadsPath = '';
   path = '';
 
+  /* === Channel - variables === */
   channel: Channel; // Daten des aktuellen Channels
   activeChannelId: string;
   activeChannelSub: Subscription = new Subscription();
+  channelCreatorName: string;
+  channelMembers = []; // Alle Userdaten der Mitglieder des Channels
+
+  /* === Logged in user - variables === */
   currentUser: string;
-  currentUserData: any;
+  currentUserName: string;
   currentUserSub: Subscription = new Subscription();
+  currentUserData: any;
+
+  /* === Selected user for DM - variables === */
   dmMessages = [];
   activeDmUser: string;
   activeDmUserData: any;
   activeDmUserName: string;
   activeDmUserSub: Subscription = new Subscription();
-  channelMembers = []; // Alle Userdaten der Mitglieder des Channels
-  //members = ["n2gxPYqotIhMceOiDdUSv6Chkiu1", "OS9ntlBZdogfRKDdbni6eZ9yop93", "mJzF8qGauLVZD6ikgG4YS7LXYF22", "gdP2EbmSmMT1CBHW6XDS6TJH1Ou2", "Yic168FhfjbDhxyTsATeQttU3xD2"];
+
+  /* === Thread (channel or DM) variables === */
   channelThreads = []; // Alle Threads des Channels
   channelThreadsDateTime = []; // Hilfsarray mit spezifischen Feldern um die Threads anzuzeigen.
   threadCreationDates = []; // Einfaches Array mit den Erstelldaten der Threads z.B. "21.02.2024"
   threadId: string = '';
   textArea: string = "";
+  subscription: Subscription = new Subscription();
+  threadOpen: boolean = false;
+  threads: Thread[] = [];
+
+  /* === Boolean - variables === */
   typeChannel: boolean = true;
   addMemberDialogOpen: boolean = false;
   channelEditionDialogOpen: boolean = false;
@@ -58,20 +72,8 @@ export class MainChatComponent implements OnInit, OnDestroy {
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
   showProfileCard: boolean = false
-  channelCreatorName: string;
   desktopView: boolean = true;
 
-  subscription: Subscription = new Subscription();
-  threadOpen: boolean = false;
-  threads: Thread[] = [];
-/*   newMember: string = "";
-  newMemberObject = {
-    'userId': 'ikeikeoie',
-    'name': this.newMember,
-    'surname': 'M.',
-    'photo': '../../../assets/img/main-chat/member2.svg'
-  };
- */
   constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       if(value) {
@@ -138,20 +140,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.channelThreadsPath = `channels/${this.activeChannelId}/threads`;
   }
 
-  /**
-   * Retruns the name of the user that has created the acitve channel.
-   * @param userId - id of the user that created the channel
-   * @returns 
-   */
-  async fetchChannelCreatorName(userId: string): Promise<string> {
-    const userRef = doc(this.firestore, "users", userId);
-    const docSnap = await getDoc(userRef);
-    if (docSnap.exists()) {
-      return docSnap.data()['name'] || 'Unbekannt';
-    }
-    return 'Unbekannt';
-  }
-
   /* ================== MAIN CHAT CHANNEL DATA ================== */
   /**
    * Runs all the function to fetch the data for the active channel.
@@ -169,6 +157,16 @@ export class MainChatComponent implements OnInit, OnDestroy {
   loadDmData() {
     this.getcurrentUserData();
     this.getDmUser();
+  }
+
+  /**
+   * Returns the name of the selected dm user.
+   * @param userId - id of the user of the selecte direct message
+   */
+  getcurrentUserData() {
+    onSnapshot(doc(collection(this.firestore, 'users'), this.currentUser), (user) => {
+      this.currentUserData = user.data();
+    });
   }
 
   /**
@@ -191,6 +189,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+
   /**
    * Fetches the data for every channel member an stores them in the channelMembers array.
    * @returns 
@@ -202,7 +201,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
         list.forEach(element => {
           if(this.channel['members'].includes(element.id)) {
             this.channelMembers.push(element.data());
-          }    
+          }
+          if(this.currentUser == element.id) {
+            this.currentUserName = element.data()['name'];
+          }
         });
         this.sortChannelMembers();
     });
@@ -238,16 +240,19 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
-    /**
-   * Returns the name of the selected dm user.
-   * @param userId - id of the user of the selecte direct message
+  /**
+   * Retruns the name of the user that has created the acitve channel.
+   * @param userId - id of the user that created the channel
+   * @returns 
    */
-    getcurrentUserData() {
-      onSnapshot(doc(collection(this.firestore, 'users'), this.currentUser), (user) => {
-        this.currentUserData = user.data();
-      });
+  async fetchChannelCreatorName(userId: string): Promise<string> {
+    const userRef = doc(this.firestore, "users", userId);
+    const docSnap = await getDoc(userRef);
+    if (docSnap.exists()) {
+      return docSnap.data()['name'] || 'Unbekannt';
     }
-  
+    return 'Unbekannt';
+    }
 
   /**
    * Fetches the data of the user that is select in direct messages and sotres them in the activeDmUserData array.
@@ -264,6 +269,18 @@ export class MainChatComponent implements OnInit, OnDestroy {
     });
   }
 
+  /**
+   * Returns the name of the selected dm user.
+   * @param userId - id of the user of the selecte direct message
+   */
+  async getDmUserName(userId: string) {
+    this.activeDmUserName = ""; 
+    const docRef = doc(this.firestore, "users", userId);
+    const docSnap = await getDoc(docRef);   
+    this.activeDmUserName = docSnap.data()['name']; 
+  }
+  
+
 /*   getUserName(userId: string): string {
     const user = this.channelMembers.find(member => member.userId === userId);
     return user ? user.name : 'Unbekannter Benutzer';
@@ -274,28 +291,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
    * @returns 
    */
   getCurrentDmUserMessages() {
-      const q = query(collection(this.firestore, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
-      return onSnapshot(q, (list) => {
-        this.dmMessages = [];
-        list.forEach(dmMessage => {
-            this.dmMessages.push(dmMessage.data());
-          }
-        )
-        this.sortChannelThreadsArray(this.dmMessages);
-        this.getThreadCreationDates(this.dmMessages);
-        console.log('Dm')
-      });
-    }
-
-  /**
-   * Returns the name of the selected dm user.
-   * @param userId - id of the user of the selecte direct message
-   */
-  async getDmUserName(userId: string) {
-    this.activeDmUserName = ""; 
-    const docRef = doc(this.firestore, "users", userId);
-    const docSnap = await getDoc(docRef);   
-    this.activeDmUserName = docSnap.data()['name']; 
+    const q = query(collection(this.firestore, this.dmMessagesPath), orderBy("creationDate", "asc"), limit(20));
+    return onSnapshot(q, (list) => {
+      this.dmMessages = [];
+      list.forEach(dmMessage => {
+          this.dmMessages.push(dmMessage.data());
+        }
+      )
+      this.sortChannelThreadsArray(this.dmMessages);
+      this.getThreadCreationDates(this.dmMessages);
+      console.log('Dm')
+    });
   }
 
   /**
@@ -323,7 +329,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
+   * 1. It transforms the thread creation dates into the date format dd.mm.yyyy. Then it pushes the transformed date in the 
+   * threadCreationDates array, but only if the date not yet exists. This is needed to set up the time separators.
+   * 2. It transforms all the data of a thread into the desired format, to be displayed later in the thread component.
+   * To do so, all the necessary values are pushed in the channelThreadsDateTime array.
+   * 3. It sorts both arrays depending on the creation date (ascending). 
    * @param threadsOrDms - array (channelThreads or dmMessages)
    */
   getThreadCreationDates(threadsOrDms: any) {
@@ -422,7 +432,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * 
+   * It returns the name of the user how created the thread (in channels or DM's).
    * @param userId 
    * @returns 
    */
@@ -446,6 +456,11 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * It returns the url of the profile icon of the user how created the thread (in channels or DM's).
+   * @param userId 
+   * @returns 
+   */
   getImgUrl(userId) {
     if(this.activeChannelId !== null) {
       for (let i = 0; i < this.channelMembers.length; i++) {
@@ -459,6 +474,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * It scrolls to the bottom of the chat to see the current message.
+   */
   scrollToBottom() {
     setTimeout(() => {
       this.mainChat.nativeElement.scroll({
@@ -470,6 +488,10 @@ export class MainChatComponent implements OnInit, OnDestroy {
   } 
 
   /* ================== MAIN CHAT OTHER FUNCTIONS ================== */
+  /**
+   * It shows/hides the needed dialog.
+   * @param dialog - value to toggle the correct dialog
+   */
   toggleDialog(dialog: string) {
     if (dialog == 'addMember') {
       if (this.addMemberDialogOpen == false) {
@@ -492,6 +514,9 @@ export class MainChatComponent implements OnInit, OnDestroy {
     }
   }
 
+  /**
+   * Hides/closes all open dialogs.  
+   */
   closeDialog() {
     this.channelEditionDialogOpen = false;
     this.showMembersDialogOpen = false;
@@ -499,34 +524,52 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.desktopView = false;
   }
 
+  /**
+   * Prevens an unwanted triggering of a function by clicking on an element.
+   * @param $event 
+   */
   doNotClose($event: any) {
     $event.stopPropagation();
   }
 
+  /**
+   * Sets the boolen values to close all dialogs.
+   * @param dialogBoolen - value has true/false
+   */
   setBoolean(dialogBoolen: boolean) {
     this.channelEditionDialogOpen = false;
     this.showMembersDialogOpen = false;
     this.addMemberDialogOpen = false;
   }
 
+  /**
+   * Opens up the add-members-dialog component.
+   * @param addMemberDialogOpen - value has true/false
+   */
   switchToAddMembers(addMemberDialogOpen: boolean) {
     this.addMemberDialogOpen = true;
   }
 
-  sendMessage() {
-    this.scrollToBottom();
-  }
-
+  /**
+   * Opens the messages of the selected thread.
+   * @param threadId - id of the selected thread
+   */
   openThread(threadId: string): void {
     this.chatService.openThread(threadId);
   }
 
+  /**
+   * Subscribes to the threadOpen boolen to constantly get the current value.
+   */
   getThreadOpenStatus(): void {
     this.subscription.add(this.chatService.threadOpen$.subscribe(open => {
       this.threadOpen = open;
     }));
   }
 
+  /**
+   * Subscribes to the threads array to constantly get the current messages of the thread.
+   */
   subscribeToThreads(): void {
     this.subscription.add(
       this.chatService.threads$.subscribe(threads => {
@@ -535,10 +578,17 @@ export class MainChatComponent implements OnInit, OnDestroy {
     );
   }
 
+  /**
+   * Sets the showProfileCard boolen to true to display the profilecards-other-users component.
+   */
   openProfileCard() {
     this.showProfileCard = true;
   }
 
+  /**
+   * Sets the showProfileCard boolen to false to hide the profilecards-other-users component.
+   * @param closeProfileCard 
+   */
   closeProfileCard(closeProfileCard: boolean) {
     this.showProfileCard = false;
   }

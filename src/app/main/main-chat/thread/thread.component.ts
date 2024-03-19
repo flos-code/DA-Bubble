@@ -22,6 +22,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
   @Input() currentUser!: string;
+  @Input() currentUserName!: string;
   @Input() activeDmUser!: string;
   @Input() acitveDmUserData!: any;
   @Input() activeChannelId!: string;
@@ -35,9 +36,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   reactionCollectionPath: string;
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
-  //@Input() textAreaEditMessage: string;
   reactions = [];
-  currentUserName: string;
   reactionNames =  [];
   reactionCount: number;
   messageCountPath: string;
@@ -67,7 +66,6 @@ export class ThreadComponent implements OnInit, OnChanges {
    * Runs all the necessary function to display the thread data.
    */
   loadThreadData() {
-    this.getCurrentUserName();
     this.getReactions();
     if(this.activeChannelId !== null) {
       this.getMessageCountAndAnswer();
@@ -75,19 +73,9 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Gets the user name of the current logged in user form firebase.
-   */
-  async getCurrentUserName() {
-    let docRef = doc(this.firestore, 'users', this.currentUser);
-    const docSnap = await getDoc(docRef);
-    this.currentUserName = docSnap.data()['name'];
-  }
-
-  /**
    * 
    */
   async getReactions() {
-    this.getCurrentUserName();
     const q = query(collection(this.firestore, this.reactionCollectionPath));
     await onSnapshot(q, (element) => {
       this.reactions = [];
@@ -108,7 +96,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
   
   /**
-   * Gets all the reactions form the reactions collection form firebase for the current thread.
+   * Fetches all the reactions form the reactions collection form firebase for the current thread.
    * Pushes the data into the reactionNAmes array.
    * @param reactedByArray 
    */
@@ -257,6 +245,10 @@ export class ThreadComponent implements OnInit, OnChanges {
       });
   }
 
+  /**
+   * Sets the path to the image in the firebase storage.
+   * @param imageURL - Firebase storage URL of the image
+   */
   async downloadImage(imageURL) {
     const storage = getStorage();
     getDownloadURL(ref(storage, imageURL))
@@ -267,6 +259,10 @@ export class ThreadComponent implements OnInit, OnChanges {
       });
   }
 
+  /**
+   * Downloads the image form firebase storage in the in the browser.
+   * @param url - Firebase storage URL of the image
+   */
   async downloadData(url: string) {
     try {
       const response = await fetch(url);
@@ -285,6 +281,10 @@ export class ThreadComponent implements OnInit, OnChanges {
     }
   }
 
+  /**
+   * Opens the selected image in a new browser tab.
+   * @param url - Firebase storage URL of the image
+   */
   openImage(url: string) {
     window.open(url, '_blank');
   }

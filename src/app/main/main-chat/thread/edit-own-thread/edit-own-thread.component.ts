@@ -41,8 +41,6 @@ export class EditOwnThreadComponent implements OnInit {
       this.messagePath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}`;
       this.collectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/`;
     }
-    //this.firestore, `users/${this.currentUser}/allDirectMessages`), this.memberData.id);
-    //this.firestore, `users/${this.memberData.id}/allDirectMessages`), this.currentUser);
     this.textAreaEditMessage = this.thread.message;
   }
 
@@ -54,6 +52,11 @@ export class EditOwnThreadComponent implements OnInit {
     this.ownMessageEditChild.emit(this.ownMessageEdit);
   }
 
+  /**
+   * When editing your own message with image attached, it deletes the image form firestore and sets the "imageUrl" of 
+   * the thread to empty.
+   * @param url - Firebase storage URL of the document
+   */
   async deleteDocument(url) {
     const storage = getStorage();
     const desertRef = ref(storage, url);

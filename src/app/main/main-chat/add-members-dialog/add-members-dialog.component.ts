@@ -19,7 +19,6 @@ import {Firestore, collection, onSnapshot,  query, doc, updateDoc} from '@angula
 export class AddMembersDialogComponent implements OnInit {
   private firestore: Firestore = inject(Firestore);
   @Input() channelData!: any;
-  @Input() channelMembers!: any; 
   @Input() currentChannelId: string;
   @Output() addMemberDialogOpenChild = new EventEmitter();
   addMemberDialogOpen: boolean;

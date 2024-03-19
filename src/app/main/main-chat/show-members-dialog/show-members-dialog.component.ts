@@ -12,7 +12,6 @@ import { ProfilecardsOtherUsersComponent } from './profilecards-other-users/prof
 
 export class ShowMembersDialogComponent implements OnInit {
   @Input() currentUser!: string;
-  @Input() channelData!: any;
   @Input() currentChannelId!: string;
   @Input() channelMembers!: any;
   @Output() showMembersDialogOpenChild = new EventEmitter();

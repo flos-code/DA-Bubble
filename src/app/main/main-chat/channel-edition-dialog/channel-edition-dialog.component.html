@@ -73,7 +73,7 @@
         <!-- ====================================== -->
     
         <!--============== Show members ================-->
-        <app-show-members-dialog *ngIf="showMembersInEditionDialog" [channelData]="channelData" [currentChannelId]="currentChannelId" [channelMembers]="channelMembers" [currentUser]="currentUser" 
+        <app-show-members-dialog *ngIf="showMembersInEditionDialog" [currentChannelId]="currentChannelId" [channelMembers]="channelMembers" [currentUser]="currentUser" 
          (addMemberDialogOpenChild)="openAddMemberMobile(addMemberDialogOpen)">
         </app-show-members-dialog>
     
@@ -112,7 +112,7 @@
     
         <!-- ========= Add members  ========= -->
         <div *ngIf="addMemberDialogOpen" (click)="closeDialog()" class="dialogBackground">
-            <app-add-members-dialog *ngIf="addMemberDialogOpen" [channelData]="channelData" [currentChannelId]="currentChannelId" [channelMembers]="channelMembers" [addMembersMobileView]="addMembersMobileView"
+            <app-add-members-dialog *ngIf="addMemberDialogOpen" [channelData]="channelData" [currentChannelId]="currentChannelId" [addMembersMobileView]="addMembersMobileView"
             (addMemberDialogOpenChild)="closeAddMemberMobile(addMemberDialogOpen)">
             </app-add-members-dialog>    
         </div>

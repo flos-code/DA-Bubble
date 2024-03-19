@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, inject } from '@angular/core';
+import { Component, EventEmitter, Input, Output, inject } from '@angular/core';
 import { MatIconModule } from '@angular/material/icon';
 import { ChatService } from '../../../../services/chat.service';
 import { Firestore, collection, onSnapshot, query, doc, setDoc } from '@angular/fire/firestore';
@@ -11,19 +11,16 @@ import { Firestore, collection, onSnapshot, query, doc, setDoc } from '@angular/
   templateUrl: './profilecards-other-users.component.html',
   styleUrl: './profilecards-other-users.component.scss'
 })
-export class ProfilecardsOtherUsersComponent implements OnInit {
+export class ProfilecardsOtherUsersComponent {
   private firestore: Firestore = inject(Firestore);
   @Input() currentUser!: string;
   @Input() memberData!: any;
-  //@Input() channelMembers!: any;
   @Input() showProfileCard!: boolean;
   @Output() showProfileCardChild = new EventEmitter();
   @Input() showMembersDialogOpen!: boolean;
   @Output() showMembersDialogOpenChild = new EventEmitter();
 
   constructor(private chatService: ChatService) { }
-
-  ngOnInit(): void { }
 
   /**
    * Checks if the currently logged in user already has a DM chat with the selected user.
