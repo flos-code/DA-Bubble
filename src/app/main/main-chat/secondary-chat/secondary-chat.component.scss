@@ -137,7 +137,7 @@ emoji-mart {
 
         .thread-message {
             background-color: white;
-            .messageDocImg {
+            .imgMessage {
                 border: 4px solid $bgColor;
             }
         }
@@ -202,7 +202,7 @@ emoji-mart {
         font-weight: 400;
     }
 
-    .messageDocImg {
+    .imgMessage {
         position: relative;
         display: flex;
         justify-content: center;
@@ -215,9 +215,48 @@ emoji-mart {
          max-height: 150px;
          max-width: 150px;
          border-radius: 10px;
+         } 
+ 
+         &:hover .imgInteraction {
+             display: flex;
+             bottom: 0;
          }
      }
 }
+
+.imgInteraction {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    right: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 5px;
+    border-radius: 0 0 10px 10px;
+    background-color: rgb(255, 255, 255, 0.8);
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    
+      mat-icon {
+        padding: 4px;
+        border-radius: 50%;
+        color: $textGray;
+
+        &:hover {
+          background-color: $bgColor;
+          color: $purple3;
+          font-variation-settings: "wght" 600;
+          cursor: pointer;
+        }
+      }
+    }
+  }
 
 
 .own-action-bar {
@@ -410,7 +449,7 @@ app-text-box {
 /* ===================== RESPONSIVENESS =================== */
 @media(max-width: 500px){
     .thread-message {
-        .messageDocImg {
+        .imgMessage {
            > img {
             max-height: 100px;
             max-width: 100px;

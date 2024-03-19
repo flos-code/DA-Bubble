@@ -47,8 +47,8 @@
     background-color: white;
 }
 
-.messageContainer:hover > .mainMessage > div:nth-of-type(2) > .messageDocImg,
-.messageContainerOwn:hover > .mainMessageOwn > div:nth-of-type(2) > .messageDocImg {
+.messageContainer:hover > .mainMessage > div:nth-of-type(2) .imgMessage,
+.messageContainerOwn:hover > .mainMessageOwn > div:nth-of-type(2) .imgMessage {
     border: 4px solid $bgColor;
 }
 
@@ -102,11 +102,11 @@
         align-items: flex-start;
         justify-content: center;
         gap: 1rem;
-        border-radius: 0px 30px 30px 30px;
+        border-radius: 0px 20px 20px 20px;
         padding: 15px;
         background-color: $bgColor;
 
-        > .mainMessageMessage {
+        .mainMessageMessage {
             display: flex;
             justify-content: flex-start;
             align-items: center;
@@ -114,7 +114,7 @@
             font-weight: 400;
         }
 
-        > .messageDocImg {
+        .imgMessage {
             position: relative;
             display: flex;
             justify-content: center;
@@ -122,15 +122,55 @@
             border: 4px solid white;
             border-radius: 10px;
             > img {
-                min-height: 100px;
-                min-width: 100px;
-                max-height: 250px;
-                max-width: 250px;
-                border-radius: 10px;
-            }
-        }
+             min-height: 100px;
+             min-width: 100px;
+             max-height: 200px;
+             max-width: 200px;
+             border-radius: 10px;
+             } 
+     
+             &:hover .imgInteraction {
+                 display: flex;
+                 bottom: 0;
+             }
+         }
     }
 }
+
+.imgInteraction {
+    position: absolute;
+    bottom: -60px;
+    left: 0;
+    right: 0;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    gap: 12px;
+    padding: 5px;
+    border-radius: 0 0 10px 10px;
+    background-color: rgb(255, 255, 255, 0.8);
+
+    div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: 50%;
+    
+      mat-icon {
+        padding: 4px;
+        border-radius: 50%;
+        color: $textGray;
+
+        &:hover {
+          background-color: $bgColor;
+          color: $purple3;
+          font-variation-settings: "wght" 600;
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
 
 .mainMessageOwn {
     display: flex;
@@ -164,7 +204,7 @@
         align-items: flex-end;
         justify-content: center;
         gap: 1rem;
-        border-radius: 30px 0 30px 30px;
+        border-radius: 20px 0 20px 20px;
         padding: 15px;
         background-color: $bgColor;
 
@@ -176,22 +216,29 @@
             font-weight: 400;
         }
 
-        > .messageDocImg {
+        .imgMessage {
+            position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
             border: 4px solid white;
             border-radius: 10px;
             > img {
-                min-height: 100px;
-                min-width: 100px;
-                max-height: 250px;
-                max-width: 250px;
-                border-radius: 10px;
-            }
-        }
+             min-height: 100px;
+             min-width: 100px;
+             max-height: 200px;
+             max-width: 200px;
+             border-radius: 10px;
+             } 
+     
+             &:hover .imgInteraction {
+                 display: flex;
+                 bottom: 0;
+             }
+         }
     }
 }
+
 
 .mainMessageThreads {
     display: flex;
@@ -594,8 +641,8 @@
         opacity: 1;
     }
 
-    .messageContainer > .mainMessage > div:nth-of-type(2) > .messageDocImg,
-    .messageContainerOwn > .mainMessageOwn > div:nth-of-type(2) > .messageDocImg  {
+    .messageContainer > .mainMessage > div:nth-of-type(2) > .imgMessage,
+    .messageContainerOwn > .mainMessageOwn > div:nth-of-type(2) > .imgMessage  {
         > img {
             max-height: 100px;
             max-width: 100px;

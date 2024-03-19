@@ -15,8 +15,16 @@
                     <div class="mainMessageMessage">
                         {{thread?.message}}
                     </div>
-                    <div *ngIf="thread?.imageUrl" class="messageDocImg">
-                        <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
+                    <div *ngIf="thread?.imageUrl" class="imgMessage">
+                        <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}"/>
+                        <div class="imgInteraction">
+                          <div (click)="downloadImage(thread?.imageUrl)">
+                            <mat-icon class="material-symbols-rounded" fontIcon="download"></mat-icon>
+                          </div>
+                          <div (click)="openImage(thread?.imageUrl)">
+                            <mat-icon class="material-symbols-rounded" fontIcon="open_in_new"></mat-icon>
+                          </div>
+                        </div>    
                     </div>
                 </div>
                 <div class="mainMessageThreads" *ngIf="messageCount > 0">
@@ -119,8 +127,21 @@
                     <div class="mainMessageMessage">
                         {{thread?.message}}
                     </div>
-                    <div *ngIf="thread?.imageUrl" class="messageDocImg">
-                        <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}">
+                    <div>
+                        <div class="mainMessageMessage">
+                            {{thread?.message}}
+                        </div>
+                        <div *ngIf="thread?.imageUrl" class="imgMessage">
+                            <img [src]="thread?.imageUrl" alt="Image uploaded by {{ thread?.createdBy }}"/>
+                            <div class="imgInteraction">
+                              <div (click)="downloadImage(thread?.imageUrl)">
+                                <mat-icon class="material-symbols-rounded" fontIcon="download"></mat-icon>
+                              </div>
+                              <div (click)="openImage(thread?.imageUrl)">
+                                <mat-icon class="material-symbols-rounded" fontIcon="open_in_new"></mat-icon>
+                              </div>
+                            </div>    
+                        </div>
                     </div>
                 </div>
                 <div class="mainMessageThreadsOwn" *ngIf="messageCount > 0">

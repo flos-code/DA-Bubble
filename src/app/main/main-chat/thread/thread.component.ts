@@ -7,11 +7,13 @@ import { MainChatComponent } from '../main-chat.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { ViewManagementService } from '../../../services/view-management.service';
 import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from '@angular/fire/firestore';
+import { MatIconModule } from '@angular/material/icon';
+import { getDownloadURL, getStorage, ref } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionEmojiInputComponent],
+  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionEmojiInputComponent, MatIconModule],
   templateUrl: './thread.component.html',
   styleUrl: './thread.component.scss'
 })
@@ -253,6 +255,38 @@ export class ThreadComponent implements OnInit, OnChanges {
         reaction: emoji,
         reactedBy: [currentUser],
       });
+  }
+
+  async downloadImage(imageURL) {
+    const storage = getStorage();
+    getDownloadURL(ref(storage, imageURL))
+      .then((url) => {
+        this.downloadData(url)
+      })
+      .catch((error) => {
+      });
+  }
+
+  async downloadData(url: string) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) console.log('Error Loading Images');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'Download_from_DABubble';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Fehler beim Herunterladen des Dokuments:', error);
+    }
+  }
+
+  openImage(url: string) {
+    window.open(url, '_blank');
   }
   
   /**

@@ -36,6 +36,7 @@ import { UserManagementService } from '../../../services/user-management.service
 import { TextBoxComponent } from '../../new-message/text-box/text-box.component';
 import { SecondaryChatMessagesComponent } from './secondary-chat-messages/secondary-chat-messages.component';
 import { ViewManagementService } from '../../../services/view-management.service';
+import { MatIconModule } from '@angular/material/icon';
 
 const app = initializeApp(environment.firebase);
 @Component({
@@ -49,6 +50,7 @@ const app = initializeApp(environment.firebase);
     ReactionEmojiInputComponent,
     SecondaryChatMessagesComponent,
     TextBoxComponent,
+    MatIconModule
   ],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss',
@@ -108,7 +110,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     setTimeout(() => this.scrollToBottom(), 200);
   }
 
-  downloadImage(imageUrl: string) {
+/*   downloadImage(imageUrl: string) {
     if (!imageUrl) {
       console.error('No image URL provided');
       return;
@@ -119,8 +121,41 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
+  } */
+
+
+  async downloadImage(imageURL) {
+    const storage = getStorage();
+    getDownloadURL(ref(storage, imageURL))
+      .then((url) => {
+        this.downloadData(url)
+      })
+      .catch((error) => {
+      });
   }
-  
+
+  async downloadData(url: string) {
+    try {
+      const response = await fetch(url);
+      if (!response.ok) console.log('Error Loading Images');
+      const blob = await response.blob();
+      const blobUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = blobUrl;
+      link.download = 'Download_from_DABubble';
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      window.URL.revokeObjectURL(blobUrl);
+    } catch (error) {
+      console.error('Fehler beim Herunterladen des Dokuments:', error);
+    }
+  }
+
+  openImage(url: string) {
+    window.open(url, '_blank');
+  }
+ 
 /**
  * Toggles the edit message field for a given message, allowing the user to start or stop editing a message.
  * If the user decides to edit a different message while already editing one, this method will switch the focus
