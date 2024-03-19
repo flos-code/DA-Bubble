@@ -60,7 +60,7 @@
               >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
             >
           </div>
-          <div *ngIf="firstThreadMessage?.message" class="thread-message own-message">
+          <div *ngIf="firstThreadMessage?.message || firstThreadMessage?.imageUrl" class="thread-message own-message">
             <span>{{ firstThreadMessage?.message }}</span>
             <div *ngIf="firstThreadMessage?.imageUrl" class="imgMessage">
               <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"/>
