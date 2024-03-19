@@ -41,7 +41,7 @@
             </div>
 
             <div class="nameInput">
-                <input [(ngModel)]="newName" type="text" *ngIf="edit" placeholder="{{serviceProfilCard.userNameandSurname}}">
+                <input [class.input-disabled]="serviceProfilCard.guestIsOnline" [disabled]="serviceProfilCard.guestIsOnline" [(ngModel)]="newName" type="text" *ngIf="edit" placeholder="{{serviceProfilCard.userNameandSurname}}">
             </div>
         </div>
 
@@ -64,7 +64,7 @@
             </div>
 
             <div class="emailContainerButton">
-                <input [(ngModel)]="newEmail" type="text" *ngIf="edit" placeholder="{{serviceProfilCard.userEmailAddress}}">
+                <input [class.input-disabled]="serviceProfilCard.guestIsOnline" [disabled]="serviceProfilCard.guestIsOnline" [(ngModel)]="newEmail" type="text" *ngIf="edit" placeholder="{{serviceProfilCard.userEmailAddress}}">
             </div>
         </div>
 
@@ -77,7 +77,7 @@
 
         <div *ngIf="edit" class="editProfilCardButton">
             <div (click)="toggleEdit(!edit)" class="cancelBotton">Abbrechen</div>
-            <button (click)="updateUserData()" class="saveBotton" [disabled]="serviceProfilCard.guestIsOnline">Speichern</button>
+            <button (click)="updateUserData()" class="saveBotton" [class.button-disabled]="serviceProfilCard.guestIsOnline" [disabled]="serviceProfilCard.guestIsOnline">Speichern</button>
         </div>
         <div class="blockEdit" *ngIf="serviceProfilCard.guestIsOnline && edit">Changes in the guest login not possible</div>
     </div>

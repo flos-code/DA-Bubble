@@ -285,3 +285,18 @@
 .mt-17 {
     margin-top: -17px;
 }
+
+.button-disabled{
+    background-color: #9f9f9f !important;
+    border: none !important;
+    &:hover{
+        cursor: default !important;
+        box-shadow: none !important;
+    }
+}
+
+.input-disabled {
+    &:hover{
+        border-color: black !important;
+    }
+}
