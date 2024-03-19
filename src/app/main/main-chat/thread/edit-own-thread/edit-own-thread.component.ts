@@ -92,18 +92,32 @@ export class EditOwnThreadComponent implements OnInit {
    * the doc in the threads or directMessages collection is updated.   
    */
   async saveEditedMessage() {
-    if((this.textAreaEditMessage || this.thread.imageUrl) || (this.textAreaEditMessage || this.messageData.imageUrl)) {
-      let currentThreadRef = doc(this.firestore, this.messagePath);
-      let data = {message: this.textAreaEditMessage };
-
-      await updateDoc(currentThreadRef, data).then(() => {
-      });
-      this.ownMessageEdit = false;
-      this.ownMessageEditChild.emit(this.ownMessageEdit);
+    if(this.messageId) {
+      if(this.textAreaEditMessage || this.messageData.imageUrl) {
+        let currentThreadRef = doc(this.firestore, this.messagePath);
+        let data = {message: this.textAreaEditMessage };
+        await updateDoc(currentThreadRef, data).then(() => {
+        });
+        this.ownMessageEdit = false;
+        this.ownMessageEditChild.emit(this.ownMessageEdit);
+      } else {
+        await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
+        this.ownMessageEdit = false;
+        this.ownMessageEditChild.emit(this.ownMessageEdit);
+      }
     } else {
-      await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
-      this.ownMessageEdit = false;
-      this.ownMessageEditChild.emit(this.ownMessageEdit);
+      if(this.textAreaEditMessage || this.thread.imageUrl) {
+        let currentThreadRef = doc(this.firestore, this.messagePath);
+        let data = {message: this.textAreaEditMessage };
+        await updateDoc(currentThreadRef, data).then(() => {
+        });
+        this.ownMessageEdit = false;
+        this.ownMessageEditChild.emit(this.ownMessageEdit);
+      } else {
+        await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
+        this.ownMessageEdit = false;
+        this.ownMessageEditChild.emit(this.ownMessageEdit);
+      }
     }
   }
 
