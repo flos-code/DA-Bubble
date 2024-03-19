@@ -420,3 +420,15 @@ $bg-color: #ECEEFE;
     }
   }
 }
+
+/* ===================== RESPONSIVENESS =================== */
+@media(max-width: 500px){
+    .thread-message {
+        .messageDocImg {
+           > img {
+            max-height: 100px;
+            max-width: 100px;
+            }
+        }
+    }
+}

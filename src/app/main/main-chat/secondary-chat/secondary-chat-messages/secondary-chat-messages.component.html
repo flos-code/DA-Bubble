@@ -26,8 +26,7 @@
             </button> -->
             
             <div *ngIf="message?.imageUrl" class="imgMessage">
-                <img
-                  [src]="message?.imageUrl"
+                <img                  [src]="message?.imageUrl"
                   alt="Image uploaded by {{ message?.createdBy }}"
                   style="height: 100px; width: 100px; border-radius: 4px"
                 />
@@ -45,7 +44,7 @@
                     ></mat-icon>
                   </div>
                 </div>
-              </div>
+            </div>
 
         </div>
 
@@ -115,14 +114,13 @@
             <button class="add-reaction"></button>
         </div>
     </div>
-
-</div>
     <app-reaction-emoji-input class="reactionOtherMessagesActionbar" *ngIf="showMoreEmojisToolbar"
         [showMoreEmojis]="showMoreEmojis" (showMoreEmojisChild)="closeMoreEmojis(showMoreEmojis)"
         [reactionCollectionPath]="reactionCollectionPath" [currentUser]="currentUser" [reactions]="reactions"
         [threadOrMessageId]="messageId">
     </app-reaction-emoji-input>
 </div>
+
 } @else {
 <!-------------------- Template of own message ------------------------>
 <div class="user-message own-message">
