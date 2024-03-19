@@ -36,6 +36,7 @@ export class ProfilCardService {
   headerUserNameandSurname: string = '';
   currentUserId: string = '';
   otherUserId: string = '';
+  guestIsOnline: boolean = false;
 
   isProfilCardActive: boolean = false;
   isOverlayActive: boolean = false;
@@ -43,6 +44,14 @@ export class ProfilCardService {
   isProfilCardActiveChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   constructor(private chatService: ChatService) { }
+
+  checkIfGuestOnline() {
+    if (this.auth.currentUser.uid == 'qAspx2yXBnc0WtnBRJgVJsDniPC3') {
+      this.guestIsOnline = true;
+    } else {
+      this.guestIsOnline = false;
+    }
+  }
 
   toggleCardOverlay(active: boolean) {
     this.isOverlayActive = active;
@@ -106,22 +115,22 @@ export class ProfilCardService {
     const q = query(collection(this.db, `users/${this.auth.currentUser.uid}/allDirectMessages`));
     return onSnapshot(q, (list) => {
       list.forEach(element => {
-        if(element.id === this.otherUserId) {
+        if (element.id === this.otherUserId) {
           this.chatService.setSelectedUserId(this.otherUserId);
           this.toggleCardOverlay(false);
         } else {
           // Create new DM Chat
           this.addDirectMessage();
           this.toggleCardOverlay(false);
-        }  
+        }
       });
     });
   }
 
-  async addDirectMessage (): Promise<void> {
+  async addDirectMessage(): Promise<void> {
     const dmSenderRef = doc(collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`), this.otherUserId);
     const dmReceiverRef = doc(collection(this.db, `users/${this.otherUserId}/allDirectMessages`), this.currentUserId);
-    let data = { }
+    let data = {}
     await setDoc(dmSenderRef, data);
     await setDoc(dmReceiverRef, data);
     this.chatService.setSelectedUserId(this.otherUserId);
