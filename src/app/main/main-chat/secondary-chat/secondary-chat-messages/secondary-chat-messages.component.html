@@ -107,11 +107,13 @@
         </div>
 
         <div *ngIf="message.message || message?.imageUrl" class="thread-message own-bubble">
-            <div *ngIf="openEditOwnInput; else displayMessage">
+
+            
+<!--             <div *ngIf="openEditOwnInput; else displayMessage">
                 <input class="edit-message-input" [(ngModel)]="editingMessageText" (keyup.enter)="saveMessageChanges()"
                     type="text">
-            </div> -->
-
+            </div>
+ -->
 
             <ng-template #displayMessage>
                 <span *ngIf="!messageDeleted">{{ message.message }}</span>
