@@ -77,7 +77,8 @@
 
         <div *ngIf="edit" class="editProfilCardButton">
             <div (click)="toggleEdit(!edit)" class="cancelBotton">Abbrechen</div>
-            <div (click)="updateUserData()" class="saveBotton">Speichern</div>
+            <button (click)="updateUserData()" class="saveBotton" [disabled]="serviceProfilCard.guestIsOnline">Speichern</button>
         </div>
+        <div class="blockEdit" *ngIf="serviceProfilCard.guestIsOnline && edit">Changes in the guest login not possible</div>
     </div>
 </div>

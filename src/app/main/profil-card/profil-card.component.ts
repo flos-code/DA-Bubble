@@ -47,6 +47,7 @@ export class ProfilCardComponent implements OnInit {
   }
 
   toggleEdit(active: boolean) {
+    this.serviceProfilCard.checkIfGuestOnline();
     this.edit = active;
   }
 

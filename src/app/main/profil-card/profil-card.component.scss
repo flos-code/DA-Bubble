@@ -266,6 +266,8 @@
             color: white;
             transition: 0.2s;
             cursor: pointer;
+            font-size: 18px;
+            font-weight: 700;
 
             &:hover {
                 background-color: #797EF3;
@@ -273,6 +275,11 @@
             }
         }
     }
+}
+
+.blockEdit {
+    text-align: center;
+    color: red;
 }
 
 .mt-17 {
