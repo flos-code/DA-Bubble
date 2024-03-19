@@ -59,6 +59,10 @@ $bg-color: #ECEEFE;
 
         .thread-message {
             background-color: white;
+
+            .messageDocImg {
+                border: 4px solid $bgColor;
+            }
         }
 
         .action-bar {
@@ -77,6 +81,7 @@ $bg-color: #ECEEFE;
 }
 
 .own-bubble {
+    align-items: flex-start;
     border-radius: 20px 0px 20px 20px !important;
     background-color: $purple !important;
 
@@ -105,6 +110,10 @@ $bg-color: #ECEEFE;
 }
 
 .thread-message {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: center;
     max-width: calc(315px - 30px);
     width: fit-content;
     background-color: $bg-color;
@@ -115,6 +124,22 @@ $bg-color: #ECEEFE;
     span {
         font-size: 18px;
         font-weight: 400;
+    }
+
+    .messageDocImg {
+       position: relative;
+       display: flex;
+       justify-content: center;
+       align-items: center;
+       border: 4px solid white;
+       border-radius: 10px;
+       > img {
+        min-height: 100px;
+        min-width: 100px;
+        max-height: 150px;
+        max-width: 150px;
+        border-radius: 10px;
+        }
     }
 }
 
@@ -356,4 +381,16 @@ $bg-color: #ECEEFE;
 
 .mainThreadReactionsOwn {
     flex-direction: row-reverse;
+}
+
+/* ===================== RESPONSIVENESS =================== */
+@media(max-width: 500px){
+    .thread-message {
+        .messageDocImg {
+           > img {
+            max-height: 100px;
+            max-width: 100px;
+            }
+        }
+    }
 }

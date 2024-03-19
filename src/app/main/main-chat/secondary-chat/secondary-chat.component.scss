@@ -137,6 +137,9 @@ emoji-mart {
 
         .thread-message {
             background-color: white;
+            .messageDocImg {
+                border: 4px solid $bgColor;
+            }
         }
 
         .action-bar {
@@ -183,15 +186,10 @@ emoji-mart {
 }
 
 .thread-message {
-    /* ----- Änderung Tobias ------- */
-/*     display: flex;
+    display: flex;
     flex-direction: column;
     align-items: flex-start;
     justify-content: center;
-    gap: 1rem; */
-    /* ----- ------- ------- ------- */
-
-
     max-width: calc(315px - 30px);
     width: fit-content;
     background-color: $bg-color;
@@ -203,6 +201,22 @@ emoji-mart {
         font-size: 18px;
         font-weight: 400;
     }
+
+    .messageDocImg {
+        position: relative;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border: 4px solid white;
+        border-radius: 10px;
+        > img {
+         min-height: 100px;
+         min-width: 100px;
+         max-height: 150px;
+         max-width: 150px;
+         border-radius: 10px;
+         }
+     }
 }
 
 
@@ -389,5 +403,18 @@ app-text-box {
 
     .purple-line {
       width: 60%;
+    }
+}
+
+
+/* ===================== RESPONSIVENESS =================== */
+@media(max-width: 500px){
+    .thread-message {
+        .messageDocImg {
+           > img {
+            max-height: 100px;
+            max-width: 100px;
+            }
+        }
     }
 }
