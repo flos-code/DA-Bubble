@@ -294,3 +294,9 @@
         box-shadow: none !important;
     }
 }
+
+.input-disabled {
+    &:hover{
+        border-color: black !important;
+    }
+}
