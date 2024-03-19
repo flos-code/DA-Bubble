@@ -8,7 +8,7 @@ import { ShowMembersDialogComponent } from './show-members-dialog/show-members-d
 import { AddMembersDialogComponent } from './add-members-dialog/add-members-dialog.component';
 import { SecondaryChatComponent } from './secondary-chat/secondary-chat.component';
 import { ChatService } from '../../services/chat.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { Channel } from '../../../models/channel.class';
 import { Thread } from '../../../models/thread.class';
 import { ThreadComponent } from './thread/thread.component';
@@ -16,6 +16,7 @@ import { UserManagementService } from '../../services/user-management.service';
 import { TextBoxComponent } from '../new-message/text-box/text-box.component';
 import { ProfilecardsOtherUsersComponent } from './show-members-dialog/profilecards-other-users/profilecards-other-users.component';
 import { Firestore, collection, doc, getDoc, limit, onSnapshot, orderBy, query } from '@angular/fire/firestore';
+import { ViewManagementService } from '../../services/view-management.service';
 
 @Component({
   selector: 'app-main-chat',
@@ -28,6 +29,8 @@ import { Firestore, collection, doc, getDoc, limit, onSnapshot, orderBy, query }
 
 export class MainChatComponent implements OnInit, OnDestroy {
   /* === Other - variables === */
+  screensize: string;
+  screensizeSub: Subscription = new Subscription();
   private firestore: Firestore = inject(Firestore);
   @ViewChild('mainChat') private mainChat: ElementRef;
   dmMessagesPath = '';
@@ -74,7 +77,15 @@ export class MainChatComponent implements OnInit, OnDestroy {
   showProfileCard: boolean = false
   desktopView: boolean = true;
 
-  constructor(public chatService: ChatService, private userManagementService: UserManagementService) {
+  constructor(public chatService: ChatService, private userManagementService: UserManagementService,
+    private viewService: ViewManagementService) {
+    this.screensizeSub = viewService.screenSize$.subscribe((value) => {
+      if(value) {
+        this.screensize = value;
+        console.log("Screensize", this.screensize)
+      }
+    });
+
     this.currentUserSub = userManagementService.activeUserId$.subscribe((value) => {
       if(value) {
         this.currentUser = value;
@@ -118,7 +129,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.currentUserSub.unsubscribe();
     this.activeDmUserSub.unsubscribe();
   }
-  
+ 
   /**
   *
   * Sets the boolean values of variables to ture, if the screensize is smaller or equal to 500px.

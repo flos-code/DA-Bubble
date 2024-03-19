@@ -330,7 +330,8 @@ app-thread {
         height: calc(100vh  - 230px);
     }
 
-    .mainChatContainer {
+    .mainChatContainer,
+    .mainChatHeader {
         border-radius: 0;
     }
 
