@@ -29,6 +29,7 @@ export class ViewManagementService {
   showSidebarToggle$ = this.showSidebarToggle.asObservable();
 
   public showMainChat$: Observable<boolean>;
+  public defaultLogoVisible$: Observable<boolean>;
 
   constructor() {
     this.updateScreenSize(window.innerWidth);
@@ -41,6 +42,12 @@ export class ViewManagementService {
       map(
         ([showChannel, showDirectMessage]) => showChannel || showDirectMessage
       )
+    );
+
+    this.defaultLogoVisible$ = combineLatest([this.screenSize$, this.showSidebar$]).pipe(
+      map(([screenSize, showSidebar]) => {
+        return !(screenSize === 'small' || screenSize === 'extraSmall') || showSidebar;
+      })
     );
   }
 
