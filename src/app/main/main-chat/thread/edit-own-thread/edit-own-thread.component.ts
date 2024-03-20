@@ -101,7 +101,8 @@ export class EditOwnThreadComponent implements OnInit {
         this.ownMessageEdit = false;
         this.ownMessageEditChild.emit(this.ownMessageEdit);
       } else {
-        await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
+        await deleteDoc(doc(this.firestore, `channels/${this.activeChannelId}/threads/${this.messageThreadId}/messages`, this.messageId));
+        // await deleteDoc(doc(this.firestore, this.collectionPath, this.thread.threadId));
         this.ownMessageEdit = false;
         this.ownMessageEditChild.emit(this.ownMessageEdit);
       }
