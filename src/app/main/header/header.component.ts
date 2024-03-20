@@ -88,11 +88,14 @@ export class HeaderComponent implements OnInit {
     })
   }
 
+  /**
+ * Handles input change in the search bar.
+ */
   onInputChange() {
-    if(this.inputValue.startsWith('@')) {
+    if (this.inputValue.startsWith('@')) {
       this.searchService.seachUsersAt(this.inputValue);
-    } 
-    if(this.inputValue.startsWith('#')) {
+    }
+    if (this.inputValue.startsWith('#')) {
       this.searchService.searchChannelsAt(this.inputValue);
     }
     this.searchService.searchUsers(this.inputValue);
@@ -101,25 +104,46 @@ export class HeaderComponent implements OnInit {
     // console.log(this.searchService.threads);
   }
 
+  /**
+   * Opens a thread from the search bar results.
+   * @param {string} threadId - The ID of the thread to open.
+   * @param {string} channelId - The ID of the channel containing the thread.
+   */
   openThreadfromSearchbar(threadId: string, channelId: string) {
     this.chatService.setActiveChannelId(channelId);
     this.chatService.openThread(threadId);
     this.viewManagementService.setView('secondaryChat');
   }
 
+  /**
+   * Checks if the length of the input value is greater than one.
+   * @returns {boolean} - Returns true if the length of the input value is greater than one, otherwise false.
+   */
   isInputValueGreaterThanOne(): boolean {
     return this.inputValue.length > 0;
   }
 
+  /**
+  * Handles clicks on menu items.
+  * @param {string} option - The clicked option.
+  */
   menuItemClicked(option: string) {
     console.log('Option clicked:', option);
   }
 
+  /**
+   * Toggles the overlay and dropdown menu visibility.
+   * @param {boolean} active - Determines whether to activate or deactivate the overlay and dropdown menu.
+   */
   toggleOverlay(active: boolean) {
     this.isOverlayActive = active;
     this.showDropdownMenu = active;
   }
 
+  /**
+    * Toggles the dropdown menu visibility.
+    * @param {boolean} active - Determines whether to activate or deactivate the dropdown menu.
+    */
   toggleDropdownMenu(active: boolean) {
     this.serviceProfilCard.getTheLoggedInUser();
     this.showDropdownMenu = active;
@@ -129,10 +153,20 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /**
+     * Opens or closes the profile menu.
+     * @param {boolean} active - Determines whether to open or close the profile menu.
+     */
   openProfil(active: boolean): void {
     this.showProfil = active;
   }
 
+  /**
+     * Signs out the user from the application.
+     * Updates the user's online status in the database.
+     * Navigates the user to the login page after sign-out.
+     * @returns {Promise<void>}
+     */
   async signOut() {
     if (this.auth.currentUser.uid) {
       let userRef = doc(db, "users", this.auth.currentUser.uid);
@@ -153,6 +187,10 @@ export class HeaderComponent implements OnInit {
 
   ///////////////////////// closes the resultFeld when clicking outside of it /////////////////////////
 
+  /**
+     * Handles document click event to close the search field result.
+     * @param {MouseEvent} event - The mouse event object.
+     */
   onDocumentClick(event: MouseEvent) {
     const clickedElement = event.target as HTMLElement;
     const isClickedOutside = !this.isDescendant(clickedElement, 'searchField');
@@ -161,12 +199,21 @@ export class HeaderComponent implements OnInit {
     }
   }
 
+  /**
+    * Handles result click event to clear the input value.
+    */
   onResultClick() {
     if (this.inputValue) {
       this.inputValue = '';
     }
   }
 
+  /**
+     * Checks if an element is a descendant of a given class.
+     * @param {HTMLElement} element - The HTML element to check.
+     * @param {string} className - The class name to check against.
+     * @returns {boolean} - Returns true if the element is a descendant of the class, otherwise false.
+     */
   private isDescendant(element: HTMLElement, className: string): boolean {
     if (!element) return false;
 
@@ -177,7 +224,9 @@ export class HeaderComponent implements OnInit {
     }
   }
 
-
+  /**
+     * Shows the sidebar by setting the active channel and user to null and updating the view.
+     */
   showSidebar() {
     this.chatService.setActiveChannelId(null);
     this.chatService.setSelectedUserId(null);
