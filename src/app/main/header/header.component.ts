@@ -4,7 +4,7 @@ import { ProfilCardComponent } from '../profil-card/profil-card.component';
 import { CommonModule } from '@angular/common';
 import { initializeApp } from "firebase/app";
 import { collection, getFirestore, doc, updateDoc } from "firebase/firestore";
-import { getAuth } from 'firebase/auth';
+import { getAuth, onAuthStateChanged  } from 'firebase/auth';
 import { Router } from '@angular/router';
 import { ProfilCardService } from '../../services/profil-card.service';
 import { MatIconModule } from '@angular/material/icon';
@@ -36,7 +36,13 @@ export class HeaderComponent implements OnInit {
   authSubscription: any;
 
   ngOnInit(): void {
-
+    onAuthStateChanged(this.auth, (user) => {
+      if (!user) {
+        this.router.navigateByUrl('/login');
+      } else {
+        this.userLoaded = true;
+      }
+    });
   }
 
   auth = getAuth(app);
@@ -46,7 +52,7 @@ export class HeaderComponent implements OnInit {
   headerUserNameandSurname: string;
   headerProfilePic: string;
   currentUser;
-
+  userLoaded: boolean = false;
   isOverlayActive: boolean = false;
   currentUserProfil: boolean = false;
   showProfil: boolean = false;

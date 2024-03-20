@@ -52,6 +52,7 @@ export class MainComponent implements OnInit {
   auth = getAuth(app);
   subscription: Subscription = new Subscription();
   threadOpen: boolean = false;
+  userLoaded: boolean = false;
 
   constructor(
     public chatService: ChatService,
@@ -73,7 +74,7 @@ export class MainComponent implements OnInit {
       if (!user) {
         this.router.navigateByUrl('/login');
       } else {
-
+        this.userLoaded = true;
       }
     });
   }

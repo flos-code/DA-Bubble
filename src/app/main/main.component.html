@@ -1,6 +1,6 @@
 <app-header></app-header>
 
-<div class="main-content" style="height: clac(100vh-120px);">
+<div *ngIf="userLoaded" class="main-content" style="height: clac(100vh-120px);">
   <app-side-bar *ngIf="viewManagementService.showSidebar$ | async"></app-side-bar>
   <app-main-chat *ngIf="viewManagementService.showMainChat$ | async"></app-main-chat>
   <!-- <app-main-chat
