@@ -5,7 +5,7 @@
         <div class="left-header">
             <img src="assets/img/Logo.png" alt="">
             <h1>DABubble</h1>
-            <div *ngIf="!searchBarActive" (click)="showSidebar()"> 
+            <div *ngIf="!searchBarActive" (click)="showSidebar()">
                 <svg class="svg-hide-worspace">
                     <use (click)="showSidebar()" xlink:href="./assets/img/toggleWorkspaceSymbols.svg#svg-hide-worspace"
                         xmlns:xlink="http://www.w3.org/1999/xlink"></use>
@@ -25,9 +25,12 @@
                 <div *ngIf="searchService.searchUserResult.length > 0" class="userResult">
                     <h4>Users:</h4>
                     <ng-container *ngFor="let result of searchService.searchUserResult">
+                        <div (click)="serviceProfilCard.toggleProfilCard(true, false, result['id']); onResultClick()" class="userResultContainer">
+                            <img src="{{ result['imgUrl'] }}" alt="">
                         <p (click)="serviceProfilCard.toggleProfilCard(true, false, result['id']); onResultClick()">{{
                             result['name'] }}
                         </p>
+                        </div>
                     </ng-container>
                 </div>
 
@@ -45,7 +48,8 @@
                         <div class="threadsContainer">
                             <h4 (click)="chatService.setActiveChannelId(result['id']); onResultClick()">[Channel: {{
                                 result['channelName'] }}]</h4>
-                            <p (click)="openThreadfromSearchbar( result['messageId'], result['id'] ); onResultClick()">*{{
+                            <p (click)="openThreadfromSearchbar( result['messageId'], result['id'] ); onResultClick()">
+                                *{{
                                 result['message'] }}*</p>
                         </div>
                     </ng-container>

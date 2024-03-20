@@ -252,6 +252,27 @@
     display: none;
 }
 
+.userResultContainer {
+    display: flex;
+    align-items: center;
+    cursor: pointer;
+
+    p {
+        margin-left: 10px;
+    }
+
+    img {
+        margin-left: 45px;
+        height: 40px;
+        width: 40px;
+        border-radius: 100%;
+    }
+
+    &:hover {
+        transform: scale(1.01);
+    }
+}
+
 @media(max-width: 1110px) {
     .headerSearchField {
         margin-left: 16px;
