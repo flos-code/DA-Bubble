@@ -3,12 +3,14 @@
 @media screen and (max-width: 1110px) {
   .sideBarContainer {
     width: calc(100vw - 32px);
+    height: calc(100vh - 200px);;
 
     .sideBarContent {
       width: 100%;
       margin-bottom: 16px;
       align-items: flex-start;
       position: relative;
+      border-radius: 0 0 30px 30px;
 
       .sideBardHeader {
         display: none;

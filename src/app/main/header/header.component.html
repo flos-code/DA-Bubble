@@ -78,7 +78,7 @@
 </div>
 
 
-<div *ngIf="searchBarActive">
+<div *ngIf="viewManagementService.showSidebar$ | async">
     <div class="sidebarSearchField" (document:click)="onDocumentClick($event)">
         <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
             <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"
