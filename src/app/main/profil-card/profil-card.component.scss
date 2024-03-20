@@ -279,7 +279,7 @@
 
 .blockEdit {
     text-align: center;
-    color: red;
+    color: rgb(0, 0, 0);
 }
 
 .mt-17 {
@@ -296,7 +296,12 @@
 }
 
 .input-disabled {
+    border-color: #9f9f9f !important;
     &:hover{
-        border-color: black !important;
+        border-color: #9f9f9f !important;
     }
+}
+
+.icon-and-title-disabled{
+    color: #9f9f9f;
 }
