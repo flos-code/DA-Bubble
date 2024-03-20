@@ -5,7 +5,7 @@
         <div class="left-header">
             <img src="assets/img/Logo.png" alt="">
             <h1>DABubble</h1>
-            <div (click)="showSidebar()"> 
+            <div *ngIf="!searchBarActive" (click)="showSidebar()"> 
                 <svg class="svg-hide-worspace">
                     <use (click)="showSidebar()" xlink:href="./assets/img/toggleWorkspaceSymbols.svg#svg-hide-worspace"
                         xmlns:xlink="http://www.w3.org/1999/xlink"></use>
@@ -74,7 +74,7 @@
 </div>
 
 
-<div>
+<div *ngIf="searchBarActive">
     <div class="sidebarSearchField" (document:click)="onDocumentClick($event)">
         <div class="input-container" [ngClass]="{'input-over-one': isInputValueGreaterThanOne()}">
             <input type="text" placeholder="Code learning durchsuchen" [(ngModel)]="inputValue"

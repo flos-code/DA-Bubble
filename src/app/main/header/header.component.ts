@@ -52,6 +52,7 @@ export class HeaderComponent implements OnInit {
   showProfil: boolean = false;
   showDropdownMenu: boolean = false;
   inputValue: string = ''; // Initialisierung der Variable
+  searchBarActive: boolean = true;
 
   firebaseConfig = {
     apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
@@ -76,6 +77,15 @@ export class HeaderComponent implements OnInit {
     this.serviceProfilCard.isProfilCardActiveChanged.subscribe((isActive: boolean) => {
       this.showDropdownMenu = isActive; // Update local variable when service variable changes
     });
+
+    this.chatService.isSearchbarActive.subscribe((value) => {
+      console.log('Wir sind hier:', value);
+      if (value !== null) {
+        this.searchBarActive = false;
+      } else {
+        this.searchBarActive = true;
+      }
+    })
   }
 
   onInputChange() {
