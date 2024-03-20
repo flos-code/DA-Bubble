@@ -1,4 +1,4 @@
-import { Injectable, inject } from '@angular/core';
+import { EventEmitter, Injectable, inject } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 import { Firestore, collection, getDocs } from '@angular/fire/firestore';
 import { Thread } from '../../models/thread.class';
@@ -10,6 +10,7 @@ export class ChatService {
   private activeChannelId: string;
   private selectedUserId: string;
   private firestore: Firestore = inject(Firestore);
+  isSearchbarActive: EventEmitter<string> = new EventEmitter<string>();
 
   private threadOpenSource = new BehaviorSubject<boolean>(false);
   threadOpen$ = this.threadOpenSource.asObservable();
@@ -42,6 +43,7 @@ export class ChatService {
    * @param {string} channelId - The ID of the channel to be set as active.
    */
   setActiveChannelId(channelId: string) {
+    this.isSearchbarActive.next(channelId);
     this.activeChannelId = channelId;
     this.selectedUserId = null;
     this.activeChannelIdUpdated.next(channelId);
