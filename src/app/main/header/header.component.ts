@@ -89,6 +89,12 @@ export class HeaderComponent implements OnInit {
   }
 
   onInputChange() {
+    if(this.inputValue.startsWith('@')) {
+      this.searchService.seachUsersAt(this.inputValue);
+    } 
+    if(this.inputValue.startsWith('#')) {
+      this.searchService.searchChannelsAt(this.inputValue);
+    }
     this.searchService.searchUsers(this.inputValue);
     this.searchService.searchChannels(this.inputValue);
     this.searchService.searchThreads(this.inputValue);

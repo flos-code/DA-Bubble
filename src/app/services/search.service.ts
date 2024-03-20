@@ -1,10 +1,7 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { debugErrorMap, getAuth } from 'firebase/auth';
-import { DocumentData, DocumentSnapshot, QuerySnapshot, collection, getFirestore, where, query, onSnapshot, doc } from 'firebase/firestore';
-import { list } from 'firebase/storage';
-import { Observable } from 'rxjs';
-import { elementAt, map } from 'rxjs/operators';
+import { getAuth } from 'firebase/auth';
+import { collection, getFirestore, query, onSnapshot, doc } from 'firebase/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -33,7 +30,12 @@ export class SearchService {
 
   constructor() { }
 
-  searchUsers(input: any) {
+  /**
+ * Searches for users based on the provided input.
+ * @param {string} input - The input to search for in user names.
+ * @returns {Observable} - Returns an observable that emits user search results.
+ */
+  searchUsers(input: string) {
     this.searchUserResult = [];
     let q = query(this.userRef);
     return onSnapshot(q, (list) => {
@@ -47,7 +49,31 @@ export class SearchService {
     })
   }
 
-  searchChannels(input: any) {
+  /**
+ * Searches for users whose names contain a specific substring after an '@' symbol.
+ * @param {string} input - The input after the '@' symbol to search for in user names.
+ * @returns {Observable} - Returns an observable that emits user search results.
+ */
+  seachUsersAt(input: string) {
+    this.searchUserResult = [];
+    let q = query(this.userRef);
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        let compare = element.data()['name'].toLowerCase();
+        let result = element.data();
+        if (compare.includes(input.slice(1).toLowerCase())) {
+          this.searchUserResult.push(result);
+        }
+      })
+    })
+  }
+
+  /**
+   * Searches for channels based on the provided input.
+   * @param {string} input - The input to search for in channel names.
+   * @returns {Observable} - Returns an observable that emits channel search results.
+   */
+  searchChannels(input: string) {
     this.searchChannelsResult = [];
     let q = query(this.channelRef);
     return onSnapshot(q, (list) => {
@@ -65,6 +91,34 @@ export class SearchService {
     })
   }
 
+  /**
+   * Searches for channels whose names contain a specific substring after an '@' symbol.
+   * @param {string} input - The input after the '@' symbol to search for in channel names.
+   * @returns {Observable} - Returns an observable that emits channel search results.
+   */
+  searchChannelsAt(input: string) {
+    this.searchChannelsResult = [];
+    let q = query(this.channelRef);
+    return onSnapshot(q, (list) => {
+      list.forEach(element => {
+        let compare = element.data()['name'].toLowerCase();
+        let result = element.data();
+        let docId = element.id;
+        let members = element.data()['members'];
+        if (members.includes(this.auth.currentUser.uid)) {
+          if (compare.includes(input.slice(1).toLowerCase())) {
+            this.searchChannelsResult.push({ id: docId, ...result });
+          }
+        }
+      })
+    })
+  }
+
+  /**
+    * Searches for threads based on the provided input.
+    * @param {string} input - The input to search for in thread messages.
+    * @returns {Observable} - Returns an observable that emits thread search results.
+    */
   searchThreads(input: string) {
     this.threads = [];
     let q = query(this.channelRef);
@@ -80,6 +134,12 @@ export class SearchService {
     });
   }
 
+  /**
+  * Finds threads within a specific channel based on the provided input.
+  * @param {string} input - The input to search for in thread messages.
+  * @param {string} docId - The ID of the channel to search for threads within.
+  * @param {string} channelName - The name of the channel.
+  */
   findThreads(input: string, docId: string, channelName: string) {
     let channelDocRef = doc(this.channelRef, docId);
     let threadsRef = collection(channelDocRef, 'threads');
@@ -93,6 +153,10 @@ export class SearchService {
     });
   }
 
+  /**
+ * Checks if there are no search results found.
+ * @returns {boolean} - Returns true if no search results are found, otherwise false.
+ */
   noResultFound() {
     if (this.searchChannelsResult.length === 0 && this.searchUserResult.length === 0 && this.threads.length === 0) {
       return true;
