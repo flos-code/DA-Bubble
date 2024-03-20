@@ -36,8 +36,8 @@
 
         <div *ngIf="edit">
             <div class="editNameContainer">
-                <mat-icon class="material-symbols-outlined" fontIcon="account_circle"></mat-icon>
-                <h3>Vollständiger Name</h3>
+                <mat-icon [class.icon-and-title-disabled]="serviceProfilCard.guestIsOnline" class="material-symbols-outlined" fontIcon="account_circle"></mat-icon>
+                <h3 [class.icon-and-title-disabled]="serviceProfilCard.guestIsOnline">Vollständiger Name</h3>
             </div>
 
             <div class="nameInput">
@@ -59,8 +59,8 @@
 
         <div class="mt-17" *ngIf="edit">
             <div class="emailContainerTop">
-                <mat-icon class="material-symbols-outlined" fontIcon="mail"></mat-icon>
-                <span>E-Mail-Adresse</span>
+                <mat-icon [class.icon-and-title-disabled]="serviceProfilCard.guestIsOnline" class="material-symbols-outlined" fontIcon="mail"></mat-icon>
+                <span [class.icon-and-title-disabled]="serviceProfilCard.guestIsOnline">E-Mail-Adresse</span>
             </div>
 
             <div class="emailContainerButton">
@@ -79,6 +79,6 @@
             <div (click)="toggleEdit(!edit)" class="cancelBotton">Abbrechen</div>
             <button (click)="updateUserData()" class="saveBotton" [class.button-disabled]="serviceProfilCard.guestIsOnline" [disabled]="serviceProfilCard.guestIsOnline">Speichern</button>
         </div>
-        <div class="blockEdit" *ngIf="serviceProfilCard.guestIsOnline && edit">Changes in the guest login not possible</div>
+        <div class="blockEdit" *ngIf="serviceProfilCard.guestIsOnline && edit">* Änderungen am Gast Profil sind nicht möglich</div>
     </div>
 </div>
