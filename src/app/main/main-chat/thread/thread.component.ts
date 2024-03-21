@@ -8,7 +8,7 @@ import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-em
 import { ViewManagementService } from '../../../services/view-management.service';
 import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
-import { getDownloadURL, getStorage, ref } from '@angular/fire/storage';
+import { getDownloadURL, getMetadata, getStorage, ref } from '@angular/fire/storage';
 
 @Component({
   selector: 'app-thread',
@@ -251,27 +251,30 @@ export class ThreadComponent implements OnInit, OnChanges {
    */
   async downloadImage(imageURL) {
     const storage = getStorage();
-    getDownloadURL(ref(storage, imageURL))
-      .then((url) => {
-        this.downloadData(url)
-      })
-      .catch((error) => {
-      });
+    const storageRef = ref(storage, imageURL);
+  
+    try {
+      const url = await getDownloadURL(storageRef);
+      const metadata = await getMetadata(storageRef);
+      this.downloadData(url, metadata.name);
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Datei oder Metadaten:', error);
+    }
   }
 
   /**
    * Downloads the image form firebase storage in the in the browser.
    * @param url - Firebase storage URL of the image
    */
-  async downloadData(url: string) {
+  async downloadData(url: string, filename: string) {
     try {
       const response = await fetch(url);
-      if (!response.ok) console.log('Error Loading Images');
+      if (!response.ok) throw new Error('Netzwerkantwort war nicht ok.');
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = 'Download_from_DABubble';
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
