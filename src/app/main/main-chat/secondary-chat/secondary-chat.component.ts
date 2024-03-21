@@ -21,7 +21,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { environment } from '../../../../environments/environment.development';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, getMetadata } from "firebase/storage";
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
@@ -110,47 +110,55 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     setTimeout(() => this.scrollToBottom(), 200);
   }
 
-/*   downloadImage(imageUrl: string) {
-    if (!imageUrl) {
-      console.error('No image URL provided');
-      return;
-    }
+/**
+ * Asynchronously downloads a file from a given storage reference URL and initiates a download in the browser.
+ * This function retrieves both the download URL and metadata for a file from Firebase storage,
+ * then calls `downloadData` to handle the actual download.
+ *
+ * @param {string} imageURL - The reference URL to the file in Firebase storage.
+ * @throws Will throw an error if it fails to retrieve the file's URL or metadata.
+ */
+async downloadImage(imageURL) {
+  const storage = getStorage();
+  const storageRef = ref(storage, imageURL);
+
+  try {
+    const url = await getDownloadURL(storageRef);
+    const metadata = await getMetadata(storageRef);
+    this.downloadData(url, metadata.name);
+  } catch (error) {
+    console.error('Fehler beim Abrufen der Datei oder Metadaten:', error);
+  }
+}
+
+/**
+ * Initiates the download of a file given its URL and a filename.
+ * This function creates a blob from the response of a fetch request to the file's URL,
+ * then creates a temporary link element to trigger the download.
+ *
+ * @param {string} url - The URL of the file to download.
+ * @param {string} filename - The name to give the downloaded file.
+ * @throws Will throw an error if the network response is not ok or if the document cannot be downloaded.
+ */
+async downloadData(url, filename) {
+  try {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error('Netzwerkantwort war nicht ok.');
+    const blob = await response.blob();
+    const blobUrl = window.URL.createObjectURL(blob);
     const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'downloadedImage.jpg';
+    link.href = blobUrl;
+    link.download = filename;
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-  } */
-
-
-  async downloadImage(imageURL) {
-    const storage = getStorage();
-    getDownloadURL(ref(storage, imageURL))
-      .then((url) => {
-        this.downloadData(url)
-      })
-      .catch((error) => {
-      });
+    window.URL.revokeObjectURL(blobUrl);
+  } catch (error) {
+    console.error('Fehler beim Herunterladen des Dokuments:', error);
   }
+}
 
-  async downloadData(url: string) {
-    try {
-      const response = await fetch(url);
-      if (!response.ok) console.log('Error Loading Images');
-      const blob = await response.blob();
-      const blobUrl = window.URL.createObjectURL(blob);
-      const link = document.createElement('a');
-      link.href = blobUrl;
-      link.download = 'Download_from_DABubble';
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-      window.URL.revokeObjectURL(blobUrl);
-    } catch (error) {
-      console.error('Fehler beim Herunterladen des Dokuments:', error);
-    }
-  }
+  
 
   openImage(url: string) {
     window.open(url, '_blank');
