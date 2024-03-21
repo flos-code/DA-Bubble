@@ -21,7 +21,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { environment } from '../../../../environments/environment.development';
-import { getStorage, ref, getDownloadURL } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, getMetadata } from "firebase/storage";
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
@@ -110,39 +110,28 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     setTimeout(() => this.scrollToBottom(), 200);
   }
 
-/*   downloadImage(imageUrl: string) {
-    if (!imageUrl) {
-      console.error('No image URL provided');
-      return;
-    }
-    const link = document.createElement('a');
-    link.href = imageUrl;
-    link.download = 'downloadedImage.jpg';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-  } */
-
-
   async downloadImage(imageURL) {
     const storage = getStorage();
-    getDownloadURL(ref(storage, imageURL))
-      .then((url) => {
-        this.downloadData(url)
-      })
-      .catch((error) => {
-      });
+    const storageRef = ref(storage, imageURL);
+  
+    try {
+      const url = await getDownloadURL(storageRef);
+      const metadata = await getMetadata(storageRef);
+      this.downloadData(url, metadata.name);
+    } catch (error) {
+      console.error('Fehler beim Abrufen der Datei oder Metadaten:', error);
+    }
   }
-
-  async downloadData(url: string) {
+  
+  async downloadData(url: string, filename: string) {
     try {
       const response = await fetch(url);
-      if (!response.ok) console.log('Error Loading Images');
+      if (!response.ok) throw new Error('Netzwerkantwort war nicht ok.');
       const blob = await response.blob();
       const blobUrl = window.URL.createObjectURL(blob);
       const link = document.createElement('a');
       link.href = blobUrl;
-      link.download = 'Download_from_DABubble';
+      link.download = filename;
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -151,6 +140,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error('Fehler beim Herunterladen des Dokuments:', error);
     }
   }
+  
 
   openImage(url: string) {
     window.open(url, '_blank');

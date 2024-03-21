@@ -304,97 +304,6 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   }
 
   /**
-   * Saves changes made to a message or deletes the message if the edited text is empty.
-   * This method determines the course of action based on whether the message text is empty
-   * and either updates the Firestore document with new text or deletes the message after a delay.
-   */
-
-/*   async saveMessageChanges() {
-    const messageRef = this.getMessageRef();
-
-    if (this.shouldDeleteMessage()) {
-      await this.deleteMessageWithDelay(messageRef);
-    } else {
-      await this.updateMessageText(messageRef);
-    }
-
-    this.resetEditingState();
-  } */
-
-  /**
-   * Constructs and returns a Firestore document reference for the current message.
-   * This reference is used for updating or deleting the message in Firestore.
-   * 
-   * @returns A Firestore document reference to the current message.
-   */
-
-/*   private getMessageRef() {
-    return doc(this.firestore, `channels/${this.activeChannelId}/threads/${this.threadId}/messages`, this.messageId);
-  } */
-
-  /**
-   * Determines whether the current message should be deleted, based on its text content.
-   * 
-   * @returns {boolean} True if the message text is empty and the message should be deleted; false otherwise.
-   */
- /*  private shouldDeleteMessage() {
-    return this.editingMessageText === '' || undefined;
-  } */
-
-  /**
-   * Deletes the current message from Firestore after a specified delay.
-   * Also sets UI flags to reflect that the message is in the process of being deleted.
-   * 
-   * @param {any} messageRef - The Firestore document reference to the message being deleted.
-   */
-/*   private async deleteMessageWithDelay(messageRef) {
-    this.setMessageAsDeleted();
-    setTimeout(async () => {
-      await deleteDoc(messageRef);
-      this.resetMessageDeletedState();
-    }, 1000); // Delay in milliseconds before deletion
-  } */
-
-
-  /**
-  * Updates the text of a message in Firestore with the currently edited message text.
-  * 
-  * @param {any} messageRef - The Firestore document reference to the message being updated.
-  */
-/*   private async updateMessageText(messageRef: any) {
-    if (this.editingMessageText === undefined) {
-      console.error("Attempting to update message with undefined text.");
-      return;
-    }
-    await updateDoc(messageRef, { message: this.editingMessageText ?? "Default message" });
-  } */
-
-  /**
-   * Sets the state to indicate that a message is being deleted. This involves hiding the message editing input,
-   * clearing the editing text, and setting the messageDeleted flag to true.
-   */
-/*   private setMessageAsDeleted() {
-    this.openEditOwnInput = false;
-    this.editingMessageText = '';
-    this.messageDeleted = true;
-  } */
-
-  /**
-   * Resets the state to indicate that a message is no longer being deleted by setting the messageDeleted flag to false.
-   */
-/*   private resetMessageDeletedState() {
-    this.messageDeleted = false;
-  } */
-
-  /**
-   * Resets the editing state by clearing the currently edited message text and hiding the message editing input.
-   */
- /*  private resetEditingState() {
-    this.editingMessageText = '';
-    this.openEditOwnInput = false;
-  } */
-
-  /**
    * Opens the field to edit the own message by setting the openEditOwnMessage flag to true.
    */
   openEditOwnMessageField() {
@@ -476,15 +385,6 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
    */
   teardownOutsideClickHandler(): void {
     document.removeEventListener('mousedown', this.handleClickOutside, true);
-  }
-
-  /**
-   * If the user clicks on "Nachricht bearbieten", the edit-own component opens und the user can start editing the 
-   * own message.
-   */
-  editMessage() {
-    //this.editMessagePopupOpen = false;
-    //this.ownMessageEdit = true;
   }
 
   /**
