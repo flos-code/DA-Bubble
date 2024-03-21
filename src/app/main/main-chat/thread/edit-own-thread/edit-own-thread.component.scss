@@ -172,6 +172,11 @@ emoji-mart {
 
 /* ======================= RESPONSIVENESS ================== */
 @media(max-width: 500px) {
+    .messageContainerOwnEdit {
+        gap: 10px;
+        padding: 1rem;
+    }
+    
     .mainMessageOwnEdit {
         .imgMessage {
             > img {
@@ -180,4 +185,21 @@ emoji-mart {
             } 
         }
     }
+
+    .mainMessageOwnEdit > .messageOwnEditBottom  > .mainChatButtons {  
+        gap: 1rem;
+        > button {
+            font-size: 16px;
+            padding: 6px 12px 6px 12px;
+
+        }
+        
+    }
+
+    .messageProfileIcon {   
+        > img {
+            height: 50px;
+            width: 50px;
+        }
+    }   
 }

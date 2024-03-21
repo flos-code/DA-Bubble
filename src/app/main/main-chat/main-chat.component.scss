@@ -1,6 +1,5 @@
 /* ======================= GENERAL ===================== */
 @import "../../../styles.scss";
-@import "../../main/side-bar/side-bar.component.scss";
 
 /* ======================= MAIN ===================== */
 
@@ -12,7 +11,7 @@
     display: flex;
     gap: 20px;
     width: 100%;
-    height: calc(100vh  - 146px);
+    height: 100%;
 }
 
 .mainChatContainer {
@@ -317,6 +316,12 @@ app-thread {
     }
 }
 
+@media(max-width: 600px) {
+    .mainChatHeaderRight > div:first-of-type {
+        display: none;
+    }
+}
+
 @media(max-width: 500px) {
     * ::-webkit-scrollbar {
         display: none!important;
@@ -327,12 +332,17 @@ app-thread {
     }
 
     .mainChatWrapper {
-        height: calc(100vh  - 230px);
+        height: 100%;
     }
 
     .mainChatContainer,
     .mainChatHeader {
         border-radius: 0;
+    }
+
+    .mainChatHeader {
+        padding-left: 1rem;
+        padding-right: 1rem;
     }
 
     .timeSeparator,
@@ -350,10 +360,6 @@ app-thread {
         width: 100%;
     }
 
-    .mainChatHeader {
-        padding-left: 1rem;
-        padding-right: 1rem;
-    }
 
     .mainChatHeaderLeft  {
         > div,
@@ -361,4 +367,5 @@ app-thread {
             font-size: 27px;
         }
     }
+
 }

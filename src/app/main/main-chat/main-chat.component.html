@@ -18,7 +18,7 @@
                 </div>
 
                 <div class="mainChatHeaderRight">
-                    <div (click)="toggleDialog('showMembers')" *ngIf="desktopView">
+                    <div (click)="toggleDialog('showMembers')">
                         <div class="memberPhotos">
                             @for (member of channelMembers | slice:0:3; track $index) {
                             <div>
