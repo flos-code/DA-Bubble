@@ -127,17 +127,33 @@ export class ChatService {
   // ------------------- Channel creation Logic --------------------
 
   /**
-   * Checks if a channel name already exists in the Firestore database.
+   * Checks if a channel with the given name exists in the Firestore database and if the specified user is a member of that channel.
    *
    * @param {string} channelName - The name of the channel to check for existence.
-   * @returns {Promise<boolean>} A promise that resolves to `true` if the channel name exists, otherwise `false`.
+   * @param {string} userId - The ID of the user to check for membership in the channel.
+   * @returns {Promise<{exists: boolean, isMember: boolean}>} A Promise that resolves to an object containing two properties:
+   *         - `exists`: A boolean indicating whether a channel with the given name exists.
+   *         - `isMember`: A boolean indicating whether the specified user is a member of the channel. This is only relevant if `exists` is true.
+   *         If the channel does not exist, `isMember` will also be false by default.
+   *
+   * The function queries the 'channels' collection in Firestore, looking for a document that matches the provided channel name.
+   * It then checks the 'members' field of the found channel document to determine if the provided user ID is included in the list of members.
    */
-  async channelNameExists(channelName: string): Promise<boolean> {
+  async channelNameExists(
+    channelName: string,
+    userId: string
+  ): Promise<{ exists: boolean; isMember: boolean }> {
     const channelsRef = collection(this.firestore, 'channels');
-    const snapshot = await getDocs(channelsRef);
-    const channelExists = snapshot.docs.some(
-      (doc) => doc.data()['name'] === channelName
-    );
-    return channelExists;
+    const querySnapshot = await getDocs(channelsRef);
+    let result = { exists: false, isMember: false };
+
+    querySnapshot.forEach((doc) => {
+      if (doc.data()['name'] === channelName) {
+        result.exists = true;
+        result.isMember = doc.data()['members'].includes(userId);
+      }
+    });
+
+    return result;
   }
 }

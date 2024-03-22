@@ -11,6 +11,7 @@ import { ViewManagementService } from '../../../services/view-management.service
 import { Subscription } from 'rxjs';
 import { ChatService } from '../../../services/chat.service';
 import { CommonModule } from '@angular/common';
+import { UserManagementService } from '../../../services/user-management.service';
 
 @Component({
   selector: 'app-dialog-add-channel',
@@ -37,6 +38,7 @@ export class DialogAddChannelComponent {
 
   constructor(
     private viewManagementService: ViewManagementService,
+    private userManagementService: UserManagementService,
     private chatService: ChatService
   ) {}
 
@@ -44,6 +46,7 @@ export class DialogAddChannelComponent {
   channelNameModel: string = '';
   channelDescriptionModel: string = '';
   channelNameExists: boolean = false;
+  channelNameExistsNotMember: boolean = false;
   isChannelNameValid: boolean = true;
 
   ngOnInit(): void {
@@ -73,16 +76,26 @@ export class DialogAddChannelComponent {
     this.inputFocused = false;
   }
 
+  /**
+   * Reacts to changes in the channel name input by checking if a channel with the entered name exists
+   * and if the active user is a member of that channel. Updates component state based on these checks.
+   */
   onChannelNameChange(): void {
     if (this.channelNameModel.trim()) {
+      const activeUserId = this.userManagementService
+        .getActiveUserId()
+        .getValue(); // Annahme: getActiveUserId() gibt ein BehaviorSubject zurück
+
       this.chatService
-        .channelNameExists(this.channelNameModel)
-        .then((exists) => {
-          this.channelNameExists = exists;
-          this.isChannelNameValid = !exists;
+        .channelNameExists(this.channelNameModel, activeUserId)
+        .then(({ exists, isMember }) => {
+          this.channelNameExists = exists && isMember;
+          this.channelNameExistsNotMember = exists && !isMember;
+          this.isChannelNameValid = !exists || !isMember;
         });
     } else {
       this.channelNameExists = false;
+      this.channelNameExistsNotMember = false;
       this.isChannelNameValid = false;
     }
   }

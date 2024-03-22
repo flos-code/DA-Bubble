@@ -44,9 +44,15 @@ export class ViewManagementService {
       )
     );
 
-    this.defaultLogoVisible$ = combineLatest([this.screenSize$, this.showSidebar$]).pipe(
+    this.defaultLogoVisible$ = combineLatest([
+      this.screenSize$,
+      this.showSidebar$,
+    ]).pipe(
       map(([screenSize, showSidebar]) => {
-        return !(screenSize === 'small' || screenSize === 'extraSmall') || showSidebar;
+        return (
+          !(screenSize === 'small' || screenSize === 'extraSmall') ||
+          showSidebar
+        );
       })
     );
   }

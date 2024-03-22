@@ -44,6 +44,9 @@
       <div *ngIf="channelNameExists" class="nameValidation">
         Ein Kanal mit diesem Namen existiert bereits.
       </div>
+      <div *ngIf="channelNameExistsNotMember" class="nameValidation">
+        Der Name wird bereits für einen dir nicht verfügbaren Channel verwendet
+      </div>
     </div>
 
     <div class="setChannelDescription">
