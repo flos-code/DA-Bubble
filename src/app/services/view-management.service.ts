@@ -35,6 +35,24 @@ export class ViewManagementService {
     this.updateScreenSize(window.innerWidth);
     this.handleWindowResize();
 
+    // this.showMainChat$ = combineLatest([
+    //   this.showChannel.asObservable(),
+    //   this.showDirectMessage.asObservable(),
+    // ]).pipe(
+    //   map(
+    //     ([showChannel, showDirectMessage]) => showChannel || showDirectMessage
+    //   )
+    // );
+
+    this.defaultLogoVisible$ = combineLatest([
+      this.screenSize$,
+      this.showSidebar$,
+    ]).pipe(
+      map(([screenSize, showSidebar]) => {
+        return !(screenSize === 'small' || screenSize === 'extraSmall') || showSidebar;
+      })
+    );
+
     this.showMainChat$ = combineLatest([
       this.showChannel.asObservable(),
       this.showDirectMessage.asObservable(),
@@ -42,18 +60,6 @@ export class ViewManagementService {
       map(
         ([showChannel, showDirectMessage]) => showChannel || showDirectMessage
       )
-    );
-
-    this.defaultLogoVisible$ = combineLatest([
-      this.screenSize$,
-      this.showSidebar$,
-    ]).pipe(
-      map(([screenSize, showSidebar]) => {
-        return (
-          !(screenSize === 'small' || screenSize === 'extraSmall') ||
-          showSidebar
-        );
-      })
     );
   }
 
@@ -109,10 +115,10 @@ export class ViewManagementService {
         showSecondaryChat: false,
       },
       newMessage: {
+        showNewMessage: true,
         showSidebar: false,
         showChannel: false,
         showDirectMessage: false,
-        showNewMessage: true,
         showSecondaryChat: false,
       },
       secondaryChat: {
@@ -146,10 +152,10 @@ export class ViewManagementService {
         showSecondaryChat: false,
       },
       newMessage: {
+        showNewMessage: true,
         showSidebar: false,
         showChannel: false,
         showDirectMessage: false,
-        showNewMessage: true,
         showSecondaryChat: false,
       },
       secondaryChat: {
@@ -184,10 +190,10 @@ export class ViewManagementService {
       },
       newMessage: {
         showSidebar: true,
+        showNewMessage: true,
         showSidebarToggle: true,
         showChannel: false,
         showDirectMessage: false,
-        showNewMessage: true,
         showSecondaryChat: false,
       },
       secondaryChat: {
@@ -217,9 +223,9 @@ export class ViewManagementService {
       },
       newMessage: {
         showSidebar: true,
+        showNewMessage: true,
         showChannel: false,
         showDirectMessage: false,
-        showNewMessage: true,
         showSecondaryChat: false,
       },
       secondaryChat: {

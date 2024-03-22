@@ -60,7 +60,7 @@ export class MainComponent implements OnInit {
     public serviceProfilCard: ProfilCardService,
     private router: Router
   ) {
-    this.viewManagementService.showMainChat$ = new BehaviorSubject<boolean>(true);
+    // this.viewManagementService.showMainChat$ = new BehaviorSubject<boolean>(true); //für was diese zeile?
     // this.viewChangeSubscription =
     //   this.viewManagementService.currentView$.subscribe((view) => {
     //     // this.showMainChat = view === 'showMainChat';
