@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
+import { ChangeDetectorRef, Component, ElementRef, Input, ViewChild, inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatIconModule } from '@angular/material/icon';
 import { PickerComponent } from '@ctrl/ngx-emoji-mart';
@@ -66,6 +66,7 @@ export class TextBoxComponent {
   constructor(
     public userManagementService: UserManagementService,
     private viewManagementService: ViewManagementService,
+    private cdRef: ChangeDetectorRef,
     private chatService: ChatService
   ) {}
 
@@ -90,6 +91,7 @@ export class TextBoxComponent {
 
   ngAfterViewInit() {
     this.messageInput.nativeElement.focus();
+    this.cdRef.detectChanges();
   }
 
   focusInput() {
