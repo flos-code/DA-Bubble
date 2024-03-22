@@ -6,6 +6,10 @@ $bg-color: #ECEEFE;
 
 // --------------------------------- Global ---------------------------------
 
+section {
+    height: 100%;
+}
+
 .chat-box {
     height: calc(100vh - 140px);
     width: 485px;
