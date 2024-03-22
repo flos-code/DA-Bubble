@@ -88,6 +88,10 @@ export class TextBoxComponent {
     this.dbSubscription.unsubscribe();
   }
 
+  ngAfterViewInit() {
+    this.messageInput.nativeElement.focus();
+  }
+
   focusInput() {
     if (!this.showEmojiPicker) {
       this.messageInput.nativeElement.focus();
