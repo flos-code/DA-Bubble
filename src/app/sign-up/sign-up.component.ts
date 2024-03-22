@@ -182,7 +182,7 @@ export class SignUpComponent {
       createdBy: 'WqUfBH53bPVombxH2XPYN70RULp1',
       creationDate: Date.now(),
       message:
-        'Herzlich willkommen auf dem Code Learning Server 👋 ich hoffe, du hast hergefunden',
+        'Herzlich willkommen auf dem Code Learning Server 👋 ich hoffe, du hast gut hergefunden',
       imageUrl:
         'https://firebasestorage.googleapis.com/v0/b/da-bubble-87fea.appspot.com/o/userImages%2FwelcomeGif.gif?alt=media&token=91f0cf99-d5d8-47ad-be89-15ca36856c35',
     });
