@@ -8,10 +8,10 @@
 }
 
 .mainChatWrapper {
+    height: calc(100vh - 140px);
+    width: 100%;
     display: flex;
     gap: 20px;
-    width: 100%;
-    height: 100%;
 }
 
 .mainChatContainer {
@@ -309,6 +309,13 @@ app-thread {
 }
 
 /* =========================== RESPONSIVENESS =========================== */
+@media(max-width: 1110px) {
+     .mainChatWrapper {
+        height: calc(100vh - 116px);
+    }
+}
+
+
 @media(max-width: 650px) {
     app-show-members-dialog {
         right: 110px;
@@ -332,7 +339,7 @@ app-thread {
     }
 
     .mainChatWrapper {
-        height: 100%;
+        height: calc(100vh - 102px);
     }
 
     .mainChatContainer,
@@ -348,8 +355,7 @@ app-thread {
     .timeSeparator,
     .beginningOfChannel,
     .mainChatInput {
-        padding-left: 1rem;
-        padding-right: 1rem;
+        padding: 1rem;
     }
     app-channel-edition-dialog {
         position: fixed;

@@ -11,7 +11,7 @@ section {
 }
 
 .chat-box {
-    height: 100%;
+    height: calc(100vh - 140px);
     width: 485px;
     background-color: white;
     border-radius: 30px;
@@ -422,6 +422,7 @@ app-text-box {
 
 @media (max-width:1110px) {
     .chat-box {
+        height: calc(100vh - 116px);
         width: calc(100vw - 40px);
     }
 
@@ -436,6 +437,7 @@ app-text-box {
 
 @media (max-width:500px) {
     .chat-box {
+        height: calc(100vh - 102px);
         width: 100vw;
         border-radius: unset;
     }
@@ -459,5 +461,10 @@ app-text-box {
             max-width: 100px;
             }
         }
+    }
+
+    app-text-box {
+        width: calc(100% - 40px);
+        margin-bottom: 1rem;
     }
 }

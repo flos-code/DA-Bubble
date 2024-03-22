@@ -239,6 +239,10 @@
     }
 }
 
+.mainMessageOwn .mainThreadReactions{
+    justify-content: flex-end;
+}
+
 
 .mainMessageThreads {
     display: flex;
