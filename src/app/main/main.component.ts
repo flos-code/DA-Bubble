@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-chat.component';
@@ -58,7 +58,8 @@ export class MainComponent implements OnInit {
     public chatService: ChatService,
     public viewManagementService: ViewManagementService,
     public serviceProfilCard: ProfilCardService,
-    private router: Router
+    private router: Router,
+    private cdr: ChangeDetectorRef,
   ) {
     // this.viewManagementService.showMainChat$ = new BehaviorSubject<boolean>(true); //für was diese zeile?
     // this.viewChangeSubscription =
@@ -76,6 +77,7 @@ export class MainComponent implements OnInit {
         this.router.navigateByUrl('/login');
       } else {
         this.userLoaded = true;
+        this.cdr.detectChanges();
       }
     });
   }
