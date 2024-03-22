@@ -7,7 +7,7 @@ import { NewMessageComponent } from './new-message/new-message.component';
 import { CommonModule } from '@angular/common';
 import { EmojiPickerComponent } from './emoji-picker/emoji-picker.component';
 import { ViewManagementService } from '../services/view-management.service';
-import { Subscription } from 'rxjs';
+import { BehaviorSubject, Subscription } from 'rxjs';
 import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfilCardService } from '../services/profil-card.service';
 import { ChatService } from '../services/chat.service';
@@ -60,6 +60,7 @@ export class MainComponent implements OnInit {
     public serviceProfilCard: ProfilCardService,
     private router: Router
   ) {
+    this.viewManagementService.showMainChat$ = new BehaviorSubject<boolean>(true);
     // this.viewChangeSubscription =
     //   this.viewManagementService.currentView$.subscribe((view) => {
     //     // this.showMainChat = view === 'showMainChat';
