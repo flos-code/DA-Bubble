@@ -7,6 +7,7 @@ import { Firestore, doc, updateDoc } from '@angular/fire/firestore';
 import { ShowMembersDialogComponent } from '../show-members-dialog/show-members-dialog.component';
 import { AddMembersDialogComponent } from '../add-members-dialog/add-members-dialog.component';
 import { deleteDoc } from 'firebase/firestore';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-channel-edition-dialog',
@@ -16,6 +17,8 @@ import { deleteDoc } from 'firebase/firestore';
   styleUrl: './channel-edition-dialog.component.scss'
 })
 export class ChannelEditionDialogComponent implements OnInit {
+  screensize: string;
+  screensizeSub: Subscription = new Subscription();
   private firestore: Firestore = inject(Firestore);
   @Input() channelData!: any;
   @Input() currentChannelId!: string;
@@ -37,7 +40,18 @@ export class ChannelEditionDialogComponent implements OnInit {
   addMemberDialogOpen: boolean = false;
   addMembersMobileView: boolean = false;
 
-  constructor(private chatService: ChatService, private viewManagementService: ViewManagementService) { }
+  constructor(private chatService: ChatService, private viewService: ViewManagementService) {
+    this.screensizeSub = viewService.screenSize$.subscribe((value) => {
+      if(value) {
+        this.screensize = value;
+        if(value == 'extraSmall'){
+          this.showMembersInEditionDialog = true;
+        } else {
+          this.showMembersInEditionDialog = false;
+        }
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.setMobileComponents();
@@ -136,7 +150,7 @@ export class ChannelEditionDialogComponent implements OnInit {
       this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
       this.chatService.setActiveChannelId(null);
       this.chatService.setSelectedUserId(null);
-      this.viewManagementService.setView('newMessage');  
+      this.viewService.setView('newMessage');  
     } else {
       let index = this.channelData.members.indexOf(this.currentUser);
       this.channelData.members.splice(index, 1);
@@ -151,7 +165,7 @@ export class ChannelEditionDialogComponent implements OnInit {
       this.channelEditionDialogOpenChild.emit(this.channelEditionDialogOpen);
       this.chatService.setActiveChannelId(null);
       this.chatService.setSelectedUserId(null);
-      this.viewManagementService.setView('newMessage');  
+      this.viewService.setView('newMessage');  
     }
   }
   

@@ -473,8 +473,8 @@
 
 .editMessagePopup {
     position: absolute;
-    top: 10px;
-    left: 270px;
+    top: 17px;
+    left: 200px;
     height: 67px;
     border-radius: 0px 30px 30px 30px;
     padding: 10px 20px 10px 20px;
@@ -603,9 +603,16 @@
             max-width: 150px;
         }
     }
+
+    .editMessagePopup {
+        left: 120px;
+    }
 }
 
 @media(max-width: 500px) {
+    .editMessagePopup {
+        left: 90px;
+    }
     .messageProfileIcon > img {
             height: 50px;
             width: 50px;
