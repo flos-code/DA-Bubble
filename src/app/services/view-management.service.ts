@@ -30,19 +30,11 @@ export class ViewManagementService {
 
   public showMainChat$: Observable<boolean>;
   public defaultLogoVisible$: Observable<boolean>;
+  private previousWidth = window.innerWidth; 
 
   constructor() {
     this.updateScreenSize(window.innerWidth);
     this.handleWindowResize();
-
-    // this.showMainChat$ = combineLatest([
-    //   this.showChannel.asObservable(),
-    //   this.showDirectMessage.asObservable(),
-    // ]).pipe(
-    //   map(
-    //     ([showChannel, showDirectMessage]) => showChannel || showDirectMessage
-    //   )
-    // );
 
     this.defaultLogoVisible$ = combineLatest([
       this.screenSize$,
@@ -87,7 +79,18 @@ export class ViewManagementService {
    */
   handleWindowResize(): void {
     window.addEventListener('resize', () => {
-      this.updateScreenSize(window.innerWidth);
+      const currentWidth = window.innerWidth;
+      const wasLargerThan1500 = this.previousWidth > 1500;
+      const isNow1500OrLess = currentWidth <= 1500;
+      this.updateScreenSize(currentWidth);
+      if (wasLargerThan1500 && isNow1500OrLess) {
+        this.showSecondaryChat$.subscribe((showSecondaryChat) => {
+          if (showSecondaryChat) {
+            this.setView('secondaryChat');
+          }
+        }).unsubscribe(); 
+      }
+      this.previousWidth = currentWidth;
     });
   }
 

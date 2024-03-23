@@ -61,14 +61,6 @@ export class MainComponent implements OnInit {
     private router: Router,
     private cdr: ChangeDetectorRef,
   ) {
-    // this.viewManagementService.showMainChat$ = new BehaviorSubject<boolean>(true); //für was diese zeile?
-    // this.viewChangeSubscription =
-    //   this.viewManagementService.currentView$.subscribe((view) => {
-    //     // this.showMainChat = view === 'showMainChat';
-    //     // this.showNewMessage = view === 'showNewMessage';
-    //   });
-
-    // this.getThreadOpenStatus();
   }
 
   ngOnInit() {
@@ -82,16 +74,4 @@ export class MainComponent implements OnInit {
     });
   }
 
-
-  // ngOnDestroy(): void {
-  //   this.viewChangeSubscription.unsubscribe();
-  // }
-
-  // getThreadOpenStatus(): void {
-  //   this.subscription.add(
-  //     this.chatService.threadOpen$.subscribe((open) => {
-  //       this.threadOpen = open;
-  //     })
-  //   );
-  // }
 }
