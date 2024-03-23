@@ -82,7 +82,6 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.screensizeSub = viewService.screenSize$.subscribe((value) => {
       if(value) {
         this.screensize = value;
-        console.log("Screensize", this.screensize)
       }
     });
 

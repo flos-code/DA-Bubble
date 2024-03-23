@@ -44,7 +44,6 @@ export class ThreadComponent implements OnInit, OnChanges {
   constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { }
 
   ngOnChanges(changes: SimpleChanges): void {
-    console.log("PATH", this.path);
     //this.reactionCollectionPath = this.path + `/${this.thread.threadId}/reactions`;
     if(this.activeChannelId == null) {
       this.reactionCollectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}/reactions`;
@@ -59,7 +58,6 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   ngOnInit(): void {
     this.loadThreadData();
-    console.log(this.thread.imageUrl)
   }
 
   /**
