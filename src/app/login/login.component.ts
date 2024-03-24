@@ -223,6 +223,9 @@ export class LoginComponent implements OnInit, OnDestroy {
     this.showAlert = true;
     setTimeout(() => {
       this.signInForm.reset();
+      this.showPasswordErrorDiv = false;
+      this.showEmailErrorDiv = false;
+      this.isText = false;
       this.showAlert = false;
     }, 3000);
   }
