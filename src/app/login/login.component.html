@@ -21,10 +21,6 @@
         <p>DABubble</p>
     </div>
 
-    <div class="create-account-container">
-        <p>Neu bei DABubble ?</p>
-        <a routerLink="/sign_up">Konto erstellen</a>
-    </div>
 
     <div class="login-form">
         <h1>Anmeldung</h1>
@@ -32,7 +28,8 @@
         <form [formGroup]="signInForm">
             <div class="login-input-main">
                 <input type="text" class="login-email-input" name="email" id="login_email"
-                    placeholder="beispielname@email.com" formControlName="email" (focus)="showEmailErrorDiv = true" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                    placeholder="beispielname@email.com" formControlName="email" (focus)="showEmailErrorDiv = true"
+                    pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
                 <div class="error-message-container" [class.visible]="showEmailErrorDiv">
                     <mat-error *ngIf="signInForm.controls.email.invalid">
                         {{ checkErrors('email') }}
@@ -74,6 +71,13 @@
 
 
     </div>
+
+    <div class="create-account-container">
+        <p>Neu bei DABubble ?</p>
+        <a routerLink="/sign_up">Konto erstellen</a>
+    </div>
+
+
     <div class="lower-links-container">
         <a routerLink="/imprint">Impressum</a>
         <a routerLink="/privacy-policy">Datenschutz</a>

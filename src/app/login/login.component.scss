@@ -13,7 +13,7 @@
     align-items: center;
     gap: 15px;
     position: absolute;
-    top: 75px;
+    top: 65px;
     left: 75px;
 
     img {
@@ -67,7 +67,7 @@
     flex-direction: column;
     align-items: flex-end;
     position: absolute;
-    top: 75px;
+    top: 65px;
     right: 75px;
 
     p {
@@ -108,7 +108,6 @@
     flex-direction: column;
     align-items: center;
     width: 606px;
-    height: 709px;
     border-radius: 30px;
 
     form{
@@ -188,6 +187,7 @@
     letter-spacing: 0em;
     text-align: center;
     width: 500px;
+    margin-top: 0px;
 }
 
 .forgot-password-btn {
@@ -213,6 +213,7 @@
     flex-direction: row;
     align-items: center;
     gap: 20px;
+    margin-bottom: 25px;
 }
 
 .login-btn {
@@ -289,13 +290,13 @@
     padding: 11px 32px 11px 32px;
     border-radius: 100px;
     width: 500px;
-    margin-bottom: 50px;
+    margin-bottom: 35px;
     border: 1px solid #ffffff00;
     transition: ease-in-out;
 
     img {
-        height: 38px;
-        width: 38px;
+        height: 34px;
+        width: 34px;
     }
 
     p {
@@ -385,7 +386,7 @@
 .error-message-container{
     width: 500px;
     height: 25px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     color: rgb(253, 91, 91);
     visibility: hidden;
 }
