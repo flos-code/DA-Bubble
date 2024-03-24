@@ -102,7 +102,7 @@ export class SignUpComponent {
     checkbox: [false, Validators.requiredTrue],
   });
 
-  constructor(private router: Router, private fb: FormBuilder) {}
+  constructor(private router: Router, private fb: FormBuilder) { }
 
   goBackToLogin() {
     this.router.navigateByUrl('login');
@@ -149,6 +149,7 @@ export class SignUpComponent {
     }
   }
 
+
   async signUp() {
     await createUserWithEmailAndPassword(
       this.auth,
@@ -162,7 +163,6 @@ export class SignUpComponent {
     await this.createUserDetailsDoc();
     await this.addUserToGeneralChannel();
     await this.createWelcomeMessage();
-    await signOut(this.auth);
     this.animateAndGoBackToLogin();
   }
 
@@ -231,6 +231,7 @@ export class SignUpComponent {
     this.userCreationSuccess = true;
     setTimeout(() => {
       this.userCreationSuccess = false;
+      signOut(this.auth);
       this.goBackToLogin();
     }, 3000);
   }
