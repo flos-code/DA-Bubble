@@ -232,7 +232,7 @@ export class SignUpComponent {
     setTimeout(() => {
       this.userCreationSuccess = false;
       this.goBackToLogin();
-    }, 1500);
+    }, 3000);
   }
 
   async onFileSelected(event) {

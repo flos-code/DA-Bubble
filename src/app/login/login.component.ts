@@ -1,8 +1,9 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router, RouterModule, NavigationStart } from '@angular/router';
-import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, ReactiveFormsModule, Validators, ValidationErrors } from '@angular/forms';
 import { initializeApp } from "firebase/app";
+import { MatFormFieldModule } from '@angular/material/form-field';
 import { getAuth, signInWithEmailAndPassword, signInWithPopup, GoogleAuthProvider } from "firebase/auth";
 import { getFirestore, doc, updateDoc, getDoc, setDoc, arrayUnion, collection, addDoc } from 'firebase/firestore';
 import { DirectMessage } from '../../models/directMessage.class';
@@ -25,7 +26,7 @@ const db = getFirestore(app);
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterModule, MatFormFieldModule],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.scss', './login.component.animations.scss', './login.component.responsive.scss']
 })
@@ -40,12 +41,18 @@ export class LoginComponent implements OnInit, OnDestroy {
   isText: boolean = false;
   type: string = 'password';
   runAnimation = true;
+  showAlert: boolean = false;
+  showPasswordErrorDiv: boolean = false;
+  showEmailErrorDiv: boolean = false;
 
   private destroy$ = new Subject<void>();
 
   signInForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]],
-    password: ['', Validators.required],
+    password: [
+      '',
+      [Validators.required, Validators.minLength(8), Validators.maxLength(100)],
+    ],
   })
 
   constructor(private fb: FormBuilder, private router: Router) {
@@ -191,7 +198,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       });
       this.router.navigateByUrl('');
     }).catch((error) => {
-      if (error.message == 'Firebase: Error (auth/user-not-found).') {
+      if (error.code == 'auth/user-not-found') {
         this.showFalseLoginAlert();
       } else {
       }
@@ -213,8 +220,42 @@ export class LoginComponent implements OnInit, OnDestroy {
   }
 
   showFalseLoginAlert() {
-    alert('Falscher Nutzername und / oder Passwort. Bitte versuchen Sie es erneut.');
-    this.signInForm.reset();
+    this.showAlert = true;
+    setTimeout(() => {
+      this.signInForm.reset();
+      this.showAlert = false;
+    }, 3000);
+  }
+
+  getEmailErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie Ihre E-Mail-Adresse ein';
+    } else if (errors['pattern']) {
+      return 'Keine gültige E-Mail-Adresse';
+    } else {
+      return;
+    }
+  }
+
+  getPWErrorMessage(errors: ValidationErrors) {
+    if (errors['required']) {
+      return 'Bitte geben Sie Ihren Passwort ein';
+    } else if (errors['minlength']) {
+      return 'Das Passwort muss länger als 8 Zeichen sein';
+    } else if (errors['maxlength']) {
+      return 'Das Passwort darf nicht länger als 100 Zeichen sein';
+    } else {
+      return;
+    }
+  }
+
+  checkErrors(control: string) {
+    const errors = (this.signInForm.controls as any)[control].errors;
+    if (control === 'email') {
+      return this.getEmailErrorMessage(errors);
+    } else if (control === 'password') {
+      return this.getPWErrorMessage(errors);
+    }
   }
 
 }

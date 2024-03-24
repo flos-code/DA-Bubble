@@ -32,14 +32,26 @@
         <form [formGroup]="signInForm">
             <div class="login-input-main">
                 <input type="text" class="login-email-input" name="email" id="login_email"
-                    placeholder="beispielname@email.com" formControlName="email">   
+                    placeholder="beispielname@email.com" formControlName="email" (focus)="showEmailErrorDiv = true" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$">
+                <div class="error-message-container" [class.visible]="showEmailErrorDiv">
+                    <mat-error *ngIf="signInForm.controls.email.invalid">
+                        {{ checkErrors('email') }}
+                    </mat-error>
+                </div>
             </div>
+
             <div class="login-input-main">
-                <input [type]="type" class="login-password-input" name="password" id="login_password" placeholder="Passwort"
-                formControlName="password">
-                <span (click)="togglePasswordVisibility()" class="the-eye" [ngClass]="{'visibility_on': isText, 'visibility_off': !isText }"></span>
+                <input [type]="type" class="login-password-input" name="password" id="login_password"
+                    placeholder="Passwort" formControlName="password" (focus)="showPasswordErrorDiv = true">
+                <span (click)="togglePasswordVisibility()" class="the-eye"
+                    [ngClass]="{'visibility_on': isText, 'visibility_off': !isText }"></span>
+                <div class="error-message-container" [class.visible]="showPasswordErrorDiv">
+                    <mat-error *ngIf="signInForm.controls.password.invalid">
+                        {{ checkErrors('password') }}
+                    </mat-error>
+                </div>
             </div>
-            
+
         </form>
         <button class="forgot-password-btn" (click)="goToPasswordReset()">Passwort vergessen?</button>
 
@@ -59,9 +71,16 @@
                 [class.btn-disabled]="!signInForm.valid" (click)="signIn()">Anmelden</button>
             <button class="guest-login-btn" (click)="signInAsGuest()">Gäste-Login</button>
         </div>
+
+
     </div>
     <div class="lower-links-container">
         <a routerLink="/imprint">Impressum</a>
         <a routerLink="/privacy-policy">Datenschutz</a>
+    </div>
+
+    <div *ngIf="showAlert" class="bad-login-main">
+        <p>Falscher Nutzername oder Passwort <br>
+            Bitte versuchen Sie es erneut.</p>
     </div>
 </div>

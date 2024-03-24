@@ -160,7 +160,6 @@
     background: url('/assets/img/login/mail_gray.png') no-repeat scroll 7px 7px;
     padding-left: 60px !important;
     background-position: 20px 50%;
-    margin-bottom: 40px;
 
     &:focus {
         background: url('/assets/img/login/mail_black.png') no-repeat scroll 7px 7px;
@@ -173,7 +172,6 @@
     background: url('/assets/img/login/lock_gray.png') no-repeat scroll 7px 7px;
     padding-left: 60px !important;
     background-position: 20px 50%;
-    margin-bottom: 50px;
 
     &:focus {
         background: url('/assets/img/login/lock_black.png') no-repeat scroll 7px 7px;
@@ -327,6 +325,27 @@
     }
 }
 
+.bad-login-main{
+    padding: 50px;
+    background: #444DF2;
+    border-radius: 30px 30px 0px 30px;
+    font-family: Nunito;
+    font-size: 30px;
+    font-weight: 700;
+    line-height: 49px;
+    letter-spacing: 0em;
+    text-align: center;
+    color: white;
+
+    p {
+        margin: 0;
+    }
+
+    position: absolute;
+    overflow-x: hidden;
+    animation: slideMessageInFromRight 500ms ease-in-out;
+}
+
 .lower-links-container {
     position: absolute;
     left: calc(50% - 133.5px);
@@ -363,9 +382,31 @@
     }
 }
 
+.error-message-container{
+    width: 500px;
+    height: 25px;
+    margin-bottom: 20px;
+    color: rgb(253, 91, 91);
+    visibility: hidden;
+}
+
+.visible{
+    visibility: visible;
+}
+
 app-imprint {
     position: absolute;
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+}
+
+@keyframes slideMessageInFromRight {
+    0% {
+        transform: translateX(1200px);
+    }
+
+    100% {
+        transform: translateX(0px);
+    }
 }
