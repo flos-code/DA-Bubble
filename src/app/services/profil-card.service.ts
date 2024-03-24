@@ -53,6 +53,10 @@ export class ProfilCardService {
     }
   }
 
+  /**
+   * Toggles the overlay of the profile card.
+   * @param active - Boolean indicating if the overlay should be active.
+   */
   toggleCardOverlay(active: boolean) {
     this.isOverlayActive = active;
     this.isProfilCardActiveChanged.emit(active); // Emit event when the variable changes
@@ -61,6 +65,12 @@ export class ProfilCardService {
     }
   }
 
+  /**
+   * Toggles the visibility of the profile card.
+   * @param active - Boolean indicating if the profile card should be active.
+   * @param currentUser - Boolean indicating if the current user's profile card is active.
+   * @param userId - The ID of the user whose profile card is being toggled.
+   */
   toggleProfilCard(active: boolean, currentUser: boolean, userId: string) {
     if (!this.isOverlayActive) {
       this.isOverlayActive = true;
@@ -79,10 +89,19 @@ export class ProfilCardService {
     }
   }
 
+  /**
+  * Updates the header with the provided name.
+  * @param name - The name to be displayed in the header.
+  * @returns The updated header.
+  */
   updateHeader(name: string) {
     return name;
   }
 
+  /**
+   * Loads user data from Firestore.
+   * @returns Snapshot listener for user data.
+   */
   loadUserFromFirestore() {
     return onSnapshot(this.userRef, (list) => {
       // console.log('Hier sind die User:', list);
@@ -94,6 +113,9 @@ export class ProfilCardService {
     })
   }
 
+  /**
+   * Retrieves the logged-in user's information.
+   */
   getTheLoggedInUser() {
     this.authSubscription = this.auth.onAuthStateChanged((user) => {
       if (user) {
@@ -111,6 +133,10 @@ export class ProfilCardService {
     });
   }
 
+  /**
+  * Writes a direct message between two users.
+  * @returns Snapshot listener for direct messages.
+  */
   writeDirectMessage() {
     const q = query(collection(this.db, `users/${this.auth.currentUser.uid}/allDirectMessages`));
     return onSnapshot(q, (list) => {
@@ -127,6 +153,10 @@ export class ProfilCardService {
     });
   }
 
+  /**
+   * Adds a new direct message between two users.
+   * @returns Promise that resolves when the direct message is added.
+   */
   async addDirectMessage(): Promise<void> {
     const dmSenderRef = doc(collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`), this.otherUserId);
     const dmReceiverRef = doc(collection(this.db, `users/${this.otherUserId}/allDirectMessages`), this.currentUserId);
