@@ -67,6 +67,7 @@ export class TextBoxComponent {
   storage = inject(Storage);
   private firestore: Firestore = inject(Firestore);
   private dbSubscription!: Subscription;
+  private channelIdSubscription: Subscription;
   public imageURL: string | undefined;
   public filePath: string | undefined;
 
@@ -90,6 +91,7 @@ export class TextBoxComponent {
         console.error('Error fetching changes:', error);
       }
     );
+    this.reFocusOnChannelChange();
   }
 
   ngOnDestroy(): void {
@@ -99,6 +101,17 @@ export class TextBoxComponent {
   ngAfterViewInit() {
     this.messageInput.nativeElement.focus();
     this.cdRef.detectChanges();
+  }
+
+  reFocusOnChannelChange() {
+    this.channelIdSubscription = this.chatService.activeChannelIdUpdates.subscribe({
+      next: () => {
+        if (this.messageInput && this.messageInput.nativeElement) {
+          this.messageInput.nativeElement.focus();
+        }
+      },
+      error: (err) => console.error('Fehler beim Abonnieren von activeChannelIdUpdates', err),
+    });
   }
 
   focusInput() {
