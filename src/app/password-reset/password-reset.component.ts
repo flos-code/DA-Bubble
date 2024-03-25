@@ -151,7 +151,7 @@ export class PasswordResetComponent implements OnInit {
     verifyPasswordResetCode(auth, actionCode).then(() => {
       const newPassword = this.passwordResetForm.value.confirmPassword;
       confirmPasswordReset(auth, actionCode, newPassword).then(() => {
-        console.log("password changed successfully")
+        // console.log("password changed successfully")
         this.passwordChanged = true;
         setTimeout(() => {
           this.passwordChanged = false;
