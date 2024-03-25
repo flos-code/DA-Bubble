@@ -1,10 +1,22 @@
 @media screen and (max-width: 650px) {
-    .login-main{
+    .login-main {
         flex-direction: column;
         gap: 30px;
-        height: unset;
     }
-    
+
+    .start-animation-logo {
+        img {
+            width: 150px;
+            height: 150px;
+        }
+    }
+
+    .start-animation-container {
+        p {
+            font-size: 76px;
+        }
+    }
+
     .login-form {
         width: 398px !important;
         height: unset;
@@ -21,11 +33,11 @@
         }
     }
 
-    .logo-container{
+    .logo-container {
         position: unset;
     }
 
-    .create-account-container{
+    .create-account-container {
         position: unset;
     }
 
@@ -98,5 +110,11 @@
     .logo-container {
         top: 70px;
         left: calc(50% - 100px);
+    }
+
+    .bad-login-main{
+        padding: 20px;
+        font-size: 21px;
+        line-height: 30px;
     }
 }

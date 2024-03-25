@@ -1,6 +1,7 @@
 @media screen and (max-width: 650px) {
     .sign-up-form-container {
         width: 398px;
+        height: unset;
 
         h1 {
             font-size: 30px;
@@ -18,10 +19,19 @@
     .the-title {
         display: inline;
         width: 290px;
+        margin-bottom: 0px;
     }
 
     .sign-up-hint {
         font-size: 17px;
+        width: 358px;
+    }
+
+    .error-message-container{
+        width: 358px;
+    }
+
+    .privacy-policy-container{
         width: 358px;
     }
 
@@ -46,6 +56,7 @@
 
     .picture-choice-container {
         width: 398px;
+        height: unset;
 
         h1 {
             font-size: 32px;
@@ -55,12 +66,9 @@
 
     .picture-choice-info {
         width: 358px;
-        margin-bottom: 20px;
     }
 
-    .chosen-profile-pic {
-        margin-bottom: 20px;
-    }
+    
 
     .generic-profile-pic-list {
         width: 358px !important;
@@ -74,6 +82,7 @@
 
     .personal-pic-upload-container {
         width: 358px;
+        margin-bottom: 0px;
 
         p {
             font-size: 17px;
@@ -93,5 +102,13 @@
     .next-btn {
         font-size: 17px !important;
         margin-top: 30px;
+        margin-bottom: 30px;
+    }
+
+    .successfull-sign-up-main{
+        bottom: 30px;
+        right: 30px;
+        font-size: 25px;
+        padding: 25px;
     }
 }
