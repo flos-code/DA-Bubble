@@ -81,15 +81,32 @@ export class ViewManagementService {
     window.addEventListener('resize', () => {
       const currentWidth = window.innerWidth;
       const wasLargerThan1500 = this.previousWidth > 1500;
-      const isNow1500OrLess = currentWidth <= 1500;
+      const wasLessThanOrEqual1110 = this.previousWidth <= 1110;
+      const isNowGreaterThan1110 = currentWidth > 1110;
+  
       this.updateScreenSize(currentWidth);
-      if (wasLargerThan1500 && isNow1500OrLess) {
+      if (wasLargerThan1500 && currentWidth <= 1500) {
         this.showSecondaryChat$.subscribe((showSecondaryChat) => {
           if (showSecondaryChat) {
             this.setView('secondaryChat');
           }
         }).unsubscribe(); 
       }
+  
+      if (wasLessThanOrEqual1110 && isNowGreaterThan1110) {
+        this.setView('sidebar');
+        this.showChannel.next(true);
+      }
+  
+      if (this.previousWidth >= 1110 && !isNowGreaterThan1110) {
+        this.setView('sidebar');
+      }
+  
+      if (this.previousWidth <= 1500 && currentWidth > 1500) {
+        this.showChannel.next(true);
+        this.showSidebar.next(true);
+      }
+  
       this.previousWidth = currentWidth;
     });
   }
