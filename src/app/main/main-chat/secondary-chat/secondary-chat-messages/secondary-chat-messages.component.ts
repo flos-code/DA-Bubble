@@ -163,7 +163,7 @@ export class SecondaryChatMessagesComponent implements OnInit, OnDestroy {
   */
   async saveReaction(emoji: string, currentUser: string) {
     if (this.reactions.length === 0) {
-      console.log('Alle Reaktionen', this.reactions);
+      //console.log('Alle Reaktionen', this.reactions);
       await this.addReaction(emoji, currentUser);
     } else {
       const reactionExists = this.reactions.some(reaction => reaction.reaction === emoji);

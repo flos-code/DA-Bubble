@@ -310,7 +310,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
       )
       this.sortChannelThreadsArray(this.dmMessages);
       this.getThreadCreationDates(this.dmMessages);
-      console.log('Dm')
+      //console.log('Dm')
     });
   }
 

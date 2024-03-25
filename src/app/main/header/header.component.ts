@@ -85,7 +85,7 @@ export class HeaderComponent implements OnInit {
     });
 
     this.chatService.isSearchbarActive.subscribe((value) => {
-      console.log('Wir sind hier:', value);
+      //console.log('Wir sind hier:', value);
       if (value !== null) {
         this.searchBarActive = false;
       } else {
@@ -134,7 +134,7 @@ export class HeaderComponent implements OnInit {
   * @param {string} option - The clicked option.
   */
   menuItemClicked(option: string) {
-    console.log('Option clicked:', option);
+    //console.log('Option clicked:', option);
   }
 
   /**
