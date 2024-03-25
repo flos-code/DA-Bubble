@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-chat.component';
@@ -47,7 +47,8 @@ export class MainComponent implements OnInit {
   // showNewMessage: boolean = false;
   // // showSecondaryChat: boolean = false;
   // // showSidebar: boolean = false;
-
+  
+  //screenSizeNumb: number;
 
   auth = getAuth(app);
   subscription: Subscription = new Subscription();
@@ -62,6 +63,20 @@ export class MainComponent implements OnInit {
     private cdr: ChangeDetectorRef,
   ) {
   }
+
+/*   @HostListener('window:resize', ['$event'])
+    onResize(event: Event) {
+    this.screenSizeNumb = window.innerWidth;
+    if(this.screenSizeNumb = 1425) {
+      this.viewManagementService.screenSize.next('large');
+    } else if(this.screenSizeNumb == 1424 || this.screenSizeNumb == 851) {
+      this.viewManagementService.screenSize.next('medium');
+    } else if(this.screenSizeNumb == 850 || this.screenSizeNumb == 501) {
+      this.viewManagementService.screenSize.next('small');
+    } else if(this.screenSizeNumb == 500) {
+      this.viewManagementService.screenSize.next('extraSmall');
+    };
+  } */
 
   ngOnInit() {
     onAuthStateChanged(this.auth, (user) => {

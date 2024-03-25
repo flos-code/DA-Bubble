@@ -234,8 +234,8 @@ export class HeaderComponent implements OnInit {
      * Shows the sidebar by setting the active channel and user to null and updating the view.
      */
   showSidebar() {
-    this.chatService.setActiveChannelId(null);
-    this.chatService.setSelectedUserId(null);
+    //this.chatService.setActiveChannelId(null);
+    //this.chatService.setSelectedUserId(null);
     this.viewManagementService.setView('sidebar');
   }
 }
