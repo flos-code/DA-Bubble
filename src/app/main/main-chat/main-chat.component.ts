@@ -128,7 +128,7 @@ export class MainChatComponent implements OnInit, OnDestroy {
     this.currentUserSub.unsubscribe();
     this.activeDmUserSub.unsubscribe();
   }
- 
+
   /**
   *
   * Sets the boolean values of variables to ture, if the screensize is smaller or equal to 500px.
