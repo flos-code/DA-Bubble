@@ -31,6 +31,7 @@ export class ViewManagementService {
   public showMainChat$: Observable<boolean>;
   public defaultLogoVisible$: Observable<boolean>;
   private previousWidth = window.innerWidth; 
+  actualView : string = '';
 
   constructor() {
     this.updateScreenSize(window.innerWidth);
@@ -83,8 +84,10 @@ export class ViewManagementService {
       const wasLargerThan1500 = this.previousWidth > 1500;
       const wasLessThanOrEqual1110 = this.previousWidth <= 1110;
       const isNowGreaterThan1110 = currentWidth > 1110;
+      const wasSecondaryChatOpen = this.showSecondaryChat.value;
   
       this.updateScreenSize(currentWidth);
+  
       if (wasLargerThan1500 && currentWidth <= 1500) {
         this.showSecondaryChat$.subscribe((showSecondaryChat) => {
           if (showSecondaryChat) {
@@ -94,8 +97,14 @@ export class ViewManagementService {
       }
   
       if (wasLessThanOrEqual1110 && isNowGreaterThan1110) {
-        this.setView('sidebar');
-        this.showChannel.next(true);
+        if (wasSecondaryChatOpen) {
+          this.showChannel.next(true);
+          this.showSecondaryChat.next(true);
+          this.showSidebar.next(false);
+        } else {
+          this.setView('sidebar');
+          this.showChannel.next(true);
+        }
       }
   
       if (this.previousWidth >= 1110 && !isNowGreaterThan1110) {
@@ -105,11 +114,19 @@ export class ViewManagementService {
       if (this.previousWidth <= 1500 && currentWidth > 1500) {
         this.showChannel.next(true);
         this.showSidebar.next(true);
+        if (wasSecondaryChatOpen) {
+          this.showSecondaryChat.next(true);
+        // console.log('@@@@')
+        } else {
+          this.showSecondaryChat.next(false);
+        }
       }
   
       this.previousWidth = currentWidth;
     });
   }
+  
+  
 
   private viewSettings = {
     extraSmall: {
@@ -281,6 +298,7 @@ export class ViewManagementService {
       | 'secondaryChat'
   ): void {
     let screenSize = this.screenSize.value;
+    this.actualView = view;
     const settingsForSize = this.viewSettings[screenSize];
     if (!settingsForSize || !settingsForSize[view]) {
       return;
