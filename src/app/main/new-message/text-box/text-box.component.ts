@@ -68,6 +68,7 @@ export class TextBoxComponent {
   private firestore: Firestore = inject(Firestore);
   private dbSubscription!: Subscription;
   private channelIdSubscription: Subscription;
+  private userIdSubscription: Subscription;
   public imageURL: string | undefined;
   public filePath: string | undefined;
 
@@ -111,6 +112,15 @@ export class TextBoxComponent {
         }
       },
       error: (err) => console.error('Fehler beim Abonnieren von activeChannelIdUpdates', err),
+    });
+
+    this.userIdSubscription = this.chatService.activeUserIdUpdates.subscribe({
+      next: () => {
+        if (this.messageInput && this.messageInput.nativeElement) {
+          this.messageInput.nativeElement.focus();
+        }
+      },
+      error: (err) => console.error('Fehler beim Abonnieren von activeUserIdUpdates', err),
     });
   }
 
