@@ -24,7 +24,7 @@ const app = initializeApp(firebaseConfig);
   standalone: true,
   imports: [CommonModule, ReactiveFormsModule, MatFormFieldModule, RouterModule],
   templateUrl: './password-reset.component.html',
-  styleUrl: './password-reset.component.scss'
+  styleUrls: ['./password-reset.component.scss', './password-reset.responsive.scss']
 })
 
 export class PasswordResetComponent implements OnInit {
@@ -64,6 +64,10 @@ export class PasswordResetComponent implements OnInit {
   showEmailErrorDiv: boolean = false;
   showPasswordErrorDiv: boolean = false;
   showConfirmPasswordErrorDiv: boolean = false;
+  isText1: boolean = false;
+  isText2: boolean = false;
+  type1: string = 'password';
+  type2: string = 'password';
 
   emailForPasswordResetForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]
@@ -157,6 +161,16 @@ export class PasswordResetComponent implements OnInit {
         console.log(error.message)
       })
     })
+  }
+
+  togglePassword1Visibility() {
+    this.isText1 = !this.isText1
+    this.type1 = this.isText1 ? "text" : "password";
+  }
+
+  togglePassword2Visibility() {
+    this.isText2 = !this.isText2
+    this.type2 = this.isText2 ? "text" : "password";
   }
 
 }
