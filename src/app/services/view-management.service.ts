@@ -111,6 +111,7 @@ export class ViewManagementService {
       //wird größer als 1110px
       if (wasLessThanOrEqual1110 && isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
+          this.setView('channel');
           this.showMainChat.next(true);
           this.showSecondaryChat.next(true);
           this.showSidebar.next(false);
@@ -127,6 +128,7 @@ export class ViewManagementService {
           this.showSidebar.next(false);
         } else {
           this.showMainChat.next(true);
+          this.showSecondaryChat.next(false);
           this.showSidebar.next(false);
         }
      }
