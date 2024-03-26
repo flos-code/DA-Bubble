@@ -114,9 +114,9 @@ export class ViewManagementService {
       if (this.previousWidth <= 1500 && currentWidth > 1500) {
         this.showChannel.next(true);
         this.showSidebar.next(true);
+                // console.log('@@@@')
         if (wasSecondaryChatOpen) {
           this.showSecondaryChat.next(true);
-        // console.log('@@@@')
         } else {
           this.showSecondaryChat.next(false);
         }
