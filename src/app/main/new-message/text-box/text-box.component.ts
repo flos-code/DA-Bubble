@@ -62,11 +62,18 @@ export class TextBoxComponent {
   messageModel: string = '';
   showEmojiPicker: boolean = false;
   showMentionUser: boolean = false;
+  displayUser: boolean = false;
+  displayChannels: boolean = false;
   user = new User();
   allUsers: any = [];
+  filteredUsers: any = [];
+  filteredChannel: any = [];
+  allChannel: any = [];
   storage = inject(Storage);
   private firestore: Firestore = inject(Firestore);
-  private dbSubscription!: Subscription;
+
+  private userSubscription!: Subscription;
+  private channelSubscription!: Subscription;
   private channelIdSubscription: Subscription;
   private userIdSubscription: Subscription;
   public imageURL: string | undefined;
@@ -80,23 +87,16 @@ export class TextBoxComponent {
   ) {}
 
   ngOnInit(): void {
-    const usersCollection = collection(this.firestore, 'users');
-    this.dbSubscription = collectionData(usersCollection, {
-      idField: 'id',
-    }).subscribe(
-      (changes) => {
-        this.allUsers = changes;
-        this.sortUsers(this.allUsers);
-      },
-      (error) => {
-        console.error('Error fetching changes:', error);
-      }
-    );
+    this.subscribeToUsers();
+    this.subscribeToChannels();
     this.reFocusOnChannelChange();
   }
 
   ngOnDestroy(): void {
-    this.dbSubscription.unsubscribe();
+    this.userSubscription.unsubscribe();
+    this.channelSubscription.unsubscribe();
+    this.channelIdSubscription.unsubscribe();
+    this.userIdSubscription.unsubscribe();
   }
 
   ngAfterViewInit() {
@@ -104,15 +104,52 @@ export class TextBoxComponent {
     this.cdRef.detectChanges();
   }
 
-  reFocusOnChannelChange() {
-    this.channelIdSubscription = this.chatService.activeChannelIdUpdates.subscribe({
-      next: () => {
-        if (this.messageInput && this.messageInput.nativeElement) {
-          this.messageInput.nativeElement.focus();
-        }
+  subscribeToUsers(): void {
+    const usersCollection = collection(this.firestore, 'users');
+    this.userSubscription = collectionData(usersCollection, {
+      idField: 'id',
+    }).subscribe(
+      (changes) => {
+        this.allUsers = changes;
+        this.sortUsers(this.allUsers);
+        this.filteredUsers = this.allUsers;
       },
-      error: (err) => console.error('Fehler beim Abonnieren von activeChannelIdUpdates', err),
-    });
+      (error) => {
+        console.error('Error fetching users:', error);
+      }
+    );
+  }
+
+  subscribeToChannels(): void {
+    const channelCollection = collection(this.firestore, 'channels');
+    this.channelSubscription = collectionData(channelCollection, {
+      idField: 'id',
+    }).subscribe(
+      (changes) => {
+        this.allChannel = changes;
+        this.sortChannel(this.allChannel);
+        this.filteredChannel = this.allChannel;
+      },
+      (error) => {
+        console.error('Error fetching channels:', error);
+      }
+    );
+  }
+
+  reFocusOnChannelChange() {
+    this.channelIdSubscription =
+      this.chatService.activeChannelIdUpdates.subscribe({
+        next: () => {
+          if (this.messageInput && this.messageInput.nativeElement) {
+            this.messageInput.nativeElement.focus();
+          }
+        },
+        error: (err) =>
+          console.error(
+            'Fehler beim Abonnieren von activeChannelIdUpdates',
+            err
+          ),
+      });
 
     this.userIdSubscription = this.chatService.activeUserIdUpdates.subscribe({
       next: () => {
@@ -120,7 +157,8 @@ export class TextBoxComponent {
           this.messageInput.nativeElement.focus();
         }
       },
-      error: (err) => console.error('Fehler beim Abonnieren von activeUserIdUpdates', err),
+      error: (err) =>
+        console.error('Fehler beim Abonnieren von activeUserIdUpdates', err),
     });
   }
 
@@ -245,6 +283,14 @@ export class TextBoxComponent {
       if (b.id === this.userManagementService.activeUserId.value) return 1;
       return a.name.localeCompare(b.name);
     });
+  }
+
+  sortChannel(channels): void {
+    const filteredChannels = channels.filter((channel) =>
+      channel.members.includes(this.userManagementService.activeUserId.value)
+    );
+    filteredChannels.sort((a, b) => a.creationDate - b.creationDate);
+    this.allChannel = filteredChannels;
   }
 
   async sendMessage(): Promise<void> {
@@ -428,5 +474,78 @@ export class TextBoxComponent {
       this.messageModel.trim().length > 0 ||
       (this.imageURL && this.imageURL.trim().length > 0)
     );
+  }
+
+  onInputChange(inputValue: string): void {
+    const cursorPosition = this.messageInput.nativeElement.selectionStart;
+    const textUpToCursor = inputValue.substring(0, cursorPosition);
+    const lastAtPos = textUpToCursor.lastIndexOf('@');
+    const lastHashPos = textUpToCursor.lastIndexOf('#');
+
+    // Bestimmen, ob wir gerade eine Benutzer- oder Kanalerwähnung haben
+    if (lastAtPos > -1 && (lastHashPos < 0 || lastAtPos > lastHashPos)) {
+      this.displayUser = true;
+      this.displayChannels = false;
+      const searchTerm = textUpToCursor.substring(lastAtPos + 1).toLowerCase();
+      this.handleUserSearch(searchTerm);
+    } else if (lastHashPos > -1 && (lastAtPos < 0 || lastHashPos > lastAtPos)) {
+      this.displayChannels = true;
+      this.displayUser = false;
+      const searchTerm = textUpToCursor
+        .substring(lastHashPos + 1)
+        .toLowerCase();
+      this.handleChannelSearch(searchTerm);
+    } else {
+      this.resetFilters();
+    }
+  }
+
+  handleUserSearch(searchTerm: string): void {
+    this.filteredUsers = this.allUsers.filter((user) =>
+      user.name.toLowerCase().startsWith(searchTerm)
+    );
+  }
+
+  handleChannelSearch(searchTerm: string): void {
+    this.filteredChannel = this.allChannel.filter((channel) =>
+      channel.name.toLowerCase().startsWith(searchTerm)
+    );
+  }
+
+  selectUser(userName: string) {
+    this.replaceMentionText('@', userName);
+    this.displayUser = false;
+  }
+
+  selectChannel(channelName: string) {
+    this.replaceMentionText('#', channelName);
+    this.displayChannels = false;
+  }
+
+  replaceMentionText(prefix: string, fullName: string) {
+    const inputEl = this.messageInput.nativeElement;
+    const cursorPosition = inputEl.selectionStart;
+    const inputValue = inputEl.value;
+    const textUpToCursor = inputValue.substring(0, cursorPosition);
+    const lastPrefixPos = textUpToCursor.lastIndexOf(prefix);
+
+    if (lastPrefixPos !== -1) {
+      const beforeMention = inputValue.substring(0, lastPrefixPos);
+      const afterMention = inputValue.substring(
+        cursorPosition,
+        inputValue.length
+      );
+      inputEl.value = `${beforeMention}${prefix}${fullName} ${afterMention}`;
+      const newPos = beforeMention.length + fullName.length + 2;
+      setTimeout(() => {
+        inputEl.selectionStart = newPos;
+        inputEl.selectionEnd = newPos;
+      });
+    }
+  }
+
+  resetFilters(): void {
+    this.filteredUsers = [];
+    this.filteredChannel = [];
   }
 }
