@@ -1,7 +1,5 @@
 <app-header></app-header>
 
-<!-- <div *ngIf="userLoaded" class="main-content" (window:resize)="onResize($event)">
- -->
 <div *ngIf="userLoaded" class="main-content">
   <app-side-bar *ngIf="viewManagementService.showSidebar$ | async"></app-side-bar>
   <app-main-chat *ngIf="viewManagementService.showMainChat$ | async"></app-main-chat>

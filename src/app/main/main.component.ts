@@ -64,20 +64,6 @@ export class MainComponent implements OnInit {
   ) {
   }
 
-/*   @HostListener('window:resize', ['$event'])
-    onResize(event: Event) {
-    this.screenSizeNumb = window.innerWidth;
-    if(this.screenSizeNumb = 1425) {
-      this.viewManagementService.screenSize.next('large');
-    } else if(this.screenSizeNumb == 1424 || this.screenSizeNumb == 851) {
-      this.viewManagementService.screenSize.next('medium');
-    } else if(this.screenSizeNumb == 850 || this.screenSizeNumb == 501) {
-      this.viewManagementService.screenSize.next('small');
-    } else if(this.screenSizeNumb == 500) {
-      this.viewManagementService.screenSize.next('extraSmall');
-    };
-  } */
-
   ngOnInit() {
     onAuthStateChanged(this.auth, (user) => {
       if (!user) {
