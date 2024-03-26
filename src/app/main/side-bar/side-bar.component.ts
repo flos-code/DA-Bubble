@@ -285,8 +285,7 @@ export class SideBarComponent {
 
   setSelectedUser(userId: string) {
     this.chatService.setSelectedUserId(userId);
-    this.viewManagementService.setView('channel');
-    //this.viewManagementService.setView('directMessage');
+    this.viewManagementService.setView('directMessage');
   }
 
   getSelectedUserId() {
