@@ -10,11 +10,11 @@ export class ViewManagementService {
   public screenSize = new BehaviorSubject<ScreenSize>('large');
   screenSize$ = this.screenSize.asObservable();
 
-  public showChannel = new BehaviorSubject<boolean>(false);
+/*   public showChannel = new BehaviorSubject<boolean>(false);
   showChannel$ = this.showChannel.asObservable();
 
   public showDirectMessage = new BehaviorSubject<boolean>(false);
-  showDirectMessage$ = this.showDirectMessage.asObservable();
+  showDirectMessage$ = this.showDirectMessage.asObservable(); */
 
   public showNewMessage = new BehaviorSubject<boolean>(false);
   showNewMessage$ = this.showNewMessage.asObservable();
