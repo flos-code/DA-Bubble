@@ -133,10 +133,12 @@ export class ViewManagementService {
       //wird kleiner als 1110px
       if (this.previousWidth >= 1110 && !isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
-          this.showChannel.next(true);
+          this.showSidebarToggle.next(true)
+          this.showChannel.next(false);
           this.showSecondaryChat.next(false);
           this.showSidebar.next(false);
         } else {
+          this.showSecondaryChat.next(false);
           this.showChannel.next(true);
           this.showSidebar.next(false);
         }
