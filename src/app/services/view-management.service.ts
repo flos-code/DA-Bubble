@@ -88,6 +88,7 @@ export class ViewManagementService {
       const wasLessThanOrEqual1110 = this.previousWidth <= 1110;
       const isNowGreaterThan1110 = currentWidth > 1110;
       const wasSecondaryChatOpen = this.showSecondaryChat.value;
+      const wasNewMessageOpen = this.showNewMessage.value;
 
       this.updateScreenSize(currentWidth);
       // wird kleiner als 1500pxx
@@ -96,6 +97,9 @@ export class ViewManagementService {
           this.showChannel.next(true);
           this.showSecondaryChat.next(true);
           this.showSidebar.next(false);
+        } else if (wasNewMessageOpen) {
+          this.showNewMessage.next(true);
+          this.showSidebar.next(true);
         } else {
           this.showChannel.next(true);
           this.showSidebar.next(true);
@@ -112,6 +116,7 @@ export class ViewManagementService {
       //wird größer als 1500px
       if (this.previousWidth <= 1500 && currentWidth > 1500) {
         this.showChannel.next(true);
+        this.showSidebarToggle.next(true);
         this.showSidebar.next(true);
         if (wasSecondaryChatOpen) {
           this.showSecondaryChat.next(true);
@@ -124,7 +129,8 @@ export class ViewManagementService {
         if (wasSecondaryChatOpen) {
           this.showChannel.next(true);
           this.showSecondaryChat.next(true);
-          this.showSidebar.next(false);
+        } else if (wasNewMessageOpen) {
+          this.setView('newMessage');
         } else {
           this.setView('sidebar');
           this.showChannel.next(true);
@@ -133,9 +139,12 @@ export class ViewManagementService {
       //wird kleiner als 1110px
       if (this.previousWidth >= 1110 && !isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
-          this.showSidebarToggle.next(true)
+          this.showSidebarToggle.next(true);
           this.showChannel.next(false);
-          this.showSecondaryChat.next(false);
+          this.showSecondaryChat.next(true);
+          this.showSidebar.next(false);
+        } else if (wasNewMessageOpen) {
+          this.showNewMessage.next(true);
           this.showSidebar.next(false);
         } else {
           this.showSecondaryChat.next(false);

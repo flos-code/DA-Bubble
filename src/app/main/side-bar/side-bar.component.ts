@@ -194,7 +194,6 @@ export class SideBarComponent {
       );
       await this.loadChannels(activeUserId);
       this.newChannelId = docRef.id;
-      // console.log(this.newChannelId);
       if (this.screenSize === 'medium' || this.screenSize === 'large') {
         this.setActiveChannel(docRef.id);
       }
