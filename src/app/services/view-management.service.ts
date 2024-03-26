@@ -7,7 +7,6 @@ export type ScreenSize = 'extraSmall' | 'small' | 'medium' | 'large';
   providedIn: 'root',
 })
 export class ViewManagementService {
-  
   public screenSize = new BehaviorSubject<ScreenSize>('large');
   screenSize$ = this.screenSize.asObservable();
 
@@ -29,12 +28,10 @@ export class ViewManagementService {
   public showSidebarToggle = new BehaviorSubject<boolean>(true);
   showSidebarToggle$ = this.showSidebarToggle.asObservable();
 
-  public showMainChat = new BehaviorSubject<boolean>(true);
-  showMainChat$ = this.showMainChat.asObservable();
-
+  public showMainChat$: Observable<boolean>;
   public defaultLogoVisible$: Observable<boolean>;
-  private previousWidth = window.innerWidth; 
-  actualView : string = '';
+  private previousWidth = window.innerWidth;
+  actualView: string = '';
 
   constructor() {
     this.updateScreenSize(window.innerWidth);
@@ -45,7 +42,10 @@ export class ViewManagementService {
       this.showSidebar$,
     ]).pipe(
       map(([screenSize, showSidebar]) => {
-        return !(screenSize === 'small' || screenSize === 'extraSmall') || showSidebar;
+        return (
+          !(screenSize === 'small' || screenSize === 'extraSmall') ||
+          showSidebar
+        );
       })
     );
 
@@ -88,19 +88,30 @@ export class ViewManagementService {
       const wasLessThanOrEqual1110 = this.previousWidth <= 1110;
       const isNowGreaterThan1110 = currentWidth > 1110;
       const wasSecondaryChatOpen = this.showSecondaryChat.value;
-  
+
       this.updateScreenSize(currentWidth);
       // wird kleiner als 1500pxx
       if (wasLargerThan1500 && currentWidth <= 1500) {
-        this.showSecondaryChat$.subscribe((showSecondaryChat) => {
-          if (showSecondaryChat) {
-            this.setView('secondaryChat');
-          }
-        }).unsubscribe(); 
+        if (wasSecondaryChatOpen) {
+          this.showChannel.next(true);
+          this.showSecondaryChat.next(true);
+          this.showSidebar.next(false);
+        } else {
+          this.showChannel.next(true);
+          this.showSidebar.next(true);
+        }
+
+        this.showSecondaryChat$
+          .subscribe((showSecondaryChat) => {
+            if (showSecondaryChat) {
+              this.setView('secondaryChat');
+            }
+          })
+          .unsubscribe();
       }
       //wird größer als 1500px
       if (this.previousWidth <= 1500 && currentWidth > 1500) {
-        this.showMainChat.next(true);
+        this.showChannel.next(true);
         this.showSidebar.next(true);
         if (wasSecondaryChatOpen) {
           this.showSecondaryChat.next(true);
@@ -111,33 +122,29 @@ export class ViewManagementService {
       //wird größer als 1110px
       if (wasLessThanOrEqual1110 && isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
-          this.setView('channel');
-          this.showMainChat.next(true);
+          this.showChannel.next(true);
           this.showSecondaryChat.next(true);
           this.showSidebar.next(false);
         } else {
           this.setView('sidebar');
-          this.showMainChat.next(true);
+          this.showChannel.next(true);
         }
       }
       //wird kleiner als 1110px
       if (this.previousWidth >= 1110 && !isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
-          this.showMainChat.next(true);
+          this.showChannel.next(true);
           this.showSecondaryChat.next(false);
           this.showSidebar.next(false);
         } else {
-          this.showMainChat.next(true);
-          this.showSecondaryChat.next(false);
+          this.showChannel.next(true);
           this.showSidebar.next(false);
         }
-     }
-  
+      }
+
       this.previousWidth = currentWidth;
     });
   }
-  
-  
 
   private viewSettings = {
     extraSmall: {

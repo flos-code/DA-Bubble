@@ -414,8 +414,7 @@ export class TextBoxComponent {
   private afterMessageSent(targetId: string) {
     this.userManagementService.loadUsers();
     this.chatService.setSelectedUserId(targetId);
-    this.viewManagementService.setView('channel');
-    //this.viewManagementService.setView('directMessage');
+    this.viewManagementService.setView('directMessage');
   }
 
   private async updateDocument(path: string, docId: string, data: object) {
