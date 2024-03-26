@@ -10,11 +10,11 @@ export class ViewManagementService {
   public screenSize = new BehaviorSubject<ScreenSize>('large');
   screenSize$ = this.screenSize.asObservable();
 
-/*   public showChannel = new BehaviorSubject<boolean>(false);
-  showChannel$ = this.showChannel.asObservable();
-
-  public showDirectMessage = new BehaviorSubject<boolean>(false);
-  showDirectMessage$ = this.showDirectMessage.asObservable(); */
+  /*   public showChannel = new BehaviorSubject<boolean>(false);
+    showChannel$ = this.showChannel.asObservable();
+  
+    public showDirectMessage = new BehaviorSubject<boolean>(false);
+    showDirectMessage$ = this.showDirectMessage.asObservable(); */
 
   public showNewMessage = new BehaviorSubject<boolean>(false);
   showNewMessage$ = this.showNewMessage.asObservable();
@@ -33,8 +33,8 @@ export class ViewManagementService {
 
   //public showMainChat$: Observable<boolean>;
   public defaultLogoVisible$: Observable<boolean>;
-  private previousWidth = window.innerWidth; 
-  actualView : string = '';
+  private previousWidth = window.innerWidth;
+  actualView: string = '';
 
   constructor() {
     this.updateScreenSize(window.innerWidth);
@@ -88,9 +88,9 @@ export class ViewManagementService {
       const wasLessThanOrEqual1110 = this.previousWidth <= 1110;
       const isNowGreaterThan1110 = currentWidth > 1110;
       const wasSecondaryChatOpen = this.showSecondaryChat.value;
-  
+
       this.updateScreenSize(currentWidth);
-  
+
       if (wasLargerThan1500 && currentWidth <= 1500) {
         if (wasSecondaryChatOpen) {
           this.showMainChat.next(true);
@@ -101,24 +101,24 @@ export class ViewManagementService {
           this.showSidebar.next(true);
         }
 
-/*         this.showSecondaryChat$.subscribe((showSecondaryChat) => {
-          if (showSecondaryChat) {
-            this.setView('secondaryChat');
-          }
-        }).unsubscribe();  */
+        /*         this.showSecondaryChat$.subscribe((showSecondaryChat) => {
+                  if (showSecondaryChat) {
+                    this.setView('secondaryChat');
+                  }
+                }).unsubscribe();  */
       }
 
       if (this.previousWidth <= 1500 && currentWidth > 1500) {
         this.showMainChat.next(true);
         this.showSidebar.next(true);
-                // console.log('@@@@')
+        // console.log('@@@@')
         if (wasSecondaryChatOpen) {
           this.showSecondaryChat.next(true);
         } else {
           this.showSecondaryChat.next(false);
         }
       }
-  
+
       if (wasLessThanOrEqual1110 && isNowGreaterThan1110) {
         if (wasSecondaryChatOpen) {
           this.showMainChat.next(true);
@@ -139,50 +139,50 @@ export class ViewManagementService {
           this.showMainChat.next(true);
           this.showSidebar.next(false);
         }
-     }
-   
+      }
+
       this.previousWidth = currentWidth;
     });
   }
-  
-  
+
+
 
   private viewSettings = {
     extraSmall: {
       sidebar: {
         showSidebar: true,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
       channel: {
         showSidebar: false,
         showMainChat: true,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
-/*       directMessage: {
+      directMessage: {
         showSidebar: false,
         showMainChat: false,
         showDirectMessage: true,
         showNewMessage: false,
         showSecondaryChat: false,
-      }, */
+      },
 
 
       newMessage: {
         showNewMessage: true,
         showSidebar: false,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showSecondaryChat: false,
       },
       secondaryChat: {
         showSidebar: false,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: true,
       },
@@ -191,37 +191,37 @@ export class ViewManagementService {
       sidebar: {
         showSidebar: true,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
       channel: {
         showSidebar: false,
         showMainChat: true,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
-/*       directMessage: {
+      directMessage: {
         showSidebar: false,
         showChannel: false,
         showDirectMessage: true,
         showNewMessage: false,
         showSecondaryChat: false,
-      }, */
+      },
 
 
       newMessage: {
         showNewMessage: true,
         showSidebar: false,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showSecondaryChat: false,
       },
       secondaryChat: {
         showSidebar: false,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: true,
       },
@@ -236,18 +236,18 @@ export class ViewManagementService {
         showSidebar: true,
         showSidebarToggle: true,
         showMainChat: true,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
-/*       directMessage: {
+      directMessage: {
         showSidebar: true,
         showSidebarToggle: true,
         showChannel: false,
         showDirectMessage: true,
         showNewMessage: false,
         showSecondaryChat: false,
-      }, */
+      },
 
 
       newMessage: {
@@ -255,7 +255,7 @@ export class ViewManagementService {
         showNewMessage: true,
         showSidebarToggle: true,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showSecondaryChat: false,
       },
       secondaryChat: {
@@ -272,23 +272,23 @@ export class ViewManagementService {
       },
       channel: {
         showMainChat: true,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showNewMessage: false,
         showSecondaryChat: false,
       },
-/*       directMessage: {
+      directMessage: {
         showSidebar: true,
         showChannel: false,
         showDirectMessage: true,
         showNewMessage: false,
         showSecondaryChat: false,
-      }, */
+      },
 
       newMessage: {
         showSidebar: true,
         showNewMessage: true,
         showMainChat: false,
-        //showDirectMessage: false,
+        showDirectMessage: false,
         showSecondaryChat: false,
       },
       secondaryChat: {
@@ -319,7 +319,7 @@ export class ViewManagementService {
     view:
       | 'sidebar'
       | 'channel'
-   //   | 'directMessage'
+      //   | 'directMessage'
       | 'newMessage'
       | 'secondaryChat'
   ): void {
