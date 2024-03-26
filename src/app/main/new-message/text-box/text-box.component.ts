@@ -483,6 +483,12 @@ export class TextBoxComponent {
     const lastAtPos = textUpToCursor.lastIndexOf('@');
     const lastHashPos = textUpToCursor.lastIndexOf('#');
 
+    if (lastAtPos === -1 && lastHashPos === -1) {
+      this.displayUser = false;
+      this.displayChannels = false;
+      return;
+    }
+
     // Bestimmen, ob wir gerade eine Benutzer- oder Kanalerwähnung haben
     if (lastAtPos > -1 && (lastHashPos < 0 || lastAtPos > lastHashPos)) {
       this.displayUser = true;
