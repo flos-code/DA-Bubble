@@ -292,12 +292,21 @@ export class SideBarComponent {
   }
 
   async preSelect(activeUserId: string) {
-    if (this.screenSize === 'medium' || this.screenSize === 'large') {
-      const isMember = await this.isUserMemberOfAllg(activeUserId);
-      if (isMember) {
-        this.setActiveChannel('allgemein');
-      } else {
-        this.openNewMessage();
+    if (
+      this.viewManagementService.showNewMessage.value === true ||
+      this.viewManagementService.showDirectMessage.value === true
+    ) {
+    } else {
+      if (
+        (this.screenSize === 'medium' || this.screenSize === 'large') &&
+        this.getActiveChannelId() === null
+      ) {
+        const isMember = await this.isUserMemberOfAllg(activeUserId);
+        if (isMember) {
+          this.setActiveChannel('allgemein');
+        } else {
+          this.openNewMessage();
+        }
       }
     }
   }

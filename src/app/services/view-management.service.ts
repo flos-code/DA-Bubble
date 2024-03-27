@@ -120,6 +120,8 @@ export class ViewManagementService {
         this.showSidebar.next(true);
         if (wasSecondaryChatOpen) {
           this.showSecondaryChat.next(true);
+        } else if (wasNewMessageOpen) {
+          this.setView('newMessage');
         } else {
           this.showSecondaryChat.next(false);
         }

@@ -7,7 +7,7 @@ import { Thread } from '../../models/thread.class';
   providedIn: 'root',
 })
 export class ChatService {
-  private activeChannelId: string;
+  private activeChannelId: string = null;
   private selectedUserId: string;
   private firestore: Firestore = inject(Firestore);
   isSearchbarActive: EventEmitter<string> = new EventEmitter<string>();
