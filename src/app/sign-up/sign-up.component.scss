@@ -1,10 +1,13 @@
 .sign-up-main {
-    height: 100vh;
+    min-height: 100vh;
     width: 100vw;
     position: relative;
     display: flex;
-    align-items: center;
+    flex-direction: column;
+    align-items: flex-start;
     justify-content: center;
+    gap: 30px;
+
 }
 
 .logo-container {
@@ -12,9 +15,7 @@
     flex-direction: row;
     align-items: center;
     gap: 15px;
-    position: absolute;
-    top: 75px;
-    left: 75px;
+    margin-left: 70px;
 
     img {
         height: 70px;
@@ -53,6 +54,7 @@
     height: 709px;
     border-radius: 30px;
     position: relative;
+    margin-left: calc((100% - 606px) / 2);
 
     h1 {
         color: #444DF2;
@@ -177,7 +179,7 @@
     display: flex;
     align-items: center;
     gap: 8px;
-    
+
 
     label {
         width: 30px;
@@ -238,8 +240,7 @@
 }
 
 .lower-links-container {
-    position: absolute;
-    left: calc(50% - 133.5px);
+    margin-left: calc(50% - 133.5px);
     bottom: 70px;
     display: flex;
     gap: 16px;
@@ -274,6 +275,7 @@
     height: 709px;
     border-radius: 30px;
     position: relative;
+    margin-left: calc((100% - 606px) / 2);
 
     h1 {
         color: #444DF2;
@@ -418,7 +420,7 @@
     overflow-x: hidden;
 }
 
-.the-eye{
+.the-eye {
     display: flex;
     position: absolute;
     top: 17px;
@@ -427,27 +429,30 @@
     right: 25px;
     background-position: center;
     background-repeat: no-repeat;
-    &:hover{
+
+    &:hover {
         cursor: pointer;
     }
 
 }
 
-.visibility_on{
+.visibility_on {
     background-image: url('/assets/img/login/visibility_on_gray.png');
-    &:hover{
+
+    &:hover {
         background-image: url('/assets/img/login/visibility_on_black.png');
     }
 }
 
-.visibility_off{
+.visibility_off {
     background-image: url('/assets/img/login/visibility_off_gray.png');
-    &:hover{
+
+    &:hover {
         background-image: url('/assets/img/login/visibility_off_black.png');
     }
 }
 
-.error-message-container{
+.error-message-container {
     width: 500px;
     height: 25px;
     margin-bottom: 20px;
@@ -455,7 +460,7 @@
     visibility: hidden;
 }
 
-.visible{
+.visible {
     visibility: visible;
 }
 

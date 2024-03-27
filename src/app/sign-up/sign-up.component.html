@@ -26,7 +26,7 @@
           {{ checkErrors('email') }}
         </mat-error>
       </div>
-      <div style="position: relative;">
+      <div style="position: relative; width: calc(100% - 20px) !important">
         <input required [type]="type" class="sign-up-password-input" name="password" id="sign_up_password"
           placeholder="Passwort" formControlName="password" (focus)="showPasswordErrorDiv = true"/>
         <span (click)="togglePasswordVisibility()" class="the-eye"

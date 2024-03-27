@@ -43,6 +43,7 @@
 
     .error-message-container {
         margin-bottom: 10px;
+        width: 358px;
     }
 
     .login-hint {
@@ -112,9 +113,66 @@
         left: calc(50% - 100px);
     }
 
-    .bad-login-main{
+    .bad-login-main {
         padding: 20px;
         font-size: 21px;
         line-height: 30px;
     }
+}
+
+@media screen and (max-width: 450px) {
+    .login-main {
+        width: 100vw;
+        height: auto;
+        padding-top: 30px;
+        padding-bottom: 30px;
+    }
+
+    .login-form {
+        width: 100% !important;
+        border-radius: unset;
+
+        form {
+            width: 100% !important;
+        }
+    }
+
+    .login-input-main {
+        width: 100% !important;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .login-email-input {
+        width: calc(100% - 20px) !important;
+    }
+
+    .login-hint {
+        width: calc(100% - 20px) !important;
+    }
+
+    .login-password-input {
+        width: calc(100% - 20px) !important;
+    }
+
+    .error-message-container {
+        width: calc(100% - 20px) !important;
+    }
+
+    .login-with-google-btn {
+        width: calc(100% - 20px) !important;
+    }
+
+    .or-container{
+        width: calc(100% - 20px) !important;
+        img{
+            width: calc((100% - 70px)/2);
+        }
+    }
+
+    .login-btns-container{
+        gap: 10px;
+    }
+
 }
