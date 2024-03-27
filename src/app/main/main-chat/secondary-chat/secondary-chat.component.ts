@@ -307,9 +307,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
         if (threadId) {
           this.loadThreadMessages(threadId);
           this.loadThreadInitMessage();
-        } else {
-          console.log('No thread ID available');
-        }
+        } 
       })
     );
   }
