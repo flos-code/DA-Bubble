@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { initializeApp } from 'firebase/app';
@@ -62,7 +62,7 @@ const storage = getStorage();
     './sign-up.component.responsive.scss',
   ],
 })
-export class SignUpComponent {
+export class SignUpComponent implements OnInit {
   auth = getAuth(app);
 
   first: boolean = true;
@@ -77,6 +77,10 @@ export class SignUpComponent {
   showEmailErrorDiv: boolean = false;
   showPasswordErrorDiv: boolean = false;
   showCheckboxErrorDiv: boolean = false;
+  public getScreenWidth: any;
+  public getScreenHeight: any;
+  addTheUpperMargin: boolean = false;
+
 
   genericImg: string = '/assets/img/login/profile_generic_big.png';
   person1Img: string = '/assets/img/userImages/userImage1.svg';
@@ -103,6 +107,27 @@ export class SignUpComponent {
   });
 
   constructor(private router: Router, private fb: FormBuilder) { }
+
+  ngOnInit(): void {
+    this.getScreenHeight = window.innerHeight;
+
+    if (this.getScreenHeight <= 1045) {
+      this.addTheUpperMargin = true;
+    } else if (this.getScreenHeight > 1045) {
+      this.addTheUpperMargin = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.getScreenHeight = window.innerHeight;
+
+    if (this.getScreenHeight <= 1045) {
+      this.addTheUpperMargin = true;
+    } else if (this.getScreenHeight > 1045) {
+      this.addTheUpperMargin = false;
+    }
+  }
 
   goBackToLogin() {
     this.router.navigateByUrl('login');

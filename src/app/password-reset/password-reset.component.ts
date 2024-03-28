@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, NonNullableFormBuilder, ReactiveFormsModule, ValidationErrors, Validators } from '@angular/forms';
 import { initializeApp } from "firebase/app";
 import { Router } from '@angular/router';
@@ -50,6 +50,25 @@ export class PasswordResetComponent implements OnInit {
         validators: CustomValidators.passwordsMatching,
       }
     )
+
+    this.getScreenHeight = window.innerHeight;
+
+    if (this.getScreenHeight <= 951) {
+      this.addTheUpperMargin = true;
+    } else if (this.getScreenHeight > 951) {
+      this.addTheUpperMargin = false;
+    }
+  }
+
+  @HostListener('window:resize', ['$event'])
+  onWindowResize() {
+    this.getScreenHeight = window.innerHeight;
+
+    if (this.getScreenHeight <= 951) {
+      this.addTheUpperMargin = true;
+    } else if (this.getScreenHeight > 951) {
+      this.addTheUpperMargin = false;
+    }
   }
   passwordResetForm!: FormGroup<PassForm>;
   auth = getAuth(app);
@@ -68,6 +87,9 @@ export class PasswordResetComponent implements OnInit {
   isText2: boolean = false;
   type1: string = 'password';
   type2: string = 'password';
+  public getScreenWidth: any;
+  public getScreenHeight: any;
+  addTheUpperMargin: boolean = false;
 
   emailForPasswordResetForm = this.fb.group({
     email: ['', [Validators.required, Validators.email]]

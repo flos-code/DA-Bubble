@@ -16,12 +16,12 @@
 
 <div class="login-main">
 
-    <div class="upper-main-container">
+    <div class="upper-main-container" [class.m-top-30]="addTheUpperMargin">
         <div class="logo-container">
             <img src="/assets/img/Logo.png">
             <p>DABubble</p>
         </div>
-        <div class="create-account-container">
+        <div *ngIf="!under650Px" class="create-account-container">
             <p>Neu bei DABubble ?</p>
             <a routerLink="/sign_up">Konto erstellen</a>
         </div>
@@ -79,6 +79,11 @@
         </div>
 
 
+    </div>
+
+    <div *ngIf="under650Px" class="create-account-container">
+        <p>Neu bei DABubble ?</p>
+        <a routerLink="/sign_up">Konto erstellen</a>
     </div>
 
 

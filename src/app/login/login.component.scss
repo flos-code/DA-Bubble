@@ -5,8 +5,9 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-    justify-content: center;
+    justify-content: space-around;
     gap: 30px;
+    transition: margin 0.2s ease;
 }
 
 .upper-main-container{
@@ -396,6 +397,10 @@
 
 .visible {
     visibility: visible;
+}
+
+.m-top-30{
+    margin-top: 30px;
 }
 
 app-imprint {
