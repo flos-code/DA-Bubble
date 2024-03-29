@@ -415,6 +415,8 @@ export class TextBoxComponent {
     this.userManagementService.loadUsers();
     this.chatService.setSelectedUserId(targetId);
     this.viewManagementService.setView('directMessage');
+    this.displayChannels = false;
+    this.displayUser = false;
   }
 
   private async updateDocument(path: string, docId: string, data: object) {
@@ -510,12 +512,16 @@ export class TextBoxComponent {
     this.filteredUsers = this.allUsers.filter((user) =>
       user.name.toLowerCase().startsWith(searchTerm)
     );
+    this.displayUser = this.filteredUsers.length > 0;
+    this.displayChannels = false;
   }
 
   handleChannelSearch(searchTerm: string): void {
     this.filteredChannel = this.allChannel.filter((channel) =>
       channel.name.toLowerCase().startsWith(searchTerm)
     );
+    this.displayChannels = this.filteredChannel.length > 0;
+    this.displayUser = false;
   }
 
   selectUser(userName: string) {
@@ -531,7 +537,7 @@ export class TextBoxComponent {
   replaceMentionText(prefix: string, fullName: string) {
     const inputEl = this.messageInput.nativeElement;
     const cursorPosition = inputEl.selectionStart;
-    const inputValue = inputEl.value;
+    const inputValue = this.messageModel;
     const textUpToCursor = inputValue.substring(0, cursorPosition);
     const lastPrefixPos = textUpToCursor.lastIndexOf(prefix);
 
@@ -541,13 +547,18 @@ export class TextBoxComponent {
         cursorPosition,
         inputValue.length
       );
-      inputEl.value = `${beforeMention}${prefix}${fullName} ${afterMention}`;
+      this.messageModel = `${beforeMention}${prefix}${fullName} ${afterMention}`;
       const newPos = beforeMention.length + fullName.length + 2;
+
+      // Fokusieren Sie das Eingabeelement und passen Sie die Cursorposition an
       setTimeout(() => {
+        inputEl.focus();
         inputEl.selectionStart = newPos;
         inputEl.selectionEnd = newPos;
       });
     }
+    this.displayChannels = false;
+    this.displayUser = false;
   }
 
   resetFilters(): void {
