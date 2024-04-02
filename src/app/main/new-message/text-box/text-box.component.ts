@@ -427,6 +427,8 @@ export class TextBoxComponent {
     this.messageModel = '';
     this.imageURL = undefined;
     this.filePath = undefined;
+    this.displayUser = false;
+    this.displayChannels = false;
   }
 
   private async handleThreadMessage() {
