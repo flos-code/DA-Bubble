@@ -4,6 +4,7 @@ import {
   Component,
   ElementRef,
   Input,
+  Renderer2,
   ViewChild,
   inject,
 } from '@angular/core';
@@ -54,6 +55,7 @@ import { DirectMessage } from '../../../../models/directMessage.class';
 export class TextBoxComponent {
   @ViewChild('message') messageInput: ElementRef<HTMLInputElement>;
   @ViewChild('fileUpload') fileUpload: ElementRef;
+  @ViewChild('userSelection') userSelection: ElementRef;
   @Input() messageType: 'direct' | 'channel' | 'thread' | 'threadMessage';
   @Input() targetId: string; // ID des Nutzers/Kanals/Threads
   @Input() placeholderText: string;
@@ -83,13 +85,15 @@ export class TextBoxComponent {
     public userManagementService: UserManagementService,
     private viewManagementService: ViewManagementService,
     private cdRef: ChangeDetectorRef,
-    private chatService: ChatService
+    private chatService: ChatService,
+    private renderer: Renderer2
   ) {}
 
   ngOnInit(): void {
     this.subscribeToUsers();
     this.subscribeToChannels();
     this.reFocusOnChannelChange();
+    this.listenToCloseUserSelection();
   }
 
   ngOnDestroy(): void {
@@ -103,6 +107,18 @@ export class TextBoxComponent {
     this.messageInput.nativeElement.focus();
     this.cdRef.detectChanges();
   }
+
+  listenToCloseUserSelection(): void {
+    this.renderer.listen('document', 'click', (event) => {
+      if (this.userSelection && !this.userSelection.nativeElement.contains(event.target) &&
+          this.messageInput && !this.messageInput.nativeElement.contains(event.target)) {
+        this.displayUser = false;
+        this.cdRef.detectChanges();
+      }
+    });
+  }
+  
+  
 
   subscribeToUsers(): void {
     const usersCollection = collection(this.firestore, 'users');

@@ -18,7 +18,7 @@
     (keyup.enter)="sendMessage()"
     (keyup)="onInputChange(message.value)"
   ></textarea>
-  <div class="userSelection" *ngIf="displayUser || displayChannels">
+  <div #userSelection class="userSelection" *ngIf="displayUser || displayChannels">
     <div class="allUser" *ngIf="displayUser">
       <div
         class="singleUser"
