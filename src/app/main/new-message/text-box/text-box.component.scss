@@ -110,11 +110,11 @@
   }
 
   .imagePreview {
-    //vorläufig
-    width: 120px;
     height: 120px;
-    background-size: cover;
+    width: 120px;
+    background-size: contain;
     background-position: center;
+    background-repeat: no-repeat;
     position: relative;
     border-radius: 8px;
     align-self: flex-start;
