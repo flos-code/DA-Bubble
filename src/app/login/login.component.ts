@@ -28,7 +28,7 @@ import {
 import { DirectMessage } from '../../models/directMessage.class';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.private';
 
 const provider = new GoogleAuthProvider();
 const app = initializeApp(environment.firebase);

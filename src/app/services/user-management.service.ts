@@ -11,7 +11,7 @@ import {
 } from 'firebase/firestore';
 import { BehaviorSubject, Observable, combineLatest, map } from 'rxjs';
 import { User } from '../../models/user.class';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 const db = getFirestore(app);

@@ -1,57 +1,75 @@
+@import "../../styles.scss";
+
 h1 {
-    color: #444DF2;
-    font-size: 46px;
-    font-weight: 700;
-    margin-block-start: 0.6em;
-    margin-block-end: 0.3em;
+  color: $purple1;
+  font-size: 46px;
+  font-weight: 700;
+  margin-block: unset;
 }
 
 h2 {
-    color: #444DF2;
-    font-size: 32px;
-    font-weight: 700;
-    margin-block-start: 1em;
-    margin-block-end: 0.3em;
+  color: $purple1;
+  font-size: 32px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  margin-block: unset;
 }
 
 p {
-    font-size: 20px;
-    font-weight: 400;
-    margin-block-start: 0em;
-    margin-block-end: 0em;
+  font-size: 20px;
+  font-weight: 400;
+  margin-block: unset;
 }
 
 .imprint-box {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    height: 469px;
-    width: 676px;
-    background-color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 30px;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  height: fit-content;
+  width: 676px;
+  background-color: white;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  border-radius: 30px;
 }
 
 .padding-box {
-    width: 100%;
-    height: 100%;
-    padding: 48px 56px 48px 56px;
+  width: 100%;
+  height: 100%;
+  padding: 48px 56px 48px 56px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  box-sizing: border-box;
 
-    .back-arrow {
-        :hover {
-            scale: 1.1;
-        }
+  .back-arrow {
+    :hover {
+      scale: 1.1;
     }
+  }
 }
 
 .email-link {
-    text-decoration: none;
+  text-decoration: none;
 
-    &:hover {
-        text-decoration: underline;
-        text-underline-offset: 4px;
-    }
+  &:hover {
+    text-decoration: underline;
+    text-underline-offset: 4px;
+  }
+}
+
+@media screen and (max-width: 1110px) {
+  .imprint-box {
+    width: calc(100vw - 32px);
+  }
+}
+
+@media screen and (max-width: 500px) {
+  .imprint-box {
+    width: 100vw;
+    height: 100vh;
+    border-radius: 0;
+  }
 }

@@ -39,7 +39,7 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 const db = getFirestore(app);

@@ -7,7 +7,7 @@ import { getAuth, updateEmail, updateProfile } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
 import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { ChatService } from '../../services/chat.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 const db = getFirestore(app);

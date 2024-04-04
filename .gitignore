@@ -40,3 +40,8 @@ testem.log
 # System files
 .DS_Store
 Thumbs.db^
+
+
+imprint-private.component.html
+privacy-policy-private.component.html
+environment.private.ts

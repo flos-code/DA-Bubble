@@ -12,7 +12,7 @@ import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
 import { ViewManagementService } from '../../services/view-management.service';
 import { ChatService } from '../../services/chat.service';
-import { environment } from '../../../environments/environment.development';
+import { environment } from '../../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 const db = getFirestore(app);

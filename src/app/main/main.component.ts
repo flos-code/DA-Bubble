@@ -14,7 +14,7 @@ import { ChatService } from '../services/chat.service';
 import { Router } from '@angular/router';
 import { initializeApp } from 'firebase/app';
 import { getAuth, onAuthStateChanged } from 'firebase/auth';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 

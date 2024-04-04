@@ -6,9 +6,7 @@ import { MatIconModule } from '@angular/material/icon';
   selector: 'app-privacy-policy',
   standalone: true,
   imports: [MatCardModule, MatIconModule],
-  templateUrl: './privacy-policy.component.html',
-  styleUrl: './privacy-policy.component.scss'
+  templateUrl: './privacy-policy-private.component.html',
+  styleUrl: './privacy-policy.component.scss',
 })
-export class PrivacyPolicyComponent {
-
-}
+export class PrivacyPolicyComponent {}

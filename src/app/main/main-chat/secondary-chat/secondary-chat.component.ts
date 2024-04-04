@@ -20,7 +20,7 @@ import {
   query,
   updateDoc,
 } from '@angular/fire/firestore';
-import { environment } from '../../../../environments/environment.development';
+import { environment } from '../../../../environments/environment.private';
 import { getStorage, ref, getDownloadURL, getMetadata } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';

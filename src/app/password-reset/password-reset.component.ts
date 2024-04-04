@@ -20,7 +20,7 @@ import { CustomValidators } from '../models/custom-validators';
 import { PassForm } from '../models/pass-form.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
-import { environment } from '../../environments/environment.development';
+import { environment } from '../../environments/environment.private';
 
 const app = initializeApp(environment.firebase);
 @Component({
