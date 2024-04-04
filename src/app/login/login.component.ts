@@ -14,6 +14,7 @@ import {
   signInWithEmailAndPassword,
   signInWithPopup,
   GoogleAuthProvider,
+  updateProfile,
 } from 'firebase/auth';
 import {
   getFirestore,
@@ -29,6 +30,12 @@ import { DirectMessage } from '../../models/directMessage.class';
 import { filter, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment.private';
+import {
+  getStorage,
+  ref as storageRef,
+  uploadBytes,
+  getDownloadURL,
+} from 'firebase/storage';
 
 const provider = new GoogleAuthProvider();
 const app = initializeApp(environment.firebase);
@@ -164,6 +171,12 @@ export class LoginComponent implements OnInit, OnDestroy {
 
   async signInWithGoogle() {
     await signInWithPopup(this.auth, provider).then(async (result) => {
+      const customPhotoURL =
+        'https://firebasestorage.googleapis.com/v0/b/da-bubble-5dd4b.appspot.com/o/profileImages%2Fuz1py2mgjkk5rf80bcvnhq-profile_generic_big.png?alt=media&token=b25f7de3-5da2-4305-8395-3b9aa1af0b00';
+      await updateProfile(result.user, {
+        photoURL: customPhotoURL,
+      });
+
       const userDocRef = doc(db, 'users', result.user.uid);
       const userDocSnap = await getDoc(userDocRef);
       if (userDocSnap.exists()) {
