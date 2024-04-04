@@ -12,17 +12,9 @@ import { FormsModule } from '@angular/forms';
 import { SearchService } from '../../services/search.service';
 import { ViewManagementService } from '../../services/view-management.service';
 import { ChatService } from '../../services/chat.service';
+import { environment } from '../../../environments/environment.development';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-  projectId: 'da-bubble-5dd4b',
-  storageBucket: 'da-bubble-5dd4b.appspot.com',
-  messagingSenderId: '102602206731',
-  appId: '1:102602206731:web:96e14d64cf36fef837210e',
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
 
 @Component({
@@ -60,17 +52,7 @@ export class HeaderComponent implements OnInit {
   inputValue: string = ''; // Initialisierung der Variable
   searchBarActive: boolean = true;
 
-  firebaseConfig = {
-    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-    projectId: 'da-bubble-5dd4b',
-    storageBucket: 'da-bubble-5dd4b.appspot.com',
-    messagingSenderId: '102602206731',
-    appId: '1:102602206731:web:96e14d64cf36fef837210e',
-  };
-  app = initializeApp(this.firebaseConfig);
-  db = getFirestore(this.app);
-  userRef = collection(this.db, 'users');
+  userRef = collection(db, 'users');
 
   constructor(
     public dialog: MatDialog,
@@ -87,7 +69,6 @@ export class HeaderComponent implements OnInit {
     );
 
     this.chatService.isSearchbarActive.subscribe((value) => {
-      //console.log('Wir sind hier:', value);
       if (value !== null) {
         this.searchBarActive = false;
       } else {
@@ -109,7 +90,6 @@ export class HeaderComponent implements OnInit {
     this.searchService.searchUsers(this.inputValue);
     this.searchService.searchChannels(this.inputValue);
     this.searchService.searchThreads(this.inputValue);
-    // console.log(this.searchService.threads);
   }
 
   /**
@@ -135,9 +115,7 @@ export class HeaderComponent implements OnInit {
    * Handles clicks on menu items.
    * @param {string} option - The clicked option.
    */
-  menuItemClicked(option: string) {
-    //console.log('Option clicked:', option);
-  }
+  menuItemClicked(option: string) {}
 
   /**
    * Toggles the overlay and dropdown menu visibility.

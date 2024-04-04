@@ -39,17 +39,9 @@ import {
   ref,
   uploadBytes,
 } from 'firebase/storage';
+import { environment } from '../../environments/environment.development';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-  projectId: 'da-bubble-5dd4b',
-  storageBucket: 'da-bubble-5dd4b.appspot.com',
-  messagingSenderId: '102602206731',
-  appId: '1:102602206731:web:96e14d64cf36fef837210e',
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
 const storage = getStorage();
 
@@ -97,7 +89,6 @@ export class SignUpComponent implements OnInit {
   imgUrl: string = this.genericImg;
 
   @ViewChild('fileUpload') fileUpload: ElementRef;
-  storage = getStorage();
   filePath: string;
   isCustomImage: boolean = false;
 
@@ -294,7 +285,7 @@ export class SignUpComponent implements OnInit {
       const uniqueFileName = `${uniqueId}-${file.name}`;
       const filePath = `profileImages/${uniqueFileName}`;
       this.filePath = filePath;
-      const storageRef = ref(this.storage, filePath);
+      const storageRef = ref(storage, filePath);
       const uploadTask = await uploadBytes(storageRef, file);
       const downloadUrl = await getDownloadURL(uploadTask.ref);
       this.isCustomImage = true;
@@ -307,7 +298,7 @@ export class SignUpComponent implements OnInit {
   async removeFileUpload() {
     if (!this.filePath) return;
     try {
-      const storageRef = ref(this.storage, this.filePath);
+      const storageRef = ref(storage, this.filePath);
       await deleteObject(storageRef);
       this.imgUrl = this.genericImg; // Setze das Bild zurück auf das Standardbild
       this.resetFileInput();
@@ -326,7 +317,7 @@ export class SignUpComponent implements OnInit {
   async deleteImageFromStorage() {
     if (!this.filePath || !this.isCustomImage) return;
     try {
-      const storageRef = ref(this.storage, this.filePath);
+      const storageRef = ref(storage, this.filePath);
       await deleteObject(storageRef);
       this.resetFileInput(); // Optional: Setze das file input zurück
       // Beachte, dass wir imgUrl hier nicht ändern

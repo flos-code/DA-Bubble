@@ -20,17 +20,9 @@ import { CustomValidators } from '../models/custom-validators';
 import { PassForm } from '../models/pass-form.model';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { RouterModule } from '@angular/router';
+import { environment } from '../../environments/environment.development';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-  projectId: 'da-bubble-5dd4b',
-  storageBucket: 'da-bubble-5dd4b.appspot.com',
-  messagingSenderId: '102602206731',
-  appId: '1:102602206731:web:96e14d64cf36fef837210e',
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebase);
 @Component({
   selector: 'app-password-reset',
   standalone: true,

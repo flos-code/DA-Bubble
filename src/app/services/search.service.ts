@@ -8,25 +8,19 @@ import {
   onSnapshot,
   doc,
 } from 'firebase/firestore';
+import { environment } from '../../environments/environment.development';
+
+const app = initializeApp(environment.firebase);
+const db = getFirestore(app);
 
 @Injectable({
   providedIn: 'root',
 })
 export class SearchService {
-  firebaseConfig = {
-    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-    projectId: 'da-bubble-5dd4b',
-    storageBucket: 'da-bubble-5dd4b.appspot.com',
-    messagingSenderId: '102602206731',
-    appId: '1:102602206731:web:96e14d64cf36fef837210e',
-  };
-  app = initializeApp(this.firebaseConfig);
-  db = getFirestore(this.app);
-  userRef = collection(this.db, 'users');
-  channelRef = collection(this.db, 'channels');
-  threadsRef = collection(this.db, 'channels');
-  auth = getAuth(this.app);
+  userRef = collection(db, 'users');
+  channelRef = collection(db, 'channels');
+  threadsRef = collection(db, 'channels');
+  auth = getAuth(app);
 
   searchUserResult = [];
   searchChannelsResult = [];

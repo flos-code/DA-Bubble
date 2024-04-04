@@ -11,24 +11,17 @@ import {
 import { User } from '../../models/user.class';
 import { getAuth } from 'firebase/auth';
 import { ChatService } from './chat.service';
+import { environment } from '../../environments/environment.development';
+
+const app = initializeApp(environment.firebase);
+const db = getFirestore(app);
 
 @Injectable({
   providedIn: 'root',
 })
 export class ProfilCardService {
-  /* ========== FIREBASE ============ */
-  firebaseConfig = {
-    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-    projectId: 'da-bubble-5dd4b',
-    storageBucket: 'da-bubble-5dd4b.appspot.com',
-    messagingSenderId: '102602206731',
-    appId: '1:102602206731:web:96e14d64cf36fef837210e',
-  };
-  app = initializeApp(this.firebaseConfig);
-  db = getFirestore(this.app);
-  userRef = collection(this.db, 'users');
-  auth = getAuth(this.app);
+  userRef = collection(db, 'users');
+  auth = getAuth(app);
   allUser = [];
   authSubscription: any;
   userNameandSurname: string = '';
@@ -50,7 +43,7 @@ export class ProfilCardService {
   constructor(private chatService: ChatService) {}
 
   checkIfGuestOnline() {
-    if (this.auth.currentUser.uid == 'qAspx2yXBnc0WtnBRJgVJsDniPC3') {
+    if (this.auth.currentUser.uid == 'k46QDaFa1USEWbMgdcgOwK0KOlN2') {
       this.guestIsOnline = true;
     } else {
       this.guestIsOnline = false;
@@ -143,10 +136,7 @@ export class ProfilCardService {
    */
   writeDirectMessage() {
     const q = query(
-      collection(
-        this.db,
-        `users/${this.auth.currentUser.uid}/allDirectMessages`
-      )
+      collection(db, `users/${this.auth.currentUser.uid}/allDirectMessages`)
     );
     return onSnapshot(q, (list) => {
       list.forEach((element) => {
@@ -168,11 +158,11 @@ export class ProfilCardService {
    */
   async addDirectMessage(): Promise<void> {
     const dmSenderRef = doc(
-      collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`),
+      collection(db, `users/${this.auth.currentUser}/allDirectMessages`),
       this.otherUserId
     );
     const dmReceiverRef = doc(
-      collection(this.db, `users/${this.otherUserId}/allDirectMessages`),
+      collection(db, `users/${this.otherUserId}/allDirectMessages`),
       this.currentUserId
     );
     let data = {};

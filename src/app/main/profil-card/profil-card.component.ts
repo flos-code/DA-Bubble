@@ -5,26 +5,11 @@ import { MatIcon } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
 import { getAuth, updateEmail, updateProfile } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
-import {
-  collection,
-  doc,
-  getFirestore,
-  onSnapshot,
-  query,
-  setDoc,
-} from 'firebase/firestore';
+import { doc, getFirestore, setDoc } from 'firebase/firestore';
 import { ChatService } from '../../services/chat.service';
+import { environment } from '../../../environments/environment.development';
 
-const firebaseConfig = {
-  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
-  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
-  projectId: 'da-bubble-5dd4b',
-  storageBucket: 'da-bubble-5dd4b.appspot.com',
-  messagingSenderId: '102602206731',
-  appId: '1:102602206731:web:96e14d64cf36fef837210e',
-};
-
-const app = initializeApp(firebaseConfig);
+const app = initializeApp(environment.firebase);
 const db = getFirestore(app);
 
 @Component({
