@@ -1,4 +1,9 @@
-import { ChangeDetectorRef, Component, HostListener, OnInit } from '@angular/core';
+import {
+  ChangeDetectorRef,
+  Component,
+  HostListener,
+  OnInit,
+} from '@angular/core';
 import { HeaderComponent } from './header/header.component';
 import { SideBarComponent } from './side-bar/side-bar.component';
 import { SecondaryChatComponent } from './main-chat/secondary-chat/secondary-chat.component';
@@ -12,16 +17,16 @@ import { ProfilCardComponent } from './profil-card/profil-card.component';
 import { ProfilCardService } from '../services/profil-card.service';
 import { ChatService } from '../services/chat.service';
 import { Router } from '@angular/router';
-import { initializeApp } from "firebase/app";
-import { getAuth, onAuthStateChanged } from "firebase/auth";
+import { initializeApp } from 'firebase/app';
+import { getAuth, onAuthStateChanged } from 'firebase/auth';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
+  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+  projectId: 'da-bubble-5dd4b',
+  storageBucket: 'da-bubble-5dd4b.appspot.com',
+  messagingSenderId: '102602206731',
+  appId: '1:102602206731:web:96e14d64cf36fef837210e',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -47,7 +52,7 @@ export class MainComponent implements OnInit {
   // showNewMessage: boolean = false;
   // // showSecondaryChat: boolean = false;
   // // showSidebar: boolean = false;
-  
+
   //screenSizeNumb: number;
 
   auth = getAuth(app);
@@ -60,9 +65,8 @@ export class MainComponent implements OnInit {
     public viewManagementService: ViewManagementService,
     public serviceProfilCard: ProfilCardService,
     private router: Router,
-    private cdr: ChangeDetectorRef,
-  ) {
-  }
+    private cdr: ChangeDetectorRef
+  ) {}
 
   ngOnInit() {
     onAuthStateChanged(this.auth, (user) => {
@@ -74,5 +78,4 @@ export class MainComponent implements OnInit {
       }
     });
   }
-
 }

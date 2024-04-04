@@ -1,26 +1,29 @@
 import { EventEmitter, Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
-import { collection, doc, getFirestore, onSnapshot, query, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  query,
+  setDoc,
+} from 'firebase/firestore';
 import { User } from '../../models/user.class';
 import { getAuth } from 'firebase/auth';
 import { ChatService } from './chat.service';
 
-
-
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class ProfilCardService {
-
   /* ========== FIREBASE ============ */
   firebaseConfig = {
-    apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-    authDomain: "da-bubble-87fea.firebaseapp.com",
-    projectId: "da-bubble-87fea",
-    storageBucket: "da-bubble-87fea.appspot.com",
-    messagingSenderId: "970901942782",
-    appId: "1:970901942782:web:56b67253649b6206f290af"
+    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+    projectId: 'da-bubble-5dd4b',
+    storageBucket: 'da-bubble-5dd4b.appspot.com',
+    messagingSenderId: '102602206731',
+    appId: '1:102602206731:web:96e14d64cf36fef837210e',
   };
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
@@ -41,9 +44,10 @@ export class ProfilCardService {
   isProfilCardActive: boolean = false;
   isOverlayActive: boolean = false;
   isCurrentUserActive: boolean;
-  isProfilCardActiveChanged: EventEmitter<boolean> = new EventEmitter<boolean>();
+  isProfilCardActiveChanged: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
-  constructor(private chatService: ChatService) { }
+  constructor(private chatService: ChatService) {}
 
   checkIfGuestOnline() {
     if (this.auth.currentUser.uid == 'qAspx2yXBnc0WtnBRJgVJsDniPC3') {
@@ -84,16 +88,16 @@ export class ProfilCardService {
         let userData = element.data();
         this.userNameandSurname = userData['name'];
         this.userEmailAddress = userData['email'];
-        this.profilePic = userData['imgUrl']
-      })
+        this.profilePic = userData['imgUrl'];
+      });
     }
   }
 
   /**
-  * Updates the header with the provided name.
-  * @param name - The name to be displayed in the header.
-  * @returns The updated header.
-  */
+   * Updates the header with the provided name.
+   * @param name - The name to be displayed in the header.
+   * @returns The updated header.
+   */
   updateHeader(name: string) {
     return name;
   }
@@ -106,11 +110,11 @@ export class ProfilCardService {
     return onSnapshot(this.userRef, (list) => {
       // console.log('Hier sind die User:', list);
       this.allUser = [];
-      list.forEach(element => {
+      list.forEach((element) => {
         // console.log('Hier sind die User:', element.data(), element.id);
         this.allUser.push(new User(element.data()));
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -128,19 +132,24 @@ export class ProfilCardService {
       } else {
         this.profilePic = '/assets/img/login/profile_generic_big.png';
         this.userNameandSurname = 'Max Mustermann';
-        this.userEmailAddress = 'maxmustermann@gmail.com'
+        this.userEmailAddress = 'maxmustermann@gmail.com';
       }
     });
   }
 
   /**
-  * Writes a direct message between two users.
-  * @returns Snapshot listener for direct messages.
-  */
+   * Writes a direct message between two users.
+   * @returns Snapshot listener for direct messages.
+   */
   writeDirectMessage() {
-    const q = query(collection(this.db, `users/${this.auth.currentUser.uid}/allDirectMessages`));
+    const q = query(
+      collection(
+        this.db,
+        `users/${this.auth.currentUser.uid}/allDirectMessages`
+      )
+    );
     return onSnapshot(q, (list) => {
-      list.forEach(element => {
+      list.forEach((element) => {
         if (element.id === this.otherUserId) {
           this.chatService.setSelectedUserId(this.otherUserId);
           this.toggleCardOverlay(false);
@@ -158,9 +167,15 @@ export class ProfilCardService {
    * @returns Promise that resolves when the direct message is added.
    */
   async addDirectMessage(): Promise<void> {
-    const dmSenderRef = doc(collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`), this.otherUserId);
-    const dmReceiverRef = doc(collection(this.db, `users/${this.otherUserId}/allDirectMessages`), this.currentUserId);
-    let data = {}
+    const dmSenderRef = doc(
+      collection(this.db, `users/${this.auth.currentUser}/allDirectMessages`),
+      this.otherUserId
+    );
+    const dmReceiverRef = doc(
+      collection(this.db, `users/${this.otherUserId}/allDirectMessages`),
+      this.currentUserId
+    );
+    let data = {};
     await setDoc(dmSenderRef, data);
     await setDoc(dmReceiverRef, data);
     this.chatService.setSelectedUserId(this.otherUserId);

@@ -303,7 +303,7 @@ export class SideBarComponent {
       ) {
         const isMember = await this.isUserMemberOfAllg(activeUserId);
         if (isMember) {
-          this.setActiveChannel('allgemein');
+          this.setActiveChannel('fGOANb4hqKxhUREJMu7k');
         } else {
           this.openNewMessage();
         }
@@ -312,7 +312,11 @@ export class SideBarComponent {
   }
 
   async isUserMemberOfAllg(userId: string) {
-    const generalChannelRef = doc(this.firestore, 'channels', 'allgemein');
+    const generalChannelRef = doc(
+      this.firestore,
+      'channels',
+      'fGOANb4hqKxhUREJMu7k'
+    );
     const generalChannelSnap = await getDoc(generalChannelRef);
     if (generalChannelSnap.exists() && generalChannelSnap.data()['members']) {
       return generalChannelSnap.data()['members'].includes(userId);

@@ -1,5 +1,11 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import {
+  Component,
+  ElementRef,
+  HostListener,
+  OnInit,
+  ViewChild,
+} from '@angular/core';
 import { Router } from '@angular/router';
 import { RouterModule } from '@angular/router';
 import { initializeApp } from 'firebase/app';
@@ -35,12 +41,12 @@ import {
 } from 'firebase/storage';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
+  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+  projectId: 'da-bubble-5dd4b',
+  storageBucket: 'da-bubble-5dd4b.appspot.com',
+  messagingSenderId: '102602206731',
+  appId: '1:102602206731:web:96e14d64cf36fef837210e',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -81,7 +87,6 @@ export class SignUpComponent implements OnInit {
   public getScreenHeight: any;
   addTheUpperMargin: boolean = false;
 
-
   genericImg: string = '/assets/img/login/profile_generic_big.png';
   person1Img: string = '/assets/img/userImages/userImage1.svg';
   person2Img: string = '/assets/img/userImages/userImage2.svg';
@@ -106,7 +111,7 @@ export class SignUpComponent implements OnInit {
     checkbox: [false, Validators.requiredTrue],
   });
 
-  constructor(private router: Router, private fb: FormBuilder) { }
+  constructor(private router: Router, private fb: FormBuilder) {}
 
   ngOnInit(): void {
     this.getScreenHeight = window.innerHeight;
@@ -174,7 +179,6 @@ export class SignUpComponent implements OnInit {
     }
   }
 
-
   async signUp() {
     await createUserWithEmailAndPassword(
       this.auth,
@@ -204,17 +208,17 @@ export class SignUpComponent implements OnInit {
   async createWelcomeMessage() {
     const welcomeMessage = new DirectMessage({
       yourMessage: false,
-      createdBy: 'WqUfBH53bPVombxH2XPYN70RULp1',
+      createdBy: 'YY4eCZw6wzOgT50nVNF0wVudSL92',
       creationDate: Date.now(),
       message:
         'Herzlich willkommen auf dem Code Learning Server 👋 ich hoffe, du hast gut hergefunden',
       imageUrl:
-        'https://firebasestorage.googleapis.com/v0/b/da-bubble-87fea.appspot.com/o/userImages%2FwelcomeGif.gif?alt=media&token=91f0cf99-d5d8-47ad-be89-15ca36856c35',
+        'https://firebasestorage.googleapis.com/v0/b/da-bubble-5dd4b.appspot.com/o/userImages%2FwelcomeGif%20(1).gif?alt=media&token=88d969f3-77d3-4180-a6a7-222beec8b5c8',
     });
     const newUserRef = doc(
       db,
       `users/${this.auth.currentUser.uid}/allDirectMessages`,
-      'WqUfBH53bPVombxH2XPYN70RULp1'
+      'YY4eCZw6wzOgT50nVNF0wVudSL92'
     );
 
     try {
@@ -222,7 +226,7 @@ export class SignUpComponent implements OnInit {
 
       const directMessagesCollection = collection(
         db,
-        `users/${this.auth.currentUser.uid}/allDirectMessages/WqUfBH53bPVombxH2XPYN70RULp1/directMessages`
+        `users/${this.auth.currentUser.uid}/allDirectMessages/YY4eCZw6wzOgT50nVNF0wVudSL92/directMessages`
       );
 
       const docRefNewUser = await addDoc(
@@ -233,7 +237,7 @@ export class SignUpComponent implements OnInit {
       await updateDoc(
         doc(
           db,
-          `users/${this.auth.currentUser.uid}/allDirectMessages/WqUfBH53bPVombxH2XPYN70RULp1/directMessages`,
+          `users/${this.auth.currentUser.uid}/allDirectMessages/YY4eCZw6wzOgT50nVNF0wVudSL92/directMessages`,
           docRefNewUser.id
         ),
         {
@@ -246,7 +250,7 @@ export class SignUpComponent implements OnInit {
   }
 
   async addUserToGeneralChannel() {
-    const channelRef = doc(db, 'channels', 'allgemein');
+    const channelRef = doc(db, 'channels', 'fGOANb4hqKxhUREJMu7k');
     await updateDoc(channelRef, {
       members: arrayUnion(this.auth.currentUser.uid),
     });

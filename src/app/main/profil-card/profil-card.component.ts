@@ -3,18 +3,25 @@ import { ProfilCardService } from '../../services/profil-card.service';
 import { CommonModule } from '@angular/common';
 import { MatIcon } from '@angular/material/icon';
 import { initializeApp } from 'firebase/app';
-import { getAuth, updateEmail, updateProfile } from "firebase/auth";
+import { getAuth, updateEmail, updateProfile } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
-import { collection, doc, getFirestore, onSnapshot, query, setDoc } from 'firebase/firestore';
+import {
+  collection,
+  doc,
+  getFirestore,
+  onSnapshot,
+  query,
+  setDoc,
+} from 'firebase/firestore';
 import { ChatService } from '../../services/chat.service';
 
 const firebaseConfig = {
-  apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-  authDomain: "da-bubble-87fea.firebaseapp.com",
-  projectId: "da-bubble-87fea",
-  storageBucket: "da-bubble-87fea.appspot.com",
-  messagingSenderId: "970901942782",
-  appId: "1:970901942782:web:56b67253649b6206f290af"
+  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+  projectId: 'da-bubble-5dd4b',
+  storageBucket: 'da-bubble-5dd4b.appspot.com',
+  messagingSenderId: '102602206731',
+  appId: '1:102602206731:web:96e14d64cf36fef837210e',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -25,9 +32,8 @@ const db = getFirestore(app);
   standalone: true,
   imports: [CommonModule, MatIcon, FormsModule],
   templateUrl: './profil-card.component.html',
-  styleUrl: './profil-card.component.scss'
+  styleUrl: './profil-card.component.scss',
 })
-
 export class ProfilCardComponent implements OnInit {
   authSubscription: any;
   auth = getAuth(app);
@@ -39,8 +45,10 @@ export class ProfilCardComponent implements OnInit {
   newEmail: string;
   newName: string;
 
-  constructor(public serviceProfilCard: ProfilCardService, private chatService: ChatService) {
-  }
+  constructor(
+    public serviceProfilCard: ProfilCardService,
+    private chatService: ChatService
+  ) {}
 
   ngOnInit(): void {
     this.serviceProfilCard.getTheLoggedInUser();
@@ -60,7 +68,7 @@ export class ProfilCardComponent implements OnInit {
       } else {
         this.profilePic = '/assets/img/login/profile_generic_big.png';
         this.userNameandSurname = 'Max Mustermann';
-        this.userEmailAddress = 'maxmustermann@gmail.com'
+        this.userEmailAddress = 'maxmustermann@gmail.com';
       }
     });
   }
@@ -69,11 +77,11 @@ export class ProfilCardComponent implements OnInit {
     if (this.newName != '') {
       await updateProfile(this.auth.currentUser, {
         displayName: this.newName,
-      })
+      });
       this.newName = '';
     }
     if (this.newEmail != '') {
-      await updateEmail(this.auth.currentUser, this.newEmail)
+      await updateEmail(this.auth.currentUser, this.newEmail);
     }
     this.newEmail = '';
     this.createUserDetailsDoc();
@@ -82,7 +90,7 @@ export class ProfilCardComponent implements OnInit {
   }
 
   async createUserDetailsDoc() {
-    await setDoc(doc(db, "users", this.auth.currentUser.uid), {
+    await setDoc(doc(db, 'users', this.auth.currentUser.uid), {
       name: this.auth.currentUser.displayName,
       email: this.auth.currentUser.email,
       imgUrl: this.auth.currentUser.photoURL,

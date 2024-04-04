@@ -14,12 +14,12 @@ import { ViewManagementService } from '../../services/view-management.service';
 import { ChatService } from '../../services/chat.service';
 
 const firebaseConfig = {
-  apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-  authDomain: 'da-bubble-87fea.firebaseapp.com',
-  projectId: 'da-bubble-87fea',
-  storageBucket: 'da-bubble-87fea.appspot.com',
-  messagingSenderId: '970901942782',
-  appId: '1:970901942782:web:56b67253649b6206f290af',
+  apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+  authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+  projectId: 'da-bubble-5dd4b',
+  storageBucket: 'da-bubble-5dd4b.appspot.com',
+  messagingSenderId: '102602206731',
+  appId: '1:102602206731:web:96e14d64cf36fef837210e',
 };
 
 const app = initializeApp(firebaseConfig);
@@ -61,12 +61,12 @@ export class HeaderComponent implements OnInit {
   searchBarActive: boolean = true;
 
   firebaseConfig = {
-    apiKey: 'AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k',
-    authDomain: 'da-bubble-87fea.firebaseapp.com',
-    projectId: 'da-bubble-87fea',
-    storageBucket: 'da-bubble-87fea.appspot.com',
-    messagingSenderId: '970901942782',
-    appId: '1:970901942782:web:56b67253649b6206f290af',
+    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+    projectId: 'da-bubble-5dd4b',
+    storageBucket: 'da-bubble-5dd4b.appspot.com',
+    messagingSenderId: '102602206731',
+    appId: '1:102602206731:web:96e14d64cf36fef837210e',
   };
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);

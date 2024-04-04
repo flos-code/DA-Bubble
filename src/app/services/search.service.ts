@@ -1,21 +1,25 @@
 import { Injectable } from '@angular/core';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
-import { collection, getFirestore, query, onSnapshot, doc } from 'firebase/firestore';
+import {
+  collection,
+  getFirestore,
+  query,
+  onSnapshot,
+  doc,
+} from 'firebase/firestore';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
-
 export class SearchService {
-
   firebaseConfig = {
-    apiKey: "AIzaSyC520Za3P8qTUGvWM0KxuYqGIMaz-Vd48k",
-    authDomain: "da-bubble-87fea.firebaseapp.com",
-    projectId: "da-bubble-87fea",
-    storageBucket: "da-bubble-87fea.appspot.com",
-    messagingSenderId: "970901942782",
-    appId: "1:970901942782:web:56b67253649b6206f290af"
+    apiKey: 'AIzaSyAPsKx6zIbKLO9wCKMjo74vtgPgdCMCVfU',
+    authDomain: 'da-bubble-5dd4b.firebaseapp.com',
+    projectId: 'da-bubble-5dd4b',
+    storageBucket: 'da-bubble-5dd4b.appspot.com',
+    messagingSenderId: '102602206731',
+    appId: '1:102602206731:web:96e14d64cf36fef837210e',
   };
   app = initializeApp(this.firebaseConfig);
   db = getFirestore(this.app);
@@ -28,44 +32,44 @@ export class SearchService {
   searchChannelsResult = [];
   threads = [];
 
-  constructor() { }
+  constructor() {}
 
   /**
- * Searches for users based on the provided input.
- * @param {string} input - The input to search for in user names.
- * @returns {Observable} - Returns an observable that emits user search results.
- */
+   * Searches for users based on the provided input.
+   * @param {string} input - The input to search for in user names.
+   * @returns {Observable} - Returns an observable that emits user search results.
+   */
   searchUsers(input: string) {
     this.searchUserResult = [];
     let q = query(this.userRef);
     return onSnapshot(q, (list) => {
-      list.forEach(element => {
+      list.forEach((element) => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
         if (compare.includes(input.toLowerCase())) {
           this.searchUserResult.push(result);
         }
-      })
-    })
+      });
+    });
   }
 
   /**
- * Searches for users whose names contain a specific substring after an '@' symbol.
- * @param {string} input - The input after the '@' symbol to search for in user names.
- * @returns {Observable} - Returns an observable that emits user search results.
- */
+   * Searches for users whose names contain a specific substring after an '@' symbol.
+   * @param {string} input - The input after the '@' symbol to search for in user names.
+   * @returns {Observable} - Returns an observable that emits user search results.
+   */
   seachUsersAt(input: string) {
     this.searchUserResult = [];
     let q = query(this.userRef);
     return onSnapshot(q, (list) => {
-      list.forEach(element => {
+      list.forEach((element) => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
         if (compare.includes(input.slice(1).toLowerCase())) {
           this.searchUserResult.push(result);
         }
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -77,7 +81,7 @@ export class SearchService {
     this.searchChannelsResult = [];
     let q = query(this.channelRef);
     return onSnapshot(q, (list) => {
-      list.forEach(element => {
+      list.forEach((element) => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
         let docId = element.id;
@@ -87,8 +91,8 @@ export class SearchService {
             this.searchChannelsResult.push({ id: docId, ...result });
           }
         }
-      })
-    })
+      });
+    });
   }
 
   /**
@@ -100,7 +104,7 @@ export class SearchService {
     this.searchChannelsResult = [];
     let q = query(this.channelRef);
     return onSnapshot(q, (list) => {
-      list.forEach(element => {
+      list.forEach((element) => {
         let compare = element.data()['name'].toLowerCase();
         let result = element.data();
         let docId = element.id;
@@ -110,15 +114,15 @@ export class SearchService {
             this.searchChannelsResult.push({ id: docId, ...result });
           }
         }
-      })
-    })
+      });
+    });
   }
 
   /**
-    * Searches for threads based on the provided input.
-    * @param {string} input - The input to search for in thread messages.
-    * @returns {Observable} - Returns an observable that emits thread search results.
-    */
+   * Searches for threads based on the provided input.
+   * @param {string} input - The input to search for in thread messages.
+   * @returns {Observable} - Returns an observable that emits thread search results.
+   */
   searchThreads(input: string) {
     this.threads = [];
     let q = query(this.channelRef);
@@ -128,18 +132,18 @@ export class SearchService {
         let docId = element.id;
         let channelName = element.data()['name'];
         if (members.includes(this.auth.currentUser.uid)) {
-          this.findThreads(input, docId, channelName)
+          this.findThreads(input, docId, channelName);
         }
       });
     });
   }
 
   /**
-  * Finds threads within a specific channel based on the provided input.
-  * @param {string} input - The input to search for in thread messages.
-  * @param {string} docId - The ID of the channel to search for threads within.
-  * @param {string} channelName - The name of the channel.
-  */
+   * Finds threads within a specific channel based on the provided input.
+   * @param {string} input - The input to search for in thread messages.
+   * @param {string} docId - The ID of the channel to search for threads within.
+   * @param {string} channelName - The name of the channel.
+   */
   findThreads(input: string, docId: string, channelName: string) {
     let channelDocRef = doc(this.channelRef, docId);
     let threadsRef = collection(channelDocRef, 'threads');
@@ -147,18 +151,26 @@ export class SearchService {
       threadSnapshot.forEach((threadDoc) => {
         let compare = threadDoc.data()['message'].toLowerCase();
         if (compare.includes(input.toLowerCase())) {
-          this.threads.push({ id: docId, channelName: channelName, ...threadDoc.data() });
+          this.threads.push({
+            id: docId,
+            channelName: channelName,
+            ...threadDoc.data(),
+          });
         }
       });
     });
   }
 
   /**
- * Checks if there are no search results found.
- * @returns {boolean} - Returns true if no search results are found, otherwise false.
- */
+   * Checks if there are no search results found.
+   * @returns {boolean} - Returns true if no search results are found, otherwise false.
+   */
   noResultFound() {
-    if (this.searchChannelsResult.length === 0 && this.searchUserResult.length === 0 && this.threads.length === 0) {
+    if (
+      this.searchChannelsResult.length === 0 &&
+      this.searchUserResult.length === 0 &&
+      this.threads.length === 0
+    ) {
       return true;
     } else {
       return false;

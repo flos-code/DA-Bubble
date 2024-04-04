@@ -21,7 +21,7 @@ import {
   updateDoc,
 } from '@angular/fire/firestore';
 import { environment } from '../../../../environments/environment.development';
-import { getStorage, ref, getDownloadURL, getMetadata } from "firebase/storage";
+import { getStorage, ref, getDownloadURL, getMetadata } from 'firebase/storage';
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { FormsModule } from '@angular/forms';
@@ -50,7 +50,7 @@ const app = initializeApp(environment.firebase);
     ReactionEmojiInputComponent,
     SecondaryChatMessagesComponent,
     TextBoxComponent,
-    MatIconModule
+    MatIconModule,
   ],
   templateUrl: './secondary-chat.component.html',
   styleUrl: './secondary-chat.component.scss',
@@ -90,8 +90,7 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     public userManagementService: UserManagementService,
     public viewManagementService: ViewManagementService,
     public inputService: InputService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.setCurrentUser();
@@ -107,12 +106,8 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   }
 
   ngAfterViewInit() {
-    setTimeout(() =>
-      this.scrollToBottom()
-      , 400);
-    setTimeout(() =>
-      this.setFokusToTextarea()
-      , 400);
+    setTimeout(() => this.scrollToBottom(), 400);
+    setTimeout(() => this.setFokusToTextarea(), 400);
   }
 
   /**
@@ -172,8 +167,6 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
       console.error('Fehler beim Herunterladen des Dokuments:', error);
     }
   }
-
-
 
   openImage(url: string) {
     window.open(url, '_blank');
@@ -250,14 +243,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.showMoreEmojis[messageId] = false;
   }
 
-
   /**
    * Retrieves and sets the current active channel ID from the chat service.
    * If no channel ID is currently active, it defaults to a general channel, identified by 'allgemein'.
    * This method is crucial for ensuring the component is interacting with the correct channel data within the application.
    */
   getActualChannelId() {
-    this.activeChannelId = this.chatService.getActiveChannelId() || 'allgemein';
+    this.activeChannelId =
+      this.chatService.getActiveChannelId() || 'fGOANb4hqKxhUREJMu7k';
   }
 
   /**
@@ -295,19 +288,18 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.currentUser = this.userManagementService.activeUserId.value;
   }
 
-
   /**
-  * Subscribes to changes in the selected thread ID from the chat service. Upon receiving a new thread ID,
-  * it loads the messages for that thread and the initial thread message for display. If no thread ID is
-  * available, it logs a message to the console indicating the absence of a thread ID.
-  */
+   * Subscribes to changes in the selected thread ID from the chat service. Upon receiving a new thread ID,
+   * it loads the messages for that thread and the initial thread message for display. If no thread ID is
+   * available, it logs a message to the console indicating the absence of a thread ID.
+   */
   subcribeThreadId() {
     this.subscription.add(
       this.chatService.selectedThreadId$.subscribe((threadId) => {
         if (threadId) {
           this.loadThreadMessages(threadId);
           this.loadThreadInitMessage();
-        } 
+        }
       })
     );
   }
@@ -348,8 +340,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
    * @return {Promise<ThreadMessage[]>} A promise that resolves to an array of ThreadMessage objects representing the messages
    *                                    in the specified thread.
    */
-  async getThreadMessages(channelId: string, threadId: string): Promise<ThreadMessage[]> {
-    const threadMessagesRef = collection(this.firestore, `channels/${channelId}/threads/${threadId}/messages`);
+  async getThreadMessages(
+    channelId: string,
+    threadId: string
+  ): Promise<ThreadMessage[]> {
+    const threadMessagesRef = collection(
+      this.firestore,
+      `channels/${channelId}/threads/${threadId}/messages`
+    );
     const snapshot = await getDocs(threadMessagesRef);
     const threadMessages = snapshot.docs
       .map((doc) => new ThreadMessage({ ...doc.data(), messageId: doc.id }))
@@ -357,21 +355,23 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     return threadMessages;
   }
 
-
   /**
-  * Subscribes to the collection of messages within a specified thread, listening for real-time updates.
-  * This method constructs a query to fetch messages in ascending order by their creation date,
-  * ensuring the chat displays messages in the order they were sent. Upon receiving updates from Firestore,
-  * it maps the document snapshots to `ThreadMessage` instances and passes them to `handleThreadMessages`
-  * for further processing.
-  *
-  * @param {string} threadId - The ID of the thread from which to load messages. This ID is used to construct
-  *                            the path to the relevant Firestore collection.
-  */
+   * Subscribes to the collection of messages within a specified thread, listening for real-time updates.
+   * This method constructs a query to fetch messages in ascending order by their creation date,
+   * ensuring the chat displays messages in the order they were sent. Upon receiving updates from Firestore,
+   * it maps the document snapshots to `ThreadMessage` instances and passes them to `handleThreadMessages`
+   * for further processing.
+   *
+   * @param {string} threadId - The ID of the thread from which to load messages. This ID is used to construct
+   *                            the path to the relevant Firestore collection.
+   */
   loadThreadMessages(threadId: string) {
     const channelId = this.activeChannelId;
     const threadMessagesRef = query(
-      collection(this.firestore, `channels/${channelId}/threads/${threadId}/messages`),
+      collection(
+        this.firestore,
+        `channels/${channelId}/threads/${threadId}/messages`
+      ),
       orderBy('creationDate', 'asc')
     );
 
@@ -406,8 +406,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
    * @param {string} threadId - The ID of the thread for which to retrieve the initial message.
    * @returns {Promise<Thread>} A promise that resolves to a `Thread` instance representing the initial message of the thread.
    */
-  async getInitialThreadMessage(channelId: string, threadId: string): Promise<Thread> {
-    const threadRef = doc(this.firestore, `channels/${channelId}/threads/${threadId}`);
+  async getInitialThreadMessage(
+    channelId: string,
+    threadId: string
+  ): Promise<Thread> {
+    const threadRef = doc(
+      this.firestore,
+      `channels/${channelId}/threads/${threadId}`
+    );
     const docSnap = await getDoc(threadRef);
 
     if (docSnap.exists()) {
@@ -430,19 +436,21 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
     this.isLoading = false;
   }
 
-
   /**
-  * Subscribes to changes in the current channel's data in Firestore and updates the component state
-  * accordingly. After successfully fetching the channel data, it triggers the `getMembers` method
-  * to fetch the channel members' data with a slight delay to ensure smooth UI updates.
-  */
+   * Subscribes to changes in the current channel's data in Firestore and updates the component state
+   * accordingly. After successfully fetching the channel data, it triggers the `getMembers` method
+   * to fetch the channel members' data with a slight delay to ensure smooth UI updates.
+   */
   getCurrentChannelData() {
-    onSnapshot(doc(collection(this.firestore, 'channels'), this.activeChannelId), (doc) => {
-      this.channel = new Channel(doc.data());
-      setTimeout(() => {
-        this.getMembers();
-      }, 200);
-    });
+    onSnapshot(
+      doc(collection(this.firestore, 'channels'), this.activeChannelId),
+      (doc) => {
+        this.channel = new Channel(doc.data());
+        setTimeout(() => {
+          this.getMembers();
+        }, 200);
+      }
+    );
   }
 
   /**
@@ -453,7 +461,10 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   getMembers() {
     const q = query(collection(this.firestore, 'users'));
     onSnapshot(q, (snapshot) => {
-      const users = snapshot.docs.map(doc => ({ ...doc.data(), userId: doc.id }));
+      const users = snapshot.docs.map((doc) => ({
+        ...doc.data(),
+        userId: doc.id,
+      }));
       this.handleMembersData(users);
     });
   }
@@ -465,7 +476,9 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
    * @param {Array<Object>} users - An array of user objects fetched from Firestore.
    */
   handleMembersData(users: any[]) {
-    this.channelMembers = users.filter(user => this.channel['members'].includes(user.userId));
+    this.channelMembers = users.filter((user) =>
+      this.channel['members'].includes(user.userId)
+    );
   }
 
   /**
@@ -488,15 +501,14 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
    * @return {string} The user's profile image URL if found, otherwise a default image URL.
    */
   getUserProfileImageUrl(userId: string): string {
-    const user = this.channelMembers.find(member => member.userId === userId);
+    const user = this.channelMembers.find((member) => member.userId === userId);
     return user ? user.imgUrl : 'imgUrl';
   }
 
-
   /**
-  * Toggles the visibility of the emoji picker window in the UI. This method flips the state of
-  * `emojiWindowOpen`, which controls whether the emoji picker is displayed to the user.
-  */
+   * Toggles the visibility of the emoji picker window in the UI. This method flips the state of
+   * `emojiWindowOpen`, which controls whether the emoji picker is displayed to the user.
+   */
   toggleEmojis() {
     this.emojiWindowOpen = !this.emojiWindowOpen;
   }
@@ -540,5 +552,4 @@ export class SecondaryChatComponent implements OnInit, OnDestroy {
   updateCursorPosition(event: any) {
     this.currentCursorPosition = event.target.selectionStart;
   }
-
 }
