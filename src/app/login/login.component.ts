@@ -268,10 +268,8 @@ export class LoginComponent implements OnInit, OnDestroy {
         this.router.navigateByUrl('');
       })
       .catch((error) => {
-        if (error.code == 'auth/user-not-found') {
-          this.showFalseLoginAlert();
-        } else {
-        }
+        console.error('Error signing in:', error);
+        this.showFalseLoginAlert();
       });
   }
 
@@ -301,7 +299,7 @@ export class LoginComponent implements OnInit, OnDestroy {
       this.showEmailErrorDiv = false;
       this.isText = false;
       this.showAlert = false;
-    }, 3000);
+    }, 2000);
   }
 
   getEmailErrorMessage(errors: ValidationErrors) {
