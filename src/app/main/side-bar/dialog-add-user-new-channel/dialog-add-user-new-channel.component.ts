@@ -88,7 +88,7 @@ export class DialogAddUserNewChannelComponent {
 
   filterUsers(): void {
     if (!this.userInputModel) {
-      this.filteredUsers = [];
+      this.filteredUsers = [...this.allUsers];
     } else {
       this.filteredUsers = this.allUsers
         .filter((user) =>
@@ -128,6 +128,7 @@ export class DialogAddUserNewChannelComponent {
   async initializeData() {
     this.activeChannelMembers = await this.fetchActiveChannelMembers();
     await this.fetchUsers();
+    this.filteredUsers = [...this.allUsers];
   }
 
   async fetchActiveChannelMembers(): Promise<string[]> {

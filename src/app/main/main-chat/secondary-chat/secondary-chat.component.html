@@ -10,7 +10,7 @@
       <div class="left-side-head">
         <h3>Thread</h3>
         <img src="/assets/img/tagPurple.svg" alt="Purple Hashtag" />
-        <p>{{channel?.name}}</p>
+        <p>{{ channel?.name }}</p>
       </div>
       <button (click)="closeThread()" class="close-button"></button>
     </div>
@@ -28,18 +28,32 @@
         <div>
           <div class="user-time">
             <p>{{ getUserName(firstThreadMessage?.createdBy) }}</p>
-            <span>{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span>
+            <span
+              >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
+            >
           </div>
-          <div *ngIf="firstThreadMessage?.message || firstThreadMessage?.imageUrl" class="thread-message">
+          <div
+            *ngIf="firstThreadMessage?.message || firstThreadMessage?.imageUrl"
+            class="thread-message"
+          >
             <span>{{ firstThreadMessage?.message }}</span>
             <div *ngIf="firstThreadMessage?.imageUrl" class="imgMessage">
-              <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"/>
+              <img
+                [src]="firstThreadMessage?.imageUrl"
+                alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"
+              />
               <div class="imgInteraction">
                 <div (click)="downloadImage(firstThreadMessage?.imageUrl)">
-                  <mat-icon class="material-symbols-rounded" fontIcon="download"></mat-icon>
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    fontIcon="download"
+                  ></mat-icon>
                 </div>
                 <div (click)="openImage(firstThreadMessage?.imageUrl)">
-                  <mat-icon class="material-symbols-rounded" fontIcon="open_in_new"></mat-icon>
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    fontIcon="open_in_new"
+                  ></mat-icon>
                 </div>
               </div>
             </div>
@@ -60,21 +74,32 @@
               >{{ firstThreadMessage?.creationDate | date : "HH:mm" }} Uhr</span
             >
           </div>
-          <div *ngIf="firstThreadMessage?.message || firstThreadMessage?.imageUrl" class="thread-message own-message">
+          <div
+            *ngIf="firstThreadMessage?.message || firstThreadMessage?.imageUrl"
+            class="thread-message own-message own-bubble"
+          >
             <span>{{ firstThreadMessage?.message }}</span>
             <div *ngIf="firstThreadMessage?.imageUrl" class="imgMessage">
-              <img [src]="firstThreadMessage?.imageUrl" alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"/>
+              <img
+                [src]="firstThreadMessage?.imageUrl"
+                alt="Image uploaded by {{ firstThreadMessage?.createdBy }}"
+              />
               <div class="imgInteraction">
                 <div (click)="downloadImage(firstThreadMessage?.imageUrl)">
-                  <mat-icon class="material-symbols-rounded" fontIcon="download"></mat-icon>
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    fontIcon="download"
+                  ></mat-icon>
                 </div>
                 <div (click)="openImage(firstThreadMessage?.imageUrl)">
-                  <mat-icon class="material-symbols-rounded" fontIcon="open_in_new"></mat-icon>
+                  <mat-icon
+                    class="material-symbols-rounded"
+                    fontIcon="open_in_new"
+                  ></mat-icon>
                 </div>
               </div>
             </div>
           </div>
-          
         </div>
       </div>
       }
