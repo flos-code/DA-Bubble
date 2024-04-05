@@ -1,23 +1,52 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, OnInit, SimpleChanges, inject } from '@angular/core';
+import {
+  Component,
+  Input,
+  OnChanges,
+  OnInit,
+  SimpleChanges,
+  inject,
+} from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { ChatService } from '../../../services/chat.service';
 import { EditOwnThreadComponent } from './edit-own-thread/edit-own-thread.component';
 import { MainChatComponent } from '../main-chat.component';
 import { ReactionEmojiInputComponent } from '../reaction-emoji-input/reaction-emoji-input.component';
 import { ViewManagementService } from '../../../services/view-management.service';
-import { Firestore, addDoc, collection, deleteDoc, doc, getDoc, onSnapshot, orderBy, query, updateDoc } from '@angular/fire/firestore';
+import {
+  Firestore,
+  addDoc,
+  collection,
+  deleteDoc,
+  doc,
+  getDoc,
+  onSnapshot,
+  orderBy,
+  query,
+  updateDoc,
+} from '@angular/fire/firestore';
 import { MatIconModule } from '@angular/material/icon';
-import { getDownloadURL, getMetadata, getStorage, ref } from '@angular/fire/storage';
+import {
+  getDownloadURL,
+  getMetadata,
+  getStorage,
+  ref,
+} from '@angular/fire/storage';
 
 @Component({
   selector: 'app-thread',
   standalone: true,
-  imports: [CommonModule, FormsModule, ReactiveFormsModule, EditOwnThreadComponent, ReactionEmojiInputComponent, MatIconModule],
+  imports: [
+    CommonModule,
+    FormsModule,
+    ReactiveFormsModule,
+    EditOwnThreadComponent,
+    ReactionEmojiInputComponent,
+    MatIconModule,
+  ],
   templateUrl: './thread.component.html',
-  styleUrl: './thread.component.scss'
+  styleUrl: './thread.component.scss',
 })
-
 export class ThreadComponent implements OnInit, OnChanges {
   private firestore: Firestore = inject(Firestore);
   @Input() thread!: any;
@@ -37,21 +66,25 @@ export class ThreadComponent implements OnInit, OnChanges {
   editMessagePopupOpen: boolean = false;
   ownMessageEdit: boolean = false;
   reactions = [];
-  reactionNames =  [];
+  reactionNames = [];
   reactionCount: number;
   messageCountPath: string;
 
-  constructor(private chatService: ChatService, private main: MainChatComponent, public viewManagementService: ViewManagementService,) { }
+  constructor(
+    public chatService: ChatService,
+    private main: MainChatComponent,
+    public viewManagementService: ViewManagementService
+  ) {}
 
   ngOnChanges(changes: SimpleChanges): void {
     //this.reactionCollectionPath = this.path + `/${this.thread.threadId}/reactions`;
-    if(this.activeChannelId == null) {
+    if (this.activeChannelId == null) {
       this.reactionCollectionPath = `users/${this.currentUser}/allDirectMessages/${this.activeDmUser}/directMessages/${this.thread.threadId}/reactions`;
     } else {
       this.reactionCollectionPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/reactions`;
       this.messageCountPath = `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`;
     }
-    if(changes['thread']) {
+    if (changes['thread']) {
       this.loadThreadData();
     }
   }
@@ -65,46 +98,49 @@ export class ThreadComponent implements OnInit, OnChanges {
    */
   loadThreadData() {
     this.getReactions();
-    if(this.activeChannelId !== null) {
+    if (this.activeChannelId !== null) {
       this.getMessageCountAndAnswer();
     }
   }
 
   /**
-   * 
+   *
    */
   async getReactions() {
     const q = query(collection(this.firestore, this.reactionCollectionPath));
     await onSnapshot(q, (element) => {
       this.reactions = [];
       this.reactionNames = [];
-      element.forEach(reaction => {
+      element.forEach((reaction) => {
         this.getReactionNames(reaction.data()['reactedBy']);
         this.reactions.push({
-          'id': reaction.id,
-          'count': reaction.data()['count'],
-          'reaction': reaction.data()['reaction'],
-          'reactedBy': reaction.data()['reactedBy'],
-          'reactedByName': this.reactionNames
+          id: reaction.id,
+          count: reaction.data()['count'],
+          reaction: reaction.data()['reaction'],
+          reactedBy: reaction.data()['reactedBy'],
+          reactedByName: this.reactionNames,
         });
         this.sortReactionIds();
         this.sortReactionNames();
       });
     });
   }
-  
+
   /**
    * Fetches all the reactions form the reactions collection form firebase for the current thread.
    * Pushes the data into the reactionNAmes array.
-   * @param reactedByArray 
+   * @param reactedByArray
    */
   getReactionNames(reactedByArray: any) {
     const q = query(collection(this.firestore, 'users'));
     onSnapshot(q, (list) => {
-      list.forEach(user => {
+      list.forEach((user) => {
         for (let i = 0; i < reactedByArray.length; i++) {
           const reactedBy = reactedByArray[i];
-          if(user.id == reactedBy && !this.reactionNames.includes(user.data()['name'])) {
+          if (
+            user.id == reactedBy &&
+            !this.reactionNames.includes(user.data()['name'])
+          ) {
             this.reactionNames.push(user.data()['name']);
           }
         }
@@ -113,15 +149,15 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Sorts the reactions reactedBy array within the reactions JSON so that the current logged in user is at the first 
+   * Sorts the reactions reactedBy array within the reactions JSON so that the current logged in user is at the first
    * position. The array is only sorted if it includes the current logged in user.
    */
   sortReactionIds() {
     for (let i = 0; i < this.reactions.length; i++) {
       const userId = this.reactions[i];
-      if(userId.reactedBy.includes(this.currentUser)) {
+      if (userId.reactedBy.includes(this.currentUser)) {
         let index = -1;
-        index = userId.reactedBy.findIndex(obj => obj == this.currentUser);
+        index = userId.reactedBy.findIndex((obj) => obj == this.currentUser);
         userId.reactedBy.splice(index, 1);
         userId.reactedBy.unshift(this.currentUser);
       }
@@ -129,15 +165,17 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-   * Sorts the reactions reactedByName array within the reactions JSON so that the current logged in user is at the first 
+   * Sorts the reactions reactedByName array within the reactions JSON so that the current logged in user is at the first
    * position. The array is only sorted if it includes the current logged in user
    */
   sortReactionNames() {
     for (let i = 0; i < this.reactions.length; i++) {
       const userName = this.reactions[i];
-      if(userName.reactedByName.includes(this.currentUserName)) {
+      if (userName.reactedByName.includes(this.currentUserName)) {
         let index = -1;
-        index = userName.reactedByName.findIndex(obj => obj == this.currentUserName);
+        index = userName.reactedByName.findIndex(
+          (obj) => obj == this.currentUserName
+        );
         userName.reactedBy.splice(index, 1);
         userName.reactedByName.unshift(this.currentUserName);
       }
@@ -150,18 +188,21 @@ export class ThreadComponent implements OnInit, OnChanges {
    */
   getMessageCountAndAnswer() {
     this.messageCount = 0;
-     const messagesRef = collection(this.firestore, `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`);
-     const q = query(messagesRef, orderBy('creationDate', 'desc'));
-  
-     onSnapshot(q, (snapshot) => {
-     this.messageCount = snapshot.docs.length;
-     this.formatMessageCount();
-  
-       if (this.messageCount > 0) {
-         const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
-         this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
-       }
-     });
+    const messagesRef = collection(
+      this.firestore,
+      `channels/${this.activeChannelId}/threads/${this.thread.threadId}/messages`
+    );
+    const q = query(messagesRef, orderBy('creationDate', 'desc'));
+
+    onSnapshot(q, (snapshot) => {
+      this.messageCount = snapshot.docs.length;
+      this.formatMessageCount();
+
+      if (this.messageCount > 0) {
+        const lastMessageTimestamp = snapshot.docs[0].data()['creationDate'];
+        this.lastAnswer = this.main.getFormattedTime(lastMessageTimestamp);
+      }
+    });
   }
 
   /**
@@ -169,7 +210,7 @@ export class ThreadComponent implements OnInit, OnChanges {
    * it returns "Antwort".
    */
   formatMessageCount() {
-    if(this.messageCount > 1 || this.messageCount == 0) {
+    if (this.messageCount > 1 || this.messageCount == 0) {
       this.answers = 'Antworten';
     } else {
       this.answers = 'Antwort';
@@ -177,70 +218,85 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-  * Saves an emoji/reaction in in the reactions collection in firebase of the current thread. Checks if a document already
-  * exists. If not the reaction is added. If an document already exists it checks if the emoji already exists.
-  * If the emoji doesn't exist, then a a new one is added. But if the emoji exists, it checks if the current logged in user
-  * already reacted (reactedBy array contains current user). If not, the count goes op by 1, otherwiese the count goes down
-  * by one and the user id is removed form the reactedBy array.
-  * If only the current user has already reacted with the emoji, the emoji is removed from the reactions collection. 
-  * 
-  * @param emoji - selected emoji from the picker > value form the input
-  * @param currentUser - currently logged in user
-  */
+   * Saves an emoji/reaction in in the reactions collection in firebase of the current thread. Checks if a document already
+   * exists. If not the reaction is added. If an document already exists it checks if the emoji already exists.
+   * If the emoji doesn't exist, then a a new one is added. But if the emoji exists, it checks if the current logged in user
+   * already reacted (reactedBy array contains current user). If not, the count goes op by 1, otherwiese the count goes down
+   * by one and the user id is removed form the reactedBy array.
+   * If only the current user has already reacted with the emoji, the emoji is removed from the reactions collection.
+   *
+   * @param emoji - selected emoji from the picker > value form the input
+   * @param currentUser - currently logged in user
+   */
   async saveReaction(emoji: string, currentUser: string) {
-    if(this.reactions.length == 0) {
+    if (this.reactions.length == 0) {
       await this.addReaction(emoji, currentUser);
     } else {
-      if(this.reactions.some(reaction => reaction.reaction == emoji)) {
+      if (this.reactions.some((reaction) => reaction.reaction == emoji)) {
         for (let i = 0; i < this.reactions.length; i++) {
           const reaction = this.reactions[i];
-          if(emoji == reaction.reaction && reaction.reactedBy.includes(currentUser)) {
-            if(reaction.reactedBy.length > 1) {
+          if (
+            emoji == reaction.reaction &&
+            reaction.reactedBy.includes(currentUser)
+          ) {
+            if (reaction.reactedBy.length > 1) {
               reaction.count = reaction.count - 1;
               let index = reaction.reactedBy.indexOf(currentUser);
               reaction.reactedBy.splice(index, 1);
-              let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' +  reaction.id);
+              let currentRef = doc(
+                this.firestore,
+                this.reactionCollectionPath + '/' + reaction.id
+              );
               let data = {
                 count: reaction.count,
                 reaction: emoji,
                 reactedBy: reaction.reactedBy,
               };
-              await updateDoc(currentRef, data).then(() => {
-              });  
+              await updateDoc(currentRef, data).then(() => {});
             } else {
-              await deleteDoc(doc(this.firestore, this.reactionCollectionPath, reaction.id));
+              await deleteDoc(
+                doc(this.firestore, this.reactionCollectionPath, reaction.id)
+              );
             }
-          } else if(emoji == reaction.reaction && !reaction.reactedBy.includes(currentUser)) {
+          } else if (
+            emoji == reaction.reaction &&
+            !reaction.reactedBy.includes(currentUser)
+          ) {
             reaction.count = reaction.count + 1;
             reaction.reactedBy.push(currentUser);
-            let currentRef = doc(this.firestore, this.reactionCollectionPath + '/' + reaction.id);
+            let currentRef = doc(
+              this.firestore,
+              this.reactionCollectionPath + '/' + reaction.id
+            );
             let data = {
               count: reaction.count,
               reaction: emoji,
               reactedBy: reaction.reactedBy,
             };
-            await updateDoc(currentRef, data).then(() => {
-            });
-          }         
+            await updateDoc(currentRef, data).then(() => {});
+          }
         }
       } else {
-        await this.addReaction(emoji, currentUser); 
+        await this.addReaction(emoji, currentUser);
       }
     }
   }
 
   /**
-  * Adds the emoji/reaction to the reactions array in firebase. The reaction contians the count, the emoji iself and the
-  * user id of the user who reacted.
-  * @param emoji - selected emoji from the picker > value form the input
-  * @param currentUser - currently logged in user
-  */
+   * Adds the emoji/reaction to the reactions array in firebase. The reaction contians the count, the emoji iself and the
+   * user id of the user who reacted.
+   * @param emoji - selected emoji from the picker > value form the input
+   * @param currentUser - currently logged in user
+   */
   async addReaction(emoji: string, currentUser: string) {
-    let newReaction = await addDoc(collection(this.firestore, this.reactionCollectionPath), {
+    let newReaction = await addDoc(
+      collection(this.firestore, this.reactionCollectionPath),
+      {
         count: 1,
         reaction: emoji,
         reactedBy: [currentUser],
-      });
+      }
+    );
   }
 
   /**
@@ -250,7 +306,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   async downloadImage(imageURL) {
     const storage = getStorage();
     const storageRef = ref(storage, imageURL);
-  
+
     try {
       const url = await getDownloadURL(storageRef);
       const metadata = await getMetadata(storageRef);
@@ -289,7 +345,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   openImage(url: string) {
     window.open(url, '_blank');
   }
-  
+
   /**
    * Opens the emoji picker if the user clicks on the emoji icon next to the reaction.
    */
@@ -306,7 +362,7 @@ export class ThreadComponent implements OnInit, OnChanges {
 
   /**
    * Closes the emoji picker.
-   * @param showMoreEmojis 
+   * @param showMoreEmojis
    */
   closeMoreEmojis(showMoreEmojis: boolean) {
     this.showMoreEmojis = false;
@@ -321,7 +377,7 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-   * If the user clicks on "Nachricht bearbieten", the edit-own component opens und the user can start editing the 
+   * If the user clicks on "Nachricht bearbieten", the edit-own component opens und the user can start editing the
    * own message.
    */
   editMessage() {
@@ -353,9 +409,9 @@ export class ThreadComponent implements OnInit, OnChanges {
   }
 
   /**
-  * Prevens an unwanted triggering of a function by clicking on an element.
-  * @param $event 
-  */
+   * Prevens an unwanted triggering of a function by clicking on an element.
+   * @param $event
+   */
   doNotClose($event: any) {
     $event.stopPropagation();
   }
