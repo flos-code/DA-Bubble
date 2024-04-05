@@ -1,27 +1,31 @@
-# DABubble
+<div align='center'><img style="width:20%" src='https://github.com/flos-code/DA-Bubble/assets/148456982/b0f68e55-8cb4-4d88-8875-f071f1b0b958'/></div>
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 17.0.8.
+<h2>About the project</h2>
 
-## Development server
+  <p>DA-Bubble, is a chat messenger in the style of Slack build with Angular for communication.</p>
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The application will automatically reload if you change any of the source files.
+  Chat messenger in the style of Slack, users can register via email or Google. In topic-based channels, users can exchange messages, images or reactions.
 
-## Code scaffolding
+👉 Live Demo: <a href='https://dabubble.scholz-florian.com/'>Live Demo</a>
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+<h3>Key Features:</h3>
 
-## Build
+» register via email or Google <br>
+» exchange messages, images or reactions <br>
+» create topic-based channels
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory.
 
-## Running unit tests
+<h3>Build with:</h3>
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+» Angular <br>
+» TypeScript <br>
+» Firebase
 
-## Running end-to-end tests
+<h2>Screenshots of the Project 📸</h2>
+<br>
+<h3 align='center'>Home Page 🏡</h3>
 
-Run `ng e2e` to execute the end-to-end tests via a platform of your choice. To use this command, you need to first add a package that implements end-to-end testing capabilities.
+<div align='center'>
+<img src='https://github.com/flos-code/DA-Bubble/assets/148456982/527c4e15-53fc-46f1-a112-6ad6334f5872'/>
 
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI Overview and Command Reference](https://angular.io/cli) page.
+</div>
